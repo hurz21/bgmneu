@@ -1,0 +1,78 @@
+﻿<Window x:Class="winFlurstueck"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:bgm"
+        mc:Ignorable="d" Background="LightGray"
+        Title="winFlurstueck" Height="157" Width="339" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+   
+    <XmlDataProvider x:Key="XMLSourceComboBoxgemarkungen" />
+    </Window.Resources>
+    <DockPanel HorizontalAlignment="Left" Width="344">
+        <StackPanel Margin="10" Width="456" Height="320">
+
+            <StackPanel Orientation="Horizontal">
+                <Label Width="90" >Gemarkung:</Label>
+                <TextBox Width="186" Name="tbGemarkung" IsEnabled="False"
+               Text="{Binding normflst.gemarkungstext,  UpdateSourceTrigger=PropertyChanged}"  
+                                    
+                                     />
+                <ComboBox Name="cmbgemarkung"  MaxDropDownHeight="800"
+                                       DataContext="{Binding Source={StaticResource XMLSourceComboBoxgemarkungen}, XPath=/Variablen/Variable}"
+                                                                ItemsSource="{Binding}" 
+                                                                DisplayMemberPath="@Name" 
+                                                                SelectedValuePath="@ID"
+                                                                SelectedValue="{Binding Path=ID}" 
+                                                              SelectionChanged="cmbgemarkung_SelectionChanged"
+                                      Width="20"
+                                      >
+              
+                </ComboBox>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <Label Width="90">Flur:</Label>
+                <TextBox Width="186" Name="tbflur" IsEnabled="False"
+                          
+                             
+                             Text="{Binding normflst.flur,  UpdateSourceTrigger=PropertyChanged}"  
+                             
+                                     />
+                <ComboBox Name="cmbFlur" ItemsSource="{Binding}"  MaxDropDownHeight="800"
+                                      DisplayMemberPath="flur"  SelectedValuePath="flur"
+                                      Width="20"
+                               SelectionChanged="cmbFlur_SelectionChanged"
+                                      ></ComboBox>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <Label Width="90">Zähler:</Label>
+                <TextBox Width="186" Name="tbZaehler" IsEnabled="False" 
+                              
+                             
+                             
+                                  Text="{Binding normflst.zaehler,  UpdateSourceTrigger=PropertyChanged}"  
+                                     />
+                <ComboBox Name="cmbZaehler" ItemsSource="{Binding}"  MaxDropDownHeight="800"
+                                      DisplayMemberPath="zaehler"  SelectedValuePath="zaehler" 
+                                      Width="20" SelectionChanged="cmbZaehler_SelectionChanged"
+                                      ></ComboBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Width="90">Nenner:</Label>
+                <TextBox Width="186"  Name="tbNenner" IsEnabled="False" 
+                                       
+                                     
+                                             Text="{Binding normflst.nenner,  UpdateSourceTrigger=PropertyChanged}"  
+                                     />
+                <ComboBox Name="cmbNenner" ItemsSource="{Binding}"  MaxDropDownHeight="800"
+                                      DisplayMemberPath="nenner"  SelectedValuePath="nenner"
+                                      Width="20"
+                                      SelectionChanged="cmbNenner_SelectionChanged"
+                                      ></ComboBox>
+            </StackPanel>
+        </StackPanel>
+    </DockPanel>
+</Window>
