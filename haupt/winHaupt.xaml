@@ -17,10 +17,12 @@
                         <Button Name="btnEdit" Click="btnEdit_Click" Content="zu Baulast" 
                             IsDefault="True" Margin="5"
                              Drop="Window_Drop" AllowDrop="True"/>
-                        <TextBox x:Name="tbblnr" HorizontalAlignment="Center"
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <TextBlock >Nr:</TextBlock>
+                            <TextBox x:Name="tbblnr" HorizontalAlignment="Center"
                                  Width="70" >
-
-                        </TextBox>
+                            </TextBox>
+                        </StackPanel>
                         <Button Name="btnBestand" Click="btnBestand_Click" Content="Bestandsliste" 
                                 IsEnabled="True" Margin="5"/>
                         <Button x:Name="btnPDFTool" Click="btnPDFTool_Click" Content="Werkzeuge" IsEnabled="True" Margin="5"/>
@@ -34,31 +36,35 @@
 
                 </Button>
                 <TextBlock Name="tbFlurstueckDisplay" Margin="5" Foreground="Gray" 
-                           Background="White" Height="60" TextWrapping="Wrap">
+                           Background="White" Height="40" TextWrapping="Wrap">
                 bitte Flurstück wählen
                 </TextBlock>
                 <Button Name="btnEigentuemer"  Margin="5" Click="btnEigentuemer_Click" IsEnabled="False" >Eigentümer für Flurstück
 
                 </Button>
-                <Button Name="btnRevers" Margin="5" IsEnabled="False">Flurstücke zu Eigentümer
+                <Button Name="btnRevers" Margin="5" IsEnabled="False" Visibility="Collapsed">Flurstücke zu Eigentümer
 
                 </Button>
-             
-                <Button Name="btnBaulast4FST" Margin="5" Click="btnBaulast4FST_Click" 
+                <GroupBox Name="gbBaulast" BorderThickness="3" BorderBrush="Black">
+                    <StackPanel>
+                        
+                    <Button Name="btnBaulast4FST" Margin="5" Click="btnBaulast4FST_Click" 
                         IsEnabled="False">Baulast zum Flurstück
-
-                </Button>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <TextBlock >Baulast:  </TextBlock>
-                    <TextBox x:Name="tbBaulast2" HorizontalAlignment="Center"
+                    </Button>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock >Baulast-Nr:</TextBlock>
+                        <TextBox x:Name="tbBaulast2" HorizontalAlignment="Center"
                                  Width="70" TextChanged="tbBaulast2_TextChanged" >21504
 
-                    </TextBox>
-                </StackPanel>
-                <Button Name="btnBaulastdisplay" Margin="5" Click="btnBaulastdisplay_Click"
+                        </TextBox>
+                    </StackPanel>
+                    <Button Name="btnBaulastdisplay" Margin="5" Click="btnBaulastdisplay_Click"
                         IsEnabled="False">Baulast anzeigen
 
-                </Button>
+                    </Button>
+                    </StackPanel>
+                </GroupBox>
+
             </StackPanel>
             <Button Name="btnGIS" Click="btnGIS_Click" Content="GIS" Margin="5,19,5,5"/>
 

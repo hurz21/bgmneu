@@ -130,6 +130,7 @@ Public Class winHaupt
         eigentuemerText = kurz & toolsEigentuemer.geteigentuemertext(tools.FSTausGISListe)
         If eigentuemerText.Length > 1 Then
             btnEigentuemer.IsEnabled = True
+            btnBaulast4FST.IsEnabled = True
         End If
     End Sub
     Private Sub btnEigentuemer_Click(sender As Object, e As RoutedEventArgs)
