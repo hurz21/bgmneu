@@ -49,14 +49,14 @@
                     <StackPanel>
                         
                     <Button Name="btnBaulast4FST" Margin="5" Click="btnBaulast4FST_Click" 
-                        IsEnabled="False">Baulast zum Flurstück
+                        IsEnabled="False" Visibility="Collapsed">Baulast zum Flurstück
                     </Button>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBlock >Baulast-Nr:</TextBlock>
-                        <TextBox x:Name="tbBaulast2" HorizontalAlignment="Center"
-                                 Width="70" TextChanged="tbBaulast2_TextChanged" >21504
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
+                        <TextBlock  >Baulast-Nr:</TextBlock>
+                            <TextBox x:Name="tbBaulast2" HorizontalAlignment="Center"
+                                 Width="70" TextChanged="tbBaulast2_TextChanged" >
 
-                        </TextBox>
+                            </TextBox>
                     </StackPanel>
                     <Button Name="btnBaulastdisplay" Margin="5" Click="btnBaulastdisplay_Click"
                         IsEnabled="False">Baulast anzeigen

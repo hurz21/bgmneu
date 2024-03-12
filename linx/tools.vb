@@ -11,6 +11,7 @@ Module tools
     Public srv_unc_path As String = "\\gis\gdvell"
     'Public srv_unc_path As String = "\\gis\d$"
     Public gisexe As String = "C:\kreisoffenbach\mgis\mgis.exe"
+    'Public bplanexe As String = "C:\kreisoffenbach\bplankat\bplaninternet.exe"
     Public bgmVersion As String = My.Resources.BuildDate.Trim.Replace(vbCrLf, "")
     Public Property baulastenoutDir As String = "c:\baulastenout"
     Public Property wkt As String = ""

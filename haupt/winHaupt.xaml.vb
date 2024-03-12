@@ -3,6 +3,9 @@
 Public Class winHaupt
     Private istgeladen As Boolean = False
     Private eigentuemerText As String = ""
+    Private lastPDF As String = ""
+    Private baulastnr As String = ""
+    Public fst As New clsFlurstueck
     Sub New()
         InitializeComponent()
     End Sub
@@ -20,6 +23,7 @@ Public Class winHaupt
         setLogfile(logfile) : l("Start " & Now) : l("mgisversion:" & bgmVersion)
         initdb()
         Title = "BGM " & " V.: " & bgmVersion
+        istgeladen = True
     End Sub
 
     Private Shared Function isAutho() As Boolean
@@ -130,7 +134,22 @@ Public Class winHaupt
         eigentuemerText = kurz & toolsEigentuemer.geteigentuemertext(tools.FSTausGISListe)
         If eigentuemerText.Length > 1 Then
             btnEigentuemer.IsEnabled = True
-            btnBaulast4FST.IsEnabled = True
+            'btnBaulast4FST.IsEnabled = True
+
+            baulastnr = getBaulastNr(tools.FSTausGISListe(0))
+            If Not IsNumeric(baulastnr) Then
+                tbBaulast2.Text = "keine BL"
+                lastPDF = ""
+                btnBaulastdisplay.IsEnabled = False
+                tbFlurstueckDisplay.Text = tbFlurstueckDisplay.Text & Environment.NewLine &
+                     "Keine Baulast gefunden."
+            Else
+
+                tbBaulast2.Text = baulastnr
+                btnBaulastdisplay.IsEnabled = True
+                tbFlurstueckDisplay.Text = tbFlurstueckDisplay.Text & Environment.NewLine &
+                   "BaulastNr: " & baulastnr
+            End If
         End If
     End Sub
     Private Sub btnEigentuemer_Click(sender As Object, e As RoutedEventArgs)
@@ -139,19 +158,24 @@ Public Class winHaupt
         fst.ShowDialog()
     End Sub
 
-    Private Sub btnBaulast4FST_Click(sender As Object, e As RoutedEventArgs)
-
-    End Sub
 
     Private Sub btnBaulastdisplay_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
+        'If tbBaulast2.Text.Length < 1 Or (Not IsNumeric(tbBaulast2.Text.Trim)) Then
+        '    MessageBox.Show("Sie sollten zuerst eine BaulastNummer eingeben!")
+        '    Exit Sub
+        'End If
+        'If lastPDF.Length < 1 Then
         MessageBox.Show("Es werden 2 Fenster angezeigt. Das " & Environment.NewLine &
-                        " 1. Fenster zeigt allg. Infos zur Baulast und das" & Environment.NewLine &
-                        " 2. Fenster zeigt die PDF zur Baulast" & Environment.NewLine & Environment.NewLine & Environment.NewLine &
-                        "Sie können die Baulast-PDF mit 'speichern unter...'  abspeichern.", "Baulast ansehen",
-                        MessageBoxButton.OK, MessageBoxImage.Information)
-        Dim neu As New winDetail((tbblnr.Text), True) ' 0=modus neu
-        neu.ShowDialog()
+               " 1. Fenster zeigt allg. Infos zur Baulast und das" & Environment.NewLine &
+               " 2. Fenster zeigt die PDF zur Baulast" & Environment.NewLine & Environment.NewLine & Environment.NewLine &
+               "Sie können die Baulast-PDF mit 'speichern unter...'  abspeichern.", "Baulast ansehen",
+               MessageBoxButton.OK, MessageBoxImage.Information)
+            Dim neu As New winDetail((tbBaulast2.Text), True) ' 0=modus neu
+            neu.ShowDialog()
+        'Else
+        '    Process.Start(lastPDF)
+        'End If
     End Sub
 
     Private Sub tbBaulast2_TextChanged(sender As Object, e As TextChangedEventArgs)
@@ -161,4 +185,36 @@ Public Class winHaupt
             btnBaulastdisplay.IsEnabled = True
         End If
     End Sub
+    Private Sub btnBaulast4FST_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+
+    End Sub
+
+    Private Function getBaulastNr(fst As clsFlurstueck) As String
+        'tools.FSTausGISListe
+        If istgeladen Then
+            Dim hinweis As String = ""
+            fstREC.mydb.SQL = "select jahr_blattnr,tiff from " & srv_schema & "." & srv_tablename &
+             " where gemcode = '" & fst.gemcode & "'" &
+             " and flur='" & fst.flur & "'" &
+             " and zaehler='" & fst.zaehler & "'" &
+             " and nenner='" & fst.nenner & "'"
+            l(fstREC.mydb.SQL)
+            hinweis = fstREC.getDataDT()
+            If fstREC.dt.Rows.Count < 1 Then
+                Return "keine BL"
+                'tbBaulast2.Text = "keine BL"
+                'lastPDF = ""
+                'btnBaulastdisplay.IsEnabled = False
+            Else
+                'tbBaulast2.Text = fstREC.dt.Rows(0).Item(0).ToString.Trim
+                lastPDF = fstREC.dt.Rows(0).Item(1).ToString.Trim
+                lastPDF = lastPDF.ToLower.Replace(".tiff", ".pdf")
+                lastPDF = lastPDF.ToLower.Replace(".tif", ".pdf")
+                Return fstREC.dt.Rows(0).Item(0).ToString.Trim
+                'btnBaulastdisplay.IsEnabled = True
+            End If
+
+        End If
+    End Function
 End Class
