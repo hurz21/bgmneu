@@ -330,8 +330,8 @@ Public Class clsProBGTools
         dt = New DataTable
         Try
             l(" MOD getbalist2 anfang")
-            'Dim host = "kh-w-sql02" : Dim schema = "Probaug" : Dim dbuser = "sgis" : Dim dbpw = " WinterErschranzt.74"
-            Dim host = "kh-w-sql02" : Dim schema = "prosozbau" : Dim dbuser = "sgis" : Dim dbpw = " WinterErschranzt.74"
+            'Dim host = "kh-w-sql02" : Dim schema = "Probaug" : Dim dbuser = "sgis" : Dim dbpw = "Grunt8-Cornhusk-Reporter"
+            Dim host = "kh-w-sql02" : Dim schema = "prosozbau" : Dim dbuser = "sgis" : Dim dbpw = "Grunt8-Cornhusk-Reporter"
             Dim conbuil As New SqlClient.SqlConnectionStringBuilder
             Dim v = "Data Source=" & host & ";User ID=" & dbuser & ";Password=" & dbpw & ";" +
                 "Initial Catalog=" & schema & ";"

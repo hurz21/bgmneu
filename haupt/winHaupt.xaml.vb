@@ -28,7 +28,7 @@ Public Class winHaupt
 
     Private Shared Function isAutho() As Boolean
         'Return False
-        Return Environment.UserName.ToLower = "storcksdieck_a" Or
+        Return Environment.UserName.ToLower = "benes_c" Or
                 Environment.UserName.ToLower = "hartmann_s" Or
                 Environment.UserName.ToLower = "briese_j" Or
                 Environment.UserName.ToLower = "feinen_j" Or

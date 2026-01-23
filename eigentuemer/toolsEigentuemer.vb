@@ -9,7 +9,7 @@ Public Class toolsEigentuemer
             l(" MOD initMssql anfang")
             paradigmaMsql.mydb = New clsDatenbankZugriff
             paradigmaMsql.mydb.Host = mssqlhost
-            paradigmaMsql.mydb.username = "sgis" : paradigmaMsql.mydb.password = "WinterErschranzt.74"
+            paradigmaMsql.mydb.username = "sgis" : paradigmaMsql.mydb.password = "Grunt8-Cornhusk-Reporter"
             paradigmaMsql.mydb.Schema = "Paradigma"
             paradigmaMsql.mydb.Tabelle = "" : paradigmaMsql.mydb.dbtyp = "sqls"
             l(" MOD initMssql ende")
