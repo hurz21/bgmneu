@@ -4,11 +4,22 @@ Imports Npgsql
 Module tools
     Public genese As Integer = 1
     Public range As New clsRange
-    Public srv_host_web As String = "http://gis.kreis-of.local"
-    Public srv_host As String = "gis"
+
+    'die alte config mit postgis
+    'Public srv_host_web As String = "http://gis.kreis-of.local"
+    'Public srv_host As String = "gis"
+    'Public srv_schema As String = "paradigma_userdata"
+    'Public srv_subdirBaulsten As String = "paradigmacache/baulasten"
+    'Public srv_unc_path As String = "\\gis\gdvell"
+
+    'neu ingrada
+    'SELECT * FROM [LKOF_Bearb].[dbo].[tbl_mdat_datensatz] where kategorie_guid='88AFE39F-78FC-4053-BE6D-315E3745CF45'    '
+    Public srv_host_web As String = "https://gis.kreis-of.de/LKOF/asp/main.asp"
+    Public srv_host As String = "KH-W-INGRADA"
     Public srv_schema As String = "paradigma_userdata"
     Public srv_subdirBaulsten As String = "paradigmacache/baulasten"
     Public srv_unc_path As String = "\\gis\gdvell"
+
     'Public srv_unc_path As String = "\\gis\d$"
     Public gisexe As String = "C:\kreisoffenbach\mgis\mgis.exe"
     'Public bplanexe As String = "C:\kreisoffenbach\bplankat\bplaninternet.exe"
@@ -41,7 +52,7 @@ Module tools
     Public katasterGem(35) As String
     Public rawList As New List(Of clsBaulast)
     Public list4Geloscht As New List(Of clsBaulast)
-    Public fstREC As New clsDBspecPG
+    Public fstREC As New clsDBspecMSSQL
     Public anzahltiff, anzahl_dateiexitiert, anzahl_blattNrIst0, anzahlKatasterFormellOK, anzahlGeloschte, vierergeloescht, anzahl_mitSerial As Integer
     Public enc As System.Text.Encoding = System.Text.Encoding.GetEncoding(1252)
     Sub setLogfile(logfile As String)
@@ -66,11 +77,21 @@ Module tools
     End Sub
 
     Sub initdb()
+        'Dim cstring As String
+        'cstring = "Server=KH-W-INGRADA;Database=LKOF;User=Ingrada;Pwd=Starry-Footless6-Mashing-Backboned;"
+        'myconn = New SqlConnection(cstring)
         fstREC.mydb = New clsDatenbankZugriff
+
         fstREC.mydb.Host = tools.srv_host
-        fstREC.mydb.username = "postgres" : fstREC.mydb.password = "lkof4"
-        fstREC.mydb.Schema = "postgis20"
-        fstREC.mydb.Tabelle = "flurkarte.basis_f" : fstREC.mydb.dbtyp = "postgis"
+        fstREC.mydb.username = "Ingrada" : fstREC.mydb.password = "Starry-Footless6-Mashing-Backboned"
+        fstREC.mydb.Schema = "LKOF"
+        'fstREC.mydb.Tabelle = "flurkarte.basis_f" : fstREC.mydb.dbtyp = "postgis"
+
+
+        'fstREC.mydb.Host = tools.srv_host
+        'fstREC.mydb.username = "postgres" : fstREC.mydb.password = "lkof4"
+        'fstREC.mydb.Schema = "postgis20"
+        'fstREC.mydb.Tabelle = "flurkarte.basis_f" : fstREC.mydb.dbtyp = "postgis"
         l("initdb  ende")
         '#If DEBUG Then
         '        fstREC.mydb.Host = "localhost"
@@ -947,43 +968,43 @@ Module tools
         Return basis
     End Function
 
-    Sub write2postgis(lok As clsBaulast, ByRef erfolg As Boolean, ByRef sql As String,
-                      coordinatesystemNumber As String, datei As String, datei2 As String,
-                      genese As Integer, outputTablename As String)
-        l("write2postgis nichtverwendet " & tools.srv_tablename)
-        l("write2postgis verwendet " & outputTablename)
+    'Sub write2postgis(lok As clsBaulast, ByRef erfolg As Boolean, ByRef sql As String,
+    '                  coordinatesystemNumber As String, datei As String, datei2 As String,
+    '                  genese As Integer, outputTablename As String)
+    '    l("write2postgis nichtverwendet " & tools.srv_tablename)
+    '    l("write2postgis verwendet " & outputTablename)
 
-        Try
-            sql = "INSERT INTO " & tools.srv_schema & "." & outputTablename & " " &
-                         "(geom,fs,kennzeichen1,baulastnr,jahr_blattnr,bauort,gueltig," &
-                         "datum,flur,flurstueck,zaehler,nenner,gefundenin,tiff,gemeinde,gemarkung,gemcode,genese,tiff2) " &
-                         "VALUES( ST_GeomFromText('" & lok.serial & "'," & coordinatesystemNumber & "),'" &
-                            lok.katFST.FS & "','" &
-                            lok.status.Trim & "','" &
-                            lok.baulastnr.Trim & "','" &
-                            lok.blattnr.Trim & "','" &
-                            lok.bauortNr.Trim & "','" &
-                            lok.gueltig.Trim & "','" &
-                            lok.datum.Trim & "','" &
-                            lok.katFST.flur & "','" &
-                            lok.katFST.fstueckKombi.Trim & "','" &
-                            lok.katFST.zaehler & "','" &
-                            lok.katFST.nenner & "','" &
-                            lok.gefundenIn & "','" &
-                            datei & "','" &
-                            lok.gemeindeText & "','" &
-                            lok.probaugNotationFST.gemarkungstext & "','" &
-                            lok.katFST.gemcode & "','" &
-                            genese & "','" &
-                            datei2 & "')"
-            Dim dtRBplus As New DataTable
-            erfolg = sqlausfuehren(sql, fstREC.mydb, dtRBplus)
-            l("write2postgis ende")
-        Catch ex As Exception
-            l("fehler in write2postgis" & ex.ToString)
+    '    Try
+    '        sql = "INSERT INTO " & tools.srv_schema & "." & outputTablename & " " &
+    '                     "(geom,fs,kennzeichen1,baulastnr,jahr_blattnr,bauort,gueltig," &
+    '                     "datum,flur,flurstueck,zaehler,nenner,gefundenin,tiff,gemeinde,gemarkung,gemcode,genese,tiff2) " &
+    '                     "VALUES( ST_GeomFromText('" & lok.serial & "'," & coordinatesystemNumber & "),'" &
+    '                        lok.katFST.FS & "','" &
+    '                        lok.status.Trim & "','" &
+    '                        lok.baulastnr.Trim & "','" &
+    '                        lok.blattnr.Trim & "','" &
+    '                        lok.bauortNr.Trim & "','" &
+    '                        lok.gueltig.Trim & "','" &
+    '                        lok.datum.Trim & "','" &
+    '                        lok.katFST.flur & "','" &
+    '                        lok.katFST.fstueckKombi.Trim & "','" &
+    '                        lok.katFST.zaehler & "','" &
+    '                        lok.katFST.nenner & "','" &
+    '                        lok.gefundenIn & "','" &
+    '                        datei & "','" &
+    '                        lok.gemeindeText & "','" &
+    '                        lok.probaugNotationFST.gemarkungstext & "','" &
+    '                        lok.katFST.gemcode & "','" &
+    '                        genese & "','" &
+    '                        datei2 & "')"
+    '        Dim dtRBplus As New DataTable
+    '        erfolg = sqlausfuehren(sql, fstREC.mydb, dtRBplus)
+    '        l("write2postgis ende")
+    '    Catch ex As Exception
+    '        l("fehler in write2postgis" & ex.ToString)
 
-        End Try
-    End Sub
+    '    End Try
+    'End Sub
     Sub createDir(targetroot As String)
         Try
             l(" createDir ---------------------- anfang" & targetroot)
@@ -997,77 +1018,77 @@ Module tools
         End Try
     End Sub
 
-    Private Sub makeConnection(ByVal host As String, datenbank As String, ByVal dbuser As String, ByVal dbpw As String, ByVal dbport As String)
-        Dim csb As New NpgsqlConnectionStringBuilder
-        Try
-            l("makeConnection")
-            'If String.IsNullOrEmpty(mydb.ServiceName) Then
-            'klassisch
-            csb.Host = host
-            ' csb. = mydb.Schema
-            csb.UserName = dbuser
-            csb.Password = dbpw
-            csb.Database = datenbank
-            csb.Port = CInt(dbport)
-            csb.Pooling = False
-            csb.MinPoolSize = 1
-            csb.MaxPoolSize = 20
-            csb.Timeout = 15
-            csb.SslMode = SslMode.Disable
-            myconn = New NpgsqlConnection(csb.ConnectionString)
-            l("makeConnection fertig " & csb.ConnectionString)
-        Catch ex As Exception
-            l("fehler in makeConnection" & ex.ToString)
-        End Try
-    End Sub
+    'Private Sub makeConnection(ByVal host As String, datenbank As String, ByVal dbuser As String, ByVal dbpw As String, ByVal dbport As String)
+    '    Dim csb As New NpgsqlConnectionStringBuilder
+    '    Try
+    '        l("makeConnection")
+    '        'If String.IsNullOrEmpty(mydb.ServiceName) Then
+    '        'klassisch
+    '        csb.Host = host
+    '        ' csb. = mydb.Schema
+    '        csb.UserName = dbuser
+    '        csb.Password = dbpw
+    '        csb.Database = datenbank
+    '        csb.Port = CInt(dbport)
+    '        csb.Pooling = False
+    '        csb.MinPoolSize = 1
+    '        csb.MaxPoolSize = 20
+    '        csb.Timeout = 15
+    '        csb.SslMode = SslMode.Disable
+    '        myconn = New NpgsqlConnection(csb.ConnectionString)
+    '        l("makeConnection fertig " & csb.ConnectionString)
+    '    Catch ex As Exception
+    '        l("fehler in makeConnection" & ex.ToString)
+    '    End Try
+    'End Sub
 
 
-    Public myconn As NpgsqlConnection
+    'Public myconn As NpgsqlConnection
 
 
-    Function sqlausfuehren(sql As String, Postgis_MYDB As clsDatenbankZugriff, tempdt As DataTable) As Boolean
-        '  ini_PGREC(tablename)
-        makeConnection(Postgis_MYDB.Host, Postgis_MYDB.Schema, Postgis_MYDB.username, Postgis_MYDB.password, "5432")
-        l("in sqlausfuehren")
-        l(sql)
-        Try
-            myconn.Open()
-            Dim com As New NpgsqlCommand(sql, myconn)
-            Dim da As New NpgsqlDataAdapter(com)
-            'da.MissingSchemaAction = MissingSchemaAction.AddWithKey
-            ' dtRBplus = New DataTable
-            Dim _mycount = da.Fill(tempdt)
-            myconn.Close()
-            myconn.Dispose()
-            com.Dispose()
-            da.Dispose()
-            l("sqlausfuehren fertig")
-            Return True
-        Catch ex As Exception
-            l("fehler in sqlausfuehren: " & ex.ToString)
-            Return False
-        End Try
-    End Function
+    'Function sqlausfuehren(sql As String, Postgis_MYDB As clsDatenbankZugriff, tempdt As DataTable) As Boolean
+    '    '  ini_PGREC(tablename)
+    '    makeConnection(Postgis_MYDB.Host, Postgis_MYDB.Schema, Postgis_MYDB.username, Postgis_MYDB.password, "5432")
+    '    l("in sqlausfuehren")
+    '    l(sql)
+    '    Try
+    '        myconn.Open()
+    '        Dim com As New NpgsqlCommand(sql, myconn)
+    '        Dim da As New NpgsqlDataAdapter(com)
+    '        'da.MissingSchemaAction = MissingSchemaAction.AddWithKey
+    '        ' dtRBplus = New DataTable
+    '        Dim _mycount = da.Fill(tempdt)
+    '        myconn.Close()
+    '        myconn.Dispose()
+    '        com.Dispose()
+    '        da.Dispose()
+    '        l("sqlausfuehren fertig")
+    '        Return True
+    '    Catch ex As Exception
+    '        l("fehler in sqlausfuehren: " & ex.ToString)
+    '        Return False
+    '    End Try
+    'End Function
 
 
-    Function getallTiffsinDB(temp As String, postgis_mydb As clsDatenbankZugriff, sql As String) As Boolean
-        Dim hinweis As String = ""
-        Try
-            l(" MOD istInHartmannDB anfang")
-            makeConnection(postgis_mydb.Host, postgis_mydb.Schema, postgis_mydb.username, postgis_mydb.password, "5432")
-            fstREC.mydb.SQL = sql  '   where lower(trim(tiff2))='" & temp.Trim.ToLower & "'"
-            l(fstREC.mydb.SQL)
-            hinweis = fstREC.getDataDT()
-            If fstREC.dt.Rows.Count < 1 Then
-                Return False
-            Else
-                Return True
-            End If
-            l(" MOD istInHartmannDB ende")
-            Return True
-        Catch ex As Exception
-            l("Fehler in istInHartmannDB: " & ex.ToString())
-            Return False
-        End Try
-    End Function
+    'Function getallTiffsinDB(temp As String, postgis_mydb As clsDatenbankZugriff, sql As String) As Boolean
+    '    Dim hinweis As String = ""
+    '    Try
+    '        l(" MOD istInHartmannDB anfang")
+    '        makeConnection(postgis_mydb.Host, postgis_mydb.Schema, postgis_mydb.username, postgis_mydb.password, "5432")
+    '        fstREC.mydb.SQL = sql  '   where lower(trim(tiff2))='" & temp.Trim.ToLower & "'"
+    '        l(fstREC.mydb.SQL)
+    '        hinweis = fstREC.getDataDT()
+    '        If fstREC.dt.Rows.Count < 1 Then
+    '            Return False
+    '        Else
+    '            Return True
+    '        End If
+    '        l(" MOD istInHartmannDB ende")
+    '        Return True
+    '    Catch ex As Exception
+    '        l("Fehler in istInHartmannDB: " & ex.ToString())
+    '        Return False
+    '    End Try
+    'End Function
 End Module

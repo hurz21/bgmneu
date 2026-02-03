@@ -17,27 +17,44 @@ Public Class toolsEigentuemer
             l("Fehler in initMssql: " & ex.ToString())
         End Try
     End Sub
-    Friend Shared Function geteigentuemertext(fSTausGISListe As List(Of clsFlurstueck)) As String
-        l(" MOD geteigentuemertext anfang")
-        Dim strLage, res, schnell As String
-        Dim aktfst As New clsFlurstueck
+    Friend Shared Function geteigentuemerText(fstkennzeichen As String) As String
+        Dim result As String
+        Dim sql = "SELECT     [Anrede],[akademischegrade],[name],[vorname],[wohnortstrasse],[wohnortplz]," &
+                " [wohnort],[geburtsdatum],[namenszusatz],[postfach],[wohnortland],[eigentuemerzusatz],[geburtsname]," &
+                " [nationalitaet],[adressherkunft],[wohnortortsteil],[postfachplz]  " &
+                "   FROM [LKOF].[dbo].[VW_lieg_eigentuemerGST_web] g, [LKOF].[dbo].[VW_lieg_eigentuemer_web] p" &
+                "   where p.guid= g.person_guid " &
+                "   and g.flurstueckskennzeichen='060729-010-00197/0002.000'  "
         Try
-            initMssql()
-            For Each fsd As clsFlurstueck In fSTausGISListe
-                strLage = fsd.FS & ": " & getlage(fsd.FS)
-                l(strLage)
-                schnell = getSchnellbatchEigentuemer(fsd.FS)
-                l(schnell)
-                res = res & Environment.NewLine & strLage & Environment.NewLine &
-                  schnell & strLage & Environment.NewLine
-            Next
-            l(" MOD geteigentuemertext ende " & res)
-            Return res
+
+
+
+            Return result
         Catch ex As Exception
-            l("Fehler in geteigentuemertext: " & ex.ToString())
-            Return "fehler geteigentuemertext"
+            l("Fehler in initMssql: " & ex.ToString())
         End Try
     End Function
+    'Friend Shared Function geteigentuemertext(fSTausGISListe As List(Of clsFlurstueck)) As String
+    '    l(" MOD geteigentuemertext anfang")
+    '    Dim strLage, res, schnell As String
+    '    Dim aktfst As New clsFlurstueck
+    '    Try
+    '        initMssql()
+    '        For Each fsd As clsFlurstueck In fSTausGISListe
+    '            strLage = fsd.FS & ": " & getlage(fsd.FS)
+    '            l(strLage)
+    '            schnell = getSchnellbatchEigentuemer(fsd.FS)
+    '            l(schnell)
+    '            res = res & Environment.NewLine & strLage & Environment.NewLine &
+    '              schnell & strLage & Environment.NewLine
+    '        Next
+    '        l(" MOD geteigentuemertext ende " & res)
+    '        Return res
+    '    Catch ex As Exception
+    '        l("Fehler in geteigentuemertext: " & ex.ToString())
+    '        Return "fehler geteigentuemertext"
+    '    End Try
+    'End Function
 
     Shared Function getSchnellbatchEigentuemer(fS As String) As String
         l(" MOD getSchnellbatchEigentuemer anfang")

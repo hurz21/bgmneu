@@ -112,13 +112,13 @@
                         <Border BorderBrush="Black" BorderThickness="1" Margin="5" HorizontalAlignment="Right">
 
                             <StackPanel>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
+                                <!--<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
 
                                     <TextBlock Margin="2">Aus dem GIS</TextBlock>
                                     <Button x:Name="btndigit" Click="btndigit_Click" Content=" digitalisieren "
                                             Background="red" Height="15" 
                                             Padding="-2" Margin="5" HorizontalAlignment="Right"/>
-                                </StackPanel>
+                                </StackPanel>-->
                                 <DataGrid  x:Name="dgAusGIS"   ItemsSource="{Binding ''}"    Margin="5"                                             
                                               RowStyle="{StaticResource dgRowStyleRB}"                                              
                                               ColumnHeaderStyle="{StaticResource dgHeaderStyle}"    
@@ -142,11 +142,11 @@
                             <Button Name="btnGISeintraegeLoeschen" Click="btnGISeintraegeLoeschen_Click" 
                                     Content="GIS-Einträge löschen" Margin="5"/>
                             <Border BorderBrush="Black" BorderThickness="1" Margin="5">
-                                <StackPanel>
+                                <!--<StackPanel>
                                     <Button Name="btnVonProbaugNachGISkopieren" Click="btnVonProbaugNachGISkopieren_Click"
                                 Content="Von Probaug nach GIS kopieren" Margin="5"/>
-                                    <!--<CheckBox Name="cbAuchUnguetige" IsChecked="False" Margin="5">auch ungültige</CheckBox>-->
-                                </StackPanel>
+                                    --><!--<CheckBox Name="cbAuchUnguetige" IsChecked="False" Margin="5">auch ungültige</CheckBox>--><!--
+                                </StackPanel>-->
                             </Border>
 
                             <Button Name="btnZumGIS" Click="btnZumGIS_Click" Content="im GIS zeigen" Margin="5"/>
@@ -198,7 +198,7 @@
 
                             </StackPanel>
                             <Canvas  x:Name="VGmapCanvas"      Panel.ZIndex="10"   Margin="0,0,0,0" 
-                                 Width="350" Height="350" 
+                                 Width="350" Height="350" Visibility="Collapsed"
                                       HorizontalAlignment="Left" VerticalAlignment="Top">
 
                                 <Image Name="VGcanvasImage"  Width="350" Height="350" Margin="0,0,0,0" 

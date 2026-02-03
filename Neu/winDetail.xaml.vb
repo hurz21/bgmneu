@@ -1,4 +1,5 @@
-﻿Imports Org.BouncyCastle.Asn1.Esf
+﻿Imports System.Security.Policy
+Imports Org.BouncyCastle.Asn1.Esf
 
 Public Class winDetail
     Property VGmyBitmapImage As New BitmapImage
@@ -28,7 +29,7 @@ Public Class winDetail
         e.Handled = True
         Dim abbruch As Boolean = False
         l("windetail loaded anfang")
-        btndigit.Visibility = Visibility.Collapsed
+        'btndigit.Visibility = Visibility.Collapsed
 #If DEBUG Then
         If tbBaulastNr.Text.IsNothingOrEmpty Then
             tbBaulastNr.Text = "2026"
@@ -41,23 +42,23 @@ Public Class winDetail
                 End
             End If
             refreshGIS(CInt(tbBaulastNr.Text))
-            refreshTIFFbox()
+            'refreshTIFFbox()
             'hier wird firstrange calculiert
             gidInString = clsGIStools.bildegidstring()
-            range = clsGIStools.calcNewRange(gidInString)
-            If Not range.istBrauchbar Then
-                btndigit.Visibility = Visibility.Visible
-                'If My.Computer.Clipboard.ContainsText Then
-                '    tools.wkt = My.Computer.Clipboard.GetText()
-                '    If tools.wkt.Trim.ToLower.StartsWith("polygon") Then
-                '        btndigit.ToolTip = "Klick = Übernehmen dieser Geometrie als temporäres Flurstück !" & tools.wkt
-                '    Else
-                '        btndigit.ToolTip = "Das ist keine gültige Geometrie: " & tools.wkt
-                '    End If
-                'Else
-                '    MessageBox.Show("Sie können ein Flurstück selber markieren ! Näheres bei Frau Hartmann. ")
-                'End If
-            End If
+            'range = clsGIStools.calcNewRange(gidInString)
+            'If Not range.istBrauchbar Then
+            '    'btndigit.Visibility = Visibility.Visible
+            '    'If My.Computer.Clipboard.ContainsText Then
+            '    '    tools.wkt = My.Computer.Clipboard.GetText()
+            '    '    If tools.wkt.Trim.ToLower.StartsWith("polygon") Then
+            '    '        btndigit.ToolTip = "Klick = Übernehmen dieser Geometrie als temporäres Flurstück !" & tools.wkt
+            '    '    Else
+            '    '        btndigit.ToolTip = "Das ist keine gültige Geometrie: " & tools.wkt
+            '    '    End If
+            '    'Else
+            '    '    MessageBox.Show("Sie können ein Flurstück selber markieren ! Näheres bei Frau Hartmann. ")
+            '    'End If
+            'End If
             refreshMap()
             tbEigentuemer.Text = toolsEigentuemer.geteigentuemertext(tools.FSTausGISListe)
         End If
@@ -181,10 +182,10 @@ Public Class winDetail
         'clstools.saveImageasThumbnail2(clstools.auswahlBplan, clstools.BPLcachedir, VGmyBitmapImage)
     End Sub
     Private Sub refreshMap()
-        Dim url As String = mapTools.genPreviewURL(tools.range, CInt(VGmapCanvas.Width), CInt(VGmapCanvas.Height), "flurkarte", 10, tools.gidInString)
-        setPreviewImageFromHttpURL(url)
-        Canvas.SetTop(VGcanvasImage, 0)
-        Canvas.SetLeft(VGcanvasImage, 0)
+        'Dim url As String = mapTools.genPreviewURL(tools.range, CInt(VGmapCanvas.Width), CInt(VGmapCanvas.Height), "flurkarte", 10, tools.gidInString)
+        'setPreviewImageFromHttpURL(url)
+        'Canvas.SetTop(VGcanvasImage, 0)
+        'Canvas.SetLeft(VGcanvasImage, 0)
     End Sub
 
     Sub refreshProbaug(baulastblattnr As Integer, sqlquelle As String, ByRef abbruch As Boolean)
@@ -263,227 +264,302 @@ Public Class winDetail
         refreshMap()
     End Sub
 
-    Private Sub btnVonProbaugNachGISkopieren_Click(sender As Object, e As RoutedEventArgs)
-        e.Handled = True
-        setzeQuellUndTargetTabelle()
-        IO.Directory.CreateDirectory(tools.baulastenoutDir)
-        getAllSerials(anzahl_mitSerial, tools.baulastenoutDir & "\Baulasten_ohneAktFlurstueck" & Now.ToString("yyyyMMddhhmm") & ".csv")
-        If anzahl_mitSerial < 1 Then
-            MsgBox("In der DB wurden KEINE geometrien gefunden!!!! " & vbNewLine &
-                   "Bitte per hand nachdigitalisieren")
-            btndigit.Visibility = Visibility.Visible
-        Else
-            ___showdispatcher("  BL mit Geometrie: " & anzahl_mitSerial & Environment.NewLine)
-            ___showdispatcher("BL werden in die DB geschrieben ...  bitte warten " & Environment.NewLine)
+    'Private Sub btnVonProbaugNachGISkopieren_Click(sender As Object, e As RoutedEventArgs)
+    '    e.Handled = True
+    '    setzeQuellUndTargetTabelle()
+    '    IO.Directory.CreateDirectory(tools.baulastenoutDir)
+    '    getAllSerials(anzahl_mitSerial, tools.baulastenoutDir & "\Baulasten_ohneAktFlurstueck" & Now.ToString("yyyyMMddhhmm") & ".csv")
+    '    If anzahl_mitSerial < 1 Then
+    '        MsgBox("In der DB wurden KEINE geometrien gefunden!!!! " & vbNewLine &
+    '               "Bitte per hand nachdigitalisieren")
+    '        btndigit.Visibility = Visibility.Visible
+    '    Else
+    '        ___showdispatcher("  BL mit Geometrie: " & anzahl_mitSerial & Environment.NewLine)
+    '        ___showdispatcher("BL werden in die DB geschrieben ...  bitte warten " & Environment.NewLine)
 
-            'writeallWithSerials(CBool(cbAuchUnguetige.IsChecked), 1, targetGISTabelle) '1=aus katasterdaten übernommen
-            writeallWithSerials(False, 1, targetGISTabelle) '1=aus katasterdaten übernommen
+    '        'writeallWithSerials(CBool(cbAuchUnguetige.IsChecked), 1, targetGISTabelle) '1=aus katasterdaten übernommen
+    '        writeallWithSerials(False, 1, targetGISTabelle) '1=aus katasterdaten übernommen
 
-            ___showdispatcher("  ausschreiben fertig: " & Environment.NewLine)
-            refreshGIS(CInt(tbBaulastNr.Text))
-            Dim gidstring As String = clsGIStools.bildegidstring()
-            range = clsGIStools.calcNewRange(gidstring)
-            refreshMap()
-        End If
-    End Sub
-    Sub writeallWithSerials(auchUngueltige As Boolean, genese As Integer, outputTablename As String)
-        Dim iz As Integer = 0
-        Dim erfolg As Boolean
-        Dim sql As String
-        Dim coordinatesystemNumber As String = "25832" '31467"'25832lt mapfile
+    '        ___showdispatcher("  ausschreiben fertig: " & Environment.NewLine)
+    '        refreshGIS(CInt(tbBaulastNr.Text))
+    '        Dim gidstring As String = clsGIStools.bildegidstring()
+    '        range = clsGIStools.calcNewRange(gidstring)
+    '        refreshMap()
+    '    End If
+    'End Sub
+    'Sub writeallWithSerials(auchUngueltige As Boolean, genese As Integer, outputTablename As String)
+    '    Dim iz As Integer = 0
+    '    Dim erfolg As Boolean
+    '    Dim sql As String
+    '    Dim coordinatesystemNumber As String = "25832" '31467"'25832lt mapfile
 
-        Dim datei As String = ""
-        Dim datei2 As String = ""
-        Try
-            l("writeallWithSerials---------------------- anfang")
-            For Each lok As clsBaulast In rawList
-                Console.WriteLine("getAllSerials " & iz)
-                If lok.blattnr = "8001" Then
-                    Debug.Print("")
-                End If
-                If lok.blattnr = "90764" Then
-                    Debug.Print("")
-                End If
-                If Not lok.katasterFormellOK Or lok.geloescht Then Continue For
-                If lok.serial.IsNothingOrEmpty Then Continue For
-                iz += 1
-                datei = lok.datei.Replace(srv_unc_path & "\", "").Replace("\", "/")
-                datei = datei.Replace("flurkarte.basis_f", "flurkarte.aktuell")
-                datei = datei.Replace("h_flurkarte.j", "hist.Flurkarte.")
-                datei = datei.Replace("_flurstueck_f", "")
-                datei = datei.Replace("_basis_f", "")
-                datei2 = datei
-                If lok.dateiExistiert Then
-                Else
-                    datei = "KeineDaten.htm"
-                End If
-                ___showdispatcher(" db ausschreiben  " & iz & " (" & anzahl_mitSerial & ")" & Environment.NewLine)
-                If lok.geloescht Then Continue For
+    '    Dim datei As String = ""
+    '    Dim datei2 As String = ""
+    '    Try
+    '        l("writeallWithSerials---------------------- anfang")
+    '        For Each lok As clsBaulast In rawList
+    '            Console.WriteLine("getAllSerials " & iz)
+    '            If lok.blattnr = "8001" Then
+    '                Debug.Print("")
+    '            End If
+    '            If lok.blattnr = "90764" Then
+    '                Debug.Print("")
+    '            End If
+    '            If Not lok.katasterFormellOK Or lok.geloescht Then Continue For
+    '            If lok.serial.IsNothingOrEmpty Then Continue For
+    '            iz += 1
+    '            datei = lok.datei.Replace(srv_unc_path & "\", "").Replace("\", "/")
+    '            datei = datei.Replace("flurkarte.basis_f", "flurkarte.aktuell")
+    '            datei = datei.Replace("h_flurkarte.j", "hist.Flurkarte.")
+    '            datei = datei.Replace("_flurstueck_f", "")
+    '            datei = datei.Replace("_basis_f", "")
+    '            datei2 = datei
+    '            If lok.dateiExistiert Then
+    '            Else
+    '                datei = "KeineDaten.htm"
+    '            End If
+    '            ___showdispatcher(" db ausschreiben  " & iz & " (" & anzahl_mitSerial & ")" & Environment.NewLine)
+    '            If lok.geloescht Then Continue For
 
-                If auchUngueltige Then
-                    write2postgis(lok, erfolg, sql, coordinatesystemNumber, datei, datei2, genese, outputTablename)
-                Else
-                    If lok.gueltig.ToLower = "j" Then
-                        write2postgis(lok, erfolg, sql, coordinatesystemNumber, datei, datei2, genese, outputTablename)
-                    End If
-                End If
+    '            If auchUngueltige Then
+    '                write2postgis(lok, erfolg, sql, coordinatesystemNumber, datei, datei2, genese, outputTablename)
+    '            Else
+    '                If lok.gueltig.ToLower = "j" Then
+    '                    write2postgis(lok, erfolg, sql, coordinatesystemNumber, datei, datei2, genese, outputTablename)
+    '                End If
+    '            End If
 
 
-            Next
-            l("writeallWithSerials---------------------- ende")
-        Catch ex As Exception
-            l("Fehler in writeallWithSerials: " & ex.ToString())
-        End Try
-    End Sub
+    '        Next
+    '        l("writeallWithSerials---------------------- ende")
+    '    Catch ex As Exception
+    '        l("Fehler in writeallWithSerials: " & ex.ToString())
+    '    End Try
+    'End Sub
     Private Sub ___showdispatcher(v As String)
 
     End Sub
 
     Private Sub btnZumGIS_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
-        Dim gidstring As String = clsGIStools.bildegidstring()
-        range = clsGIStools.calcNewRange(gidstring)
+        Dim url As String
+        ' C:\kreisoffenbach\mgis\ingradaadapter.exe    suchmodus=flurstueck gemarkung="Hainhausen" flur="4" fstueck="387/1"
+        'For Each item As clsFlurstueck In tools.FSTausGISListe
+        '    'summe = summe & "," & item.gid
+        'Next
+        Dim flurstueckskennzeichen = flurstueckZuFKZ(tools.FSTausGISListe(0).gemcode.ToString,
+                                                     tools.FSTausGISListe(0).flur.ToString,
+                                                     tools.FSTausGISListe(0).zaehler.ToString,
+                                                     tools.FSTausGISListe(0).nenner.ToString)
 
-        Dim param, rangestring As String
 
-        Dim lu, ro As New myPoint
-        lu.X = range.xl
-        lu.Y = range.yl
-        ro.X = range.xh
-        ro.Y = range.yh
-        rangestring = clsGIStools.calcrangestring(lu, ro)
-        param = "modus=""bebauungsplankataster""  range=""" & rangestring & ""
-        Process.Start(tools.gisexe, param)
+        'url = makeurl("https://gis.kreis-of.de/LKOF/asp/main.asp?", flurstueckskennzeichen)
+        url = "https://gis.kreis-of.de/LKOF/extensions/logout.asp?removeLostSession=true"
+        'Process.Start(url)
+        Url = makeurl("https://gis.kreis-of.de/LKOF/asp/main.asp?", flurstueckskennzeichen)
+        l("url " & Url)
+        Process.Start(Url)
+        l(flurstueckskennzeichen)
+
+
+        'Dim gidstring As String = clsGIStools.bildegidstring()
+        'range = clsGIStools.calcNewRange(gidstring)
+
+        'Dim param, rangestring As String
+
+        'Dim lu, ro As New myPoint
+        'lu.X = range.xl
+        'lu.Y = range.yl
+        'ro.X = range.xh
+        'ro.Y = range.yh
+        'rangestring = clsGIStools.calcrangestring(lu, ro)
+        'param = "modus=""bebauungsplankataster""  range=""" & rangestring & ""
+        'Process.Start(tools.gisexe, param)
     End Sub
 
-    Private Sub dropped(sender As Object, e As DragEventArgs)
-        e.Handled = True
-        'droptiff(e)
-        dropPDF(e)
-    End Sub
-
-    Private Sub dropPDF(e As DragEventArgs)
-        Dim filenames As String()
-        Dim zuielname As String = ""
-        Dim endung As String = ".pdf"
-        Dim listeZippedFiles, listeNOnZipFiles, allFeiles As New List(Of String)
-        Dim titelVorschlag As String = ""
+    Private Function makeurl(v As String, results As String) As String
+        l("in makurl")
         Try
-            l(" MOD dropped anfang")
-            If e.Data.GetDataPresent(DataFormats.FileDrop) Then
-                filenames = CType(e.Data.GetData(DataFormats.FileDrop), String())
-            End If
-
-            If filenames(0).ToLower.EndsWith(".pdf") Then
-                endung = ".pdf"
-            End If
-            l(" MOD dropped 2")
-            If filenames(0).ToLower.EndsWith(endung) Then
-                l(" MOD dropped 3")
-                zuielname = IO.Path.Combine(srv_unc_path & "\fkat\baulasten", tools.FSTausPROBAUGListe(0).gemarkungstext.Trim & "\" & tbBaulastNr.Text.Trim & endung).ToLower.Trim
-                l(" MOD dropped 4 " & filenames(0).ToLower & " nach " & zuielname)
-                IO.File.Copy(filenames(0).ToLower, zuielname, True)
-                rawList(0).dateiExistiert = True
-                rawList(0).datei = zuielname
-                l(" MOD dropped 5")
-                'pdfdatei erzeugen
-                'clsTIFFtools.zerlegeMultipageTIFF(zuielname, tools.baulastenoutDir)
-                'refreshTIFFbox()
-                Dim erfolg As Boolean = clsGIStools.updateGISDB(tbBaulastNr.Text, zuielname, tools.FSTausPROBAUGListe(0).gemarkungstext.Trim, endung)
-                If erfolg Then
-                    Dim mesres As MessageBoxResult
-                    mesres = MessageBox.Show("Die tiff - Datei wurde erfolgreich ins GIS kopiert!" & Environment.NewLine &
-                                    "Ausserdem wurde die PDF-Datei erzeugt/erneuert." & Environment.NewLine &
-                                    "" & Environment.NewLine &
-                                    "Soll die Quelldatei gelöscht werden ? (J/N)" & Environment.NewLine &
-                                    " J - Löschen" & Environment.NewLine &
-                                    " N - bewahren " & Environment.NewLine,
-                                             "Quelldatei löschen?", MessageBoxButton.YesNo,
-                                                MessageBoxImage.Question, MessageBoxResult.Yes
-                                    )
-                    If mesres = MessageBoxResult.Yes Then
-                        If Not dateiLoeschen(filenames) Then
-                            MessageBox.Show("Datei liess sich nicht löschen. Haben Sie sie noch im Zugriff ? Abbruch!!")
-                        End If
-                    Else
-
-                    End If
-                Else
-                    MessageBox.Show("DB-Eintrag liess sich nicht erneuern. Bitte beim admin melden ? Abbruch!!")
-                End If
-
-
-            End If
-
-            l(" MOD dropped ende")
+            '&skipwelcome=true
+            v = v & "app=sp_lieg&obj=flu&fld=flurstueckskennzeichen&typ=string&val="
+            v = v & results & "&skipwelcome=true"
+            Return v
+            'https://gis.kreis-of.de/LKOF/asp/main.asp?app=sp_lieg&obj=flu&fld=flurstueckskennzeichen&typ=string&val=060729-005-00490/0000.000&skipwelcome=true
+            ' Die endung  .000  ist wichtig - sonst gehts nicht
         Catch ex As Exception
-            l("Fehler in dropped: " & zuielname & Environment.NewLine &
-              zuielname.Trim.ToLower & "   " & ex.ToString())
-            MessageBox.Show("Datei läßt sich nicht löschen. ")
+            l(ex.ToString)
+            Return "fehler in makeurl"
         End Try
-    End Sub
-    Private Sub droptiff(e As DragEventArgs)
-        Dim filenames As String()
-        Dim zuielname As String = ""
-        Dim endung As String = ".tiff"
-        Dim listeZippedFiles, listeNOnZipFiles, allFeiles As New List(Of String)
-        Dim titelVorschlag As String = ""
+    End Function
+    Private Function flurstueckZuFKZ(gemcode As String, flur As String, zaehler As String, nenner As String) As String
+        l("in flurstueckZuFKZ")
+        Dim fuell, fs2, _flur As String
+
+
+        'Dim gemcode As String
+        Dim result = "060"
         Try
-            l(" MOD dropped anfang")
-            If e.Data.GetDataPresent(DataFormats.FileDrop) Then
-                filenames = CType(e.Data.GetData(DataFormats.FileDrop), String())
-            End If
-            If filenames(0).ToLower.EndsWith(".tiff") Then
-                endung = ".tiff"
-            End If
-            If filenames(0).ToLower.EndsWith(".tif") Then
-                endung = ".tif"
-            End If
-            l(" MOD dropped 2")
-            If filenames(0).ToLower.EndsWith(".tiff") Or filenames(0).ToLower.EndsWith(".tif") Then
-                l(" MOD dropped 3")
-                zuielname = IO.Path.Combine(srv_unc_path & "\fkat\baulasten", tools.FSTausPROBAUGListe(0).gemarkungstext.Trim & "\" & tbBaulastNr.Text.Trim & ".tiff").ToLower.Trim
-                l(" MOD dropped 4 " & filenames(0).ToLower & " nach " & zuielname)
-                IO.File.Copy(filenames(0).ToLower, zuielname, True)
-                rawList(0).dateiExistiert = True
-                rawList(0).datei = zuielname
-                l(" MOD dropped 5")
-                'pdfdatei erzeugen
-                clsTIFFtools.zerlegeMultipageTIFF(zuielname, tools.baulastenoutDir)
-                refreshTIFFbox()
-                Dim erfolg As Boolean = clsGIStools.updateGISDB(tbBaulastNr.Text, zuielname, tools.FSTausPROBAUGListe(0).gemarkungstext.Trim, endung)
-                If erfolg Then
-                    Dim mesres As MessageBoxResult
-                    mesres = MessageBox.Show("Die tiff - Datei wurde erfolgreich ins GIS kopiert!" & Environment.NewLine &
-                                    "Ausserdem wurde die PDF-Datei erzeugt/erneuert." & Environment.NewLine &
-                                    "" & Environment.NewLine &
-                                    "Soll die Quelldatei gelöscht werden ? (J/N)" & Environment.NewLine &
-                                    " J - Löschen" & Environment.NewLine &
-                                    " N - bewahren " & Environment.NewLine,
-                                             "Quelldatei löschen?", MessageBoxButton.YesNo,
-                                                MessageBoxImage.Question, MessageBoxResult.Yes
-                                    )
-                    If mesres = MessageBoxResult.Yes Then
-                        If Not dateiLoeschen(filenames) Then
-                            MessageBox.Show("Datei liess sich nicht löschen. Haben Sie sie noch im Zugriff ? Abbruch!!")
-                        End If
-                    Else
+            'splitFstueckkombi(fstueck, zaehler, nenner)
+            l("zn " & zaehler & "_" & nenner)
+            'gemcode = clsFlurauswahl.getGemcode(gemarkung)
+            result = result & CInt(gemcode)
+            result = result & "-"
 
-                    End If
-                Else
-                    MessageBox.Show("DB-Eintrag liess sich nicht erneuern. Bitte beim admin melden ? Abbruch!!")
-                End If
+            fuell = "000"
+            fs2 = fuell.Substring(flur.ToString.Length) & flur
 
 
-            End If
+            result = result & fs2
+            result = result & "-"
 
-            l(" MOD dropped ende")
+            fuell = "00000"
+            fs2 = fuell.Substring(zaehler.ToString.Length) & zaehler
+
+            result = result & fs2
+            result = result & "/"
+
+            fuell = "0000"
+            fs2 = fuell.Substring(nenner.ToString.Length) & nenner
+
+            result = result & fs2
+            result = result & ".000"
+            Return result
+            '060729-005-00495/0001.000
+            '060729-012-00530/0008.000
+            '061301-026-00004/0001.000
         Catch ex As Exception
-            l("Fehler in dropped: " & zuielname & Environment.NewLine &
-              zuielname.Trim.ToLower & "   " & ex.ToString())
-            MessageBox.Show("Datei läßt sich nicht löschen. ")
+            l(ex.ToString)
+            Return "fehler in adresseZuFKZ"
         End Try
-    End Sub
+    End Function
+    'Private Sub dropped(sender As Object, e As DragEventArgs)
+    '    e.Handled = True
+    '    'droptiff(e)
+    '    dropPDF(e)
+    'End Sub
+
+    'Private Sub dropPDF(e As DragEventArgs)
+    '    Dim filenames As String()
+    '    Dim zuielname As String = ""
+    '    Dim endung As String = ".pdf"
+    '    Dim listeZippedFiles, listeNOnZipFiles, allFeiles As New List(Of String)
+    '    Dim titelVorschlag As String = ""
+    '    Try
+    '        l(" MOD dropped anfang")
+    '        If e.Data.GetDataPresent(DataFormats.FileDrop) Then
+    '            filenames = CType(e.Data.GetData(DataFormats.FileDrop), String())
+    '        End If
+
+    '        If filenames(0).ToLower.EndsWith(".pdf") Then
+    '            endung = ".pdf"
+    '        End If
+    '        l(" MOD dropped 2")
+    '        If filenames(0).ToLower.EndsWith(endung) Then
+    '            l(" MOD dropped 3")
+    '            zuielname = IO.Path.Combine(srv_unc_path & "\fkat\baulasten", tools.FSTausPROBAUGListe(0).gemarkungstext.Trim & "\" & tbBaulastNr.Text.Trim & endung).ToLower.Trim
+    '            l(" MOD dropped 4 " & filenames(0).ToLower & " nach " & zuielname)
+    '            IO.File.Copy(filenames(0).ToLower, zuielname, True)
+    '            rawList(0).dateiExistiert = True
+    '            rawList(0).datei = zuielname
+    '            l(" MOD dropped 5")
+    '            'pdfdatei erzeugen
+    '            'clsTIFFtools.zerlegeMultipageTIFF(zuielname, tools.baulastenoutDir)
+    '            'refreshTIFFbox()
+    '            Dim erfolg As Boolean = clsGIStools.updateGISDB(tbBaulastNr.Text, zuielname, tools.FSTausPROBAUGListe(0).gemarkungstext.Trim, endung)
+    '            If erfolg Then
+    '                Dim mesres As MessageBoxResult
+    '                mesres = MessageBox.Show("Die tiff - Datei wurde erfolgreich ins GIS kopiert!" & Environment.NewLine &
+    '                                "Ausserdem wurde die PDF-Datei erzeugt/erneuert." & Environment.NewLine &
+    '                                "" & Environment.NewLine &
+    '                                "Soll die Quelldatei gelöscht werden ? (J/N)" & Environment.NewLine &
+    '                                " J - Löschen" & Environment.NewLine &
+    '                                " N - bewahren " & Environment.NewLine,
+    '                                         "Quelldatei löschen?", MessageBoxButton.YesNo,
+    '                                            MessageBoxImage.Question, MessageBoxResult.Yes
+    '                                )
+    '                If mesres = MessageBoxResult.Yes Then
+    '                    If Not dateiLoeschen(filenames) Then
+    '                        MessageBox.Show("Datei liess sich nicht löschen. Haben Sie sie noch im Zugriff ? Abbruch!!")
+    '                    End If
+    '                Else
+
+    '                End If
+    '            Else
+    '                MessageBox.Show("DB-Eintrag liess sich nicht erneuern. Bitte beim admin melden ? Abbruch!!")
+    '            End If
+
+
+    '        End If
+
+    '        l(" MOD dropped ende")
+    '    Catch ex As Exception
+    '        l("Fehler in dropped: " & zuielname & Environment.NewLine &
+    '          zuielname.Trim.ToLower & "   " & ex.ToString())
+    '        MessageBox.Show("Datei läßt sich nicht löschen. ")
+    '    End Try
+    'End Sub
+    'Private Sub droptiff(e As DragEventArgs)
+    '    Dim filenames As String()
+    '    Dim zuielname As String = ""
+    '    Dim endung As String = ".tiff"
+    '    Dim listeZippedFiles, listeNOnZipFiles, allFeiles As New List(Of String)
+    '    Dim titelVorschlag As String = ""
+    '    Try
+    '        l(" MOD dropped anfang")
+    '        If e.Data.GetDataPresent(DataFormats.FileDrop) Then
+    '            filenames = CType(e.Data.GetData(DataFormats.FileDrop), String())
+    '        End If
+    '        If filenames(0).ToLower.EndsWith(".tiff") Then
+    '            endung = ".tiff"
+    '        End If
+    '        If filenames(0).ToLower.EndsWith(".tif") Then
+    '            endung = ".tif"
+    '        End If
+    '        l(" MOD dropped 2")
+    '        If filenames(0).ToLower.EndsWith(".tiff") Or filenames(0).ToLower.EndsWith(".tif") Then
+    '            l(" MOD dropped 3")
+    '            zuielname = IO.Path.Combine(srv_unc_path & "\fkat\baulasten", tools.FSTausPROBAUGListe(0).gemarkungstext.Trim & "\" & tbBaulastNr.Text.Trim & ".tiff").ToLower.Trim
+    '            l(" MOD dropped 4 " & filenames(0).ToLower & " nach " & zuielname)
+    '            IO.File.Copy(filenames(0).ToLower, zuielname, True)
+    '            rawList(0).dateiExistiert = True
+    '            rawList(0).datei = zuielname
+    '            l(" MOD dropped 5")
+    '            'pdfdatei erzeugen
+    '            clsTIFFtools.zerlegeMultipageTIFF(zuielname, tools.baulastenoutDir)
+    '            refreshTIFFbox()
+    '            Dim erfolg As Boolean = clsGIStools.updateGISDB(tbBaulastNr.Text, zuielname, tools.FSTausPROBAUGListe(0).gemarkungstext.Trim, endung)
+    '            If erfolg Then
+    '                Dim mesres As MessageBoxResult
+    '                mesres = MessageBox.Show("Die tiff - Datei wurde erfolgreich ins GIS kopiert!" & Environment.NewLine &
+    '                                "Ausserdem wurde die PDF-Datei erzeugt/erneuert." & Environment.NewLine &
+    '                                "" & Environment.NewLine &
+    '                                "Soll die Quelldatei gelöscht werden ? (J/N)" & Environment.NewLine &
+    '                                " J - Löschen" & Environment.NewLine &
+    '                                " N - bewahren " & Environment.NewLine,
+    '                                         "Quelldatei löschen?", MessageBoxButton.YesNo,
+    '                                            MessageBoxImage.Question, MessageBoxResult.Yes
+    '                                )
+    '                If mesres = MessageBoxResult.Yes Then
+    '                    If Not dateiLoeschen(filenames) Then
+    '                        MessageBox.Show("Datei liess sich nicht löschen. Haben Sie sie noch im Zugriff ? Abbruch!!")
+    '                    End If
+    '                Else
+
+    '                End If
+    '            Else
+    '                MessageBox.Show("DB-Eintrag liess sich nicht erneuern. Bitte beim admin melden ? Abbruch!!")
+    '            End If
+
+
+    '        End If
+
+    '        l(" MOD dropped ende")
+    '    Catch ex As Exception
+    '        l("Fehler in dropped: " & zuielname & Environment.NewLine &
+    '          zuielname.Trim.ToLower & "   " & ex.ToString())
+    '        MessageBox.Show("Datei läßt sich nicht löschen. ")
+    '    End Try
+    'End Sub
 
     Private Shared Function dateiLoeschen(filenames() As String) As Boolean
         Dim fi As IO.FileInfo
@@ -509,7 +585,7 @@ Public Class winDetail
         e.Handled = True
         'droptiff(e)
 
-        dropPDF(e)
+        'dropPDF(e)
     End Sub
 
     Private Sub btndeleteTIFF_Click(sender As Object, e As RoutedEventArgs)
@@ -602,33 +678,33 @@ Public Class winDetail
         refreshMap()
     End Sub
 
-    Private Sub btndigit_Click(sender As Object, e As RoutedEventArgs)
-        e.Handled = True
-        'genese = 2 '2-selbst digitalisiert, 1 = aus dem kataster
-        setzeQuellUndTargetTabelle()
-        If My.Computer.Clipboard.ContainsText Then
-            tools.wkt = My.Computer.Clipboard.GetText()
-            If tools.wkt.Trim.ToLower.StartsWith("polygon") Then
-                btndigit.ToolTip = "Klick = Übernehmen dieser Geometrie als temporäres Flurstück !" & tools.wkt
-            Else
-                btndigit.ToolTip = "Das ist keine gültige Geometrie: " & tools.wkt
-            End If
+    'Private Sub btndigit_Click(sender As Object, e As RoutedEventArgs)
+    '    e.Handled = True
+    '    'genese = 2 '2-selbst digitalisiert, 1 = aus dem kataster
+    '    setzeQuellUndTargetTabelle()
+    '    If My.Computer.Clipboard.ContainsText Then
+    '        tools.wkt = My.Computer.Clipboard.GetText()
+    '        If tools.wkt.Trim.ToLower.StartsWith("polygon") Then
+    '            btndigit.ToolTip = "Klick = Übernehmen dieser Geometrie als temporäres Flurstück !" & tools.wkt
+    '        Else
+    '            btndigit.ToolTip = "Das ist keine gültige Geometrie: " & tools.wkt
+    '        End If
 
-            Dim msgres As New MessageBoxResult
-            msgres = MessageBox.Show("Ihr Polygon: " & vbNewLine & vbNewLine &
-                                    tools.wkt & vbNewLine & vbNewLine &
-                                        "Möchten Sie diese Geometrie übernehmen? (j/n) ", "Geometrie übernehmen", MessageBoxButton.YesNo, MessageBoxImage.Question)
-            If msgres = MessageBoxResult.Yes Then
-                For Each item As clsBaulast In rawList
-                    item.serial = tools.wkt
-                Next
-                'writeallWithSerials(CBool(cbAuchUnguetige.IsChecked), 2, targetGISTabelle) '1=aus katasterdaten übernommen
-                writeallWithSerials(False, 2, targetGISTabelle) '1=aus katasterdaten übernommen
-            End If
-        End If
+    '        Dim msgres As New MessageBoxResult
+    '        msgres = MessageBox.Show("Ihr Polygon: " & vbNewLine & vbNewLine &
+    '                                tools.wkt & vbNewLine & vbNewLine &
+    '                                    "Möchten Sie diese Geometrie übernehmen? (j/n) ", "Geometrie übernehmen", MessageBoxButton.YesNo, MessageBoxImage.Question)
+    '        If msgres = MessageBoxResult.Yes Then
+    '            For Each item As clsBaulast In rawList
+    '                item.serial = tools.wkt
+    '            Next
+    '            'writeallWithSerials(CBool(cbAuchUnguetige.IsChecked), 2, targetGISTabelle) '1=aus katasterdaten übernommen
+    '            writeallWithSerials(False, 2, targetGISTabelle) '1=aus katasterdaten übernommen
+    '        End If
+    '    End If
 
 
-    End Sub
+    'End Sub
 
     Private Sub chkQuelle_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True

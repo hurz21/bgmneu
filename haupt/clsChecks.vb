@@ -5,7 +5,7 @@
         Dim gemarkung As String = ""
         'update " & tools.srv_schema & "." & tools.srv_tablename & " set tiff2='fkat/baulasten/' || trim(gemarkung) || '/' || trim(jahr_blattnr) || '.tiff'
         Dim sb As New Text.StringBuilder
-        getallTiffsinDB(temp, fstREC.mydb, "select * from " & tools.srv_schema & "." & tools.srv_tablename & " order by gemcode")
+        'getallTiffsinDB(temp, fstREC.mydb, "select * from " & tools.srv_schema & "." & tools.srv_tablename & " order by gemcode")
         sb.AppendLine("Folgende TIFFs fehlen als Dateien")
         Dim blattnr, datei As String
         Dim fi As IO.FileInfo

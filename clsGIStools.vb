@@ -46,17 +46,17 @@ Public Class clsGIStools
             l(" MOD fstGIS2OBJ anfang")
             For i = 0 To fstREC.dt.Rows.Count - 1
                 tfst = New clsFlurstueck
-                tfst.gemcode = CInt(fstREC.dt.Rows(i).Item("gemcode"))
-                tfst.flur = CInt(fstREC.dt.Rows(i).Item("flur"))
-                tfst.zaehler = CInt(fstREC.dt.Rows(i).Item("zaehler"))
-                tfst.nenner = CInt(fstREC.dt.Rows(i).Item("nenner"))
-                tfst.FS = (fstREC.dt.Rows(i).Item("fs")).ToString.Trim
-                tfst.gemeindename = (fstREC.dt.Rows(i).Item("gemeinde")).ToString.Trim
-                tfst.gemarkungstext = (fstREC.dt.Rows(i).Item("gemarkung")).ToString.Trim
-                tfst.gemeindename = (fstREC.dt.Rows(i).Item("gefundenin")).ToString.Trim
-                tfst.gid = CInt((fstREC.dt.Rows(i).Item("gid")).ToString.Trim)
-                tfst.gebucht = ((fstREC.dt.Rows(i).Item("baulastnr")).ToString.Trim)
-                tfst.genese = CInt((fstREC.dt.Rows(i).Item("genese")).ToString.Trim)
+                tfst.gemcode = CInt(fstREC.dt.Rows(i).Item("int4"))
+                tfst.flur = CInt(fstREC.dt.Rows(i).Item("int1"))
+                tfst.zaehler = CInt(fstREC.dt.Rows(i).Item("int2"))
+                tfst.nenner = CInt(fstREC.dt.Rows(i).Item("int3"))
+                'tfst.FS = (fstREC.dt.Rows(i).Item("fs")).ToString.Trim
+                tfst.gemeindename = (fstREC.dt.Rows(i).Item("text7")).ToString.Trim
+                tfst.gemarkungstext = (fstREC.dt.Rows(i).Item("text8")).ToString.Trim
+                tfst.gemeindename = (fstREC.dt.Rows(i).Item("text7")).ToString.Trim
+                'tfst.gid = CInt((fstREC.dt.Rows(i).Item("gid")).ToString.Trim)
+                tfst.gebucht = ((fstREC.dt.Rows(i).Item("text2")).ToString.Trim)
+                'tfst.genese = CInt((fstREC.dt.Rows(i).Item("genese")).ToString.Trim)
                 tfst.fstueckKombi = tfst.buildFstueckkombi().Trim
                 liste.Add(tfst)
             Next
@@ -122,7 +122,12 @@ Public Class clsGIStools
         Try
             l(" MOD ---------------------- anfang")
             l("getSerialFromBasis---------------------- anfang")
-            fstREC.mydb.SQL = "select * from " & tools.srv_schema & "." & tools.srv_tablename & " where jahr_blattnr ='" & v & "' order by gemcode, flur, zaehler, nenner"
+            'fstREC.mydb.SQL = "select * from " & tools.srv_schema & "." & tools.srv_tablename & " where jahr_blattnr ='" & v & "' order by gemcode, flur, zaehler, nenner"
+            fstREC.mydb.SQL = "SELECT * FROM [LKOF_Bearb].[dbo].[tbl_mdat_datensatz]" &
+                         " where kategorie_guid='88AFE39F-78FC-4053-BE6D-315E3745CF45'    " &
+                         " and text3='" & v & "' order by text8, int1, int2, int3"
+
+
             l(fstREC.mydb.SQL)
             hinweis = fstREC.getDataDT()
             If fstREC.dt.Rows.Count < 1 Then
@@ -241,26 +246,26 @@ Public Class clsGIStools
         End Try
     End Function
 
-    Friend Shared Function updateGISDB(baulastblatnr As String, zuielname As String, gemarkung As String, endung As String) As Boolean
-        Dim sql As String
-        Dim neuerTIFFname As String
-        'fkat/baulasten/Sprendlingen/2284.tiff     
-        'srv_subdirBaulsten/Klein-Welzheim/13022.tiff            
-        'tiff like 'KeineDaten.htm 
+    'Friend Shared Function updateGISDB(baulastblatnr As String, zuielname As String, gemarkung As String, endung As String) As Boolean
+    '    Dim sql As String
+    '    Dim neuerTIFFname As String
+    '    'fkat/baulasten/Sprendlingen/2284.tiff     
+    '    'srv_subdirBaulsten/Klein-Welzheim/13022.tiff            
+    '    'tiff like 'KeineDaten.htm 
 
 
-        Try
-            l(" MOD updateGISDB anfang")
-            neuerTIFFname = srv_subdirBaulsten & "/" & gemarkung & "/" & baulastblatnr.Trim & endung
-            'update " & tools.srv_schema & "." & tools.srv_tablename & " set tiff2='fkat/baulasten/' || trim(gemarkung) || '/' || trim(jahr_blattnr) || '.tiff'
-            sql = "update " & tools.srv_schema & "." & tools.srv_tablename & " Set tiff='" & neuerTIFFname & "' where jahr_blattnr='" & baulastblatnr & "'"
-            Dim dtRBplus As New DataTable
-            Dim erfolg = sqlausfuehren(sql, fstREC.mydb, dtRBplus)
-            l(" MOD updateGISDB ende")
-            Return erfolg
-        Catch ex As Exception
-            l("Fehler in updateGISDB: " & ex.ToString())
-            Return False
-        End Try
-    End Function
+    '    Try
+    '        l(" MOD updateGISDB anfang")
+    '        neuerTIFFname = srv_subdirBaulsten & "/" & gemarkung & "/" & baulastblatnr.Trim & endung
+    '        'update " & tools.srv_schema & "." & tools.srv_tablename & " set tiff2='fkat/baulasten/' || trim(gemarkung) || '/' || trim(jahr_blattnr) || '.tiff'
+    '        sql = "update " & tools.srv_schema & "." & tools.srv_tablename & " Set tiff='" & neuerTIFFname & "' where jahr_blattnr='" & baulastblatnr & "'"
+    '        Dim dtRBplus As New DataTable
+    '        Dim erfolg = sqlausfuehren(sql, fstREC.mydb, dtRBplus)
+    '        l(" MOD updateGISDB ende")
+    '        Return erfolg
+    '    Catch ex As Exception
+    '        l("Fehler in updateGISDB: " & ex.ToString())
+    '        Return False
+    '    End Try
+    'End Function
 End Class
