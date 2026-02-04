@@ -4,6 +4,7 @@ Imports Npgsql
 Module tools
     Public genese As Integer = 1
     Public range As New clsRange
+    Public flurstueckskennzeichen As String
 
     'die alte config mit postgis
     'Public srv_host_web As String = "http://gis.kreis-of.local"
@@ -1089,6 +1090,45 @@ Module tools
     '    Catch ex As Exception
     '        l("Fehler in istInHartmannDB: " & ex.ToString())
     '        Return False
+    '    End Try
+    'End Function
+    'Function flurstueckZuFKZ(gemcode As String, flur As String, zaehler As String, nenner As String) As String
+    '    l("in flurstueckZuFKZ")
+    '    Dim fuell, fs2, _flur As String
+    '    'Dim gemcode As String
+    '    Dim result = "060"
+    '    Try
+    '        'splitFstueckkombi(fstueck, zaehler, nenner)
+    '        l("zn " & zaehler & "_" & nenner)
+    '        'gemcode = clsFlurauswahl.getGemcode(gemarkung)
+    '        result = result & CInt(gemcode)
+    '        result = result & "-"
+
+    '        fuell = "000"
+    '        fs2 = fuell.Substring(flur.ToString.Length) & flur
+
+
+    '        result = result & fs2
+    '        result = result & "-"
+
+    '        fuell = "00000"
+    '        fs2 = fuell.Substring(zaehler.ToString.Length) & zaehler
+
+    '        result = result & fs2
+    '        result = result & "/"
+
+    '        fuell = "0000"
+    '        fs2 = fuell.Substring(nenner.ToString.Length) & nenner
+
+    '        result = result & fs2
+    '        result = result & ".000"
+    '        Return result
+    '        '060729-005-00495/0001.000
+    '        '060729-012-00530/0008.000
+    '        '061301-026-00004/0001.000
+    '    Catch ex As Exception
+    '        l(ex.ToString)
+    '        Return "fehler in adresseZuFKZ"
     '    End Try
     'End Function
 End Module

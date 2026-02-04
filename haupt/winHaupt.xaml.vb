@@ -136,7 +136,7 @@ Public Class winHaupt
             btnEigentuemer.IsEnabled = True
             'btnBaulast4FST.IsEnabled = True
 
-            baulastnr = getBaulastNr(tools.FSTausGISListe(0))
+            baulastnr = getBaulastNr(tools.FSTausGISListe(0)) '????
             If Not IsNumeric(baulastnr) Then
                 tbBaulast2.Text = "keine BL"
                 lastPDF = ""

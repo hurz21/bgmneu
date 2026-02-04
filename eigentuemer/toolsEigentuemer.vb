@@ -17,21 +17,61 @@ Public Class toolsEigentuemer
             l("Fehler in initMssql: " & ex.ToString())
         End Try
     End Sub
-    Friend Shared Function geteigentuemerText(fstkennzeichen As String) As String
+    Friend Shared Function geteigentuemerText(fstcoll As List(Of clsFlurstueck)) As String
         Dim result As String
-        Dim sql = "SELECT     [Anrede],[akademischegrade],[name],[vorname],[wohnortstrasse],[wohnortplz]," &
-                " [wohnort],[geburtsdatum],[namenszusatz],[postfach],[wohnortland],[eigentuemerzusatz],[geburtsname]," &
-                " [nationalitaet],[adressherkunft],[wohnortortsteil],[postfachplz]  " &
-                "   FROM [LKOF].[dbo].[VW_lieg_eigentuemerGST_web] g, [LKOF].[dbo].[VW_lieg_eigentuemer_web] p" &
-                "   where p.guid= g.person_guid " &
-                "   and g.flurstueckskennzeichen='060729-010-00197/0002.000'  "
+        Dim hinweis As String
+        Dim sb As New Text.StringBuilder
         Try
+            If fstcoll.Count < 1 Then Return "Fehler in Eigentümer: Kein Flurstück vorhanden? Keines im GIS? "
 
 
+            fstREC.mydb.SQL = "SELECT [Anrede],[akademischegrade],[name],[vorname],[wohnortstrasse],[wohnortplz]," &
+                    " [wohnort],[geburtsdatum],[namenszusatz],[postfach],[wohnortland],[eigentuemerzusatz],[geburtsname]," &
+                    " [nationalitaet],[adressherkunft],[wohnortortsteil],[postfachplz]  " &
+                    "   FROM [LKOF].[dbo].[VW_lieg_eigentuemerGST_web] g, [LKOF].[dbo].[VW_lieg_eigentuemer_web] p" &
+                    "   where p.guid= g.person_guid " &
+                    "   and g.flurstueckskennzeichen='" & fstcoll(0).flurstueckZuFKZ & "'  "
 
+            l(fstREC.mydb.SQL)
+            hinweis = fstREC.getDataDT()
+            If fstREC.dt.Rows.Count < 1 Then
+                'Return ""
+                Return "keine eigentümerinfo gefunden"
+            Else
+                For i = 0 To fstREC.dt.Rows.Count - 1
+                    sb.Append(clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item(0)).ToString & " ")
+                    sb.Append(clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item(1)).ToString & " ")
+                    sb.Append(clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item(2)).ToString & " ")
+                    sb.Append(clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item(3)).ToString & ", ")
+                    sb.Append("Whft: ")
+                    sb.Append(clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item(4)).ToString & " ")
+                    sb.Append(clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item(5)).ToString & " ")
+                    sb.Append(clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item(6)).ToString & " ")
+                    sb.Append(", geb. ")
+                    sb.Append(clsString.date2string(clsDBtools.fieldvalueDate(fstREC.dt.Rows(i).Item(7)), 4) & " ")
+
+                    sb.Append(clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item(8)).ToString & " ")
+                    sb.Append(clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item(9)).ToString & " ")
+                    sb.Append(clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item(10)).ToString & " ")
+                    sb.Append(clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item(11)).ToString & " ")
+                    If clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item(12)).ToString.Length > 1 Then
+                        sb.Append(", GebName: ")
+                    End If
+                    sb.Append(clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item(12)).ToString & " ")
+                    sb.Append(clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item(13)).ToString & " ")
+                    sb.Append(clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item(15)).ToString & " ")
+
+                    sb.AppendLine(clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item(16)).ToString & " ")
+                    sb.AppendLine("------------------ ")
+                Next
+                'Debug.Print(clsDBtools.fieldvalue(fstREC.dt.Rows(0).Item(0)))
+            End If
+            result = sb.ToString
+            clsString.leerzeichenRaus(result)
             Return result
         Catch ex As Exception
             l("Fehler in initMssql: " & ex.ToString())
+            Return "fehler in eigentümer " & ex.ToString
         End Try
     End Function
     'Friend Shared Function geteigentuemertext(fSTausGISListe As List(Of clsFlurstueck)) As String

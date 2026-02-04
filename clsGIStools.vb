@@ -46,7 +46,7 @@ Public Class clsGIStools
             l(" MOD fstGIS2OBJ anfang")
             For i = 0 To fstREC.dt.Rows.Count - 1
                 tfst = New clsFlurstueck
-                tfst.gemcode = CInt(fstREC.dt.Rows(i).Item("int4"))
+                'tfst.gemcode = CInt(fstREC.dt.Rows(i).Item("int4"))
                 tfst.flur = CInt(fstREC.dt.Rows(i).Item("int1"))
                 tfst.zaehler = CInt(fstREC.dt.Rows(i).Item("int2"))
                 tfst.nenner = CInt(fstREC.dt.Rows(i).Item("int3"))
@@ -115,6 +115,7 @@ Public Class clsGIStools
             l(" MOD getGISrecord2 ende")
         Catch ex As Exception
             l("Fehler in getGISrecord2: " & ex.ToString())
+            Return "Fehler in getGISrecord2: " & ex.ToString()
         End Try
     End Function
     Friend Shared Function getGISrecord(v As Integer) As String
@@ -131,7 +132,7 @@ Public Class clsGIStools
             l(fstREC.mydb.SQL)
             hinweis = fstREC.getDataDT()
             If fstREC.dt.Rows.Count < 1 Then
-                'Return ""
+                Return "(Noch) Kein Eintrag im GIS"
             Else
                 Debug.Print(clsDBtools.fieldvalue(fstREC.dt.Rows(0).Item(0)))
             End If

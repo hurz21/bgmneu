@@ -10,6 +10,7 @@ Public Class clsFlurstueck
     Protected Sub OnPropertyChanged(ByVal prop As String)
         RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs(prop))
     End Sub
+    Property Flurstuecksskennzeichen As String = ""
     Property HSchl As String = ""
     Property AzJahr As String = ""
     Property AzOG As String = ""
@@ -388,7 +389,45 @@ Public Class clsFlurstueck
     Public Property gid As Integer = 0
     Public Property gueltig As String = ""
     Public Property genese As Integer = 1
+    Function flurstueckZuFKZ() As String
+        l("in flurstueckZuFKZ")
+        Dim fuell, fs2, _flur As String
+        'Dim gemcode As String
+        Dim result = "060"
+        Try
+            'splitFstueckkombi(fstueck, zaehler, nenner)
+            l("zn " & zaehler & "_" & nenner)
+            'gemcode = clsFlurauswahl.getGemcode(gemarkung)
+            result = result & CInt(gemcode)
+            result = result & "-"
 
+            fuell = "000"
+            fs2 = fuell.Substring(flur.ToString.Length) & flur
+
+
+            result = result & fs2
+            result = result & "-"
+
+            fuell = "00000"
+            fs2 = fuell.Substring(zaehler.ToString.Length) & zaehler
+
+            result = result & fs2
+            result = result & "/"
+
+            fuell = "0000"
+            fs2 = fuell.Substring(nenner.ToString.Length) & nenner
+
+            result = result & fs2
+            result = result & ".000"
+            Return result
+            '060729-005-00495/0001.000
+            '060729-012-00530/0008.000
+            '061301-026-00004/0001.000
+        Catch ex As Exception
+            l(ex.ToString)
+            Return "fehler in adresseZuFKZ"
+        End Try
+    End Function
     Sub clear()
         gemarkungstext = ""
         gemcode = 0
