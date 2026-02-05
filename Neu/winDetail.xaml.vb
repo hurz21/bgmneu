@@ -72,6 +72,7 @@ Public Class winDetail
                     fst.flur & ", Fst: " &
                     fst.zaehler & "/" & fst.nenner & " =="
             Next
+            summe = summe & Environment.NewLine
             tbEigentuemer.Text = summe & Environment.NewLine &
                 toolsEigentuemer.geteigentuemerText(tools.FSTausGISListe)
         End If
@@ -121,11 +122,26 @@ Public Class winDetail
         'Else
         If hinweis.StartsWith("(Noch") Then
             tbGISinfo.Text = hinweis
+            stpPDF.Visibility = Visibility.Collapsed
+            btnZumGIS.IsEnabled = False
+            btnZumGISOBJ.IsEnabled = False
+            btnZumGISPROBAUG.Content = "im GIS erfassen"
+            btnZumGISPROBAUG.Width = 400
+            btnZumGISPROBAUG.Height = 30
+
         Else
             tools.FSTausGISListe = clsGIStools.fstGIS2OBJ()
-            'End If
+            If tools.FSTausGISListe Is Nothing Then
+                MsgBox("Die im GIS-Baulastkataster hinterlegten Flurstücksinfos sind mangelhaft. Bitte verbessern!")
+            End If
+            stpPDF.Visibility = Visibility.Visible
             dgAusGIS.DataContext = tools.FSTausGISListe
             tbGISinfo.Text = ""
+            btnZumGIS.IsEnabled = True
+            btnZumGISOBJ.IsEnabled = True
+            btnZumGISPROBAUG.Content = "im GIS anzeigen"
+            btnZumGISPROBAUG.Width = 100
+            btnZumGISPROBAUG.Height = 15
         End If
 
         l("getSerialFromBasis---------------------- ende")
@@ -829,5 +845,21 @@ Public Class winDetail
         e.Handled = True
         My.Computer.Clipboard.SetText(tbEigentuemer.Text)
         MsgBox("Inhalt wurde in die Zwischenablage kopiert. Mit Strg-v können sie die Daten z.B. in Word einfügen.")
+    End Sub
+
+    Private Sub btnMakeworddok_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+        Dim filepath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+        filepath = IO.Path.Combine(filepath, "Eigentümer_BL_" & tbBaulastNr.Text & ".docx")
+
+        Dim wp As New eigentuemerWord
+        Dim erfolg = wp.machma(tbEigentuemer.Text, filepath, Format(Now, "dd.MM.yyyy"))
+        If erfolg Then
+            MsgBox("Die Worddatei wurde unter " & Environment.NewLine & filepath & Environment.NewLine & " abgelegt!")
+        Else
+            MsgBox("Die Worddatei konnte nicht erzeugt werden. Vermutlich haben sie sie noch geöffnet.")
+        End If
+        Process.Start(filepath)
+        End
     End Sub
 End Class

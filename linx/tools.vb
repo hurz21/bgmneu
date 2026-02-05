@@ -223,7 +223,7 @@ Module tools
     '        Console.WriteLine("vor fill")
     '        _mycount = da.Fill(dt)
     '        nachricht("fillfertig: " & _mycount)
-    '        nachricht("in gisview2 wurden " & _mycount & " datensätze gefunden.=======================")
+    '        nachricht("in gisview2 wurden " & _mycount & " datensätze gefunden 
     '        oOracleConn.Close()
     '        com.Dispose()
     '        da.Dispose()

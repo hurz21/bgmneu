@@ -170,8 +170,10 @@
                                     >
                             <StackPanel   >
 
-                                <TextBlock Width="100" Margin="5">PDF:</TextBlock>
-                                <StackPanel Orientation="Vertical"    Drop="dropTheBomb" AllowDrop="True"  Height="350" >
+                         
+                                <StackPanel Name="stpPDF" Orientation="Vertical"    Drop="dropTheBomb" AllowDrop="True"  Height="350" >
+                                    <TextBlock Width="100" Margin="5">PDF:</TextBlock>
+                                    
                                     <Border BorderBrush="Black"  Margin="5" BorderThickness="1"
                                         Drop="dropTheBomb" AllowDrop="True"
                                         Width="100" Height="150" Panel.ZIndex="2"
@@ -203,6 +205,9 @@
                                 <TextBlock Width="100" Margin="5" Padding="5">Eigentümer:</TextBlock>
                                 <Button Name="btnEigentümerclip" Click="btnEigentümerclip_Click" Margin="5"
                                         >in die Zwischenablage kopieren</Button>
+                                <Button Name="btnMakeworddok" Click="btnMakeworddok_Click" Margin="5">
+                                    mach daraus Wordkokument
+                                </Button>
                             </StackPanel>
                             <TextBox Name="tbEigentuemer" Width="1000"  Height="200" Margin="5" TextWrapping="Wrap"  AcceptsReturn="True" AcceptsTab="True" />
                         </StackPanel>

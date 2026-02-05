@@ -23,8 +23,6 @@ Public Class toolsEigentuemer
         Dim sb As New Text.StringBuilder
         Try
             If fstcoll.Count < 1 Then Return "Fehler in Eigentümer: Kein Flurstück vorhanden? Keines im GIS? "
-
-
             fstREC.mydb.SQL = "SELECT [Anrede],[akademischegrade],[name],[vorname],[wohnortstrasse],[wohnortplz]," &
                     " [wohnort],[geburtsdatum],[namenszusatz],[postfach],[wohnortland],[eigentuemerzusatz],[geburtsname]," &
                     " [nationalitaet],[adressherkunft],[wohnortortsteil],[postfachplz]  " &
@@ -62,7 +60,7 @@ Public Class toolsEigentuemer
                     sb.Append(clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item(15)).ToString & " ")
 
                     sb.AppendLine(clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item(16)).ToString & " ")
-                    sb.AppendLine("------------------ ")
+                    'sb.AppendLine(" ")
                 Next
                 'Debug.Print(clsDBtools.fieldvalue(fstREC.dt.Rows(0).Item(0)))
             End If

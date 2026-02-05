@@ -106,6 +106,12 @@
     <ApplicationIcon>resouirces\bgm.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DocumentFormat.OpenXml, Version=3.4.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>packages\DocumentFormat.OpenXml.3.4.1\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml.Framework, Version=3.4.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>packages\DocumentFormat.OpenXml.Framework.3.4.1\lib\net46\DocumentFormat.OpenXml.Framework.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
@@ -135,6 +141,7 @@
     <Compile Include="eigentuemer\clsDatenbankZugriff.vb" />
     <Compile Include="eigentuemer\clsDBspecMSSQL.vb" />
     <Compile Include="eigentuemer\clsFlurauswahl.vb" />
+    <Compile Include="eigentuemer\eigentuemerWord.vb" />
     <Compile Include="eigentuemer\IDB_grundfunktionen.vb" />
     <Compile Include="eigentuemer\iRaumbezug.vb" />
     <Compile Include="eigentuemer\modgetdt4sql.vb" />
@@ -267,6 +274,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

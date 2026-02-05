@@ -37,6 +37,7 @@ Public Class clsGIStools
             l(" MOD fstGIS2BLOBJ ende")
         Catch ex As Exception
             l("Fehler in fstGIS2BLOBJ: " & ex.ToString())
+            Return Nothing
         End Try
     End Function
     Shared Function fstGIS2OBJ() As List(Of clsFlurstueck)
@@ -49,13 +50,23 @@ Public Class clsGIStools
                 'tfst.gemcode = CInt(fstREC.dt.Rows(i).Item("int4"))
                 tfst.flur = CInt(fstREC.dt.Rows(i).Item("int1"))
                 tfst.zaehler = CInt(fstREC.dt.Rows(i).Item("int2"))
-                tfst.nenner = CInt(fstREC.dt.Rows(i).Item("int3"))
+                Try
+
+                    tfst.nenner = CInt(fstREC.dt.Rows(i).Item("int3"))
+                Catch ex As Exception
+                    tfst.nenner = 0
+                End Try
                 'tfst.FS = (fstREC.dt.Rows(i).Item("fs")).ToString.Trim
                 tfst.gemeindename = (fstREC.dt.Rows(i).Item("text7")).ToString.Trim
                 tfst.gemarkungstext = (fstREC.dt.Rows(i).Item("text8")).ToString.Trim
-                tfst.gemeindename = (fstREC.dt.Rows(i).Item("text7")).ToString.Trim
+                'tfst.gemeindename = (fstREC.dt.Rows(i).Item("text7")).ToString.Trim
                 'tfst.gid = CInt((fstREC.dt.Rows(i).Item("gid")).ToString.Trim)
-                tfst.gebucht = ((fstREC.dt.Rows(i).Item("text2")).ToString.Trim)
+                Try
+
+                    tfst.gebucht = ((fstREC.dt.Rows(i).Item("text2")).ToString.Trim)
+                Catch ex As Exception
+                    tfst.gebucht = ""
+                End Try
                 'tfst.genese = CInt((fstREC.dt.Rows(i).Item("genese")).ToString.Trim)
                 tfst.fstueckKombi = tfst.buildFstueckkombi().Trim
                 liste.Add(tfst)
