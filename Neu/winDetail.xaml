@@ -190,10 +190,12 @@
                                             Panel.ZIndex="10" Visibility="Visible"
                                             Height="30">PDF anzeigen</Button>
                                     <TextBlock Name="tbPDFvorhanden" Margin="5"/>
+
+                                    <Button Name="btnProtokoll" Click="btnProtokoll_Click"    Background="LightGray" >Logfiles</Button>
                                 </StackPanel>
                             </StackPanel>
                         </Border>
-
+                   
                         <StackPanel  Margin="5" Visibility="Collapsed">
                             <TextBlock Width="100" Margin="5">Bemerkung.:</TextBlock>
                             <TextBox Name="tbBemerkung" Width="250"  Height="100" Margin="5"/>

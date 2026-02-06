@@ -165,7 +165,7 @@ Public Class toolsEigentuemer
             l(" MOD ---------------------- ende")
             Return True
         Catch ex As Exception
-            l("Fehler in insertBaulastPdfInDB: " & filename & ", " & ex.ToString())
+            l("Fehler in insertBaulastPdfInDB: " & ", " & ex.ToString())
             Return False
         End Try
     End Function

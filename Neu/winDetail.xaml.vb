@@ -490,49 +490,19 @@ Public Class winDetail
                     l(" MOD dropped 4 " & filenames(0).ToLower & " nach " & zielname)
                     IO.File.Copy(filenames(0).ToLower, zielname, True)
                     MsgBox("Datei wurde aktualisiert!" & Environment.NewLine & tbBaulastNr.Text.Trim & endung.Trim)
-                    'hier muss der db-eintrag gemacht werden
-                    'insert
+                    'hier muss der db-eintrag gemacht werden                    'insert
                     Dim erfolg As Boolean = toolsEigentuemer.insertBaulastPdfInDB(tbBaulastNr.Text & ".pdf", zielname, ObjektGuid)
+                    If erfolg Then
+                        MsgBox("DB für die Datei wurde gesetzt!" & Environment.NewLine & tbBaulastNr.Text.Trim & endung.Trim)
+                    Else
+                        MsgBox("DB für die Datei wurde NICHT gesetzt! Fehler (\dokumente\bgm)")
+                    End If
                     MsgBox("DB für die Datei wurde gesetzt!" & Environment.NewLine & tbBaulastNr.Text.Trim & endung.Trim)
                 End If
-
-
-                'rawList(0).dateiExistiert = True
-                'rawList(0).datei = zielname
-                'l(" MOD dropped 5")
-                ''pdfdatei erzeugen
-                ''clsTIFFtools.zerlegeMultipageTIFF(zielname, tools.baulastenoutDir)
-                ''refreshTIFFbox()
-                'Dim erfolg As Boolean '= clsGIStools.updateGISDB(tbBaulastNr.Text, zielname, tools.FSTausPROBAUGListe(0).gemarkungstext.Trim, endung)
-                'If erfolg Then
-                '    Dim mesres As MessageBoxResult
-                '    mesres = MessageBox.Show("Die tiff - Datei wurde erfolgreich ins GIS kopiert!" & Environment.NewLine &
-                '                    "Ausserdem wurde die PDF-Datei erzeugt/erneuert." & Environment.NewLine &
-                '                    "" & Environment.NewLine &
-                '                    "Soll die Quelldatei gelöscht werden ? (J/N)" & Environment.NewLine &
-                '                    " J - Löschen" & Environment.NewLine &
-                '                    " N - bewahren " & Environment.NewLine,
-                '                             "Quelldatei löschen?", MessageBoxButton.YesNo,
-                '                                MessageBoxImage.Question, MessageBoxResult.Yes
-                '                    )
-                '    If mesres = MessageBoxResult.Yes Then
-                '        If Not dateiLoeschen(filenames) Then
-                '            MessageBox.Show("Datei liess sich nicht löschen. Haben Sie sie noch im Zugriff ? Abbruch!!")
-                '        End If
-                '    Else
-
-                '    End If
-                'Else
-                '    MessageBox.Show("DB-Eintrag liess sich nicht erneuern. Bitte beim admin melden ? Abbruch!!")
-                'End If
-
-
             End If
-
             l(" MOD dropped ende")
         Catch ex As Exception
-            l("Fehler in dropped: " & zielname & Environment.NewLine &
-              zielname.Trim.ToLower & "   " & ex.ToString())
+            l("Fehler in dropped: " & zielname & Environment.NewLine & zielname.Trim.ToLower & "   " & ex.ToString())
             MessageBox.Show("Datei läßt sich nicht löschen. ")
         End Try
     End Sub
@@ -882,5 +852,14 @@ Public Class winDetail
         End If
         Process.Start(filepath)
         End
+    End Sub
+
+    Private Sub btnProtokoll_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+        Dim testfolder = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
+        IO.Directory.CreateDirectory(IO.Path.Combine(testfolder, "bgm"))
+        logfile = IO.Path.Combine(Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),
+                                 "bgm")
+        Process.Start(logfile)
     End Sub
 End Class

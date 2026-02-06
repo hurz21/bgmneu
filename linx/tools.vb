@@ -1,5 +1,5 @@
 ﻿Imports System.Data
-Imports Npgsql
+
 
 Module tools
     Public genese As Integer = 1
@@ -78,25 +78,11 @@ Module tools
     End Sub
 
     Sub initdb()
-        'Dim cstring As String
-        'cstring = "Server=KH-W-INGRADA;Database=LKOF;User=Ingrada;Pwd=Starry-Footless6-Mashing-Backboned;"
-        'myconn = New SqlConnection(cstring)
         fstREC.mydb = New clsDatenbankZugriff
-
         fstREC.mydb.Host = tools.srv_host
         fstREC.mydb.username = "Ingrada" : fstREC.mydb.password = "Starry-Footless6-Mashing-Backboned"
         fstREC.mydb.Schema = "LKOF"
-        'fstREC.mydb.Tabelle = "flurkarte.basis_f" : fstREC.mydb.dbtyp = "postgis"
-
-
-        'fstREC.mydb.Host = tools.srv_host
-        'fstREC.mydb.username = "postgres" : fstREC.mydb.password = "lkof4"
-        'fstREC.mydb.Schema = "postgis20"
-        'fstREC.mydb.Tabelle = "flurkarte.basis_f" : fstREC.mydb.dbtyp = "postgis"
         l("initdb  ende")
-        '#If DEBUG Then
-        '        fstREC.mydb.Host = "localhost"
-        '#End If
     End Sub
 
     Sub istKatnichtOKaberTiffVorhanden(balist As List(Of clsBaulast), ByRef katnichtOKAberMitTiff_summe As String)
