@@ -30,7 +30,7 @@
         <TabItem  Header="GIS-Bestand">
             <DockPanel Background="LightGray">
                 <StackPanel Orientation="Horizontal" Height="50" DockPanel.Dock="Top">
-                    <ComboBox Name="cmbgemarkung"  MaxDropDownHeight="800"   Height="30" Margin="5"
+                    <!--<ComboBox Name="cmbgemarkung"  MaxDropDownHeight="800"   Height="30" Margin="5"
                                        DataContext="{Binding Source={StaticResource XMLSourceComboBoxgemarkungen}, XPath=/Variablen/Variable}"
                                                                 ItemsSource="{Binding}" 
                                                                 DisplayMemberPath="@Name" 
@@ -39,7 +39,7 @@
                                                               SelectionChanged="cmbgemarkung_SelectionChanged"
                                       Width="200"
                                       >
-                    </ComboBox>
+                    </ComboBox>-->
                     <TextBlock Name="tbTreffer" Width="100" Margin="5" Height="30" Padding="5"/>
                 </StackPanel>
                 <DataGrid  x:Name="dgBestand"   ItemsSource="{Binding ''}"    Margin="5"                                             

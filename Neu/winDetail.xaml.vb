@@ -4,7 +4,7 @@ Imports Org.BouncyCastle.Asn1.Esf
 Public Class winDetail
     Property VGmyBitmapImage As New BitmapImage
     Private istgeladen As Boolean = False
-
+    Public Property ObjektGuid As String = "88AFE39F-78FC-4053-BE6D-315E3745CF45"
     Public Property quelleSQL As String = "gisview2belastet"
     Public Property targetGISTabelle As String = "hartmann"
     Dim modus As String = "neu"
@@ -131,6 +131,7 @@ Public Class winDetail
 
         Else
             tools.FSTausGISListe = clsGIStools.fstGIS2OBJ()
+            ObjektGuid = tools.FSTausGISListe(0).GUID
             If tools.FSTausGISListe Is Nothing Then
                 MsgBox("Die im GIS-Baulastkataster hinterlegten Flurstücksinfos sind mangelhaft. Bitte verbessern!")
             End If
@@ -454,7 +455,7 @@ Public Class winDetail
 
     Private Sub dropPDF(e As DragEventArgs)
         Dim filenames As String()
-        Dim zuielname As String = ""
+        Dim zielname As String = ""
         Dim endung As String = ".pdf"
         Dim listeZippedFiles, listeNOnZipFiles, allFeiles As New List(Of String)
         Dim titelVorschlag As String = ""
@@ -470,51 +471,74 @@ Public Class winDetail
             l(" MOD dropped 2")
             If filenames(0).ToLower.EndsWith(endung) Then
                 l(" MOD dropped 3")
-                zuielname = IO.Path.Combine(srv_unc_path & "\fkat\baulasten", tools.FSTausPROBAUGListe(0).gemarkungstext.Trim & "\" & tbBaulastNr.Text.Trim & endung).ToLower.Trim
-                l(" MOD dropped 4 " & filenames(0).ToLower & " nach " & zuielname)
-                IO.File.Copy(filenames(0).ToLower, zuielname, True)
-                rawList(0).dateiExistiert = True
-                rawList(0).datei = zuielname
-                l(" MOD dropped 5")
-                'pdfdatei erzeugen
-                'clsTIFFtools.zerlegeMultipageTIFF(zuielname, tools.baulastenoutDir)
-                'refreshTIFFbox()
-                Dim erfolg As Boolean '= clsGIStools.updateGISDB(tbBaulastNr.Text, zuielname, tools.FSTausPROBAUGListe(0).gemarkungstext.Trim, endung)
-                If erfolg Then
-                    Dim mesres As MessageBoxResult
-                    mesres = MessageBox.Show("Die tiff - Datei wurde erfolgreich ins GIS kopiert!" & Environment.NewLine &
-                                    "Ausserdem wurde die PDF-Datei erzeugt/erneuert." & Environment.NewLine &
-                                    "" & Environment.NewLine &
-                                    "Soll die Quelldatei gelöscht werden ? (J/N)" & Environment.NewLine &
-                                    " J - Löschen" & Environment.NewLine &
-                                    " N - bewahren " & Environment.NewLine,
-                                             "Quelldatei löschen?", MessageBoxButton.YesNo,
-                                                MessageBoxImage.Question, MessageBoxResult.Yes
-                                    )
+                zielname = IO.Path.Combine(srv_unc_path & "BAUL4ST_" & tbBaulastNr.Text.Trim & endung).Trim
+                Dim fi As New IO.FileInfo(zielname)
+                If Not fi.Exists Then
+                    Dim mesres = MessageBox.Show("Möchten Sie die Datei überschreiben ?" & Environment.NewLine &
+                                                    "  Ja    - Überschreiben " & Environment.NewLine &
+                                                    "  Nein - Abbruch",
+                                                    "Die Datei existiert bereits!", MessageBoxButton.YesNo, MessageBoxImage.Error, MessageBoxResult.No)
                     If mesres = MessageBoxResult.Yes Then
-                        If Not dateiLoeschen(filenames) Then
-                            MessageBox.Show("Datei liess sich nicht löschen. Haben Sie sie noch im Zugriff ? Abbruch!!")
-                        End If
+                        l(" MOD dropped 4 " & filenames(0).ToLower & " nach " & zielname)
+                        IO.File.Copy(filenames(0).ToLower, zielname, True)
+                        'der DB-eintrag existiert bereits also nichts weiter erforderlich
+                        MsgBox("Datei wurde aktualisiert!" & Environment.NewLine & tbBaulastNr.Text.Trim & endung.Trim)
                     Else
-
+                        Exit Sub
                     End If
                 Else
-                    MessageBox.Show("DB-Eintrag liess sich nicht erneuern. Bitte beim admin melden ? Abbruch!!")
+                    l(" MOD dropped 4 " & filenames(0).ToLower & " nach " & zielname)
+                    IO.File.Copy(filenames(0).ToLower, zielname, True)
+                    MsgBox("Datei wurde aktualisiert!" & Environment.NewLine & tbBaulastNr.Text.Trim & endung.Trim)
+                    'hier muss der db-eintrag gemacht werden
+                    'insert
+                    Dim erfolg As Boolean = toolsEigentuemer.insertBaulastPdfInDB(tbBaulastNr.Text & ".pdf", zielname, ObjektGuid)
+                    MsgBox("DB für die Datei wurde gesetzt!" & Environment.NewLine & tbBaulastNr.Text.Trim & endung.Trim)
                 End If
+
+
+                'rawList(0).dateiExistiert = True
+                'rawList(0).datei = zielname
+                'l(" MOD dropped 5")
+                ''pdfdatei erzeugen
+                ''clsTIFFtools.zerlegeMultipageTIFF(zielname, tools.baulastenoutDir)
+                ''refreshTIFFbox()
+                'Dim erfolg As Boolean '= clsGIStools.updateGISDB(tbBaulastNr.Text, zielname, tools.FSTausPROBAUGListe(0).gemarkungstext.Trim, endung)
+                'If erfolg Then
+                '    Dim mesres As MessageBoxResult
+                '    mesres = MessageBox.Show("Die tiff - Datei wurde erfolgreich ins GIS kopiert!" & Environment.NewLine &
+                '                    "Ausserdem wurde die PDF-Datei erzeugt/erneuert." & Environment.NewLine &
+                '                    "" & Environment.NewLine &
+                '                    "Soll die Quelldatei gelöscht werden ? (J/N)" & Environment.NewLine &
+                '                    " J - Löschen" & Environment.NewLine &
+                '                    " N - bewahren " & Environment.NewLine,
+                '                             "Quelldatei löschen?", MessageBoxButton.YesNo,
+                '                                MessageBoxImage.Question, MessageBoxResult.Yes
+                '                    )
+                '    If mesres = MessageBoxResult.Yes Then
+                '        If Not dateiLoeschen(filenames) Then
+                '            MessageBox.Show("Datei liess sich nicht löschen. Haben Sie sie noch im Zugriff ? Abbruch!!")
+                '        End If
+                '    Else
+
+                '    End If
+                'Else
+                '    MessageBox.Show("DB-Eintrag liess sich nicht erneuern. Bitte beim admin melden ? Abbruch!!")
+                'End If
 
 
             End If
 
             l(" MOD dropped ende")
         Catch ex As Exception
-            l("Fehler in dropped: " & zuielname & Environment.NewLine &
-              zuielname.Trim.ToLower & "   " & ex.ToString())
+            l("Fehler in dropped: " & zielname & Environment.NewLine &
+              zielname.Trim.ToLower & "   " & ex.ToString())
             MessageBox.Show("Datei läßt sich nicht löschen. ")
         End Try
     End Sub
     'Private Sub droptiff(e As DragEventArgs)
     '    Dim filenames As String()
-    '    Dim zuielname As String = ""
+    '    Dim zielname As String = ""
     '    Dim endung As String = ".tiff"
     '    Dim listeZippedFiles, listeNOnZipFiles, allFeiles As New List(Of String)
     '    Dim titelVorschlag As String = ""
@@ -532,16 +556,16 @@ Public Class winDetail
     '        l(" MOD dropped 2")
     '        If filenames(0).ToLower.EndsWith(".tiff") Or filenames(0).ToLower.EndsWith(".tif") Then
     '            l(" MOD dropped 3")
-    '            zuielname = IO.Path.Combine(srv_unc_path & "\fkat\baulasten", tools.FSTausPROBAUGListe(0).gemarkungstext.Trim & "\" & tbBaulastNr.Text.Trim & ".tiff").ToLower.Trim
-    '            l(" MOD dropped 4 " & filenames(0).ToLower & " nach " & zuielname)
-    '            IO.File.Copy(filenames(0).ToLower, zuielname, True)
+    '            zielname = IO.Path.Combine(srv_unc_path & "\fkat\baulasten", tools.FSTausPROBAUGListe(0).gemarkungstext.Trim & "\" & tbBaulastNr.Text.Trim & ".tiff").ToLower.Trim
+    '            l(" MOD dropped 4 " & filenames(0).ToLower & " nach " & zielname)
+    '            IO.File.Copy(filenames(0).ToLower, zielname, True)
     '            rawList(0).dateiExistiert = True
-    '            rawList(0).datei = zuielname
+    '            rawList(0).datei = zielname
     '            l(" MOD dropped 5")
     '            'pdfdatei erzeugen
-    '            clsTIFFtools.zerlegeMultipageTIFF(zuielname, tools.baulastenoutDir)
+    '            clsTIFFtools.zerlegeMultipageTIFF(zielname, tools.baulastenoutDir)
     '            refreshTIFFbox()
-    '            Dim erfolg As Boolean = clsGIStools.updateGISDB(tbBaulastNr.Text, zuielname, tools.FSTausPROBAUGListe(0).gemarkungstext.Trim, endung)
+    '            Dim erfolg As Boolean = clsGIStools.updateGISDB(tbBaulastNr.Text, zielname, tools.FSTausPROBAUGListe(0).gemarkungstext.Trim, endung)
     '            If erfolg Then
     '                Dim mesres As MessageBoxResult
     '                mesres = MessageBox.Show("Die tiff - Datei wurde erfolgreich ins GIS kopiert!" & Environment.NewLine &
@@ -569,8 +593,8 @@ Public Class winDetail
 
     '        l(" MOD dropped ende")
     '    Catch ex As Exception
-    '        l("Fehler in dropped: " & zuielname & Environment.NewLine &
-    '          zuielname.Trim.ToLower & "   " & ex.ToString())
+    '        l("Fehler in dropped: " & zielname & Environment.NewLine &
+    '          zielname.Trim.ToLower & "   " & ex.ToString())
     '        MessageBox.Show("Datei läßt sich nicht löschen. ")
     '    End Try
     'End Sub
@@ -597,9 +621,6 @@ Public Class winDetail
 
     Private Sub dropTheBomb(sender As Object, e As DragEventArgs)
         e.Handled = True
-
-        'droptiff(e)
-
         dropPDF(e)
     End Sub
 
@@ -633,7 +654,7 @@ Public Class winDetail
 
     Private Sub showpdf()
 
-        Dim quelle = "\\kh-w-ingrada\lkof\data\upload\FILES\LKOF\sp_mdat\dat\BAUL4ST_" & tbBaulastNr.Text & ".pdf"
+        Dim quelle = srv_unc_path & "BAUL4ST_" & tbBaulastNr.Text & ".pdf"
         Dim ziel = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
         Try
             ziel = IO.Path.Combine(ziel, tbBaulastNr.Text & ".pdf")

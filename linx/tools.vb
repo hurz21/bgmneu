@@ -17,9 +17,9 @@ Module tools
     'SELECT * FROM [LKOF_Bearb].[dbo].[tbl_mdat_datensatz] where kategorie_guid='88AFE39F-78FC-4053-BE6D-315E3745CF45'    '
     Public srv_host_web As String = "https://gis.kreis-of.de/LKOF/asp/main.asp"
     Public srv_host As String = "KH-W-INGRADA"
-    Public srv_schema As String = "paradigma_userdata"
+    'Public srv_schema As String = "paradigma_userdata"
     Public srv_subdirBaulsten As String = "paradigmacache/baulasten"
-    Public srv_unc_path As String = "\\gis\gdvell"
+    Public srv_unc_path As String = "\\kh-w-ingrada\lkof\data\upload\FILES\LKOF\sp_mdat\dat\"
 
     'Public srv_unc_path As String = "\\gis\d$"
     Public gisexe As String = "C:\kreisoffenbach\mgis\mgis.exe"
@@ -536,18 +536,18 @@ Module tools
             Return False
         End If
     End Function
-    Function istSchonVorhanden(fS As String) As Boolean
-        Dim hinweis As String = ""
-        fstREC.mydb.SQL = "select * from " & tools.srv_schema & "." & tools.srv_tablename & "   where fs='" & fS & "'"
-        l(fstREC.mydb.SQL)
-        hinweis = fstREC.getDataDT()
-        If fstREC.dt.Rows.Count < 1 Then
+    'Function istSchonVorhanden(fS As String) As Boolean
+    '    Dim hinweis As String = ""
+    '    fstREC.mydb.SQL = "select * from " & tools.srv_schema & "." & tools.srv_tablename & "   where fs='" & fS & "'"
+    '    l(fstREC.mydb.SQL)
+    '    hinweis = fstREC.getDataDT()
+    '    If fstREC.dt.Rows.Count < 1 Then
 
-            Return False
-        Else
-            Return True
-        End If
-    End Function
+    '        Return False
+    '    Else
+    '        Return True
+    '    End If
+    'End Function
 
 
     Sub initKatasterGemarkungtext()

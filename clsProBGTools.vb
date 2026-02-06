@@ -1,7 +1,4 @@
 ﻿Imports System.Data
-Imports Devart.Common.Utils
-Imports iTextSharp.text.rtf
-
 Public Class clsProBGTools
     Shared Property ProbauGIstOracle As Boolean = False
 

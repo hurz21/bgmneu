@@ -1,5 +1,6 @@
 ﻿Imports System.Data
 Imports System.Data.SqlClient
+Imports System.Text
 Public Class toolsEigentuemer
     Public Shared paradigmaMsql As New clsDBspecMSSQL
     Public Shared paradigmaMsqlmyconn As SqlConnection
@@ -146,4 +147,52 @@ Public Class toolsEigentuemer
         End Try
     End Function
 
+    Friend Shared Function insertBaulastPdfInDB(filename As String, zielname As String, objektGUID As String) As Boolean
+        Dim result, hinweis As String
+        Dim newid As Long
+        Try
+            result = makeInsertStatement(filename, objektGUID, result)
+            fstREC.mydb.SQL = result
+            l(fstREC.mydb.SQL)
+            Dim retcode = fstREC.dboeffnen(hinweis)
+            newid = fstREC.sqlexecute(newid)
+            retcode = fstREC.dbschliessen(hinweis)
+            'If fstREC.dt.Rows.Count < 1 Then
+            '    Return False
+            'Else
+            '    Debug.Print(clsDBtools.fieldvalue(fstREC.dt.Rows(0).Item(0)))
+            'End If
+            l(" MOD ---------------------- ende")
+            Return True
+        Catch ex As Exception
+            l("Fehler in insertBaulastPdfInDB: " & filename & ", " & ex.ToString())
+            Return False
+        End Try
+    End Function
+
+    Private Shared Function makeInsertStatement(filename As String, objektGUID As String, ByRef result As String) As String
+        Dim builder As New StringBuilder()
+        Dim newGuid = Guid.NewGuid()
+        Dim startInsertfile = "USE [LKOF_Bearb] GO"
+
+        Dim insert1 = "INSERT INTO  [LKOF_Bearb].[dbo].[tbl_mdat_dateien]  ([guid],[object_guid],[modulid] ,[file_key],[file_name] ,[sys_login_in],[sys_stamp_in] ) VALUES ("
+
+        Try
+            builder.AppendLine(insert1)
+            builder.AppendLine(" '" & newGuid.ToString & "' ") '
+            builder.AppendLine(",'" & objektGUID & "' ") '
+            builder.AppendLine(",'EIGENEDATEN-BL' ") '
+            'builder.AppendLine(",'BPL4N_" & tempfile.Name.Trim & "' ") '
+            builder.AppendLine(",'" & "BAUL4ST_" & filename & "' ") '
+            builder.AppendLine(",'" & filename & "' ") '
+            builder.AppendLine(",'Ingrada',GETDATE() )") '
+            'builder.AppendLine("GO ") ' 
+            result = builder.ToString
+            Debug.Print(builder.ToString)
+            Return result
+        Catch ex As Exception
+            l("Fehler in makeInsertStatement: " & filename & ", " & ex.ToString())
+            Return "Fehler in makeInsertStatement:"
+        End Try
+    End Function
 End Class

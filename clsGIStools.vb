@@ -59,8 +59,8 @@ Public Class clsGIStools
                 'tfst.FS = (fstREC.dt.Rows(i).Item("fs")).ToString.Trim
                 tfst.gemeindename = (fstREC.dt.Rows(i).Item("text7")).ToString.Trim
                 tfst.gemarkungstext = (fstREC.dt.Rows(i).Item("text8")).ToString.Trim
-                'tfst.gemeindename = (fstREC.dt.Rows(i).Item("text7")).ToString.Trim
-                'tfst.gid = CInt((fstREC.dt.Rows(i).Item("gid")).ToString.Trim)
+                'tfst.gemeindename = (fstREC.dt.Rows(i).Item("")).ToString.Trim
+                tfst.GUID = ((fstREC.dt.Rows(i).Item("guid")).ToString.Trim)
                 Try
 
                     tfst.gebucht = ((fstREC.dt.Rows(i).Item("text2")).ToString.Trim)
@@ -175,34 +175,34 @@ Public Class clsGIStools
             Return ""
         End Try
     End Function
-    Friend Shared Function calcNewRange(gidstring As String) As clsRange
-        Dim drange As New clsRange
-        Dim rangestring, hinweis As String
-        Try
-            l(" MOD calcNewRange anfang")
-            If gidstring.IsNothingOrEmpty Then
-                MessageBox.Show("Sie haben noch kein GIS-Flurstück angelegt! Abbruch!")
-                Return drange
-            End If
-            fstREC.mydb.SQL = "SELECT ST_EXTENT(geom) FROM " & tools.srv_schema & "." & tools.srv_tablename & "   where gid in (" & gidstring & ")"
+    'Friend Shared Function calcNewRange(gidstring As String) As clsRange
+    '    Dim drange As New clsRange
+    '    Dim rangestring, hinweis As String
+    '    Try
+    '        l(" MOD calcNewRange anfang")
+    '        If gidstring.IsNothingOrEmpty Then
+    '            MessageBox.Show("Sie haben noch kein GIS-Flurstück angelegt! Abbruch!")
+    '            Return drange
+    '        End If
+    '        fstREC.mydb.SQL = "SELECT ST_EXTENT(geom) FROM " & tools.srv_schema & "." & tools.srv_tablename & "   where gid in (" & gidstring & ")"
 
-            l(fstREC.mydb.SQL)
-            hinweis = fstREC.getDataDT()
-            If fstREC.dt.Rows.Count < 1 Then
-                MessageBox.Show("Fehler bei der Ermittlung der Lokalität der GIS-Flurstücke!!")
-                Return drange
-            Else
-                rangestring = clsDBtools.fieldvalue(fstREC.dt.Rows(0).Item(0)).Trim
-            End If
-            drange.BBOX = rangestring
-            drange.bbox_split()
-            l(" MOD calcNewRange ende")
-            Return drange
-        Catch ex As Exception
-            l("Fehler in MOcalcNewRangeD: " & ex.ToString())
-            Return drange
-        End Try
-    End Function
+    '        l(fstREC.mydb.SQL)
+    '        hinweis = fstREC.getDataDT()
+    '        If fstREC.dt.Rows.Count < 1 Then
+    '            MessageBox.Show("Fehler bei der Ermittlung der Lokalität der GIS-Flurstücke!!")
+    '            Return drange
+    '        Else
+    '            rangestring = clsDBtools.fieldvalue(fstREC.dt.Rows(0).Item(0)).Trim
+    '        End If
+    '        drange.BBOX = rangestring
+    '        drange.bbox_split()
+    '        l(" MOD calcNewRange ende")
+    '        Return drange
+    '    Catch ex As Exception
+    '        l("Fehler in MOcalcNewRangeD: " & ex.ToString())
+    '        Return drange
+    '    End Try
+    'End Function
 
     Friend Shared Function bildegidstring() As String
         Dim summe As String = ""
@@ -214,29 +214,29 @@ Public Class clsGIStools
         Return summe
     End Function
 
-    Friend Shared Function loeschenGISDatensatz(text As String) As Integer
-        l("getSerialFromBasis---------------------- anfang")
-        Dim newid As Long = 0
-        Dim hinweis As String = ""
-        Try
-            l(" MOD ---------------------- anfang")
-            fstREC.mydb.SQL = "delete from " & tools.srv_schema & "." & tools.srv_tablename & " where jahr_blattnr ='" & text & "'  "
-            l(fstREC.mydb.SQL)
-            Dim retcode = fstREC.dboeffnen(hinweis)
-            newid = fstREC.sqlexecute(newid)
-            retcode = fstREC.dbschliessen(hinweis)
-            If fstREC.dt.Rows.Count < 1 Then
-                Return 0
-            Else
-                Debug.Print(clsDBtools.fieldvalue(fstREC.dt.Rows(0).Item(0)))
-            End If
-            l(" MOD ---------------------- ende")
-            Return CInt(newid)
-        Catch ex As Exception
-            l("Fehler in MOD: " & ex.ToString())
-            Return 0
-        End Try
-    End Function
+    'Friend Shared Function loeschenGISDatensatz(text As String) As Integer
+    '    l("getSerialFromBasis---------------------- anfang")
+    '    Dim newid As Long = 0
+    '    Dim hinweis As String = ""
+    '    Try
+    '        l(" MOD ---------------------- anfang")
+    '        fstREC.mydb.SQL = "delete from " & tools.srv_schema & "." & tools.srv_tablename & " where jahr_blattnr ='" & text & "'  "
+    '        l(fstREC.mydb.SQL)
+    '        Dim retcode = fstREC.dboeffnen(hinweis)
+    '        newid = fstREC.sqlexecute(newid)
+    '        retcode = fstREC.dbschliessen(hinweis)
+    '        If fstREC.dt.Rows.Count < 1 Then
+    '            Return 0
+    '        Else
+    '            Debug.Print(clsDBtools.fieldvalue(fstREC.dt.Rows(0).Item(0)))
+    '        End If
+    '        l(" MOD ---------------------- ende")
+    '        Return CInt(newid)
+    '    Catch ex As Exception
+    '        l("Fehler in MOD: " & ex.ToString())
+    '        Return 0
+    '    End Try
+    'End Function
 
     Friend Shared Function loescheTiffaufGISServer(baulastnr As String, gemarkung As String) As Boolean
         Dim aufruf, hinweis As String

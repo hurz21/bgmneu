@@ -64,31 +64,31 @@
         Process.Start(datei)
     End Sub
 
-    Private Sub btndoppeltimgis_Click(sender As Object, e As RoutedEventArgs)
-        e.Handled = True
-        Dim hinweis As String
-        Dim datei = tools.baulastenoutDir & "\mehrfachimgis.txt"
-        fstREC.mydb.SQL = "  Select   count(jahr_blattnr  ) As anzahl, jahr_blattnr  FROM " & tools.srv_schema & "." & tools.srv_tablename & " " &
-                                " group by jahr_blattnr,baulastnr " &
-                                " order by anzahl desc"
-        fstREC.mydb.SQL = " Select    count(jahr_blattnr ||'-'|| baulastnr||'-'||fs ) As anzahl, (jahr_blattnr ||'-'||baulastnr||'-'||fs) as mname  " &
-                                 " FROM paradigma_userdata.baulaschten_f where gueltig='J' group by mname  order by anzahl desc"
-        '      Select   count(jahr_blattnr) anzahl,jahr_blattnr  
-        'From paradigma_userdata.baulaschten_f  Group By jahr_blattnr, baulastnr  Order By anzahl desc 
-        l(fstREC.mydb.SQL)
-        hinweis = fstREC.getDataDT()
-        If fstREC.dt.Rows.Count > 0 Then
-            'strlage = "Lage: " & clsDBtools.fieldvalue(fstREC.dt.Rows(0).Item("name")).Trim
-            Dim sb As New Text.StringBuilder
-            For i = 0 To fstREC.dt.Rows.Count - 1
-                sb.Append(clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("anzahl")).Trim & ";" & clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("mname")).Trim & Environment.NewLine)
-            Next
-            IO.File.WriteAllText(datei, sb.ToString)
-            Process.Start(datei)
-        Else
-        End If
-        Process.Start(datei)
-    End Sub
+    'Private Sub btndoppeltimgis_Click(sender As Object, e As RoutedEventArgs)
+    '    e.Handled = True
+    '    Dim hinweis As String
+    '    Dim datei = tools.baulastenoutDir & "\mehrfachimgis.txt"
+    '    fstREC.mydb.SQL = "  Select   count(jahr_blattnr  ) As anzahl, jahr_blattnr  FROM " & tools.srv_schema & "." & tools.srv_tablename & " " &
+    '                            " group by jahr_blattnr,baulastnr " &
+    '                            " order by anzahl desc"
+    '    fstREC.mydb.SQL = " Select    count(jahr_blattnr ||'-'|| baulastnr||'-'||fs ) As anzahl, (jahr_blattnr ||'-'||baulastnr||'-'||fs) as mname  " &
+    '                             " FROM paradigma_userdata.baulaschten_f where gueltig='J' group by mname  order by anzahl desc"
+    '    '      Select   count(jahr_blattnr) anzahl,jahr_blattnr  
+    '    'From paradigma_userdata.baulaschten_f  Group By jahr_blattnr, baulastnr  Order By anzahl desc 
+    '    l(fstREC.mydb.SQL)
+    '    hinweis = fstREC.getDataDT()
+    '    If fstREC.dt.Rows.Count > 0 Then
+    '        'strlage = "Lage: " & clsDBtools.fieldvalue(fstREC.dt.Rows(0).Item("name")).Trim
+    '        Dim sb As New Text.StringBuilder
+    '        For i = 0 To fstREC.dt.Rows.Count - 1
+    '            sb.Append(clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("anzahl")).Trim & ";" & clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("mname")).Trim & Environment.NewLine)
+    '        Next
+    '        IO.File.WriteAllText(datei, sb.ToString)
+    '        Process.Start(datei)
+    '    Else
+    '    End If
+    '    Process.Start(datei)
+    'End Sub
 
     Private Sub btnbeguenstigt_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True

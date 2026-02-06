@@ -54,8 +54,8 @@
                         <TextBlock Padding="9" Width="250"> Mehrfache Einträge im GIS:</TextBlock>
                         <!--<TextBox Name="tbPDFPfad" Padding="5" Width="250">\\\</TextBox>-->
 
-                        <Button Content="mehrfach im GIS" Name="btndoppeltimgis" Width="100" 
-                                Click="btndoppeltimgis_Click" Margin="5"/>
+                        <!--<Button Content="mehrfach im GIS" Name="btndoppeltimgis" Width="100" 
+                                Click="btndoppeltimgis_Click" Margin="5"/>-->
                     </StackPanel>
                 </Border>
                 <Border BorderBrush="Black" BorderThickness="1" Margin="5">

@@ -11,6 +11,7 @@ Public Class clsFlurstueck
         RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs(prop))
     End Sub
     Property Flurstuecksskennzeichen As String = ""
+    Property GUID As String = ""
     Property HSchl As String = ""
     Property AzJahr As String = ""
     Property AzOG As String = ""

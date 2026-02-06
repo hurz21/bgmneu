@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:bgm" AllowDrop="True"
         mc:Ignorable="d" Left="1" WindowStyle="ToolWindow"    Drop="Window_Drop"
-        Title="BGM" Height="536" Width="177" Background="Beige" >
+        Title="BGM" Height="336" Width="177" Background="Beige" >
     <DockPanel Margin="5">
         <StackPanel Orientation="Vertical">
             <StackPanel Margin="5" Width="145" Name="stpAdminOnly" Background="LightGray">
@@ -15,7 +15,7 @@
                     <StackPanel>
 
                         <Button Name="btnEdit" Click="btnEdit_Click" Content="zu Baulast" 
-                            IsDefault="True" Margin="5"
+                            IsDefault="True" Margin="5" 
                              Drop="Window_Drop" AllowDrop="True"/>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                             <TextBlock >Nr:</TextBlock>
@@ -24,14 +24,16 @@
                             </TextBox>
                         </StackPanel>
                         <Button Name="btnBestand" Click="btnBestand_Click" Content="Bestandsliste" 
-                                IsEnabled="True" Margin="5"/>
-                        <Button x:Name="btnPDFTool" Click="btnPDFTool_Click" Content="Werkzeuge" IsEnabled="True" Margin="5"/>
+                                Margin="5"
+                                IsEnabled="False"/>
+                        <Button x:Name="btnPDFTool" Click="btnPDFTool_Click" Content="Werkzeuge"
+                                IsEnabled="False" Margin="5"/>
 
                     </StackPanel>
                 </GroupBox>
 
             </StackPanel>
-            <StackPanel IsEnabled="True">
+            <StackPanel IsEnabled="True" Visibility="Collapsed">
                 <Button Name="btngetFlurstück" Margin="5" Click="btngetFlurstueck_Click"  >Flurstück wählen
 
                 </Button>
@@ -68,9 +70,7 @@
             </StackPanel>
             <Button Name="btnGIS" Click="btnGIS_Click" Content="GIS" Margin="5,19,5,5"/>
 
-            <Button Name="btnbplan"   Click="btnbplan_Click" Margin="5">Bebauungspläne
-
-            </Button>
+            <Button Name="btnbplan"   Click="btnbplan_Click" Visibility="Collapsed" Margin="5">Bebauungspläne            </Button>
         </StackPanel>
     </DockPanel>
 </Window>

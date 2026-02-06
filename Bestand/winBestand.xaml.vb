@@ -5,8 +5,8 @@
 
     Private Sub winBestand_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         e.Handled = True
-        Dim sql = "select * from " & tools.srv_schema & "." & tools.srv_tablename & "    order by genese desc"
-        'Dim sql = "select * from " & tools.srv_schema & "." & tools.srv_tablename & "  where lower(gemeinde)='dietzenbach' order by fs"
+        Dim sql = "" '= "select * from " & tools.srv_schema & "." & tools.srv_tablename & "    order by genese desc"
+        ''Dim sql = "select * from " & tools.srv_schema & "." & tools.srv_tablename & "  where lower(gemeinde)='dietzenbach' order by fs"
         l("bestand geladen")
         initGemarkungsCombo()
         l("bestand geladen " & sql)
@@ -56,18 +56,18 @@
         End Try
     End Sub
 
-    Private Sub cmbgemarkung_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
-        If cmbgemarkung.SelectedItem Is Nothing Then Exit Sub
+    'Private Sub cmbgemarkung_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
+    '    If cmbgemarkung.SelectedItem Is Nothing Then Exit Sub
 
-        Dim myvali$ = CStr(cmbgemarkung.SelectedValue)
-        Dim myvalx = CType(cmbgemarkung.SelectedItem, System.Xml.XmlElement)
-        Dim myvals$ = myvalx.Attributes(1).Value.ToString
-        dgBestand.DataContext = Nothing
-        Dim sql = "select * from " & tools.srv_schema & "." & tools.srv_tablename & "  where lower(gemarkung)='" & myvals.ToLower.Trim & "' order by fs"
-        l(sql)
-        refreshGISBestand(sql)
-        tbTreffer.Text = tools.baulastListe.Count & " Treffer"
-    End Sub
+    '    Dim myvali$ = CStr(cmbgemarkung.SelectedValue)
+    '    Dim myvalx = CType(cmbgemarkung.SelectedItem, System.Xml.XmlElement)
+    '    Dim myvals$ = myvalx.Attributes(1).Value.ToString
+    '    dgBestand.DataContext = Nothing
+    '    Dim sql = "select * from " & tools.srv_schema & "." & tools.srv_tablename & "  where lower(gemarkung)='" & myvals.ToLower.Trim & "' order by fs"
+    '    l(sql)
+    '    refreshGISBestand(sql)
+    '    tbTreffer.Text = tools.baulastListe.Count & " Treffer"
+    'End Sub
 
     Private Sub dgProbaug_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
 

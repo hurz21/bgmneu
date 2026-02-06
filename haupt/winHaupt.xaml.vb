@@ -51,14 +51,8 @@ Public Class winHaupt
 
     Private Sub btnGIS_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
-        Dim gisexe = "C:\kreisoffenbach\mgis\mgis.exe"
-        'Dim lu, ro As New myPoint
-        'lu.X = range.xl
-        'lu.Y = range.yl
-        'ro.X = range.xh
-        'ro.Y = range.yh
-        'rangestring = calcrangestring(lu, ro)
-        'param = "modus=""bebauungsplankataster""  range=""" & rangestring & ""
+        Dim gisexe = "https://gis.kreis-of.de/LKOF/asp/main.asp"
+
         Process.Start(gisexe)
     End Sub
 
@@ -131,12 +125,12 @@ Public Class winHaupt
         'tbFlurstueckDisplay.Background=
         tools.FSTausGISListe.Clear()
         tools.FSTausGISListe.Add(f.normflst)
-        eigentuemerText = kurz & toolsEigentuemer.geteigentuemertext(tools.FSTausGISListe)
+        eigentuemerText = kurz & toolsEigentuemer.geteigentuemerText(tools.FSTausGISListe)
         If eigentuemerText.Length > 1 Then
             btnEigentuemer.IsEnabled = True
             'btnBaulast4FST.IsEnabled = True
 
-            baulastnr = getBaulastNr(tools.FSTausGISListe(0)) '????
+            '''''  baulastnr = getBaulastNr(tools.FSTausGISListe(0)) '????
             If Not IsNumeric(baulastnr) Then
                 tbBaulast2.Text = "keine BL"
                 lastPDF = ""
@@ -190,31 +184,31 @@ Public Class winHaupt
 
     End Sub
 
-    Private Function getBaulastNr(fst As clsFlurstueck) As String
-        'tools.FSTausGISListe
-        If istgeladen Then
-            Dim hinweis As String = ""
-            fstREC.mydb.SQL = "select jahr_blattnr,tiff from " & srv_schema & "." & srv_tablename &
-             " where gemcode = '" & fst.gemcode & "'" &
-             " and flur='" & fst.flur & "'" &
-             " and zaehler='" & fst.zaehler & "'" &
-             " and nenner='" & fst.nenner & "'"
-            l(fstREC.mydb.SQL)
-            hinweis = fstREC.getDataDT()
-            If fstREC.dt.Rows.Count < 1 Then
-                Return "keine BL"
-                'tbBaulast2.Text = "keine BL"
-                'lastPDF = ""
-                'btnBaulastdisplay.IsEnabled = False
-            Else
-                'tbBaulast2.Text = fstREC.dt.Rows(0).Item(0).ToString.Trim
-                lastPDF = fstREC.dt.Rows(0).Item(1).ToString.Trim
-                lastPDF = lastPDF.ToLower.Replace(".tiff", ".pdf")
-                lastPDF = lastPDF.ToLower.Replace(".tif", ".pdf")
-                Return fstREC.dt.Rows(0).Item(0).ToString.Trim
-                'btnBaulastdisplay.IsEnabled = True
-            End If
+    'Private Function getBaulastNr(fst As clsFlurstueck) As String
+    '    'tools.FSTausGISListe
+    '    If istgeladen Then
+    '        Dim hinweis As String = ""
+    '        fstREC.mydb.SQL = "select jahr_blattnr,tiff from " & srv_schema & "." & srv_tablename &
+    '         " where gemcode = '" & fst.gemcode & "'" &
+    '         " and flur='" & fst.flur & "'" &
+    '         " and zaehler='" & fst.zaehler & "'" &
+    '         " and nenner='" & fst.nenner & "'"
+    '        l(fstREC.mydb.SQL)
+    '        hinweis = fstREC.getDataDT()
+    '        If fstREC.dt.Rows.Count < 1 Then
+    '            Return "keine BL"
+    '            'tbBaulast2.Text = "keine BL"
+    '            'lastPDF = ""
+    '            'btnBaulastdisplay.IsEnabled = False
+    '        Else
+    '            'tbBaulast2.Text = fstREC.dt.Rows(0).Item(0).ToString.Trim
+    '            lastPDF = fstREC.dt.Rows(0).Item(1).ToString.Trim
+    '            lastPDF = lastPDF.ToLower.Replace(".tiff", ".pdf")
+    '            lastPDF = lastPDF.ToLower.Replace(".tif", ".pdf")
+    '            Return fstREC.dt.Rows(0).Item(0).ToString.Trim
+    '            'btnBaulastdisplay.IsEnabled = True
+    '        End If
 
-        End If
-    End Function
+    '    End If
+    'End Function
 End Class
