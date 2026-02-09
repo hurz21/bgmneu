@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
      
-     xmlns:src="clr-namespace:paradigma">
+     xmlns:src="clr-namespace:bgm">
 
     <Style TargetType="DatePickerTextBox">
         <Setter Property="Text" Value="Bitte wählen" />

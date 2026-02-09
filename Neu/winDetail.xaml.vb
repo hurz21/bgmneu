@@ -496,16 +496,26 @@ Public Class winDetail
                         l(" MOD dropped 4 " & filenames(0).ToLower & " nach " & zielname)
                         IO.File.Copy(filenames(0).ToLower, zielname, True)
                         'der DB-eintrag existiert bereits also nichts weiter erforderlich
+                        If toolsEigentuemer.existiertPDF(tbBaulastNr.Text.Trim) Then
+                            '
+                        Else
+                            Dim erfolg As Boolean = toolsEigentuemer.insertBaulastPdfInDB(tbBaulastNr.Text & ".pdf", ObjektGuid)
+                            If erfolg Then
+                                MsgBox("DB für die Datei wurde gesetzt!" & Environment.NewLine & tbBaulastNr.Text.Trim & endung.Trim)
+                            Else
+                                MsgBox("DB für die Datei wurde NICHT gesetzt! Fehler (\dokumente\bgm)")
+                            End If
+                        End If
                         MsgBox("Datei wurde aktualisiert!" & Environment.NewLine & tbBaulastNr.Text.Trim & endung.Trim)
-                    Else
-                        Exit Sub
+                        Else
+                            Exit Sub
                     End If
                 Else
                     l(" MOD dropped 4 " & filenames(0).ToLower & " nach " & zielname)
                     IO.File.Copy(filenames(0).ToLower, zielname, True)
                     MsgBox("Datei wurde aktualisiert!" & Environment.NewLine & tbBaulastNr.Text.Trim & endung.Trim)
                     'hier muss der db-eintrag gemacht werden                    'insert
-                    Dim erfolg As Boolean = toolsEigentuemer.insertBaulastPdfInDB(tbBaulastNr.Text & ".pdf", zielname, ObjektGuid)
+                    Dim erfolg As Boolean = toolsEigentuemer.insertBaulastPdfInDB(tbBaulastNr.Text & ".pdf", ObjektGuid)
                     If erfolg Then
                         MsgBox("DB für die Datei wurde gesetzt!" & Environment.NewLine & tbBaulastNr.Text.Trim & endung.Trim)
                     Else
@@ -636,23 +646,51 @@ Public Class winDetail
         Process.Start(ziel)
     End Sub
 
-    Private Sub showpdf()
-
+    Sub showPDF()
+        Dim hinweis As String
         Dim quelle = srv_unc_path & "BAUL4ST_" & tbBaulastNr.Text & ".pdf"
         Dim ziel = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+        ziel = IO.Path.Combine(ziel, tbBaulastNr.Text & ".pdf")
         Try
-            ziel = IO.Path.Combine(ziel, tbBaulastNr.Text & ".pdf")
-            '"\\kh-w-ingrada\lkof\data\upload\FILES\LKOF\sp_mdat\dat\BAUL4ST_" & tbBaulastNr.Text & ".pdf"
-            IO.File.Copy(quelle, ziel, True)
-            btnPDFaufrufen.IsEnabled = True
-            tbPDFvorhanden.Text = "PDF ist verfügbar"
+
+            If toolsEigentuemer.existiertPDF(tbBaulastNr.Text.Trim) Then
+
+                '"\\kh-w-ingrada\lkof\data\upload\FILES\LKOF\sp_mdat\dat\BAUL4ST_" & tbBaulastNr.Text & ".pdf"
+                IO.File.Copy(quelle, ziel, True)
+                btnPDFaufrufen.IsEnabled = True
+                tbPDFvorhanden.Text = "PDF ist verfügbar"
+            Else
+                btnPDFaufrufen.IsEnabled = False
+                tbPDFvorhanden.Text = "PDF fehlt"
+            End If
+            Return
+
         Catch ex As Exception
             l("Fehler in showpdf " & ex.ToString)
             btnPDFaufrufen.IsEnabled = False
             tbPDFvorhanden.Text = "PDF fehlt"
         End Try
-
     End Sub
+
+
+
+    'Private Sub showpdf()
+
+    '    Dim quelle = srv_unc_path & "BAUL4ST_" & tbBaulastNr.Text & ".pdf"
+    '    Dim ziel = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+    '    Try
+    '        ziel = IO.Path.Combine(ziel, tbBaulastNr.Text & ".pdf")
+    '        '"\\kh-w-ingrada\lkof\data\upload\FILES\LKOF\sp_mdat\dat\BAUL4ST_" & tbBaulastNr.Text & ".pdf"
+    '        IO.File.Copy(quelle, ziel, True)
+    '        btnPDFaufrufen.IsEnabled = True
+    '        tbPDFvorhanden.Text = "PDF ist verfügbar"
+    '    Catch ex As Exception
+    '        l("Fehler in showpdf " & ex.ToString)
+    '        btnPDFaufrufen.IsEnabled = False
+    '        tbPDFvorhanden.Text = "PDF fehlt"
+    '    End Try
+
+    'End Sub
 
     Private Sub StackPanel_Drop(sender As Object, e As DragEventArgs)
         e.Handled = True
@@ -772,8 +810,15 @@ Public Class winDetail
         Dim url As String
         ' C:\kreisoffenbach\mgis\ingradaadapter.exe    suchmodus=flurstueck gemarkung="Hainhausen" flur="4" fstueck="387/1" 
         '91197
+        Dim zwischen As String
         Try
-
+            zwischen = zwischen & tbBaulastNr.Text.Trim & Environment.NewLine
+            zwischen = zwischen & tools.FSTausPROBAUGListe(0).gemeindename & Environment.NewLine
+            zwischen = zwischen & tools.FSTausPROBAUGListe(0).gemarkungstext & Environment.NewLine
+            zwischen = zwischen & tools.FSTausPROBAUGListe(0).flur & Environment.NewLine
+            zwischen = zwischen & tools.FSTausPROBAUGListe(0).zaehler & Environment.NewLine
+            zwischen = zwischen & tools.FSTausPROBAUGListe(0).nenner & Environment.NewLine
+            My.Computer.Clipboard.SetText(zwischen)
             If tools.FSTausPROBAUGListe.Count > 0 Then
                 flurstueckskennzeichen = tools.FSTausPROBAUGListe(0).flurstueckZuFKZ
                 'url = makeurl4FST("https://gis.kreis-of.de/LKOF/asp/main.asp?", flurstueckskennzeichen)

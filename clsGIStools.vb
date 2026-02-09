@@ -54,26 +54,26 @@ Public Class clsGIStools
                     MsgBox("Sie haben keine Flurstücksdaten eingeben. (Gemeinde,Gemarkung,Flur,Zaehler,Nenner).")
                     Return liste
                 End If
-                'tfst.flur = CInt(fstREC.dt.Rows(i).Item("int1"))
-                'tfst.zaehler = CInt(fstREC.dt.Rows(i).Item("int2"))
-                'Try
+                tfst.flur = CInt(fstREC.dt.Rows(i).Item("int1"))
+                tfst.zaehler = CInt(fstREC.dt.Rows(i).Item("int2"))
+                Try
 
-                '    tfst.nenner = CInt(fstREC.dt.Rows(i).Item("int3"))
-                'Catch ex As Exception
-                '    tfst.nenner = 0
-                'End Try
-                ''tfst.FS = (fstREC.dt.Rows(i).Item("fs")).ToString.Trim
-                'tfst.gemeindename = (fstREC.dt.Rows(i).Item("text7")).ToString.Trim
-                'tfst.gemarkungstext = (fstREC.dt.Rows(i).Item("text8")).ToString.Trim
-                ''tfst.gemeindename = (fstREC.dt.Rows(i).Item("")).ToString.Trim
-                'Try
+                    tfst.nenner = CInt(fstREC.dt.Rows(i).Item("int3"))
+                Catch ex As Exception
+                    tfst.nenner = 0
+                End Try
+                'tfst.FS = (fstREC.dt.Rows(i).Item("fs")).ToString.Trim
+                tfst.gemeindename = (fstREC.dt.Rows(i).Item("text7")).ToString.Trim
+                tfst.gemarkungstext = (fstREC.dt.Rows(i).Item("text8")).ToString.Trim
+                'tfst.gemeindename = (fstREC.dt.Rows(i).Item("")).ToString.Trim
+                Try
 
-                '    tfst.gebucht = ((fstREC.dt.Rows(i).Item("text2")).ToString.Trim)
-                'Catch ex As Exception
-                '    tfst.gebucht = ""
-                'End Try
-                ''tfst.genese = CInt((fstREC.dt.Rows(i).Item("genese")).ToString.Trim)
-                'tfst.fstueckKombi = tfst.buildFstueckkombi().Trim
+                    tfst.gebucht = ((fstREC.dt.Rows(i).Item("text2")).ToString.Trim)
+                Catch ex As Exception
+                    tfst.gebucht = ""
+                End Try
+                'tfst.genese = CInt((fstREC.dt.Rows(i).Item("genese")).ToString.Trim)
+                tfst.fstueckKombi = tfst.buildFstueckkombi().Trim
                 liste.Add(tfst)
             Next
             Return liste

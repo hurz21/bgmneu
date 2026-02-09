@@ -147,11 +147,11 @@ Public Class toolsEigentuemer
         End Try
     End Function
 
-    Friend Shared Function insertBaulastPdfInDB(filename As String, zielname As String, objektGUID As String) As Boolean
+    Friend Shared Function insertBaulastPdfInDB(filename As String, objektGUID As String) As Boolean
         Dim result, hinweis As String
         Dim newid As Long
         Try
-            result = makeInsertStatement(filename, objektGUID, result)
+            result = makeInsertStatement(filename, objektGUID)
             fstREC.mydb.SQL = result
             l(fstREC.mydb.SQL)
             Dim retcode = fstREC.dboeffnen(hinweis)
@@ -169,27 +169,42 @@ Public Class toolsEigentuemer
             Return False
         End Try
     End Function
-
-    Private Shared Function makeInsertStatement(filename As String, objektGUID As String, ByRef result As String) As String
+    Public Shared Function existiertPDF(baulast As String) As Boolean
+        Dim hinweis As String
+        fstREC.mydb.SQL = "select * from [LKOF_Bearb].[dbo].[tbl_mdat_dateien] where file_key='BAUL4ST_" & baulast.Trim & ".pdf'"
+        l(fstREC.mydb.SQL)
+        Try
+            hinweis = fstREC.getDataDT()
+            If fstREC.dt.Rows.Count < 1 Then
+                Return False
+            Else
+                Return True
+            End If
+        Catch ex As Exception
+            l("existiertPDF " & ex.ToString)
+            Return False
+        End Try
+    End Function
+    Private Shared Function makeInsertStatement(filename As String, objektGUID As String) As String
         Dim builder As New StringBuilder()
-        Dim newGuid = Guid.NewGuid()
+        'Dim newGuid = Guid.NewGuid()
         Dim startInsertfile = "USE [LKOF_Bearb] GO"
-
+        Dim result As String = ""
         Dim insert1 = "INSERT INTO  [LKOF_Bearb].[dbo].[tbl_mdat_dateien]  ([guid],[object_guid],[modulid] ,[file_key],[file_name] ,[sys_login_in],[sys_stamp_in] ) VALUES ("
 
         Try
             builder.AppendLine(insert1)
-            builder.AppendLine(" '" & newGuid.ToString & "' ") '
+            builder.AppendLine(" '" & objektGUID.ToString & "' ") '
             builder.AppendLine(",'" & objektGUID & "' ") '
-            builder.AppendLine(",'EIGENEDATEN-BL' ") '
+            builder.AppendLine(",'EIGENEDATEN-DATENSAETZE' ") '
             'builder.AppendLine(",'BPL4N_" & tempfile.Name.Trim & "' ") '
             builder.AppendLine(",'" & "BAUL4ST_" & filename & "' ") '
             builder.AppendLine(",'" & filename & "' ") '
             builder.AppendLine(",'Ingrada',GETDATE() )") '
             'builder.AppendLine("GO ") ' 
-            result = builder.ToString
+            Result = builder.ToString
             Debug.Print(builder.ToString)
-            Return result
+            Return Result
         Catch ex As Exception
             l("Fehler in makeInsertStatement: " & filename & ", " & ex.ToString())
             Return "Fehler in makeInsertStatement:"
