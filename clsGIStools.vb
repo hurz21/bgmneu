@@ -47,28 +47,33 @@ Public Class clsGIStools
             l(" MOD fstGIS2OBJ anfang")
             For i = 0 To fstREC.dt.Rows.Count - 1
                 tfst = New clsFlurstueck
-                'tfst.gemcode = CInt(fstREC.dt.Rows(i).Item("int4"))
-                tfst.flur = CInt(fstREC.dt.Rows(i).Item("int1"))
-                tfst.zaehler = CInt(fstREC.dt.Rows(i).Item("int2"))
-                Try
-
-                    tfst.nenner = CInt(fstREC.dt.Rows(i).Item("int3"))
-                Catch ex As Exception
-                    tfst.nenner = 0
-                End Try
-                'tfst.FS = (fstREC.dt.Rows(i).Item("fs")).ToString.Trim
-                tfst.gemeindename = (fstREC.dt.Rows(i).Item("text7")).ToString.Trim
-                tfst.gemarkungstext = (fstREC.dt.Rows(i).Item("text8")).ToString.Trim
-                'tfst.gemeindename = (fstREC.dt.Rows(i).Item("")).ToString.Trim
                 tfst.GUID = ((fstREC.dt.Rows(i).Item("guid")).ToString.Trim)
-                Try
+                'tfst.gemcode = CInt(fstREC.dt.Rows(i).Item("int4"))
+                If fstREC.dt.Rows(i).Item("int1").ToString = String.Empty Then
+                    l("kein eintrag für flur")
+                    MsgBox("Sie haben keine Flurstücksdaten eingeben. (Gemeinde,Gemarkung,Flur,Zaehler,Nenner).")
+                    Return liste
+                End If
+                'tfst.flur = CInt(fstREC.dt.Rows(i).Item("int1"))
+                'tfst.zaehler = CInt(fstREC.dt.Rows(i).Item("int2"))
+                'Try
 
-                    tfst.gebucht = ((fstREC.dt.Rows(i).Item("text2")).ToString.Trim)
-                Catch ex As Exception
-                    tfst.gebucht = ""
-                End Try
-                'tfst.genese = CInt((fstREC.dt.Rows(i).Item("genese")).ToString.Trim)
-                tfst.fstueckKombi = tfst.buildFstueckkombi().Trim
+                '    tfst.nenner = CInt(fstREC.dt.Rows(i).Item("int3"))
+                'Catch ex As Exception
+                '    tfst.nenner = 0
+                'End Try
+                ''tfst.FS = (fstREC.dt.Rows(i).Item("fs")).ToString.Trim
+                'tfst.gemeindename = (fstREC.dt.Rows(i).Item("text7")).ToString.Trim
+                'tfst.gemarkungstext = (fstREC.dt.Rows(i).Item("text8")).ToString.Trim
+                ''tfst.gemeindename = (fstREC.dt.Rows(i).Item("")).ToString.Trim
+                'Try
+
+                '    tfst.gebucht = ((fstREC.dt.Rows(i).Item("text2")).ToString.Trim)
+                'Catch ex As Exception
+                '    tfst.gebucht = ""
+                'End Try
+                ''tfst.genese = CInt((fstREC.dt.Rows(i).Item("genese")).ToString.Trim)
+                'tfst.fstueckKombi = tfst.buildFstueckkombi().Trim
                 liste.Add(tfst)
             Next
             Return liste

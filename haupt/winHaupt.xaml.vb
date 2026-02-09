@@ -122,6 +122,7 @@ Public Class winHaupt
             ": : " & f.normflst.zaehler &
             "/" & f.normflst.nenner & Environment.NewLine & Environment.NewLine
         tbFlurstueckDisplay.Text = kurz
+
         'tbFlurstueckDisplay.Background=
         tools.FSTausGISListe.Clear()
         tools.FSTausGISListe.Add(f.normflst)

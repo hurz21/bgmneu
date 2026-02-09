@@ -1,4 +1,5 @@
 ﻿Imports System.Security.Policy
+Imports DocumentFormat.OpenXml.Office.MetaAttributes
 Imports Org.BouncyCastle.Asn1.Esf
 
 Public Class winDetail
@@ -66,18 +67,17 @@ Public Class winDetail
             '                                     tools.FSTausGISListe(0).zaehler.ToString,
             '                                     tools.FSTausGISListe(0).nenner.ToString)
             Dim summe = ""
-            For Each fst As clsFlurstueck In tools.FSTausGISListe
-                summe = summe & "== Grundstück: " & fst.gemeindename & ", Gemarkung: " &
-                    fst.gemarkungstext & ", Flur: " &
-                    fst.flur & ", Fst: " &
-                    fst.zaehler & "/" & fst.nenner & " =="
-            Next
+            summe = makeFlurstuecksAbstrakt(tools.FSTausGISListe)
             summe = summe & Environment.NewLine
-            tbEigentuemer.Text = summe & Environment.NewLine &
-                toolsEigentuemer.geteigentuemerText(tools.FSTausGISListe)
+            tbEigentuemer.Text = summe & Environment.NewLine & toolsEigentuemer.geteigentuemerText(tools.FSTausGISListe)
+            If tbEigentuemer.Text.Contains("keine eigen") Then
+                summe = makeFlurstuecksAbstrakt(FSTausPROBAUGListe)
+                summe = summe & Environment.NewLine
+                tbEigentuemer.Text = summe & Environment.NewLine & toolsEigentuemer.geteigentuemerText(tools.FSTausPROBAUGListe)
+            End If
         End If
 
-        setTitle()
+            setTitle()
         showpdf()
         'If nurlesen Then
         '    dpMain.IsEnabled = False
@@ -87,6 +87,17 @@ Public Class winDetail
         istgeladen = True
         l("windetail loaded ende")
     End Sub
+
+    Private Shared Function makeFlurstuecksAbstrakt(dieliste As List(Of clsFlurstueck)) As String
+        Dim summe As String
+        For Each fst As clsFlurstueck In dieliste
+            summe = summe & "== Grundstück: " & fst.gemeindename & ", Gemarkung: " &
+                fst.gemarkungstext & ", Flur: " &
+                fst.flur & ", Fst: " &
+                fst.zaehler & "/" & fst.nenner & " =="
+        Next
+        Return summe
+    End Function
 
     Private Sub setTitle()
         Title = "BGM: BaulastenGISManager 0.11. " & Environment.UserName & " V.: " & bgmVersion
@@ -131,6 +142,9 @@ Public Class winDetail
 
         Else
             tools.FSTausGISListe = clsGIStools.fstGIS2OBJ()
+            If tools.FSTausGISListe.Count < 1 Then
+                Exit Sub
+            End If
             ObjektGuid = tools.FSTausGISListe(0).GUID
             If tools.FSTausGISListe Is Nothing Then
                 MsgBox("Die im GIS-Baulastkataster hinterlegten Flurstücksinfos sind mangelhaft. Bitte verbessern!")
@@ -473,7 +487,7 @@ Public Class winDetail
                 l(" MOD dropped 3")
                 zielname = IO.Path.Combine(srv_unc_path & "BAUL4ST_" & tbBaulastNr.Text.Trim & endung).Trim
                 Dim fi As New IO.FileInfo(zielname)
-                If Not fi.Exists Then
+                If fi.Exists Then
                     Dim mesres = MessageBox.Show("Möchten Sie die Datei überschreiben ?" & Environment.NewLine &
                                                     "  Ja    - Überschreiben " & Environment.NewLine &
                                                     "  Nein - Abbruch",
@@ -858,8 +872,26 @@ Public Class winDetail
         e.Handled = True
         Dim testfolder = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
         IO.Directory.CreateDirectory(IO.Path.Combine(testfolder, "bgm"))
-        logfile = IO.Path.Combine(Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),
-                                 "bgm")
+        logfile = IO.Path.Combine(Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), "bgm")
         Process.Start(logfile)
+    End Sub
+
+    Private Sub btnEigentuemerProbaug_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+        Dim summe As String = "Aus ProbauG:" & Environment.NewLine
+        summe = summe & makeFlurstuecksAbstrakt(tools.FSTausPROBAUGListe)
+        summe = summe & Environment.NewLine
+        tbEigentuemer.Text = summe & Environment.NewLine & toolsEigentuemer.geteigentuemerText(tools.FSTausPROBAUGListe)
+        'FSTausPROBAUGListe
+
+    End Sub
+
+    Private Sub btnEigentuemerGIS_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+        Dim summe As String = "Aus GIS:" & Environment.NewLine
+        summe = summe & makeFlurstuecksAbstrakt(tools.FSTausGISListe)
+        summe = summe & Environment.NewLine
+        tbEigentuemer.Text = summe & Environment.NewLine & toolsEigentuemer.geteigentuemerText(tools.FSTausGISListe)
+        'FSTausPROBAUGListe
     End Sub
 End Class
