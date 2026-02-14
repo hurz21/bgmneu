@@ -325,4 +325,9 @@
     <PreBuildEvent>
     </PreBuildEvent>
   </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>copy $(targetfilename) \\gis\gdvell\apps\bgm\bgmIngrada.exe 
+ 
+)</PostBuildEvent>
+  </PropertyGroup>
 </Project>
