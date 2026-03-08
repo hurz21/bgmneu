@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:bgm"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen"
-        Title="BGM - BaulastenGISManager 0.11" Height="730.209" Width="1295.513">
+        Title="BGM - BaulastenGISManager 0.11" Height="966" Width="1299">
     <Window.Resources>
         <Style x:Key="dgRowStyleRB" TargetType="{x:Type DataGridRow}" BasedOn="{StaticResource dgRowStyle}">
             <Style.Triggers>
@@ -26,7 +26,7 @@
     <DockPanel Background="Gray" Name="dpMain"  >
         <TabControl Margin="5">
             <TabItem   >
-                <StackPanel Margin="5" Background="LightGray">
+                <StackPanel Margin="5,5,15,5" Background="LightGray" Height="910">
 
 
                     <StackPanel Orientation="Horizontal" Margin="5"  AllowDrop="True" 
@@ -70,9 +70,10 @@
                         </GroupBox>
                     </StackPanel>
 
-                    <StackPanel Name="spFST" Orientation="Horizontal" Width="1250"  HorizontalAlignment="Left">
+                    <StackPanel Name="spFST" Orientation="Vertical" Width="1250" 
+                                HorizontalAlignment="Left">
                         <Border BorderBrush="Green" BorderThickness="1" Margin="5" 
-                                HorizontalAlignment="Left" >
+                                HorizontalAlignment="Left" Width="1200">
 
                             <StackPanel HorizontalAlignment="Left">
                                 <StackPanel Orientation="Horizontal">
@@ -82,12 +83,15 @@
                                     <Button Name="btnZumGISPROBAUG" Click="btnZumGISPROBAUG_Click" Content="im GIS zeigen" Width="100"    
                                         Height="20"  Padding="-2" Margin="5" HorizontalAlignment="Right"/>
                                     <Button Name="btnEigentuemerProbaug" Click="btnEigentuemerProbaug_Click" Margin="5" Height="20" Width="200"
->Eigentümer </Button>
+>Eigentümer</Button>
+                                    <TextBlock Padding="5" Margin="2" 
+                                               FontStyle="Normal" FontFamily="Arial Black" > P R O B A U G</TextBlock>
                                 </StackPanel>
                                 <DataGrid  x:Name="dgAusProbaug"   ItemsSource="{Binding ''}"      Margin="5"                                           
                                               RowStyle="{StaticResource dgRowStyleRB}"                                        
                                               ColumnHeaderStyle="{StaticResource dgHeaderStyle}"    
-                                     Width="650"   MaxHeight="160" Height="160"
+                                     Width="1150"   MaxHeight="160" Height="160"
+                                           HorizontalAlignment="Left"
                                    >
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Gemarkung"      Binding="{Binding gemarkungstext}"     />
@@ -97,7 +101,7 @@
                                         <DataGridTextColumn Header="Nenner"   Binding="{Binding nenner}" />-->
                                         <DataGridTextColumn Header="Fst"  Binding="{Binding fstueckKombi}" />
                                         <DataGridTextColumn Header="g"  Binding="{Binding gueltig}"  ToolTipService.ToolTip="gültig" />
-                                        <DataGridTextColumn Header="BlNr"  Binding="{Binding gebucht}" />
+                                        <DataGridTextColumn Header="BNr"  Binding="{Binding gebucht}" />
                                         <DataGridTextColumn Header="AzJahr"  Binding="{Binding AzJahr}" />
                                         <!--<DataGridTextColumn Header="og"  Binding="{Binding AzOG}" />-->
                                         <DataGridTextColumn Header="AzNr"  Binding="{Binding AzNr}" />
@@ -112,30 +116,35 @@
                                 </DataGrid>
                             </StackPanel>
                         </Border>
-                        <Border BorderBrush="Black" BorderThickness="1" Margin="5" HorizontalAlignment="Right">
+                        <Border BorderBrush="Black" BorderThickness="1" Margin="5"
+                                Width="1200"
+                                HorizontalAlignment="Left">
 
-                            <StackPanel>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" >
+                            <StackPanel Name="spBL">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="left" >
 
-                                    <TextBlock Margin="2">Aus dem GIS</TextBlock>
+                                  
                                     <TextBlock x:Name="tbGISinfo" Margin="2" Foreground="Red"/>
                                     <Button Name="btnZumGIS" Click="btnZumGIS_Click" Content="GIS via Flurstück" Width="100"    
                                              Height="20"  Padding="-2" Margin="5" HorizontalAlignment="Right"/>
                                     <Button Name="btnZumGISOBJ" Click="btnZumGISOBJ_Click" Content="GIS via Baulast" Width="100"    
                                Height="20"  Padding="-2" Margin="5" HorizontalAlignment="Right"
                                             ToolTip="Diese Möglichkeit geht nur dann wenn das Objekt bereits erfasst wurde!"/>
+                                    <Button Name="btnUebertragMetadaten" IsEnabled="False" Click="btnUebertragMetadaten_Click" Margin="5">
+                                        Übertrag </Button>
                                     <Button Name="btnEigentuemerGIS" Click="btnEigentuemerGIS_Click" Margin="5" Height="20"
-                                            Width="200"
->Eigentümer</Button>
+                                            Width="200" >Eigentümer</Button>
+                                    <TextBlock Margin="2" Padding="15"   FontStyle="Normal" FontFamily="Arial Black"> G I S </TextBlock>
                                     <!--<Button x:Name="btndigit" Click="btndigit_Click" Content=" digitalisieren "
                                             Background="red" Height="15" 
                                             Padding="-2" Margin="5" HorizontalAlignment="Right"/>-->
-                                     
+
                                 </StackPanel>
                                 <DataGrid  x:Name="dgAusGIS"   ItemsSource="{Binding ''}"    Margin="5"                                             
                                               RowStyle="{StaticResource dgRowStyleRB}"                                              
                                               ColumnHeaderStyle="{StaticResource dgHeaderStyle}"    
-                                          Width="350"   MaxHeight="160" Height="160"
+                                          Width="1150"   MaxHeight="160" Height="160"
+                                           HorizontalAlignment="Left"
                                    >
                                     <DataGrid.Columns>
                                         <DataGridTextColumn Header="Gemarkung"      Binding="{Binding gemarkungstext}"     />
@@ -144,42 +153,27 @@
                                         <!--<DataGridTextColumn Header="Zähler"   Binding="{Binding zaehler}" />
                                         <DataGridTextColumn Header="Nenner"   Binding="{Binding nenner}" />-->
                                         <DataGridTextColumn Header=""  Binding="{Binding fstueckKombi}" />
-                                        <DataGridTextColumn Header="k"  Binding="{Binding gebucht}" />
-                                        <DataGridTextColumn Header="gefundenIn"    Binding="{Binding gemeindename}" />
-                                        <DataGridTextColumn Header="digit"    Binding="{Binding genese}" />
+                                        <DataGridTextColumn Header="BNr"  Binding="{Binding gebucht}" />
+                                        <DataGridTextColumn Header="Gemeinde"    Binding="{Binding gemeindename}" />
+                                        <DataGridTextColumn Header="Info"    Binding="{Binding fsgml}" />
+                                        <DataGridTextColumn Header="az"    Binding="{Binding AzOG}" />
                                     </DataGrid.Columns>
                                 </DataGrid>
                             </StackPanel>
                         </Border>
-                        <StackPanel  Margin="5">
-                            <!--<Button Name="btnGISeintraegeLoeschen" Click="btnGISeintraegeLoeschen_Click" 
-                                    Content="GIS-Einträge löschen" Margin="5"/>-->
-                            <!--<Border BorderBrush="Black" BorderThickness="1" Margin="5">
-                                -->
-                            <!--<StackPanel>
-                                    <Button Name="btnVonProbaugNachGISkopieren" Click="btnVonProbaugNachGISkopieren_Click"
-                                Content="Von Probaug nach GIS kopieren" Margin="5"/>
-                                    -->
-                            <!--<CheckBox Name="cbAuchUnguetige" IsChecked="False" Margin="5">auch ungültige</CheckBox>-->
-                            <!--
-                                </StackPanel>-->
-                            <!--
-                            </Border>-->
-
-
-                        </StackPanel>
+            
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal" Panel.ZIndex="1">
                         <Border BorderBrush="Gray"  Margin="5" BorderThickness="2" Width="120"
-                                  Drop="dropTheBomb" AllowDrop="True" VerticalAlignment="Top"
+                                  Drop="dropTheBomb" AllowDrop="True" VerticalAlignment="Top" Height="261"
                                     >
                             <StackPanel   >
 
-                         
+
                                 <StackPanel Name="stpPDF" Orientation="Vertical"    Drop="dropTheBomb" AllowDrop="True"  Height="350" >
                                     <TextBlock Width="100" Margin="5">PDF:</TextBlock>
-                                    
+
                                     <Border BorderBrush="Black"  Margin="5" BorderThickness="1"
                                         Drop="dropTheBomb" AllowDrop="True"
                                         Width="100" Height="150" Panel.ZIndex="2"
@@ -201,7 +195,7 @@
                                 </StackPanel>
                             </StackPanel>
                         </Border>
-                   
+
                         <StackPanel  Margin="5" Visibility="Collapsed">
                             <TextBlock Width="100" Margin="5">Bemerkung.:</TextBlock>
                             <TextBox Name="tbBemerkung" Width="250"  Height="100" Margin="5"/>
@@ -209,12 +203,12 @@
 
                         <StackPanel   Margin="5" Width="1000"  Height="300" >
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                          
+
                                 <TextBlock Width="100" Margin="5" Padding="5">Eigentümer:</TextBlock>
                                 <Button Name="btnEigentümerclip" Click="btnEigentümerclip_Click" Margin="5"
                                         >in die Zwischenablage kopieren</Button>
                                 <Button Name="btnMakeworddok" Click="btnMakeworddok_Click" Margin="5">
-                                    mach daraus Wordkokument
+                                    mach daraus Worddokument
                                 </Button>
                             </StackPanel>
                             <TextBox Name="tbEigentuemer" Width="1000"  Height="200" Margin="5" TextWrapping="Wrap"  AcceptsReturn="True" AcceptsTab="True" />

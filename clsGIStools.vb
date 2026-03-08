@@ -40,11 +40,11 @@ Public Class clsGIStools
             Return Nothing
         End Try
     End Function
-    Shared Function fstGIS2OBJ() As List(Of clsFlurstueck)
+    Shared Function fstGISdt2ObjListe() As List(Of clsFlurstueck)
         Dim tfst As New clsFlurstueck
         Dim liste As New List(Of clsFlurstueck)
         Try
-            l(" MOD fstGIS2OBJ anfang")
+            l(" MOD fstGISdt2ObjListe anfang")
             For i = 0 To fstREC.dt.Rows.Count - 1
                 tfst = New clsFlurstueck
                 tfst.GUID = ((fstREC.dt.Rows(i).Item("guid")).ToString.Trim)
@@ -57,7 +57,6 @@ Public Class clsGIStools
                 tfst.flur = CInt(fstREC.dt.Rows(i).Item("int1"))
                 tfst.zaehler = CInt(fstREC.dt.Rows(i).Item("int2"))
                 Try
-
                     tfst.nenner = CInt(fstREC.dt.Rows(i).Item("int3"))
                 Catch ex As Exception
                     tfst.nenner = 0
@@ -65,6 +64,7 @@ Public Class clsGIStools
                 'tfst.FS = (fstREC.dt.Rows(i).Item("fs")).ToString.Trim
                 tfst.gemeindename = (fstREC.dt.Rows(i).Item("text7")).ToString.Trim
                 tfst.gemarkungstext = (fstREC.dt.Rows(i).Item("text8")).ToString.Trim
+                tfst.AzOG = (fstREC.dt.Rows(i).Item("text5")).ToString.Trim
                 'tfst.gemeindename = (fstREC.dt.Rows(i).Item("")).ToString.Trim
                 Try
 
@@ -73,13 +73,13 @@ Public Class clsGIStools
                     tfst.gebucht = ""
                 End Try
                 'tfst.genese = CInt((fstREC.dt.Rows(i).Item("genese")).ToString.Trim)
-                tfst.fstueckKombi = tfst.buildFstueckkombi().Trim
+                tfst.fsgml = ((fstREC.dt.Rows(i).Item("memo")).ToString.Trim) 'tfst.buildFstueckkombi().Trim
                 liste.Add(tfst)
             Next
             Return liste
-            l(" MOD fstGIS2OBJ ende")
+            l(" MOD fstGISdt2ObjListe ende")
         Catch ex As Exception
-            l("Fehler in fstGIS2OBJ: " & ex.ToString())
+            l("Fehler in fstGISdt2ObjListe: " & ex.ToString())
             Return liste
         End Try
     End Function
@@ -88,7 +88,7 @@ Public Class clsGIStools
         Dim tfst As New clsFlurstueck
         Dim liste As New List(Of clsFlurstueck)
         Try
-            l(" MOD fstGIS2OBJ anfang")
+            l(" MOD fstGISdt2ObjListe anfang")
             For i = 0 To fSTausPROBAUGListe.Count - 1
                 tfst = New clsFlurstueck
                 tfst.gemcode = CInt(fSTausPROBAUGListe.Item(i).gemcode)
@@ -105,9 +105,9 @@ Public Class clsGIStools
                 liste.Add(tfst)
             Next
             Return liste
-            l(" MOD fstGIS2OBJ ende")
+            l(" MOD fstGISdt2ObjListe ende")
         Catch ex As Exception
-            l("Fehler in fstGIS2OBJ: " & ex.ToString())
+            l("Fehler in fstGISdt2ObjListe: " & ex.ToString())
             Return liste
         End Try
     End Function
@@ -134,30 +134,32 @@ Public Class clsGIStools
             Return "Fehler in getGISrecord2: " & ex.ToString()
         End Try
     End Function
-    Friend Shared Function getGISrecord(v As Integer) As String
+    Friend Shared Function getBaulastFromBaulastMDAT(BaulastNR As Integer, kategorie_guid As String) As Boolean
         Dim hinweis As String
         Try
             l(" MOD ---------------------- anfang")
             l("getSerialFromBasis---------------------- anfang")
-            'fstREC.mydb.SQL = "select * from " & tools.srv_schema & "." & tools.srv_tablename & " where jahr_blattnr ='" & v & "' order by gemcode, flur, zaehler, nenner"
+            'fstREC.mydb.SQL = "select * from " & tools.srv_schema & "." & tools.srv_tablename & " where jahr_blattnr ='" & BaulastNR & "' order by gemcode, flur, zaehler, nenner"
             fstREC.mydb.SQL = "SELECT * FROM [LKOF_Bearb].[dbo].[tbl_mdat_datensatz]" &
-                         " where kategorie_guid='88AFE39F-78FC-4053-BE6D-315E3745CF45'    " &
-                         " and text3='" & v & "' order by text8, int1, int2, int3"
+                         " where kategorie_guid='" & kategorie_guid & "' " &
+                         " and text3='" & BaulastNR & "' order by text8, int1, int2, int3"
 
 
             l(fstREC.mydb.SQL)
             hinweis = fstREC.getDataDT()
             If fstREC.dt.Rows.Count < 1 Then
-                Return "(Noch) Kein Eintrag im GIS"
+                Return False '"(Noch) Kein Eintrag im GIS"
             Else
                 Debug.Print(clsDBtools.fieldvalue(fstREC.dt.Rows(0).Item(0)))
+                Return True
             End If
 
-            Return hinweis
+            'Return hinweis
 
-            l(" MOD getGISrecordv ende")
+            l(" MOD getBaulastFromBaulastMDAT ende")
         Catch ex As Exception
-            l("Fehler in getGISrecordv: " & ex.ToString())
+            l("Fehler in getBaulastFromBaulastMDAT: " & ex.ToString())
+            Return False
         End Try
     End Function
     Friend Shared Function calcrangestring(lu As myPoint, ro As myPoint) As String

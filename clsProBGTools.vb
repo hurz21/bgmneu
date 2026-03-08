@@ -36,7 +36,10 @@ Public Class clsProBGTools
             End If
             Debug.Print(rawList.Count.ToString)
             If rawList.Count < 1 Then
+
                 MessageBox.Show("Probaug lieferte keine sauberen Daten zu BaulastBlattNr: " & baulastblattnr & ". Bitte zuerst auf ProbauG-Seite in Ordnung bringen.")
+                abbruch = True
+                Exit Sub
             Else
                 l("vor schlkeife ")
                 For i = 0 To rawList.Count - 1

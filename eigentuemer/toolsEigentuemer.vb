@@ -147,7 +147,7 @@ Public Class toolsEigentuemer
         End Try
     End Function
 
-    Friend Shared Function insertBaulastPdfInDB(filename As String, objektGUID As String) As Boolean
+    Friend Shared Function insertBaulastPdfInMDAT_Dateien(filename As String, objektGUID As String) As Boolean
         Dim result, hinweis As String
         Dim newid As Long
         Try
@@ -165,7 +165,7 @@ Public Class toolsEigentuemer
             l(" MOD ---------------------- ende")
             Return True
         Catch ex As Exception
-            l("Fehler in insertBaulastPdfInDB: " & ", " & ex.ToString())
+            l("Fehler in insertBaulastPdfInMDAT_Dateien: " & ", " & ex.ToString())
             Return False
         End Try
     End Function
