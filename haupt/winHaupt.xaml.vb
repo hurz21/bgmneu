@@ -13,14 +13,13 @@ Public Class winHaupt
         e.Handled = True
         setLogfile(logfile) : l("Start " & Now) : l("mgisversion:" & bgmVersion)
         initdb()
+        tbblnr.Text = "21507"
         If isAutho() Then
             'its ok  21478  21504
-            tbblnr.Text = "21507"
             '"POLYGON ((479015 5538655,479033 5538660,479035 5538656,479017 5538650,479015 5538655))" 
         Else
             'MessageBox.Show("Sie haben keine Berechtigung für diese Anwendung. Abbruch!")
-            'Close()
-            tbblnr.Text = "21507"
+            'Close() 
             stpAdminOnly.Visibility = Visibility.Visible
             btnEdit.IsEnabled = False
         End If
@@ -35,10 +34,10 @@ Public Class winHaupt
         Return Environment.UserName.ToLower = "benes_c" Or
                 Environment.UserName.ToLower = "hartmann_s" Or
                 Environment.UserName.ToLower = "briese_j" Or
-                Environment.UserName.ToLower = "feinen_ja" Or
+                Environment.UserName.ToLower = "feinen_j" Or
                 Environment.UserName.ToLower = "thieme_m" Or
                 Environment.UserName.ToLower = "zahnlückenpimpf" Or
-                Environment.UserName.ToLower = "kroemmelbein_m"
+                Environment.UserName.ToLower = "neis_h"
     End Function
 
     Private Sub btnNeu_Click(sender As Object, e As RoutedEventArgs)
@@ -193,8 +192,8 @@ Public Class winHaupt
         e.Handled = True
         lastPDF = clsGIStools.copyOnlyPDF(tbblnr.Text.Trim)
         If lastPDF.ToLower.StartsWith("fehler") Or
-                    lastPDF.ToLower.StartsWith("keine") Then
-
+           lastPDF.ToLower.StartsWith("keine") Then
+            MsgBox(lastPDF)
         Else
             Process.Start(lastPDF)
         End If
