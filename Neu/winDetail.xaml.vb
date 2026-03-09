@@ -107,17 +107,21 @@ Public Class winDetail
         If schonvorhanden Then
             tools.FSTausGISListe = clsGIStools.fstGISdt2ObjListe()
             If tools.FSTausGISListe.Count < 1 Then
+                tbGISinfo.Text = "Mit dem Knopf 'Übertrag' können Sie die Flurstücksinfos zum GIS"
+                tbGISinfo2.Text = " in die Baulast-DB übertragen!"
                 Exit Sub
             End If
             ObjektGuid = tools.FSTausGISListe(0).GUID
             If tools.FSTausGISListe Is Nothing Then
                 MsgBox("Die im GIS-Baulastkataster hinterlegten Flurstücksinfos sind mangelhaft. Bitte verbessern!")
+
             End If
             btnUebertragMetadaten.IsEnabled = True
             spBL.Background = greenBrush
             stpPDF.Visibility = Visibility.Visible
             dgAusGIS.DataContext = tools.FSTausGISListe
             tbGISinfo.Text = ""
+            tbGISinfo2.Text = ""
             btnZumGIS.IsEnabled = True
             btnZumGISOBJ.IsEnabled = True
             btnZumGISPROBAUG.Content = "im GIS anzeigen"
@@ -126,6 +130,7 @@ Public Class winDetail
         Else
             'btnUebertragMetadaten.IsEnabled = False
             tbGISinfo.Text = "Baulast ist in der Baulast-DB(MDAT) noch nicht vorhanden !"
+            tbGISinfo2.Text = "Bitte nutzen sie den Knopf 'im GIS erfassen' !"
             stpPDF.Visibility = Visibility.Collapsed
             btnZumGIS.IsEnabled = False
             btnZumGISOBJ.IsEnabled = False
@@ -774,12 +779,12 @@ Public Class winDetail
         '91197
         Dim zwischen As String
         Try
-            zwischen = zwischen & tbBaulastNr.Text.Trim & Environment.NewLine
-            zwischen = zwischen & tools.FSTausPROBAUGListe(0).gemeindename & Environment.NewLine
-            zwischen = zwischen & tools.FSTausPROBAUGListe(0).gemarkungstext & Environment.NewLine
-            zwischen = zwischen & tools.FSTausPROBAUGListe(0).flur & Environment.NewLine
-            zwischen = zwischen & tools.FSTausPROBAUGListe(0).zaehler & Environment.NewLine
-            zwischen = zwischen & tools.FSTausPROBAUGListe(0).nenner & Environment.NewLine
+            zwischen = tbBaulastNr.Text.Trim
+            'zwischen = zwischen & tools.FSTausPROBAUGListe(0).gemeindename & Environment.NewLine
+            'zwischen = zwischen & tools.FSTausPROBAUGListe(0).gemarkungstext & Environment.NewLine
+            'zwischen = zwischen & tools.FSTausPROBAUGListe(0).flur & Environment.NewLine
+            'zwischen = zwischen & tools.FSTausPROBAUGListe(0).zaehler & Environment.NewLine
+            'zwischen = zwischen & tools.FSTausPROBAUGListe(0).nenner & Environment.NewLine
             My.Computer.Clipboard.SetText(zwischen)
             If tools.FSTausPROBAUGListe.Count > 0 Then
                 flurstueckskennzeichen = tools.FSTausPROBAUGListe(0).flurstueckZuFKZ
@@ -908,10 +913,13 @@ Public Class winDetail
     End Sub
 
     Private Sub uebertrageAlleMetadatenNachGIS()
+        l("uebertrageAlleMetadatenNachGIS")
         Try
             For Each bl As clsBaulast In rawList
                 If transferItem2gis(bl) Then
+                    l("uebertrageAlleMetadatenNachGIS item ok ")
                 Else
+                    l("uebertrageAlleMetadatenNachGIS item fail ")
                 End If
             Next
             refreshGIS(CInt(tbBaulastNr.Text))
@@ -923,6 +931,7 @@ Public Class winDetail
     Private Function transferItem2gis(bl As clsBaulast) As Boolean
         'update  " set tiff2='fkat/baulasten/' || trim(gemarkung) || '/' || trim(jahr_blattnr) || '.tiff'
         '        sql = "update " & tools.srv_schema & "." & tools.srv_tablename & " Set tiff='" & neuerTIFFname & "' where jahr_blattnr='" & baulastblatnr & "'"
+        l("transferItem2gis ")
         Dim mmemo, tooltip, update As String
         Dim hinweis As String
         Dim newid As Long
@@ -959,4 +968,16 @@ Public Class winDetail
             Return False
         End Try
     End Function
+
+    Private Sub btnBaulastLoeschen_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+        MessageBox.Show(
+            "Dazu gehen Sie ins 'GIS via Baulast' " & Environment.NewLine &
+            " - rufen Sie mit 'i' die Datenapplikation auf' " & Environment.NewLine &
+            " - wählen sie unten 'Datensatz löschen' " & Environment.NewLine &
+            " - Grafik und Sachdaten gemeinsam löschen' " & Environment.NewLine &
+            " - starten sie das BGM neu " & Environment.NewLine &
+            " " & Environment.NewLine, "Baulast löschen", MessageBoxButton.OK, MessageBoxImage.Information)
+
+    End Sub
 End Class

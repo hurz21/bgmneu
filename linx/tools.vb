@@ -58,7 +58,7 @@ Module tools
     Public enc As System.Text.Encoding = System.Text.Encoding.GetEncoding(1252)
     Sub setLogfile(logfile As String)
         With My.Log.DefaultFileLogWriter
-#If DEBUG Then
+            '#If DEBUG Then
             '.CustomLocation = mgisUserRoot & "logs\"
             logfile = "d:\" & "" ' & Environment.UserName & "_"
             Dim testfolder = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
@@ -66,8 +66,8 @@ Module tools
                                  "bgm"))
             logfile = IO.Path.Combine(Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),
                                  "bgm")
-#Else
-#End If
+            '#Else
+            '#End If
             '.CustomLocation = My.Computer.FileSystem.SpecialDirectories.Temp & "\mgis_logs\"
             .CustomLocation = logfile '
             '.BaseFileName = GisUser.username & "_" & Format(Now, "yyyyMMddhhmmss")
@@ -447,6 +447,7 @@ Module tools
     Private Function istgeschlossen(blattnr As String, geschlossen As DataTable) As Boolean
         Try
             l(" MOD istgeschlossen anfang")
+            If geschlossen Is Nothing Then Return False
             For Each ds As DataRow In geschlossen.AsEnumerable
                 If CStr(ds.Item(0)) = blattnr Then
                     Return False
