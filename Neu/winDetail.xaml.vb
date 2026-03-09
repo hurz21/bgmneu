@@ -124,7 +124,7 @@ Public Class winDetail
             btnZumGISPROBAUG.Width = 100
             btnZumGISPROBAUG.Height = 15
         Else
-            btnUebertragMetadaten.IsEnabled = False
+            'btnUebertragMetadaten.IsEnabled = False
             tbGISinfo.Text = "Baulast ist in der Baulast-DB(MDAT) noch nicht vorhanden !"
             stpPDF.Visibility = Visibility.Collapsed
             btnZumGIS.IsEnabled = False

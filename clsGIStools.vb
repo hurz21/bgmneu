@@ -265,6 +265,28 @@ Public Class clsGIStools
         End Try
     End Function
 
+    Public Shared Function copyOnlyPDF(baulastblattnr As String) As String
+        Dim hinweis As String
+        Dim quelle = srv_unc_path & "BAUL4ST_" & baulastblattnr & ".pdf"
+        Dim ziel = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+        ziel = IO.Path.Combine(ziel, baulastblattnr & ".pdf")
+        Try
+            If toolsEigentuemer.existiertPDF(baulastblattnr.Trim) Then
+                '"\\kh-w-ingrada\lkof\data\upload\FILES\LKOF\sp_mdat\dat\BAUL4ST_" & tbBaulastNr.Text & ".pdf"
+                IO.File.Copy(quelle, ziel, True)
+                'Process.Start(ziel)
+                Return ziel
+            Else
+                '    btnPDFaufrufen.IsEnabled = False
+                'tbPDFvorhanden.Text = "PDF fehlt"
+                Return "keine PDF gefunden"
+            End If
+        Catch ex As Exception
+            l("Fehler in showpdf " & ex.ToString)
+            Return "fehler"
+        End Try
+    End Function
+
     'Friend Shared Function updateGISDB(baulastblatnr As String, zuielname As String, gemarkung As String, endung As String) As Boolean
     '    Dim sql As String
     '    Dim neuerTIFFname As String

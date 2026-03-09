@@ -11,6 +11,8 @@ Public Class winHaupt
     End Sub
     Private Sub winHaupt_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         e.Handled = True
+        setLogfile(logfile) : l("Start " & Now) : l("mgisversion:" & bgmVersion)
+        initdb()
         If isAutho() Then
             'its ok  21478  21504
             tbblnr.Text = "21507"
@@ -18,20 +20,22 @@ Public Class winHaupt
         Else
             'MessageBox.Show("Sie haben keine Berechtigung für diese Anwendung. Abbruch!")
             'Close()
-            stpAdminOnly.Visibility = Visibility.Collapsed
+            tbblnr.Text = "21507"
+            stpAdminOnly.Visibility = Visibility.Visible
+            btnEdit.IsEnabled = False
         End If
-        setLogfile(logfile) : l("Start " & Now) : l("mgisversion:" & bgmVersion)
-        initdb()
+
         Title = "BGM " & " V.: " & bgmVersion
         istgeladen = True
     End Sub
+
 
     Private Shared Function isAutho() As Boolean
         'Return False
         Return Environment.UserName.ToLower = "benes_c" Or
                 Environment.UserName.ToLower = "hartmann_s" Or
                 Environment.UserName.ToLower = "briese_j" Or
-                Environment.UserName.ToLower = "feinen_j" Or
+                Environment.UserName.ToLower = "feinen_ja" Or
                 Environment.UserName.ToLower = "thieme_m" Or
                 Environment.UserName.ToLower = "zahnlückenpimpf" Or
                 Environment.UserName.ToLower = "kroemmelbein_m"
@@ -182,6 +186,18 @@ Public Class winHaupt
     End Sub
     Private Sub btnBaulast4FST_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
+
+    End Sub
+
+    Private Sub btnShowPDF_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+        lastPDF = clsGIStools.copyOnlyPDF(tbblnr.Text.Trim)
+        If lastPDF.ToLower.StartsWith("fehler") Or
+                    lastPDF.ToLower.StartsWith("keine") Then
+
+        Else
+            Process.Start(lastPDF)
+        End If
 
     End Sub
 

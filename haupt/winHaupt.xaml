@@ -64,10 +64,15 @@
                         IsEnabled="False">Baulast anzeigen
 
                     </Button>
+                
                     </StackPanel>
                 </GroupBox>
 
             </StackPanel>
+            <Button Name="btnShowPDF1" Click="btnShowPDF_Click" Visibility="Visible" 
+                    IsEnabled="True" Margin="5,19,5,5">
+                PDF-Anzeigen
+            </Button>
             <Button Name="btnGIS" Click="btnGIS_Click" Content="GIS" Margin="5,19,5,5"/>
 
             <Button Name="btnbplan"   Click="btnbplan_Click" Visibility="Collapsed" Margin="5">Bebauungspläne            </Button>
