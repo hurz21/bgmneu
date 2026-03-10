@@ -761,6 +761,7 @@ Module tools
             l("getKatzaehler---------------------- ende")
         Catch ex As Exception
             l("Fehler in getKatzaehler: " & ex.ToString())
+            Return 0
         End Try
 
     End Function
@@ -776,6 +777,7 @@ Module tools
             l("getKatFlur---------------------- ende")
         Catch ex As Exception
             l("Fehler in getKatFlur: " & ex.ToString())
+            Return 0
         End Try
     End Function
 

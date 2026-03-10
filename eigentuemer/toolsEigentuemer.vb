@@ -95,27 +95,27 @@ Public Class toolsEigentuemer
     '    End Try
     'End Function
 
-    Shared Function getSchnellbatchEigentuemer(fS As String) As String
-        l(" MOD getSchnellbatchEigentuemer anfang")
-        Dim dt As DataTable = Nothing
-        Dim Eigentuemernameundadresse As String = ""
-        Dim eigentumerKurzinfo = "", hinweis As String = ""
-        Dim sql As String = "select * from paradigma.dbo.alkis_fs2eigentuemer where fs='" & fS & "'"
-        Try
-            dt = modgetdt4sql.getDT4Query(sql, toolsEigentuemer.paradigmaMsql, hinweis)
-            If dt.Rows.Count > 0 Then
-                eigentumerKurzinfo = CStr(clsDBtools.fieldvalue(dt.Rows(0).Item("TOOLTIP")))
-                Eigentuemernameundadresse = CStr(clsDBtools.fieldvalue(dt.Rows(0).Item("NAMENADRESSEN")))
-                '  Return eigentumerKurzinfo
-                Return Eigentuemernameundadresse
-            Else
-                Return "Fehler. Kein Flurstück in den GIS-Daten gefunden ? Der Zeitraum zwischen 2002 und 2010 hat keine historischen Kastaster-Daten !"
-            End If
-            l(" MOD getSchnellbatchEigentuemer ende")
-        Catch ex As Exception
-            l("Fehler in getSchnellbatchEigentuemer: " & ex.ToString())
-        End Try
-    End Function
+    'Shared Function getSchnellbatchEigentuemer(fS As String) As String
+    '    l(" MOD getSchnellbatchEigentuemer anfang")
+    '    Dim dt As DataTable = Nothing
+    '    Dim Eigentuemernameundadresse As String = ""
+    '    Dim eigentumerKurzinfo = "", hinweis As String = ""
+    '    Dim sql As String = "select * from paradigma.dbo.alkis_fs2eigentuemer where fs='" & fS & "'"
+    '    Try
+    '        dt = modgetdt4sql.getDT4Query(sql, toolsEigentuemer.paradigmaMsql, hinweis)
+    '        If dt.Rows.Count > 0 Then
+    '            eigentumerKurzinfo = CStr(clsDBtools.fieldvalue(dt.Rows(0).Item("TOOLTIP")))
+    '            Eigentuemernameundadresse = CStr(clsDBtools.fieldvalue(dt.Rows(0).Item("NAMENADRESSEN")))
+    '            '  Return eigentumerKurzinfo
+    '            Return Eigentuemernameundadresse
+    '        Else
+    '            Return "Fehler. Kein Flurstück in den GIS-Daten gefunden ? Der Zeitraum zwischen 2002 und 2010 hat keine historischen Kastaster-Daten !"
+    '        End If
+    '        l(" MOD getSchnellbatchEigentuemer ende")
+    '    Catch ex As Exception
+    '        l("Fehler in getSchnellbatchEigentuemer: " & ex.ToString())
+    '    End Try
+    'End Function
     Friend Shared Function getlage(fs As String) As String
         Dim dt As DataTable
         Dim strlage = ""

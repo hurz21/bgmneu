@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:bgm"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen"
-        Title="BGM - BaulastenGISManager 0.11" Height="966" Width="1299">
+        Title="BGM - BaulastenGISManager 0.11" Height="966" Width="1319">
     <Window.Resources>
         <Style x:Key="dgRowStyleRB" TargetType="{x:Type DataGridRow}" BasedOn="{StaticResource dgRowStyle}">
             <Style.Triggers>
@@ -68,12 +68,20 @@
                                 </StackPanel>
                             </WrapPanel>
                         </GroupBox>
+                        <StackPanel Orientation="Vertical" Width="450" Margin="5">
+
+                            <TextBlock x:Name="tbGISinfo" Margin="0" Foreground="Red"></TextBlock>
+                            <TextBlock x:Name="tbGISinfo2" Margin="0" Foreground="Red"></TextBlock>
+                            <Button Name="btnBaulastLoeschen" Click="btnBaulastLoeschen_Click" Margin="5" 
+                                   Background="LightGreen" Foreground="black" FontFamily="Arial Black" Height="15"
+                            Width="100" HorizontalAlignment="Right" >HILFE</Button>
+                        </StackPanel>
                     </StackPanel>
 
                     <StackPanel Name="spFST" Orientation="Vertical" Width="1250" 
                                 HorizontalAlignment="Left">
                         <Border BorderBrush="Green" BorderThickness="1" Margin="5" 
-                                HorizontalAlignment="Left" Width="1200">
+                                HorizontalAlignment="Left" Width="1243">
 
                             <StackPanel HorizontalAlignment="Left">
                                 <StackPanel Orientation="Horizontal">
@@ -82,9 +90,10 @@
                                     <TextBlock HorizontalAlignment="Center" Margin="2" Name="tbQuelle">Belastet aus ProbauG</TextBlock>
                                     <Button Name="btnZumGISPROBAUG" Click="btnZumGISPROBAUG_Click" 
                                             Content="im GIS zeigen" Width="100"    
-                                        Height="20"  Padding="-2" Margin="5" HorizontalAlignment="Right"/>
+                                        Height="20"  Padding="-2" Margin="5" HorizontalAlignment="Right"
+                                            />
                                     <Button Name="btnEigentuemerProbaug" Click="btnEigentuemerProbaug_Click" Margin="5" Height="20"
-                                            Width="100"
+                                            Width="100"  ToolTip="Zeigt die Eigentümerdaten entsprechend der Flurstücksangaben im PROBAUG"
 >Eigentümer</Button>
                                     <TextBlock Padding="5" Margin="2" 
                                                FontStyle="Normal" FontFamily="Arial Black" > P R O B A U G</TextBlock>
@@ -119,31 +128,30 @@
                             </StackPanel>
                         </Border>
                         <Border BorderBrush="Black" BorderThickness="1" Margin="5"
-                                Width="1200"
+                                Width="1243"
                                 HorizontalAlignment="Left">
 
                             <StackPanel Name="spBL">
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="left" >
 
-                                    <StackPanel Orientation="Vertical">
-                                        
-                                    <TextBlock x:Name="tbGISinfo" Margin="0" Foreground="Red"/>
-                                    <TextBlock x:Name="tbGISinfo2" Margin="0" Foreground="Red"/>
-                                    </StackPanel>
-                                    <Button Name="btnZumGIS" Click="btnZumGIS_Click" Content="GIS via Flurstück" Width="100"    
+                                
+                                    <Button Name="btnZumGIS" Click="btnZumGIS_Click" 
+                                            Content="Flurstück im GIS" Width="100"    
                                              Height="20"  Padding="-2" Margin="5"  
+                                            ToolTip="Zeigt das Flurstück im GIS"
                                             HorizontalAlignment="Right"/>
                                     <Button Name="btnZumGISOBJ" Click="btnZumGISOBJ_Click" 
-                                            Content="GIS via Baulast" Width="100"    
+                                            Content="Baulast zeigen" Width="100"    
                                Height="20"  Padding="-2" Margin="5" HorizontalAlignment="Right"
-                                            ToolTip="Diese Möglichkeit geht nur dann wenn das Objekt bereits erfasst wurde!"/>
+                                            ToolTip="Zeigt die Baulast im GIS. Diese Möglichkeit geht nur dann wenn das Objekt bereits erfasst wurde!"/>
                                     <Button Name="btnUebertragMetadaten" IsEnabled="true" Click="btnUebertragMetadaten_Click"
                                             Margin="5"  Height="20" Width="100">
                                         Übertrag </Button>
                                     <Button Name="btnEigentuemerGIS" Click="btnEigentuemerGIS_Click" Margin="5" Height="20"
-                                            Width="100" >Eigentümer</Button>
-                                    <Button Name="btnBaulastLoeschen" Click="btnBaulastLoeschen_Click" Margin="5" Height="20"
-          Width="100" >Baulast löschen</Button>
+                                            Width="100" 
+                                            ToolTip="Zeigt die Eigentümerdaten entsprechend der Flurstücksangaben im GIS">
+                                        Eigentümer</Button>
+                                 
                                     <TextBlock Margin="2" Padding="15"   FontStyle="Normal" FontFamily="Arial Black"> G I S </TextBlock>
                                     <!--<Button x:Name="btndigit" Click="btndigit_Click" Content=" digitalisieren "
                                             Background="red" Height="15" 
@@ -178,7 +186,7 @@
                         <Border BorderBrush="Gray"  Margin="5" BorderThickness="2" Width="120"
                                   Drop="dropTheBomb" AllowDrop="True" VerticalAlignment="Top" Height="261"
                                     >
-                            <StackPanel   >
+                            <StackPanel Height="267" VerticalAlignment="Top"   >
 
 
                                 <StackPanel Name="stpPDF" Orientation="Vertical"    Drop="dropTheBomb" AllowDrop="True"  Height="350" >
@@ -188,7 +196,7 @@
                                         Drop="dropTheBomb" AllowDrop="True"
                                         Width="100" Height="150" Panel.ZIndex="2"
                                     >
-                                        <TextBlock Padding="5">Drop PDF here</TextBlock>
+                                        <TextBlock Padding="5" Margin="0,9,0,-1">Drop PDF here</TextBlock>
                                         <!--<Image Name="imgTiff" VerticalAlignment="Top"    Drop="dropTheBomb" AllowDrop="True"></Image>-->
                                     </Border>
                                     <TextBlock Name="tbFiledate" Padding="5" />
@@ -211,7 +219,7 @@
                             <TextBox Name="tbBemerkung" Width="250"  Height="100" Margin="5"/>
                         </StackPanel>
 
-                        <StackPanel   Margin="5" Width="1000"  Height="300" >
+                        <StackPanel   Margin="5" Width="1120"  Height="300" >
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
 
                                 <TextBlock Width="100" Margin="5" Padding="5">Eigentümer:</TextBlock>
@@ -221,7 +229,7 @@
                                     mach daraus Worddokument
                                 </Button>
                             </StackPanel>
-                            <TextBox Name="tbEigentuemer" Width="1000"  Height="200" Margin="5" TextWrapping="Wrap"  AcceptsReturn="True" AcceptsTab="True" />
+                            <TextBox Name="tbEigentuemer" Width="1102"  Height="200" Margin="5" TextWrapping="Wrap"  AcceptsReturn="True" AcceptsTab="True" />
                         </StackPanel>
                         <StackPanel>
                             <StackPanel Orientation="Horizontal" IsEnabled="True" HorizontalAlignment="Center"/>

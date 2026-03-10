@@ -14,6 +14,7 @@ Public Class winHaupt
         setLogfile(logfile) : l("Start " & Now) : l("mgisversion:" & bgmVersion)
         initdb()
         tbblnr.Text = "21507"
+        tbblnr.Text = "131045"
         If isAutho() Then
             'its ok  21478  21504
             '"POLYGON ((479015 5538655,479033 5538660,479035 5538656,479017 5538650,479015 5538655))" 
@@ -196,6 +197,19 @@ Public Class winHaupt
             MsgBox(lastPDF)
         Else
             Process.Start(lastPDF)
+        End If
+
+    End Sub
+
+    Private Sub btnBaulastImGIS_Click(sender As Object, e As RoutedEventArgs)
+        'https://gis.kreis-of.de/LKOF/asp/main.asp?lay=sp_mdat_0010_F&fld=text3&typ=string&val=10001&skipwelcome=true
+        e.Handled = True
+        Dim url As String
+        If IsNumeric(tbblnr.Text.Trim) Then
+            url = "https://gis.kreis-of.de/LKOF/asp/main.asp?lay=sp_mdat_0010_F&fld=text3&typ=string&val=" & tbblnr.Text.Trim & "&skipwelcome=true"
+            Process.Start(url)
+        Else
+            MsgBox("Die BaulastNr. '" & tbblnr.Text.Trim & "' ist ungültig!")
         End If
 
     End Sub

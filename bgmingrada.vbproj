@@ -287,8 +287,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Mono.Security.dll" />
-    <Content Include="Npgsql.dll" />
     <Resource Include="resouirces\bgm.ico" />
     <Resource Include="resouirces\BuildDate.txt" />
   </ItemGroup>
@@ -334,6 +332,8 @@
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>copy $(targetfilename) \\gis\gdvell\apps\bgm\bgmIngrada.exe 
+copy $(targetfilename) W:\diverses\bgmIngrada.exe 
+ 
  
 )</PostBuildEvent>
   </PropertyGroup>

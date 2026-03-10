@@ -1,8 +1,6 @@
 ﻿Imports System.IO
 Public Class filehelper
-    '' <summary>
-    ''' This class contains directory helper method(s).
-    ''' </summary>
+
 
 
     ''' <summary>

@@ -1,7 +1,7 @@
 ﻿Imports System.Security.Policy
 Imports System.Text
 Imports DocumentFormat.OpenXml.Office.MetaAttributes
-Imports Org.BouncyCastle.Asn1.Esf
+
 
 Public Class winDetail
     Property VGmyBitmapImage As New BitmapImage
@@ -129,7 +129,7 @@ Public Class winDetail
             btnZumGISPROBAUG.Height = 15
         Else
             'btnUebertragMetadaten.IsEnabled = False
-            tbGISinfo.Text = "Baulast ist in der Baulast-DB(MDAT) noch nicht vorhanden !"
+            tbGISinfo.Text = "Baulast ist in der Baulast-DB(MDAT) von Ingrada noch nicht vorhanden !"
             tbGISinfo2.Text = "Bitte nutzen sie den Knopf 'im GIS erfassen' !"
             stpPDF.Visibility = Visibility.Collapsed
             btnZumGIS.IsEnabled = False
@@ -201,8 +201,9 @@ Public Class winDetail
         Try
             l(" setImageFromHttpURL ---------------------- anfang")
             clearCanvas()
-            VGcanvasImage = New Image
-            VGcanvasImage.Name = "canvasImage"
+            VGcanvasImage = New Image With {
+                .Name = "canvasImage"
+            }
             VGmapCanvas.Children.Add(VGcanvasImage)
             VGmapCanvas.SetZIndex(VGcanvasImage, 100)
 
@@ -825,33 +826,24 @@ Public Class winDetail
         '91197
         '11368 hat keine gültigen flurstuecke	
         Try
-
-            If tools.FSTausPROBAUGListe.Count > 0 Then
-                flurstueckskennzeichen = tools.FSTausPROBAUGListe(0).flurstueckZuFKZ
-                'url = makeurl4FST("https://gis.kreis-of.de/LKOF/asp/main.asp?", flurstueckskennzeichen)
-                'url = "https://gis.kreis-of.de/LKOF/extensions/logout.asp?removeLostSession=true"
-                'Process.Start(url)
-                url = makeurl4Baulast("https://gis.kreis-of.de/LKOF/asp/main.asp?", tbBaulastNr.Text)
-                l("url " & url)
-                Process.Start(url)
-                l(flurstueckskennzeichen)
-            Else
-                MsgBox("Keine Flurstücke zugeordnet!!!  GIS wird ohne Flurstück gestartet!")
-                url = "https://gis.kreis-of.de/LKOF/asp/main.asp?"
-                l("url " & url)
-                Process.Start(url)
-            End If
-            'Dim gidstring As String = clsGIStools.bildegidstring()
-            'range = clsGIStools.calcNewRange(gidstring) 
-            'Dim param, rangestring As String 
-            'Dim lu, ro As New myPoint
-            'lu.X = range.xl
-            'lu.Y = range.yl
-            'ro.X = range.xh
-            'ro.Y = range.yh
-            'rangestring = clsGIStools.calcrangestring(lu, ro)
-            'param = "modus=""bebauungsplankataster""  range=""" & rangestring & ""
-            'Process.Start(tools.gisexe, param) 
+            url = makeurl4Baulast("https://gis.kreis-of.de/LKOF/asp/main.asp?", tbBaulastNr.Text)
+            l("url " & url)
+            Process.Start(url)
+            'If tools.FSTausPROBAUGListe.Count > 0 Then
+            '    flurstueckskennzeichen = tools.FSTausPROBAUGListe(0).flurstueckZuFKZ
+            '    'url = makeurl4FST("https://gis.kreis-of.de/LKOF/asp/main.asp?", flurstueckskennzeichen)
+            '    'url = "https://gis.kreis-of.de/LKOF/extensions/logout.asp?removeLostSession=true"
+            '    'Process.Start(url)
+            '    url = makeurl4Baulast("https://gis.kreis-of.de/LKOF/asp/main.asp?", tbBaulastNr.Text)
+            '    l("url " & url)
+            '    Process.Start(url)
+            '    l(flurstueckskennzeichen)
+            'Else
+            '    MsgBox("Keine Flurstücke zugeordnet!!!  GIS wird ohne Flurstück gestartet!")
+            '    url = "https://gis.kreis-of.de/LKOF/asp/main.asp?"
+            '    l("url " & url)
+            '    Process.Start(url)
+            'End If
         Catch ex As Exception
             l(ex.ToString)
             'Return "fehler in btnZumGIS_Click"
@@ -971,13 +963,7 @@ Public Class winDetail
 
     Private Sub btnBaulastLoeschen_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
-        MessageBox.Show(
-            "Dazu gehen Sie ins 'GIS via Baulast' " & Environment.NewLine &
-            " - rufen Sie mit 'i' die Datenapplikation auf' " & Environment.NewLine &
-            " - wählen sie unten 'Datensatz löschen' " & Environment.NewLine &
-            " - Grafik und Sachdaten gemeinsam löschen' " & Environment.NewLine &
-            " - starten sie das BGM neu " & Environment.NewLine &
-            " " & Environment.NewLine, "Baulast löschen", MessageBoxButton.OK, MessageBoxImage.Information)
+        Process.Start("\\kh-w-ingrada\GIS-Daten\diverses\AnleitungBGM.docx")
 
     End Sub
 End Class
