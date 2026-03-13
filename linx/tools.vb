@@ -1007,6 +1007,81 @@ Module tools
             MsgBox(ex.Message & " fehler in createdir  " & targetroot)
         End Try
     End Sub
+    Public Function ReadSemicolonFileAllText(path As String) As List(Of String())
+        Dim result As New List(Of String())
+        Dim content As String = IO.File.ReadAllText(path)
+        ' Zeilen sauber trennen (Windows + Linux kompatibel)
+        Dim lines() As String = content.Split({Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries)
+        Try
+            For Each line As String In lines
+                result.Add(line.Split(";"c))
+            Next
+            Return result
+        Catch ex As Exception
+            Return result
+        End Try
+    End Function
+    'Friend Function HoleThemaFuerSachgebiet(sachgebiet As String, themen As List(Of String())) As String
+    '    Dim thema As String = ""
+    '    Dim backup As String
+    '    l("HoleThemaFuer Sachgebiet " & sachgebiet)
+    '    If sachgebiet = String.Empty Then
+    '        sachgebiet = "1"
+    '    End If
+    '    l("HoleThemaFuer Sachgebiet " & sachgebiet)
+    '    Try
+    '        For Each str As String() In themen
+    '            If str(0).Substring(0, 1) = sachgebiet Then
+    '                backup = str(1)
+    '                Return str(1)
+    '            End If
+    '        Next
+    '        l("backup: " & backup)
+    '        Return backup
+    '    Catch ex As Exception
+    '        l("ThemenAusThemenDateiHolen " & ex.ToString)
+    '        Return thema
+    '    End Try
+    'End Function
+
+    Public Sub baulastAlsObjImGisZeigen(baulastblatt As String)
+        Dim url As String
+        Dim themen As String
+        themen = tools.getthemen("")
+        'theme=BauenUndUmwelt,Eigene%20Daten,Grenzen,Liegenschaften
+        If IsNumeric(baulastblatt) Then
+            url = "https://gis.kreis-of.de/LKOF/asp/main.asp?" & themen & "&lay=sp_mdat_0010_F&fld=text3&typ=string&val=" & baulastblatt & "&skipwelcome=true"
+            Process.Start(url)
+        Else
+            MsgBox("Die BaulastNr. '" & baulastblatt & "' ist ungültig!")
+        End If
+    End Sub
+    Friend Function getthemen(url As String) As String
+        Dim exepath, themendatei As String
+        Dim theme As String
+        Try
+            exepath = AppDomain.CurrentDomain.BaseDirectory
+#If DEBUG Then
+            exepath = "W:\diverses"
+#End If
+            l("exepath: " & exepath)
+            themendatei = IO.Path.Combine(exepath, "themendateiBaulasten.txt")
+            l("themendatei: " & themendatei)
+            Dim fi As New IO.FileInfo(themendatei)
+            If fi.Exists Then
+                theme = IO.File.ReadAllText(themendatei)
+                l("eingelesen: " & theme)
+
+                Return theme
+            Else
+                l("fehler themendatei: ''")
+                Return ""
+            End If
+        Catch ex As Exception
+            l("getthemen " & ex.ToString)
+            Return ""
+        End Try
+    End Function
 
     'Private Sub makeConnection(ByVal host As String, datenbank As String, ByVal dbuser As String, ByVal dbpw As String, ByVal dbport As String)
     '    Dim csb As New NpgsqlConnectionStringBuilder
@@ -1120,4 +1195,124 @@ Module tools
     '        Return "fehler in adresseZuFKZ"
     '    End Try
     'End Function
+    Public Function makeFlurstuecksAbstrakt(dieliste As List(Of clsFlurstueck)) As String
+        Dim summe As String
+        Try
+            For Each fst As clsFlurstueck In dieliste
+                summe = summe & "== Grundstück: " & fst.gemeindename & ", Gemarkung: " &
+                fst.gemarkungstext & ", Flur: " &
+                fst.flur & ", Fst: " &
+                fst.zaehler & "/" & fst.nenner & " =="
+            Next
+            Return summe
+        Catch ex As Exception
+            l(ex.ToString)
+            Return "Fehler - Flurstück nicht vorhanden?"
+        End Try
+    End Function
+    Public Function erzeugeWordDateiEigentuemer(eigentuemertext As String, baulastnr As String) As String
+        Dim filepath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+        Try
+            filepath = IO.Path.Combine(filepath, "Eigentümer_BL_" & baulastnr & ".docx")
+
+            Dim wp As New eigentuemerWord
+            Dim erfolg = wp.machma(eigentuemertext, filepath, Format(Now, "dd.MM.yyyy"))
+            If erfolg Then
+                'MsgBox("Die Worddatei wurde unter " & Environment.NewLine & filepath & Environment.NewLine & " abgelegt!")
+            Else
+                MsgBox("Die Worddatei konnte nicht erzeugt werden. Vermutlich haben Sie sie noch geöffnet.")
+            End If
+            Return filepath
+        Catch ex As Exception
+            l("fehler in erzeugeword")
+            l(ex.ToString)
+            Return "fehler"
+        End Try
+    End Function
+    Public Sub gisFuerProbaugFlurst(baulast As String, flurstueckskennzeichen As String)
+        Dim url As String
+        ' C:\kreisoffenbach\mgis\ingradaadapter.exe    suchmodus=flurstueck gemarkung="Hainhausen" flur="4" fstueck="387/1" 
+        '91197
+        Dim zwischen As String
+        Try
+            If tools.flurstueckExistiertImGis(flurstueckskennzeichen) Then
+            Else
+                MessageBox.Show("Flurstück existiert so nicht im GIS! " & Environment.NewLine &
+                                flurstueckskennzeichen)
+
+            End If
+            zwischen = baulast
+            My.Computer.Clipboard.SetText(zwischen)
+            If flurstueckskennzeichen.Length > 1 Then
+                'url = makeurl4FST("https://gis.kreis-of.de/LKOF/asp/main.asp?", flurstueckskennzeichen)
+                'url = "https://gis.kreis-of.de/LKOF/extensions/logout.asp?removeLostSession=true"
+                'Process.Start(url)
+                url = makeurl4FST("https://gis.kreis-of.de/LKOF/asp/main.asp?", flurstueckskennzeichen)
+                l("url " & url)
+                Process.Start(url)
+                l(flurstueckskennzeichen)
+            Else
+                MsgBox("Keine Flurstücke zugeordnet!!!  GIS wird ohne Flurstück gestartet!")
+                url = "https://gis.kreis-of.de/LKOF/asp/main.asp?"
+                l("url " & url)
+                Process.Start(url)
+            End If
+        Catch ex As Exception
+            l(ex.ToString)
+        End Try
+    End Sub
+    Public Function makeurl4FST(v As String, results As String) As String
+        l("in makurl")
+        Try
+            '&skipwelcome=true
+            v = v & "app=sp_lieg&obj=flu&fld=flurstueckskennzeichen&typ=string&val="
+            v = v & results & "&skipwelcome=true"
+            Return v
+            'https://gis.kreis-of.de/LKOF/asp/main.asp?app=sp_lieg&obj=flu&fld=flurstueckskennzeichen&typ=string&val=060729-005-00490/0000.000&skipwelcome=true
+            ' Die endung  .000  ist wichtig - sonst gehts nicht
+        Catch ex As Exception
+            l(ex.ToString)
+            Return "fehler in makeurl4FST"
+        End Try
+    End Function
+
+    Friend Function flurstueckExistiertImGis(flurstueckZuFKZ As String) As Boolean
+        Dim sql, hinweis As String
+        Dim newid As Long
+        Try
+            fstREC.mydb.SQL = "use LKOF;select * FROM [LKOF].[dbo].[tbl_lieg_flurstueck] where flurstueckskennzeichen='" & flurstueckZuFKZ & "'"
+            l(fstREC.mydb.SQL)
+            Dim retcode = fstREC.dboeffnen(hinweis)
+            'newid = fstREC.sqlexecute(newid)
+            Dim com As New SqlCommand(fstREC.mydb.SQL, fstREC.myconn)
+            Dim da As New SqlDataAdapter(com)
+
+            Dim reader As SqlDataReader = com.ExecuteReader()
+
+            While reader.Read()
+                hinweis = reader("flurstueckskennzeichen").ToString
+            End While
+
+            retcode = fstREC.dbschliessen(hinweis)
+            If hinweis = flurstueckZuFKZ Then
+                Return True
+            Else
+                Return False
+            End If
+
+
+            'hinweis = fstREC.getDataDT()
+            'If fstREC.dt.Rows.Count < 1 Then
+            '    Return False '"(Noch) Kein Eintrag im GIS"
+            'Else
+            '    Debug.Print(clsDBtools.fieldvalue(fstREC.dt.Rows(0).Item(0)))
+            '    Return True
+            'End If
+            'Return True
+        Catch ex As Exception
+            l(ex.ToString)
+            l("fehler in flurstueckExistiertImGis Abfrage gescheitert " & ex.ToString)
+            Return False
+        End Try
+    End Function
 End Module

@@ -48,12 +48,19 @@ Public Class winDetail
             Dim summe = ""
             summe = makeFlurstuecksAbstrakt(tools.FSTausGISListe)
             summe = summe & Environment.NewLine
-            tbEigentuemer.Text = summe & Environment.NewLine & toolsEigentuemer.geteigentuemerText(tools.FSTausGISListe)
-            If tbEigentuemer.Text.Contains("keine eigen") Then
+            Dim result As String
+            If toolsEigentuemer.geteigentuemerText(tools.FSTausGISListe, result) Then
+                tbEigentuemer.Text = summe & Environment.NewLine & result
+                'If tbEigentuemer.Text.Contains("keine eigen") Then
+
+                'End If
+            Else
                 summe = makeFlurstuecksAbstrakt(FSTausPROBAUGListe)
                 summe = summe & Environment.NewLine
-                tbEigentuemer.Text = summe & Environment.NewLine & toolsEigentuemer.geteigentuemerText(tools.FSTausPROBAUGListe)
+                tbEigentuemer.Text = summe & Environment.NewLine & result ' toolsEigentuemer.geteigentuemerText(tools.FSTausPROBAUGListe)
+                'MsgBox(result)
             End If
+
         End If
 
         setTitle()
@@ -62,16 +69,7 @@ Public Class winDetail
         l("windetail loaded ende")
     End Sub
 
-    Private Shared Function makeFlurstuecksAbstrakt(dieliste As List(Of clsFlurstueck)) As String
-        Dim summe As String
-        For Each fst As clsFlurstueck In dieliste
-            summe = summe & "== Grundstück: " & fst.gemeindename & ", Gemarkung: " &
-                fst.gemarkungstext & ", Flur: " &
-                fst.flur & ", Fst: " &
-                fst.zaehler & "/" & fst.nenner & " =="
-        Next
-        Return summe
-    End Function
+
 
     Private Sub setTitle()
         Title = "BGM: BaulastenGISManager 0.11. " & Environment.UserName & " V.: " & bgmVersion
@@ -379,12 +377,18 @@ Public Class winDetail
         Dim url As String
         '91197
         Try
+            If tools.flurstueckExistiertImGis(tools.FSTausGISListe(0).flurstueckZuFKZ) Then
+            Else
+                MsgBox("Flurstück existiert so nicht im GIS !  " & Environment.NewLine &
+                       tools.FSTausGISListe(0).flurstueckZuFKZ)
+                Exit Sub
+            End If
             If tools.FSTausGISListe.Count > 0 Then
                 flurstueckskennzeichen = tools.FSTausGISListe(0).flurstueckZuFKZ
                 'url = makeurl4FST("https://gis.kreis-of.de/LKOF/asp/main.asp?", flurstueckskennzeichen)
                 'url = "https://gis.kreis-of.de/LKOF/extensions/logout.asp?removeLostSession=true"
                 'Process.Start(url)
-                url = makeurl4FST("https://gis.kreis-of.de/LKOF/asp/main.asp?", flurstueckskennzeichen)
+                url = tools.makeurl4FST("https://gis.kreis-of.de/LKOF/asp/main.asp?", flurstueckskennzeichen)
                 l("url " & url)
                 Process.Start(url)
                 l(flurstueckskennzeichen)
@@ -399,20 +403,7 @@ Public Class winDetail
         End Try
     End Sub
 
-    Private Function makeurl4FST(v As String, results As String) As String
-        l("in makurl")
-        Try
-            '&skipwelcome=true
-            v = v & "app=sp_lieg&obj=flu&fld=flurstueckskennzeichen&typ=string&val="
-            v = v & results & "&skipwelcome=true"
-            Return v
-            'https://gis.kreis-of.de/LKOF/asp/main.asp?app=sp_lieg&obj=flu&fld=flurstueckskennzeichen&typ=string&val=060729-005-00490/0000.000&skipwelcome=true
-            ' Die endung  .000  ist wichtig - sonst gehts nicht
-        Catch ex As Exception
-            l(ex.ToString)
-            Return "fehler in makeurl4FST"
-        End Try
-    End Function
+
 
     Private Function makeurl4Baulast(httpstring As String, baulast As String) As String
         l("in makurl")
@@ -775,79 +766,41 @@ Public Class winDetail
 
     Private Sub btnZumGISPROBAUG_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
-        Dim url As String
-        ' C:\kreisoffenbach\mgis\ingradaadapter.exe    suchmodus=flurstueck gemarkung="Hainhausen" flur="4" fstueck="387/1" 
-        '91197
-        Dim zwischen As String
-        Try
-            zwischen = tbBaulastNr.Text.Trim
-            'zwischen = zwischen & tools.FSTausPROBAUGListe(0).gemeindename & Environment.NewLine
-            'zwischen = zwischen & tools.FSTausPROBAUGListe(0).gemarkungstext & Environment.NewLine
-            'zwischen = zwischen & tools.FSTausPROBAUGListe(0).flur & Environment.NewLine
-            'zwischen = zwischen & tools.FSTausPROBAUGListe(0).zaehler & Environment.NewLine
-            'zwischen = zwischen & tools.FSTausPROBAUGListe(0).nenner & Environment.NewLine
-            My.Computer.Clipboard.SetText(zwischen)
-            If tools.FSTausPROBAUGListe.Count > 0 Then
-                flurstueckskennzeichen = tools.FSTausPROBAUGListe(0).flurstueckZuFKZ
-                'url = makeurl4FST("https://gis.kreis-of.de/LKOF/asp/main.asp?", flurstueckskennzeichen)
-                'url = "https://gis.kreis-of.de/LKOF/extensions/logout.asp?removeLostSession=true"
-                'Process.Start(url)
-                url = makeurl4FST("https://gis.kreis-of.de/LKOF/asp/main.asp?", flurstueckskennzeichen)
-                l("url " & url)
-                Process.Start(url)
-                l(flurstueckskennzeichen)
-            Else
-                MsgBox("Keine Flurstücke zugeordnet!!!  GIS wird ohne Flurstück gestartet!")
-                url = "https://gis.kreis-of.de/LKOF/asp/main.asp?"
-                l("url " & url)
-                Process.Start(url)
-            End If
-            'Dim gidstring As String = clsGIStools.bildegidstring()
-            'range = clsGIStools.calcNewRange(gidstring) 
-            'Dim param, rangestring As String 
-            'Dim lu, ro As New myPoint
-            'lu.X = range.xl
-            'lu.Y = range.yl
-            'ro.X = range.xh
-            'ro.Y = range.yh
-            'rangestring = clsGIStools.calcrangestring(lu, ro)
-            'param = "modus=""bebauungsplankataster""  range=""" & rangestring & ""
-            'Process.Start(tools.gisexe, param) 
-        Catch ex As Exception
-            l(ex.ToString)
-            'Return "fehler in btnZumGIS_Click"
-        End Try
+        gisFuerProbaugFlurst(tbBaulastNr.Text.Trim, tools.FSTausPROBAUGListe(0).flurstueckZuFKZ)
     End Sub
+
+
 
     Private Sub btnZumGISOBJ_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
-        Dim url As String
-        '  https://gis.kreis-of.de/LKOF/asp/main.asp?lay=sp_mdat_0010_F&fld=text3&typ=string&val=1001&skipwelcome=true
-        '91197
-        '11368 hat keine gültigen flurstuecke	
-        Try
-            url = makeurl4Baulast("https://gis.kreis-of.de/LKOF/asp/main.asp?", tbBaulastNr.Text)
-            l("url " & url)
-            Process.Start(url)
-            'If tools.FSTausPROBAUGListe.Count > 0 Then
-            '    flurstueckskennzeichen = tools.FSTausPROBAUGListe(0).flurstueckZuFKZ
-            '    'url = makeurl4FST("https://gis.kreis-of.de/LKOF/asp/main.asp?", flurstueckskennzeichen)
-            '    'url = "https://gis.kreis-of.de/LKOF/extensions/logout.asp?removeLostSession=true"
-            '    'Process.Start(url)
-            '    url = makeurl4Baulast("https://gis.kreis-of.de/LKOF/asp/main.asp?", tbBaulastNr.Text)
-            '    l("url " & url)
-            '    Process.Start(url)
-            '    l(flurstueckskennzeichen)
-            'Else
-            '    MsgBox("Keine Flurstücke zugeordnet!!!  GIS wird ohne Flurstück gestartet!")
-            '    url = "https://gis.kreis-of.de/LKOF/asp/main.asp?"
-            '    l("url " & url)
-            '    Process.Start(url)
-            'End If
-        Catch ex As Exception
-            l(ex.ToString)
-            'Return "fehler in btnZumGIS_Click"
-        End Try
+        baulastAlsObjImGisZeigen(tbBaulastNr.Text.Trim)
+        'Dim url As String
+        ''  https://gis.kreis-of.de/LKOF/asp/main.asp?lay=sp_mdat_0010_F&fld=text3&typ=string&val=1001&skipwelcome=true
+        ''91197
+        ''11368 hat keine gültigen flurstuecke	
+        'Try
+        '    url = makeurl4Baulast("https://gis.kreis-of.de/LKOF/asp/main.asp?", tbBaulastNr.Text)
+        '    l("url " & url)
+        '    Process.Start(url)
+        '    'If tools.FSTausPROBAUGListe.Count > 0 Then
+        '    '    flurstueckskennzeichen = tools.FSTausPROBAUGListe(0).flurstueckZuFKZ
+        '    '    'url = makeurl4FST("https://gis.kreis-of.de/LKOF/asp/main.asp?", flurstueckskennzeichen)
+        '    '    'url = "https://gis.kreis-of.de/LKOF/extensions/logout.asp?removeLostSession=true"
+        '    '    'Process.Start(url)
+        '    '    url = makeurl4Baulast("https://gis.kreis-of.de/LKOF/asp/main.asp?", tbBaulastNr.Text)
+        '    '    l("url " & url)
+        '    '    Process.Start(url)
+        '    '    l(flurstueckskennzeichen)
+        '    'Else
+        '    '    MsgBox("Keine Flurstücke zugeordnet!!!  GIS wird ohne Flurstück gestartet!")
+        '    '    url = "https://gis.kreis-of.de/LKOF/asp/main.asp?"
+        '    '    l("url " & url)
+        '    '    Process.Start(url)
+        '    'End If
+        'Catch ex As Exception
+        '    l(ex.ToString)
+        '    'Return "fehler in btnZumGIS_Click"
+        'End Try
     End Sub
 
     Private Sub btnEigentümerclip_Click(sender As Object, e As RoutedEventArgs)
@@ -858,19 +811,13 @@ Public Class winDetail
 
     Private Sub btnMakeworddok_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
-        Dim filepath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-        filepath = IO.Path.Combine(filepath, "Eigentümer_BL_" & tbBaulastNr.Text & ".docx")
-
-        Dim wp As New eigentuemerWord
-        Dim erfolg = wp.machma(tbEigentuemer.Text, filepath, Format(Now, "dd.MM.yyyy"))
-        If erfolg Then
-            MsgBox("Die Worddatei wurde unter " & Environment.NewLine & filepath & Environment.NewLine & " abgelegt!")
-        Else
-            MsgBox("Die Worddatei konnte nicht erzeugt werden. Vermutlich haben Sie sie noch geöffnet.")
-        End If
-        Process.Start(filepath)
+        Dim datei As String
+        datei = tools.erzeugeWordDateiEigentuemer(tbEigentuemer.Text, tbBaulastNr.Text)
+        Process.Start(datei)
         'End
     End Sub
+
+
 
     Private Sub btnProtokoll_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
@@ -882,11 +829,23 @@ Public Class winDetail
 
     Private Sub btnEigentuemerProbaug_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
-        Dim summe As String = "Aus ProbauG:" & Environment.NewLine
-        summe = summe & makeFlurstuecksAbstrakt(tools.FSTausPROBAUGListe)
-        summe = summe & Environment.NewLine
-        tbEigentuemer.Text = summe & Environment.NewLine & toolsEigentuemer.geteigentuemerText(tools.FSTausPROBAUGListe)
-        'FSTausPROBAUGListe
+        Dim summe As String
+        Try
+
+
+            summe = "Aus ProbauG:" & Environment.NewLine
+            summe = summe & makeFlurstuecksAbstrakt(tools.FSTausPROBAUGListe)
+            summe = summe & Environment.NewLine
+            Dim result As String
+            If toolsEigentuemer.geteigentuemerText(tools.FSTausPROBAUGListe, result) Then
+                summe = summe & Environment.NewLine & result
+                tbEigentuemer.Text = summe
+            Else
+                MsgBox(result)
+            End If
+        Catch ex As Exception
+            l("btnEigentuemerProbaug_Click " & ex.ToString)
+        End Try
 
     End Sub
 
@@ -895,7 +854,12 @@ Public Class winDetail
         Dim summe As String = "Aus GIS:" & Environment.NewLine
         summe = summe & makeFlurstuecksAbstrakt(tools.FSTausGISListe)
         summe = summe & Environment.NewLine
-        tbEigentuemer.Text = summe & Environment.NewLine & toolsEigentuemer.geteigentuemerText(tools.FSTausGISListe)
+        Dim result As String
+        If toolsEigentuemer.geteigentuemerText(tools.FSTausGISListe, result) Then
+            tbEigentuemer.Text = summe & Environment.NewLine & result
+        Else
+            tbEigentuemer.Text = summe & Environment.NewLine & result
+        End If
         'FSTausPROBAUGListe
     End Sub
 
@@ -963,7 +927,7 @@ Public Class winDetail
 
     Private Sub btnBaulastLoeschen_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
-        Process.Start("\\kh-w-ingrada\GIS-Daten\diverses\AnleitungBGM.docx")
+        Process.Start("\\kh-w-ingrada\GIS-Daten\diverses\AnleitungBGM.pdf")
 
     End Sub
 End Class

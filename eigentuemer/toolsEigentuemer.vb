@@ -18,12 +18,15 @@ Public Class toolsEigentuemer
             l("Fehler in initMssql: " & ex.ToString())
         End Try
     End Sub
-    Friend Shared Function geteigentuemerText(fstcoll As List(Of clsFlurstueck)) As String
-        Dim result As String
+    Friend Shared Function geteigentuemerText(fstcoll As List(Of clsFlurstueck), ByRef result As String) As Boolean
+        l("geteigentuemerText " & fstcoll.Count)
         Dim hinweis As String
         Dim sb As New Text.StringBuilder
         Try
-            If fstcoll.Count < 1 Then Return "Fehler in Eigentümer: Kein Flurstück vorhanden? Keines im GIS? "
+            If fstcoll.Count < 1 Then
+                result = "Fehler in Eigentümer: Kein Flurstück vorhanden? Keines im GIS? "
+                Return False
+            End If
             fstREC.mydb.SQL = "SELECT [Anrede],[akademischegrade],[name],[vorname],[wohnortstrasse],[wohnortplz]," &
                     " [wohnort],[geburtsdatum],[namenszusatz],[postfach],[wohnortland],[eigentuemerzusatz],[geburtsname]," &
                     " [nationalitaet],[adressherkunft],[wohnortortsteil],[postfachplz]  " &
@@ -34,8 +37,8 @@ Public Class toolsEigentuemer
             l(fstREC.mydb.SQL)
             hinweis = fstREC.getDataDT()
             If fstREC.dt.Rows.Count < 1 Then
-                'Return ""
-                Return "keine eigentümerinfo gefunden"
+                result = "Keine Eigentümerinfo gefunden: Kein Flurstück vorhanden? Keines im GIS?"
+                Return False
             Else
                 For i = 0 To fstREC.dt.Rows.Count - 1
                     sb.Append(clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item(0)).ToString & " ")
@@ -67,10 +70,11 @@ Public Class toolsEigentuemer
             End If
             result = sb.ToString
             clsString.leerzeichenRaus(result)
-            Return result
+            Return True
         Catch ex As Exception
             l("Fehler in initMssql: " & ex.ToString())
-            Return "fehler in eigentümer " & ex.ToString
+            result = "fehler in eigentümer " & ex.ToString
+            Return False
         End Try
     End Function
     'Friend Shared Function geteigentuemertext(fSTausGISListe As List(Of clsFlurstueck)) As String
@@ -116,36 +120,36 @@ Public Class toolsEigentuemer
     '        l("Fehler in getSchnellbatchEigentuemer: " & ex.ToString())
     '    End Try
     'End Function
-    Friend Shared Function getlage(fs As String) As String
-        Dim dt As DataTable
-        Dim strlage = ""
-        Dim hinweis As String = ""
-        Try
-            l(" getlage ---------------------- anfang")
-            'Dim sql As String
-            fstREC.mydb.SQL = "select * from flurkarte.basis_ext_f where fs='" & fs & "'"
-            'dt = getDTFromWebgisDB(sql, "postgis20") 
-            l(fstREC.mydb.SQL)
-            hinweis = fstREC.getDataDT()
-            If fstREC.dt.Rows.Count > 0 Then
-                strlage = "Lage: " & clsDBtools.fieldvalue(fstREC.dt.Rows(0).Item("name")).Trim
-                strlage = strlage & ", " & clsDBtools.fieldvalue(fstREC.dt.Rows(0).Item("lage")).Trim
-                If clsDBtools.fieldvalue(fstREC.dt.Rows(0).Item("hausnr")).Trim <> String.Empty Then
-                    strlage = strlage & ", Nr: " & clsDBtools.fieldvalue(fstREC.dt.Rows(0).Item("hausnr")).Trim & ". "
-                    'strlage = strlage & "Bez: " & clsDBtools.fieldvalue(fstREC.dt.Rows(0).Item("bezeich")).Trim
-                Else
-                    strlage = strlage & ". "
-                End If
-            Else
-                strlage = ""
-            End If
-            l(" getlage ---------------------- ende: " & strlage)
-            Return strlage
-        Catch ex As Exception
-            l("Fehler in getlage: " & fs & ", " & ex.ToString())
-            Return ""
-        End Try
-    End Function
+    'Friend Shared Function getlage(fs As String) As String
+    '    Dim dt As DataTable
+    '    Dim strlage = ""
+    '    Dim hinweis As String = ""
+    '    Try
+    '        l(" getlage ---------------------- anfang")
+    '        'Dim sql As String
+    '        fstREC.mydb.SQL = "select * from flurkarte.basis_ext_f where fs='" & fs & "'"
+    '        'dt = getDTFromWebgisDB(sql, "postgis20") 
+    '        l(fstREC.mydb.SQL)
+    '        hinweis = fstREC.getDataDT()
+    '        If fstREC.dt.Rows.Count > 0 Then
+    '            strlage = "Lage: " & clsDBtools.fieldvalue(fstREC.dt.Rows(0).Item("name")).Trim
+    '            strlage = strlage & ", " & clsDBtools.fieldvalue(fstREC.dt.Rows(0).Item("lage")).Trim
+    '            If clsDBtools.fieldvalue(fstREC.dt.Rows(0).Item("hausnr")).Trim <> String.Empty Then
+    '                strlage = strlage & ", Nr: " & clsDBtools.fieldvalue(fstREC.dt.Rows(0).Item("hausnr")).Trim & ". "
+    '                'strlage = strlage & "Bez: " & clsDBtools.fieldvalue(fstREC.dt.Rows(0).Item("bezeich")).Trim
+    '            Else
+    '                strlage = strlage & ". "
+    '            End If
+    '        Else
+    '            strlage = ""
+    '        End If
+    '        l(" getlage ---------------------- ende: " & strlage)
+    '        Return strlage
+    '    Catch ex As Exception
+    '        l("Fehler in getlage: " & fs & ", " & ex.ToString())
+    '        Return ""
+    '    End Try
+    'End Function
 
     Friend Shared Function insertBaulastPdfInMDAT_Dateien(filename As String, objektGUID As String) As Boolean
         Dim result, hinweis As String

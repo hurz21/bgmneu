@@ -5,13 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:bgm" AllowDrop="True"
         mc:Ignorable="d" Left="1" WindowStyle="ToolWindow"    Drop="Window_Drop"
-        Title="BGM" Height="336" Width="177" Background="Beige" >
+        Title="BGM" Height="536" Width="187" Background="Beige" >
     <DockPanel Margin="5">
         <StackPanel Orientation="Vertical">
             <StackPanel Margin="5" Width="145" Name="stpAdminOnly" Background="LightGray">
                 <Button Name="btnNeu" Click="btnNeu_Click" Content="Neu" Margin="5" 
                     IsEnabled="False" Visibility="Collapsed"/>
-                <GroupBox Name="grpBaulasten" Background="LightGray">
+                <GroupBox Name="grpBaulasten" Background="LightGray" Height="145">
                     <StackPanel>
 
                         <Button Name="btnEdit" Click="btnEdit_Click" Content="zu Baulast" 
@@ -60,7 +60,7 @@
 
                             </TextBox>
                     </StackPanel>
-                    <Button Name="btnBaulastdisplay" Margin="5" Click="btnBaulastdisplay_Click"
+                    <Button Name="btnBaulastdisplay"  Click="btnBaulastdisplay_Click"
                         IsEnabled="False">Baulast anzeigen
 
                     </Button>
@@ -70,13 +70,46 @@
 
             </StackPanel>
             <Button Name="btnShowPDF1" Click="btnShowPDF_Click" Visibility="Visible" 
-                    IsEnabled="True" Margin="5,19,5,5">
-                PDF-Anzeigen
+                    IsEnabled="True" Margin="5,5,5,0" ToolTip="zeigt unmittelbar die PDF-Datei der Baulast an">
+                Baulast als PDF
             </Button>
-            <Button Name="btnGIS" Click="btnGIS_Click" Content="GIS" Margin="5,9,5,5"/>
-            <Button Name="btnBaulastImGIS" Click="btnBaulastImGIS_Click" Content="Baulast im GIS" Margin="5,9,5,5"/>
+            <Button Name="btnBaulastImGIS" Click="btnBaulastImGIS_Click" Content="Baulast im GIS" Margin="5,0,5,5"
+                    ToolTip="zeigt unmittelbar die Baulast im GIS an"/>
+            <Button Name="btnGIS" Click="btnGIS_Click" Content="GIS" Margin="5,9,5,5" Visibility="Collapsed"
+                    ToolTip="zeigt unmittelbar die PDF-Datei der Baulast an"/>
+          
 
             <Button Name="btnbplan"   Click="btnbplan_Click" Visibility="Collapsed" Margin="5">Bebauungspläne            </Button>
+            <GroupBox x:Name="grpEigentuemer" Height="200" Width="170" Header="Eigentümer"
+                      Background="LightGray">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Width="75">Gemarkung: </Label>
+                           <ComboBox x:Name="cmbGemarkungen" HorizontalAlignment="Left" 
+                                    Height="25" Width="80"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Width="75">Flur:</Label>
+                        <TextBox Name="tbFlur" Width="80"></TextBox>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Width="75">Zähler:</Label>
+                        <TextBox Name="tbZaehler" Width="80"></TextBox>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Width="75">Nenner:</Label>
+                        <TextBox Name="tbnenner" Width="80"></TextBox>
+                    </StackPanel>
+                    <Button x:Name="btnsucheeigentumer" Click="btnsucheeigentumer_Click"
+                            Margin="0,5,0,0">Word-Datei</Button>
+                    <Button x:Name="btngis4fst" Click="btngis4fst_click">im GIS</Button>
+
+
+                </StackPanel>
+                
+           
+
+            </GroupBox>
         </StackPanel>
     </DockPanel>
 </Window>

@@ -141,6 +141,7 @@
     <Compile Include="Bestand\winBestand.xaml.vb">
       <DependentUpon>winBestand.xaml</DependentUpon>
     </Compile>
+    <Compile Include="clsCombo.vb" />
     <Compile Include="clsGIStools.vb" />
     <Compile Include="clsProBGTools.vb" />
     <Compile Include="eigentuemer\clsAdress.vb" />

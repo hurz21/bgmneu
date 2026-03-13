@@ -22,9 +22,24 @@ Public Class winHaupt
             'MessageBox.Show("Sie haben keine Berechtigung für diese Anwendung. Abbruch!")
             'Close() 
             stpAdminOnly.Visibility = Visibility.Visible
+            grpBaulasten.Height = 99
             btnEdit.IsEnabled = False
         End If
+        initKatasterGemarkungtext()
+        katasterGemarkungslist = splitKatasterGemarkung()
+        Dim items As New List(Of myComboBoxItem)
 
+        For Each gema As myComboBoxItem In katasterGemarkungslist
+            items.Add(New myComboBoxItem With {.mySttring = gema.mySttring, .myindex = gema.myindex})
+        Next
+        'items.Add(New clsCombo With {.Text = "Deutschland", .Code = 1})
+        'items.Add(New clsCombo With {.Text = "Österreich", .Code = 2})
+        'items.Add(New clsCombo With {.Text = "Schweiz", .Code = 3})
+
+        cmbGemarkungen.ItemsSource = items
+        cmbGemarkungen.DisplayMemberPath = "mySttring"
+        cmbGemarkungen.SelectedValuePath = "myindex"
+        cmbGemarkungen.IsDropDownOpen = False
         Title = "BGM " & " V.: " & bgmVersion
         istgeladen = True
     End Sub
@@ -130,26 +145,33 @@ Public Class winHaupt
         'tbFlurstueckDisplay.Background=
         tools.FSTausGISListe.Clear()
         tools.FSTausGISListe.Add(f.normflst)
-        eigentuemerText = kurz & toolsEigentuemer.geteigentuemerText(tools.FSTausGISListe)
-        If eigentuemerText.Length > 1 Then
-            btnEigentuemer.IsEnabled = True
-            'btnBaulast4FST.IsEnabled = True
+        Dim result As String
+        If toolsEigentuemer.geteigentuemerText(tools.FSTausGISListe, result) Then
+            eigentuemerText = kurz & result
+            If eigentuemerText.Length > 1 Then
+                btnEigentuemer.IsEnabled = True
+                'btnBaulast4FST.IsEnabled = True
 
-            '''''  baulastnr = getBaulastNr(tools.FSTausGISListe(0)) '????
-            If Not IsNumeric(baulastnr) Then
-                tbBaulast2.Text = "keine BL"
-                lastPDF = ""
-                btnBaulastdisplay.IsEnabled = False
-                tbFlurstueckDisplay.Text = tbFlurstueckDisplay.Text & Environment.NewLine &
-                     "Keine Baulast gefunden."
-            Else
+                '''''  baulastnr = getBaulastNr(tools.FSTausGISListe(0)) '????
+                If Not IsNumeric(baulastnr) Then
+                    tbBaulast2.Text = "keine BL"
+                    lastPDF = ""
+                    btnBaulastdisplay.IsEnabled = False
+                    tbFlurstueckDisplay.Text = tbFlurstueckDisplay.Text & Environment.NewLine &
+                         "Keine Baulast gefunden."
+                Else
 
-                tbBaulast2.Text = baulastnr
-                btnBaulastdisplay.IsEnabled = True
-                tbFlurstueckDisplay.Text = tbFlurstueckDisplay.Text & Environment.NewLine &
-                   "BaulastNr: " & baulastnr
+                    tbBaulast2.Text = baulastnr
+                    btnBaulastdisplay.IsEnabled = True
+                    tbFlurstueckDisplay.Text = tbFlurstueckDisplay.Text & Environment.NewLine &
+                       "BaulastNr: " & baulastnr
+                End If
             End If
+        Else
+            eigentuemerText = kurz & result
         End If
+
+
     End Sub
     Private Sub btnEigentuemer_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
@@ -170,8 +192,8 @@ Public Class winHaupt
                " 2. Fenster zeigt die PDF zur Baulast" & Environment.NewLine & Environment.NewLine & Environment.NewLine &
                "Sie können die Baulast-PDF mit 'speichern unter...'  abspeichern.", "Baulast ansehen",
                MessageBoxButton.OK, MessageBoxImage.Information)
-            Dim neu As New winDetail((tbBaulast2.Text), True) ' 0=modus neu
-            neu.ShowDialog()
+        Dim neu As New winDetail((tbBaulast2.Text), True) ' 0=modus neu
+        neu.ShowDialog()
         'Else
         '    Process.Start(lastPDF)
         'End If
@@ -204,15 +226,84 @@ Public Class winHaupt
     Private Sub btnBaulastImGIS_Click(sender As Object, e As RoutedEventArgs)
         'https://gis.kreis-of.de/LKOF/asp/main.asp?lay=sp_mdat_0010_F&fld=text3&typ=string&val=10001&skipwelcome=true
         e.Handled = True
-        Dim url As String
-        If IsNumeric(tbblnr.Text.Trim) Then
-            url = "https://gis.kreis-of.de/LKOF/asp/main.asp?lay=sp_mdat_0010_F&fld=text3&typ=string&val=" & tbblnr.Text.Trim & "&skipwelcome=true"
-            Process.Start(url)
-        Else
-            MsgBox("Die BaulastNr. '" & tbblnr.Text.Trim & "' ist ungültig!")
-        End If
+        baulastAlsObjImGisZeigen(tbblnr.Text.Trim)
+    End Sub
+
+    Private Sub btnsucheeigentumer_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+        eigentuemerWord()
+    End Sub
+
+    Private Sub eigentuemerWord()
+        Dim item As myComboBoxItem = CType(cmbGemarkungen.SelectedItem, myComboBoxItem)
+        Dim code As Integer = CInt(cmbGemarkungen.SelectedValue)
+        Dim gemtext As String = (item.mySttring).ToString
+        Dim fst As New clsFlurstueck
+        Dim fkzlist As New List(Of clsFlurstueck)
+        Try
+            fst.gemcode = code
+            fst.gemarkungstext=gemtext
+            fst.flur = CInt(tbFlur.Text.Trim)
+            fst.zaehler = CInt(tbZaehler.Text.Trim)
+            If tbnenner.Text = String.Empty Then
+                fst.nenner = 0
+            Else
+                fst.nenner = CInt(tbnenner.Text.Trim)
+            End If
+            fkzlist.Add(fst)
+            Dim summe As String
+            summe = "Aus ProbauG:" & Environment.NewLine
+            summe = summe & makeFlurstuecksAbstrakt(fkzlist)
+            summe = summe.Replace("Aus ProbauG:", "Aus Liegenschaftsbuch:")
+            summe = summe & Environment.NewLine
+            Dim result As String
+            If toolsEigentuemer.geteigentuemerText(fkzlist, result) Then
+                summe = summe & Environment.NewLine & result
+                Dim datei = tools.erzeugeWordDateiEigentuemer(summe, "")
+                Process.Start(datei)
+            Else
+                MsgBox(result)
+            End If
+        Catch ex As Exception
+            l("fehler in eigentuemerWord " & ex.ToString)
+        End Try
+    End Sub
+
+    Private Sub btngis4fst_click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+        MitFlurstueckInsGIS()
 
     End Sub
+
+    Private Sub MitFlurstueckInsGIS()
+        l("fehler in btngis4fst_click ")
+        Dim item As myComboBoxItem = CType(cmbGemarkungen.SelectedItem, myComboBoxItem)
+        Dim code As Integer = CInt(cmbGemarkungen.SelectedValue)
+        Dim gemtext As String = (item.mySttring).ToString
+        Dim fst As New clsFlurstueck
+        Dim fkzlist As New List(Of clsFlurstueck)
+        Try
+            fst.gemcode = code
+            fst.gemarkungstext = gemtext
+            fst.flur = CInt(tbFlur.Text.Trim)
+            fst.zaehler = CInt(tbZaehler.Text.Trim)
+            If tbnenner.Text = String.Empty Then
+                fst.nenner = 0
+            Else
+                fst.nenner = CInt(tbnenner.Text.Trim)
+            End If
+            fkzlist.Add(fst)
+            If tools.flurstueckExistiertImGis(fkzlist(0).flurstueckZuFKZ) Then
+                gisFuerProbaugFlurst(tbblnr.Text.Trim, fkzlist(0).flurstueckZuFKZ)
+            Else
+                MsgBox("Das Flurstück exisitert so nicht im GIS!")
+            End If
+        Catch ex As Exception
+            l("fehler in btngis4fst_click " & ex.ToString)
+        End Try
+    End Sub
+
+
 
     'Private Function getBaulastNr(fst As clsFlurstueck) As String
     '    'tools.FSTausGISListe
