@@ -37,7 +37,14 @@ Public Class clsProBGTools
             Debug.Print(rawList.Count.ToString)
             If rawList.Count < 1 Then
 
-                MessageBox.Show("Probaug lieferte keine sauberen Daten zu BaulastBlattNr: " & baulastblattnr & ". Bitte zuerst auf ProbauG-Seite in Ordnung bringen.")
+                MessageBox.Show("Probaug lieferte keine sauberen Daten zu BaulastBlattNr: " & baulastblattnr & "." & Environment.NewLine &
+                                "Ausweg: " & Environment.NewLine &
+                                "Bitte  " & Environment.NewLine &
+                                "- entweder   zuerst auf ProbauG-Seite in Ordnung bringen," & Environment.NewLine &
+                                "  oder    -falls sie die BL im GIS löschen wollen- :" & Environment.NewLine &
+                                "- Gehen sie im Hauptformular über den Knopf: 'Baulast im GIS'" & Environment.NewLine &
+                                "  und löschen Sie die Baulast im GIS !" & Environment.NewLine
+                                )
                 abbruch = True
                 Exit Sub
             Else

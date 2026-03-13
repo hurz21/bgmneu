@@ -1230,6 +1230,7 @@ Module tools
         End Try
     End Function
     Public Sub gisFuerProbaugFlurst(baulast As String, flurstueckskennzeichen As String)
+
         Dim url As String
         ' C:\kreisoffenbach\mgis\ingradaadapter.exe    suchmodus=flurstueck gemarkung="Hainhausen" flur="4" fstueck="387/1" 
         '91197
@@ -1279,6 +1280,7 @@ Module tools
     Friend Function flurstueckExistiertImGis(flurstueckZuFKZ As String) As Boolean
         Dim sql, hinweis As String
         Dim newid As Long
+        l("flurstueckExistiertImGis")
         Try
             fstREC.mydb.SQL = "use LKOF;select * FROM [LKOF].[dbo].[tbl_lieg_flurstueck] where flurstueckskennzeichen='" & flurstueckZuFKZ & "'"
             l(fstREC.mydb.SQL)
@@ -1310,9 +1312,35 @@ Module tools
             'End If
             'Return True
         Catch ex As Exception
-            l(ex.ToString)
             l("fehler in flurstueckExistiertImGis Abfrage gescheitert " & ex.ToString)
             Return False
         End Try
     End Function
+
+    Friend Function readBLBlattCookie() As String
+        l("readBLBlattCookie")
+        Dim cookiefile = "bgm_blattnr_cookie.txt"
+        Dim result As String
+        Try
+            Dim testfolder = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
+            cookiefile = IO.Path.Combine(testfolder, cookiefile)
+            result = IO.File.ReadAllText(cookiefile)
+            Return result
+        Catch ex As Exception
+            l("fehler in readBLBlattCookie Abfrage gescheitert " & ex.ToString)
+            Return "6428"
+        End Try
+    End Function
+    Friend Sub writeBLBlattCookie(text As String)
+        l("readBLBlattCookie")
+        Dim cookiefile = "bgm_blattnr_cookie.txt"
+        Dim result As String = ""
+        Try
+            Dim testfolder = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
+            cookiefile = IO.Path.Combine(testfolder, cookiefile)
+            IO.File.WriteAllText(cookiefile, text)
+        Catch ex As Exception
+            l("fehler in writeBLBlattCookie Abfrage gescheitert " & ex.ToString)
+        End Try
+    End Sub
 End Module

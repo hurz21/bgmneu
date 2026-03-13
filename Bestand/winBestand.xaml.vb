@@ -63,7 +63,7 @@
     '    Dim myvalx = CType(cmbgemarkung.SelectedItem, System.Xml.XmlElement)
     '    Dim myvals$ = myvalx.Attributes(1).Value.ToString
     '    dgBestand.DataContext = Nothing
-    '    Dim sql = "select * from " & tools.srv_schema & "." & tools.srv_tablename & "  where lower(gemarkung)='" & myvals.ToLower.Trim & "' order by fs"
+    '    Dim sql = "cccccbj " & tools.srv_schema & "." & tools.srv_tablename & "  where lower(gemarkung)='" & myvals.ToLower.Trim & "' order by fs"
     '    l(sql)
     '    refreshGISBestand(sql)
     '    tbTreffer.Text = tools.baulastListe.Count & " Treffer"

@@ -26,8 +26,8 @@
                         <Button Name="btnBestand" Click="btnBestand_Click" Content="Bestandsliste" 
                                 Margin="5"
                                 IsEnabled="False"/>
-                        <Button x:Name="btnPDFTool" Click="btnPDFTool_Click" Content="Werkzeuge"
-                                IsEnabled="False" Margin="5"/>
+                        <!--<Button x:Name="btnPDFTool" Click="btnPDFTool_Click" Content="Werkzeuge"
+                                IsEnabled="False" Margin="5"/>-->
 
                     </StackPanel>
                 </GroupBox>
@@ -84,20 +84,20 @@
                       Background="LightGray">
                 <StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <Label Width="75">Gemarkung: </Label>
+                        <Label Width="75" FontSize="10">Gemarkung: </Label>
                            <ComboBox x:Name="cmbGemarkungen" HorizontalAlignment="Left" 
-                                    Height="25" Width="80"/>
+                                    Height="25" Width="80"  FontSize="10"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <Label Width="75">Flur:</Label>
+                        <Label Width="75" FontSize="10">Flur:</Label>
                         <TextBox Name="tbFlur" Width="80"></TextBox>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <Label Width="75">Zähler:</Label>
+                        <Label Width="75" FontSize="10">Zähler:</Label>
                         <TextBox Name="tbZaehler" Width="80"></TextBox>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <Label Width="75">Nenner:</Label>
+                        <Label Width="75" FontSize="10">Nenner:</Label>
                         <TextBox Name="tbnenner" Width="80"></TextBox>
                     </StackPanel>
                     <Button x:Name="btnsucheeigentumer" Click="btnsucheeigentumer_Click"

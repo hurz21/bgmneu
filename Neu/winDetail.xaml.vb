@@ -42,7 +42,8 @@ Public Class winDetail
             refreshProbaug(CInt(tbBaulastNr.Text), quelleSQL, abbruch)
             If abbruch Then
                 Close()
-                End
+                Return
+                'End
             End If
             refreshGIS(CInt(tbBaulastNr.Text))
             Dim summe = ""
@@ -238,7 +239,7 @@ Public Class winDetail
             clsProBGTools.holeProBaugDaten(baulastblattnr, sqlquelle, abbruch) ' füllt FSTausPROBAUGListe
             'abbruch = False
             If abbruch Then
-                MsgBox("Anwendung wird beendet !")
+                'MsgBox("Anwendung wird beendet !")
                 abbruch = True
                 Exit Sub
             End If

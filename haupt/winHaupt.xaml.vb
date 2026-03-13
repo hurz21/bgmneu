@@ -13,8 +13,11 @@ Public Class winHaupt
         e.Handled = True
         setLogfile(logfile) : l("Start " & Now) : l("mgisversion:" & bgmVersion)
         initdb()
+        tbblnr.Text = "6428"
         tbblnr.Text = "21507"
         tbblnr.Text = "131045"
+        tbblnr.Text = tools.readBLBlattCookie
+
         If isAutho() Then
             'its ok  21478  21504
             '"POLYGON ((479015 5538655,479033 5538660,479035 5538656,479017 5538650,479015 5538655))" 
@@ -83,6 +86,7 @@ Public Class winHaupt
         '    MsgBox("bitte geben sie eine blnr ein!")
         '    Exit Sub
         'End If
+        tools.writeBLBlattCookie(tbblnr.Text)
         Dim neu As New winDetail((tbblnr.Text), False) ' 0=modus neu
         neu.ShowDialog()
     End Sub
@@ -118,12 +122,12 @@ Public Class winHaupt
         End Try
     End Sub
 
-    Private Sub btnPDFTool_Click(sender As Object, e As RoutedEventArgs)
-        e.Handled = True
-        Dim ewrk As New winWerkzeuge
-        ewrk.ShowDialog()
+    'Private Sub btnPDFTool_Click(sender As Object, e As RoutedEventArgs)
+    '    e.Handled = True
+    '    Dim ewrk As New winWerkzeuge
+    '    ewrk.ShowDialog()
 
-    End Sub
+    'End Sub
 
     Private Sub btnbplan_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
@@ -218,6 +222,7 @@ Public Class winHaupt
            lastPDF.ToLower.StartsWith("keine") Then
             MsgBox(lastPDF)
         Else
+            tools.writeBLBlattCookie(tbblnr.Text.Trim)
             Process.Start(lastPDF)
         End If
 
@@ -226,6 +231,7 @@ Public Class winHaupt
     Private Sub btnBaulastImGIS_Click(sender As Object, e As RoutedEventArgs)
         'https://gis.kreis-of.de/LKOF/asp/main.asp?lay=sp_mdat_0010_F&fld=text3&typ=string&val=10001&skipwelcome=true
         e.Handled = True
+        tools.writeBLBlattCookie(tbblnr.Text.Trim)
         baulastAlsObjImGisZeigen(tbblnr.Text.Trim)
     End Sub
 
