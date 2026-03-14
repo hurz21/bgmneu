@@ -18,6 +18,7 @@ Public Class winHaupt
         tbblnr.Text = "131045"
         tbblnr.Text = tools.readBLBlattCookie("bgm_blattnr_cookie.txt")
         Dim gemarkung, flur, zaehler, nenner, gemarkungsindex As String
+        Dim gemeinde, strasse, hausnr, lage, gemeindeindex As String
         tools.readFSTCookie(gemarkung, flur, zaehler, nenner, "bgm_FST_cookie.txt")
         gemarkungsindex = gemarkung
             tbFlur.Text = flur
@@ -40,22 +41,31 @@ Public Class winHaupt
         Dim gemeinden() = mapTools.init_katastergemeindeliste()
         katasterGemeindelist = mapTools.splitgemeindeliste(gemeinden)
         katasterGemarkungslist = splitKatasterGemarkung()
-        Dim items As New List(Of myComboBoxItem)
+        Dim gameindeitems As New List(Of myComboBoxItem)
+        Dim gamarkungsitems As New List(Of myComboBoxItem)
 
         For Each gema As myComboBoxItem In katasterGemarkungslist
-            items.Add(New myComboBoxItem With {.mySttring = gema.mySttring, .myindex = gema.myindex})
+            gamarkungsitems.Add(New myComboBoxItem With {.mySttring = gema.mySttring, .myindex = gema.myindex})
         Next
-        'items.Add(New clsCombo With {.Text = "Deutschland", .Code = 1})
-        'items.Add(New clsCombo With {.Text = "Österreich", .Code = 2})
-        'items.Add(New clsCombo With {.Text = "Schweiz", .Code = 3})
+        For Each gema As myComboBoxItem In katasterGemeindelist
+            gameindeitems.Add(New myComboBoxItem With {.mySttring = gema.mySttring, .myindex = gema.myindex})
+        Next
+        'gamarkungsitems.Add(New clsCombo With {.Text = "Deutschland", .Code = 1})
+        'gamarkungsitems.Add(New clsCombo With {.Text = "Österreich", .Code = 2})
+        'gamarkungsitems.Add(New clsCombo With {.Text = "Schweiz", .Code = 3})
 
-        cmbGemarkungen.ItemsSource = items
+        cmbGemarkungen.ItemsSource = gamarkungsitems
         cmbGemarkungen.DisplayMemberPath = "mySttring"
         cmbGemarkungen.SelectedValuePath = "myindex"
         cmbGemarkungen.IsDropDownOpen = False
-
-
         cmbGemarkungen.SelectedIndex = CInt(gemarkungsindex)
+
+        cmbGemeinden.ItemsSource = gameindeitems
+        cmbGemeinden.DisplayMemberPath = "mySttring"
+        cmbGemeinden.SelectedValuePath = "myindex"
+        cmbGemarkungen.IsDropDownOpen = True
+        cmbGemeinden.SelectedIndex = CInt(gemeindeindex)
+
         Title = "BGM " & " V.: " & bgmVersion
         istgeladen = True
     End Sub
@@ -402,38 +412,28 @@ Public Class winHaupt
 
     End Sub
 
-    Private Sub tbStrasseFilter_TextChanged(sender As Object, e As TextChangedEventArgs)
-        If tbStrasseFilter Is Nothing Then Exit Sub
+    Private Sub btnSucheStrassehausnr_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
+
+        lageliste = clsGIStools.getLage(tbStrasse.Text, cmbGemeinden.SelectedValue.ToString, tbHausnr.Text)
+        'For Each gema As myComboBoxItem In lageliste
+        '    cmbstrassen.Add(New myComboBoxItem With {.mySttring = gema.mySttring, .myindex = gema.myindex})
+        'Next
+        cmbstrassen.ItemsSource = lageliste
+        cmbstrassen.DisplayMemberPath = "mySttring"
+        cmbstrassen.SelectedValuePath = "myindex"
+        cmbstrassen.IsDropDownOpen = True
+        'cmbstrassen.SelectedIndex = CInt(1)
     End Sub
 
+    'Private Sub tbStrasseFilter_TextChanged(sender As Object, e As TextChangedEventArgs)
+    '    'If tbStrasseFilter Is Nothing Then Exit Sub
+    '    'e.Handled = True
+
+    '    'lageliste = clsGIStools.getLage(tbStrasseFilter.Text, cmbGemeinden.SelectedValue.ToString, tbHausnr.Text)
+    '    ''lageliste = mapTools.lageohneZahl(lageliste)
+    'End Sub
 
 
-    'Private Function getBaulastNr(fst As clsFlurstueck) As String
-    '    'tools.FSTausGISListe
-    '    If istgeladen Then
-    '        Dim hinweis As String = ""
-    '        fstREC.mydb.SQL = "select jahr_blattnr,tiff from " & srv_schema & "." & srv_tablename &
-    '         " where gemcode = '" & fst.gemcode & "'" &
-    '         " and flur='" & fst.flur & "'" &
-    '         " and zaehler='" & fst.zaehler & "'" &
-    '         " and nenner='" & fst.nenner & "'"
-    '        l(fstREC.mydb.SQL)
-    '        hinweis = fstREC.getDataDT()
-    '        If fstREC.dt.Rows.Count < 1 Then
-    '            Return "keine BL"
-    '            'tbBaulast2.Text = "keine BL"
-    '            'lastPDF = ""
-    '            'btnBaulastdisplay.IsEnabled = False
-    '        Else
-    '            'tbBaulast2.Text = fstREC.dt.Rows(0).Item(0).ToString.Trim
-    '            lastPDF = fstREC.dt.Rows(0).Item(1).ToString.Trim
-    '            lastPDF = lastPDF.ToLower.Replace(".tiff", ".pdf")
-    '            lastPDF = lastPDF.ToLower.Replace(".tif", ".pdf")
-    '            Return fstREC.dt.Rows(0).Item(0).ToString.Trim
-    '            'btnBaulastdisplay.IsEnabled = True
-    '        End If
 
-    '    End If
-    'End Function
 End Class

@@ -287,6 +287,48 @@ Public Class clsGIStools
         End Try
     End Function
 
+    Friend Shared Function getLage(tbStrasseFilter As String, gemeinde As String, hausnr As String) As List(Of myComboBoxItem)
+        Dim hinweis As String
+        'Dim a() As String
+        Dim cbl As New List(Of myComboBoxItem)
+        Dim cb As New myComboBoxItem
+        Try
+            l("getLage ")
+            l("gemeinde " & gemeinde)
+            l("tbStrasseFilter " & tbStrasseFilter)
+
+            'fstREC.mydb.SQL = "SELECT * FROM [LKOF_Bearb].[dbo].[tbl_mdat_datensatz]" &
+            '             " where kategorie_guid='" & kategorie_guid & "' " &
+            '             " and text3='" & BaulastNR & "' order by text8, int1, int2, int3"
+
+
+            fstREC.mydb.SQL = "SELECT  distinct lagebezeichnung,flurstueckskennzeichen  FROM   dbo.tbl_lieg_flurstueck AS f LEFT OUTER JOIN       dbo.tbl_reg_gemeinde AS g ON f.gemeinde_gemeindeschluessel = g.gemeindeschluessel " &
+                            "where lagebezeichnung is not null and " &
+                            "lagebezeichnung like '" & tbStrasseFilter & "%' " &
+                            "and lagebezeichnung like '%" & hausnr & "'  " &
+                            "and gemeindeschluessel ='" & gemeinde & "'  " &
+                            "order by lagebezeichnung"
+
+            l(fstREC.mydb.SQL)
+            hinweis = fstREC.getDataDT()
+            If fstREC.dt.Rows.Count > 0 Then
+                For i = 0 To fstREC.dt.Rows.Count - 1
+                    cb = New myComboBoxItem
+                    cb.mySttring = fstREC.dt.Rows(i).Item(0).ToString.Trim
+                    cb.myindex = fstREC.dt.Rows(i).Item(1).ToString.Trim
+                    cbl.Add(cb)
+                Next
+            Else
+                Debug.Print(clsDBtools.fieldvalue(fstREC.dt.Rows(0).Item(0)))
+                'Return True
+            End If
+            Return cbl
+        Catch ex As Exception
+            l("Fehler in getLage " & ex.ToString)
+            Return Nothing
+        End Try
+    End Function
+
     'Friend Shared Function updateGISDB(baulastblatnr As String, zuielname As String, gemarkung As String, endung As String) As Boolean
     '    Dim sql As String
     '    Dim neuerTIFFname As String

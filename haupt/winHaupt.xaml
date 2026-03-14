@@ -88,12 +88,12 @@
                             <StackPanel Orientation="Horizontal">
                                 <Label Width="75" FontSize="10">Gemeinde:</Label>
                                 <ComboBox x:Name="cmbGemeinden" HorizontalAlignment="Left" 
-Height="25" Width="80"  FontSize="10"/>
+                                            Height="25" Width="80"  FontSize="10"/>
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal">
+                            <!--<StackPanel Orientation="Horizontal">
                                 <Label Width="75" FontSize="10">Filter:</Label>
                                 <TextBox Name="tbStrasseFilter" Width="80" TextChanged="tbStrasseFilter_TextChanged"></TextBox>
-                            </StackPanel>
+                            </StackPanel>-->
                             <StackPanel Orientation="Horizontal">
                                 <Label Width="75" FontSize="10">Strasse:</Label>
                                 <TextBox Name="tbStrasse" Width="80"></TextBox>
@@ -102,7 +102,10 @@ Height="25" Width="80"  FontSize="10"/>
                                 <Label Width="75" FontSize="10">HausNr:</Label>
                                 <TextBox Name="tbHausnr" Width="80"></TextBox>
                             </StackPanel>
-
+                            <ComboBox x:Name="cmbstrassen" HorizontalAlignment="Left" 
+               Height="25" Width="80"  FontSize="10"/>
+                            
+                            <Button Name="btnSucheStrassehausnr" Click="btnSucheStrassehausnr_Click" >suchen</Button>
                             <Button x:Name="btnsucheeigentumerADR" Click="btnsucheeigentumerADR_Click" Margin="0,5,0,0">Word-Datei</Button>
                             <Button x:Name="btngis4adr" Click="btngis4adr_Click">im GIS</Button>
                         </StackPanel>

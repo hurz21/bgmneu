@@ -6,6 +6,7 @@ Module tools
     Public genese As Integer = 1
     Public range As New clsRange
     Public flurstueckskennzeichen As String
+    Public lageliste As New List(Of myComboBoxItem)
 
     'die alte config mit postgis
     'Public srv_host_web As String = "http://gis.kreis-of.local"
