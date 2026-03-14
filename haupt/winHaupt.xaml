@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:bgm" AllowDrop="True"
         mc:Ignorable="d" Left="1" WindowStyle="ToolWindow"    Drop="Window_Drop"
-        Title="BGM" Height="536" Width="187" Background="Beige" >
+        Title="BGM" Height="536" Width="287" Background="Beige" >
     <DockPanel Margin="5">
         <StackPanel Orientation="Vertical">
             <StackPanel Margin="5" Width="145" Name="stpAdminOnly" Background="LightGray">
@@ -80,32 +80,62 @@
           
 
             <Button Name="btnbplan"   Click="btnbplan_Click" Visibility="Collapsed" Margin="5">Bebauungspläne            </Button>
-            <GroupBox x:Name="grpEigentuemer" Height="200" Width="170" Header="Eigentümer"
+            <GroupBox x:Name="grpEigentuemer" Height="290" Width="170" Header="Eigentümer"
                       Background="LightGray">
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Label Width="75" FontSize="10">Gemarkung: </Label>
-                           <ComboBox x:Name="cmbGemarkungen" HorizontalAlignment="Left" 
-                                    Height="25" Width="80"  FontSize="10"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Label Width="75" FontSize="10">Flur:</Label>
-                        <TextBox Name="tbFlur" Width="80"></TextBox>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Label Width="75" FontSize="10">Zähler:</Label>
-                        <TextBox Name="tbZaehler" Width="80"></TextBox>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Label Width="75" FontSize="10">Nenner:</Label>
-                        <TextBox Name="tbnenner" Width="80"></TextBox>
-                    </StackPanel>
-                    <Button x:Name="btnsucheeigentumer" Click="btnsucheeigentumer_Click"
-                            Margin="0,5,0,0">Word-Datei</Button>
-                    <Button x:Name="btngis4fst" Click="btngis4fst_click">im GIS</Button>
+                <TabControl x:Name="tabEig" FontSize="10">
+                    <TabItem Name="tabadr" Header="Lage" FontSize="9">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Label Width="75" FontSize="10">Gemeinde:</Label>
+                                <ComboBox x:Name="cmbGemeinden" HorizontalAlignment="Left" 
+Height="25" Width="80"  FontSize="10"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Label Width="75" FontSize="10">Filter:</Label>
+                                <TextBox Name="tbStrasseFilter" Width="80" TextChanged="tbStrasseFilter_TextChanged"></TextBox>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Label Width="75" FontSize="10">Strasse:</Label>
+                                <TextBox Name="tbStrasse" Width="80"></TextBox>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Label Width="75" FontSize="10">HausNr:</Label>
+                                <TextBox Name="tbHausnr" Width="80"></TextBox>
+                            </StackPanel>
+
+                            <Button x:Name="btnsucheeigentumerADR" Click="btnsucheeigentumerADR_Click" Margin="0,5,0,0">Word-Datei</Button>
+                            <Button x:Name="btngis4adr" Click="btngis4adr_Click">im GIS</Button>
+                        </StackPanel>
+                    </TabItem>
+                    <TabItem Name="tabfst" Header="Flurstück" FontSize="9">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Label Width="75" FontSize="10">Gemarkung:</Label>
+                                <ComboBox x:Name="cmbGemarkungen" HorizontalAlignment="Left" 
+                      Height="25" Width="80"  FontSize="10"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Label Width="75" FontSize="10">Flur:</Label>
+                                <TextBox Name="tbFlur" Width="80"></TextBox>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Label Width="75" FontSize="10">Zähler:</Label>
+                                <TextBox Name="tbZaehler" Width="80"></TextBox>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Label Width="75" FontSize="10">Nenner:</Label>
+                                <TextBox Name="tbnenner" Width="80"></TextBox>
+                            </StackPanel>
+                            <Button x:Name="btnsucheeigentumer" Click="btnsucheeigentumer_Click"
+              Margin="0,5,0,0">Word-Datei</Button>
+                            <Button x:Name="btngis4fst" Click="btngis4fst_click">im GIS</Button>
 
 
-                </StackPanel>
+                        </StackPanel>
+                    </TabItem>
+                
+                </TabControl>
+              
                 
            
 

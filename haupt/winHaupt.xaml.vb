@@ -16,7 +16,15 @@ Public Class winHaupt
         tbblnr.Text = "6428"
         tbblnr.Text = "21507"
         tbblnr.Text = "131045"
-        tbblnr.Text = tools.readBLBlattCookie
+        tbblnr.Text = tools.readBLBlattCookie("bgm_blattnr_cookie.txt")
+        Dim gemarkung, flur, zaehler, nenner, gemarkungsindex As String
+        tools.readFSTCookie(gemarkung, flur, zaehler, nenner, "bgm_FST_cookie.txt")
+        gemarkungsindex = gemarkung
+            tbFlur.Text = flur
+        tbZaehler.Text = zaehler
+        tbnenner.Text = nenner
+
+
 
         If isAutho() Then
             'its ok  21478  21504
@@ -29,6 +37,8 @@ Public Class winHaupt
             btnEdit.IsEnabled = False
         End If
         initKatasterGemarkungtext()
+        Dim gemeinden() = mapTools.init_katastergemeindeliste()
+        katasterGemeindelist = mapTools.splitgemeindeliste(gemeinden)
         katasterGemarkungslist = splitKatasterGemarkung()
         Dim items As New List(Of myComboBoxItem)
 
@@ -43,6 +53,9 @@ Public Class winHaupt
         cmbGemarkungen.DisplayMemberPath = "mySttring"
         cmbGemarkungen.SelectedValuePath = "myindex"
         cmbGemarkungen.IsDropDownOpen = False
+
+
+        cmbGemarkungen.SelectedIndex = CInt(gemarkungsindex)
         Title = "BGM " & " V.: " & bgmVersion
         istgeladen = True
     End Sub
@@ -86,7 +99,7 @@ Public Class winHaupt
         '    MsgBox("bitte geben sie eine blnr ein!")
         '    Exit Sub
         'End If
-        tools.writeBLBlattCookie(tbblnr.Text)
+        tools.writeBLBlattCookie(tbblnr.Text, "bgm_blattnr_cookie.txt")
         Dim neu As New winDetail((tbblnr.Text), False) ' 0=modus neu
         neu.ShowDialog()
     End Sub
@@ -217,38 +230,77 @@ Public Class winHaupt
 
     Private Sub btnShowPDF_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
-        lastPDF = clsGIStools.copyOnlyPDF(tbblnr.Text.Trim)
-        If lastPDF.ToLower.StartsWith("fehler") Or
-           lastPDF.ToLower.StartsWith("keine") Then
-            MsgBox(lastPDF)
+        'feststellen ob es die baulast gibt - sonst 
+        'besteht die gefahr, dass eine veraltete PDF gezogen wird
+        If clsGIStools.getBaulastFromBaulastMDAT(CInt(tbblnr.Text.Trim), kategorie_guid) Then
+            lastPDF = clsGIStools.copyOnlyPDF(tbblnr.Text.Trim)
+            If lastPDF.ToLower.StartsWith("fehler") Or
+               lastPDF.ToLower.StartsWith("keine") Then
+                MsgBox(lastPDF)
+            Else
+                tools.writeBLBlattCookie(tbblnr.Text.Trim, "bgm_blattnr_cookie.txt")
+                Process.Start(lastPDF)
+            End If
         Else
-            tools.writeBLBlattCookie(tbblnr.Text.Trim)
-            Process.Start(lastPDF)
-        End If
+            MsgBox("Diese Baulast gibt es im GIS nicht!")
+        End If 'füllt fstREC
+
+
+
 
     End Sub
 
     Private Sub btnBaulastImGIS_Click(sender As Object, e As RoutedEventArgs)
         'https://gis.kreis-of.de/LKOF/asp/main.asp?lay=sp_mdat_0010_F&fld=text3&typ=string&val=10001&skipwelcome=true
         e.Handled = True
-        tools.writeBLBlattCookie(tbblnr.Text.Trim)
+        tools.writeBLBlattCookie(tbblnr.Text.Trim, "bgm_blattnr_cookie.txt")
         baulastAlsObjImGisZeigen(tbblnr.Text.Trim)
     End Sub
 
     Private Sub btnsucheeigentumer_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
-        eigentuemerWord()
-    End Sub
 
-    Private Sub eigentuemerWord()
         Dim item As myComboBoxItem = CType(cmbGemarkungen.SelectedItem, myComboBoxItem)
+        If item Is Nothing Then
+            MsgBox("Die eingabe war ungültig. Bitte korrigieren!")
+            Exit Sub
+        End If
         Dim code As Integer = CInt(cmbGemarkungen.SelectedValue)
+        Dim gemindex As Integer = CInt(cmbGemarkungen.SelectedIndex)
         Dim gemtext As String = (item.mySttring).ToString
         Dim fst As New clsFlurstueck
         Dim fkzlist As New List(Of clsFlurstueck)
         Try
             fst.gemcode = code
-            fst.gemarkungstext=gemtext
+            fst.gemarkungstext = gemtext
+            fst.flur = CInt(tbFlur.Text.Trim)
+            fst.zaehler = CInt(tbZaehler.Text.Trim)
+            If tbnenner.Text = String.Empty Then
+                fst.nenner = 0
+            Else
+                fst.nenner = CInt(tbnenner.Text.Trim)
+            End If
+            tools.writeFlurstCookie(gemindex.ToString, (tbFlur.Text.Trim), tbZaehler.Text.Trim, tbnenner.Text.Trim, "bgm_FST_cookie.txt")
+            eigentuemerWord(False)
+        Catch ex As Exception
+            l("btnsucheeigentumer_Click " & ex.ToString)
+        End Try
+    End Sub
+
+    Private Sub eigentuemerWord(isbaulast As Boolean)
+        Dim item As myComboBoxItem = CType(cmbGemarkungen.SelectedItem, myComboBoxItem)
+        Dim code As Integer = CInt(cmbGemarkungen.SelectedValue)
+        If item Is Nothing Then
+            MsgBox("Die Eingabe war ungültig. Bitte korrigieren!")
+            Exit Sub
+        End If
+        Dim gemtext As String = (item.mySttring).ToString
+        Dim fst As New clsFlurstueck
+        Dim fkzlist As New List(Of clsFlurstueck)
+        Dim dateinameFST As String
+        Try
+            fst.gemcode = code
+            fst.gemarkungstext = gemtext
             fst.flur = CInt(tbFlur.Text.Trim)
             fst.zaehler = CInt(tbZaehler.Text.Trim)
             If tbnenner.Text = String.Empty Then
@@ -257,15 +309,20 @@ Public Class winHaupt
                 fst.nenner = CInt(tbnenner.Text.Trim)
             End If
             fkzlist.Add(fst)
+            dateinameFST = "_" & gemtext & "_" & fst.flur & "_" & fst.zaehler & "" & fst.nenner & "_"
             Dim summe As String
             summe = "Aus ProbauG:" & Environment.NewLine
             summe = summe & makeFlurstuecksAbstrakt(fkzlist)
             summe = summe.Replace("Aus ProbauG:", "Aus Liegenschaftsbuch:")
             summe = summe & Environment.NewLine
-            Dim result As String
+            Dim result, datei As String
             If toolsEigentuemer.geteigentuemerText(fkzlist, result) Then
                 summe = summe & Environment.NewLine & result
-                Dim datei = tools.erzeugeWordDateiEigentuemer(summe, "")
+                If isbaulast Then
+                    datei = tools.erzeugeWordDateiEigentuemer(summe, "")
+                Else
+                    datei = tools.erzeugeWordDateiEigentuemer(summe, dateinameFST)
+                End If
                 Process.Start(datei)
             Else
                 MsgBox(result)
@@ -277,8 +334,32 @@ Public Class winHaupt
 
     Private Sub btngis4fst_click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
-        MitFlurstueckInsGIS()
 
+        Dim item As myComboBoxItem = CType(cmbGemarkungen.SelectedItem, myComboBoxItem)
+        If item Is Nothing Then
+            MsgBox("Die eingabe war ungültig. Bitte korrigieren!")
+            Exit Sub
+        End If
+        Dim code As Integer = CInt(cmbGemarkungen.SelectedValue)
+        Dim index As Integer = CInt(cmbGemarkungen.SelectedIndex)
+        Dim gemtext As String = (item.mySttring).ToString
+        Dim fst As New clsFlurstueck
+        Dim fkzlist As New List(Of clsFlurstueck)
+        Try
+            fst.gemcode = code
+            fst.gemarkungstext = gemtext
+            fst.flur = CInt(tbFlur.Text.Trim)
+            fst.zaehler = CInt(tbZaehler.Text.Trim)
+            If tbnenner.Text = String.Empty Then
+                fst.nenner = 0
+            Else
+                fst.nenner = CInt(tbnenner.Text.Trim)
+            End If
+            tools.writeFlurstCookie(index.ToString, (tbFlur.Text.Trim), tbZaehler.Text.Trim, tbnenner.Text.Trim, "bgm_FST_cookie.txt")
+            MitFlurstueckInsGIS()
+        Catch ex As Exception
+            l("btnsucheeigentumer_Click " & ex.ToString)
+        End Try
     End Sub
 
     Private Sub MitFlurstueckInsGIS()
@@ -307,6 +388,23 @@ Public Class winHaupt
         Catch ex As Exception
             l("fehler in btngis4fst_click " & ex.ToString)
         End Try
+    End Sub
+
+    Private Sub cmbGemarkungen_SelectionChanged(sender As Object, e As SelectionChangedEventArgs) Handles cmbGemarkungen.SelectionChanged
+
+    End Sub
+
+    Private Sub btnsucheeigentumerADR_Click(sender As Object, e As RoutedEventArgs)
+
+    End Sub
+
+    Private Sub btngis4adr_Click(sender As Object, e As RoutedEventArgs)
+
+    End Sub
+
+    Private Sub tbStrasseFilter_TextChanged(sender As Object, e As TextChangedEventArgs)
+        If tbStrasseFilter Is Nothing Then Exit Sub
+        e.Handled = True
     End Sub
 
 

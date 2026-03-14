@@ -7,7 +7,7 @@ Public Class winDetail
     Property VGmyBitmapImage As New BitmapImage
     Private istgeladen As Boolean = False
     Public Property ObjektGuid As String = "88AFE39F-78FC-4053-BE6D-315E3745CF45" '=kategorie
-    Public Property kategorie_guid As String = "88AFE39F-78FC-4053-BE6D-315E3745CF45"
+
     Public Property quelleSQL As String = "gisview2belastet"
     Public Property targetGISTabelle As String = "hartmann"
     Dim modus As String = "neu"

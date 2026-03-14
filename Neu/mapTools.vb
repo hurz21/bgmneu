@@ -1,53 +1,60 @@
 ﻿Public Class mapTools
 
+    Shared Function init_katastergemeindeliste() As String()
+        'SELECT  distinct gemeinde,gemeindeschluessel  FROM   dbo.tbl_lieg_flurstueck AS f LEFT OUTER JOIN       dbo.tbl_reg_gemeinde AS g ON f.gemeinde_gemeindeschluessel = g.gemeindeschluessel
 
-    Friend Shared Function genPreviewURL(aktrange As clsRange, breite As Integer, hoehe As Integer, hgrund As String, puffer As Integer, gid As String) As String
+        Dim a() As String
+        ReDim a(13)
         Try
-            l(" genPreview ---------------------- anfang")
-            Dim mapsize As String
-            Dim Mapfile As String
-            'http://gis.kreis-of.local/cgi-bin/mapserv722/mapserv.exe?mode=map&mapsize=400+300&mapext=484999+5542166+485168+5542289&map=/inetpub/wwwroot/apps/paradigma/nt/header_2.map&gid=6
-            Dim geodatenroot, url As String
-            mapsize = breite & "+" & hoehe
-            Mapfile = calcMapfileName(hgrund)
-            '#If DEBUG Then
-            Mapfile = "/baulastenundflurkarte_test.map"
-            '#End If
-            Dim xl, xh, yl, yh As Integer
-
-            xl = CInt(aktrange.xl) - puffer
-            xh = CInt(aktrange.xh) + puffer
-            yl = CInt(aktrange.yl) - puffer
-            yh = CInt(aktrange.yh) + puffer
-
-            geodatenroot = "http://gis.kreis-of.local/cgi-bin/mapserv722/mapserv.cgi?mode=map&mapsize=" & mapsize
-
-            url = geodatenroot & "&mapext=" & (xl & "+" & (yl) & "+" & (xh) & "+" & (yh))
-            url = url & "&map=/nkat/vorlage/paradigma/baulasten" & Mapfile
-            url = url & "&gid=" & gid
-            'url = url & "&gid=173"
-
-            url = url & "&ts=" & clsString.getTimestamp
-            l(url)
-            l(" genPreview ---------------------- ende")
-            Return url
-            'Else
-            '    '
-            'End If
+            a(1) = "Dietzenbach	;06438001"
+            a(2) = "Dreieich	;06438002"
+            a(3) = "Egelsbach	;06438003"
+            a(4) = "Hainburg	;06438004"
+            a(5) = "Heusenstamm	;06438005"
+            a(6) = "Langen (Hessen)	;06438006"
+            a(7) = "Mainhausen	;06438007"
+            a(8) = "Mühlheim am Main	;06438008"
+            a(9) = "Neu-Isenburg	;06438009"
+            a(10) = "Obertshausen	;06438010"
+            a(11) = "Rödermark	;06438012"
+            a(12) = "Rodgau	;06438011"
+            a(13) = "Seligenstadt	;06438013"
+            Return a
         Catch ex As Exception
-            l("Fehler in genPreview: " & ex.ToString())
-            Return ""
+            l("init_gemeindeliste " & ex.ToString)
+            Return a
         End Try
     End Function
 
-    Private Shared Function calcMapfileName(hgrund As String) As String
-        Dim mapfile As String
-
-        Dim vgrundstring = "baulasten"
-
-        mapfile = "/" & vgrundstring & "und" & hgrund & ".map"
-        Return Mapfile
+    Friend Shared Function splitgemeindeliste(kataster As String()) As List(Of myComboBoxItem)
+        Dim dict As New List(Of myComboBoxItem)
+        Dim a() As String
+        Dim my As New myComboBoxItem
+        For i = 0 To kataster.Count - 1
+            my = New myComboBoxItem
+            a = kataster(i).Replace(vbTab, " ").Split(";"c)
+            my.myindex = a(1).Trim
+            my.mySttring = (a(0).Trim)
+            dict.Add(my)
+        Next
+        Return dict
     End Function
+
+    Function getstrasse() As String
+        Dim sql As String
+        Try
+            sql = "SELECT *  FROM   dbo.tbl_lieg_flurstueck AS f LEFT OUTER JOIN       dbo.tbl_reg_gemeinde AS g ON f.gemeinde_gemeindeschluessel = g.gemeindeschluessel " &
+"where lagebezeichnung is not null and lagebezeichnung like 'am r%' and gemeinde ='Dietzenbach'  " &
+"order by lagebezeichnung"
+        Catch ex As Exception
+
+        End Try
+    End Function
+
+
+
+
+
 
 
 End Class

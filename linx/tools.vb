@@ -2,6 +2,7 @@
 
 
 Module tools
+    Public kategorie_guid As String = "88AFE39F-78FC-4053-BE6D-315E3745CF45"
     Public genese As Integer = 1
     Public range As New clsRange
     Public flurstueckskennzeichen As String
@@ -47,6 +48,7 @@ Module tools
 
     Public probaugGemarkungsdict As New Dictionary(Of Integer, String)
     Public katasterGemarkungslist As New List(Of myComboBoxItem)
+    Public katasterGemeindelist As New List(Of myComboBoxItem)
     Public gemeindedict As New Dictionary(Of Integer, String)
     Public gem(37) As String
     Public gemeinde(13) As String
@@ -1317,9 +1319,9 @@ Module tools
         End Try
     End Function
 
-    Friend Function readBLBlattCookie() As String
+    Friend Function readBLBlattCookie(cookiefile As String) As String
         l("readBLBlattCookie")
-        Dim cookiefile = "bgm_blattnr_cookie.txt"
+        '  Dim cookiefile = "bgm_blattnr_cookie.txt"
         Dim result As String
         Try
             Dim testfolder = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
@@ -1331,16 +1333,54 @@ Module tools
             Return "6428"
         End Try
     End Function
-    Friend Sub writeBLBlattCookie(text As String)
+    Friend Sub writeBLBlattCookie(text As String, cookiefile As String)
         l("readBLBlattCookie")
-        Dim cookiefile = "bgm_blattnr_cookie.txt"
+        'Dim cookiefile = "bgm_blattnr_cookie.txt"
         Dim result As String = ""
         Try
             Dim testfolder = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
             cookiefile = IO.Path.Combine(testfolder, cookiefile)
             IO.File.WriteAllText(cookiefile, text)
         Catch ex As Exception
-            l("fehler in writeBLBlattCookie Abfrage gescheitert " & ex.ToString)
+            l("fehler in writeBLBlattCookie   gescheitert " & ex.ToString)
         End Try
     End Sub
+    Friend Sub writeFlurstCookie(gemarkung As String, flur As String, zaehler As String, nenner As String, cookiefile As String)
+        l("readBLBlattCookie")
+        'Dim cookiefile = "bgm_FST_cookie.txt"
+        Dim result As String = ""
+        Dim testfolder = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
+        Try
+            result = gemarkung.Trim & "," & flur.Trim & "," & zaehler.Trim & "," & nenner.Trim & ","
+            cookiefile = IO.Path.Combine(testfolder, cookiefile)
+            IO.File.WriteAllText(cookiefile, result)
+        Catch ex As Exception
+            l("fehler in writeFlurstCookie   gescheitert " & ex.ToString)
+        End Try
+    End Sub
+    Friend Function readFSTCookie(ByRef gemarkung As String, ByRef flur As String, ByRef zaehler As String, ByRef nenner As String, cookiefile As String) As Boolean
+        l("readFSTCookie")
+        '  Dim cookiefile = "bgm_FST_cookie.txt"
+        Dim result As String
+        Dim a() As String
+        Try
+            Dim testfolder = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
+            cookiefile = IO.Path.Combine(testfolder, cookiefile)
+            result = IO.File.ReadAllText(cookiefile)
+            l("result")
+            a = result.Split(","c)
+            gemarkung = a(0)
+            flur = a(1)
+            zaehler = a(2)
+            nenner = a(3)
+            Return True
+        Catch ex As Exception
+            l("fehler in readFSTCookie Abfrage gescheitert " & ex.ToString)
+            gemarkung = "0"
+            flur = ""
+            zaehler = ""
+            nenner = ""
+            Return False
+        End Try
+    End Function
 End Module
