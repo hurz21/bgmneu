@@ -331,6 +331,7 @@ Public Class winHaupt
                 Else
                     datei = tools.erzeugeWordDateiEigentuemer(summe, dateinameFST)
                 End If
+                Threading.Thread.Sleep(5000)
                 Process.Start(datei)
             Else
                 MsgBox(result)
