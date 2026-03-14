@@ -1,4 +1,5 @@
 ﻿Imports System.ComponentModel
+Imports DocumentFormat.OpenXml.Drawing
 
 Public Class winHaupt
     Private istgeladen As Boolean = False
@@ -269,45 +270,28 @@ Public Class winHaupt
 
     Private Sub btnsucheeigentumer_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
+        fkzlist = New List(Of clsFlurstueck)
+        fkzlist = readFlurst_Form()
+        fst_lage = fkzlist(0).gemarkungstext
+        If tools.flurstueckExistiertImGis(fkzlist(0).flurstueckZuFKZ) Then
+            eigentuemerWord(False, fkzlist, fst_lage)
+        Else
+            MsgBox("Dieses Flurstück existiert nicht im GIS!")
+        End If
+    End Sub
 
+    Private Function readFlurst_Form() As List(Of clsFlurstueck)
+        l("readFlurst_Form")
         Dim item As myComboBoxItem = CType(cmbGemarkungen.SelectedItem, myComboBoxItem)
         If item Is Nothing Then
-            MsgBox("Die eingabe war ungültig. Bitte korrigieren!")
-            Exit Sub
+            MsgBox("Die Eingabe war ungültig. Bitte korrigieren!")
+            Exit Function
         End If
         Dim code As Integer = CInt(cmbGemarkungen.SelectedValue)
         Dim gemindex As Integer = CInt(cmbGemarkungen.SelectedIndex)
         Dim gemtext As String = (item.mySttring).ToString
         Dim fst As New clsFlurstueck
-        Dim fkzlist As New List(Of clsFlurstueck)
-        Try
-            fst.gemcode = code
-            fst.gemarkungstext = gemtext
-            fst.flur = CInt(tbFlur.Text.Trim)
-            fst.zaehler = CInt(tbZaehler.Text.Trim)
-            If tbnenner.Text = String.Empty Then
-                fst.nenner = 0
-            Else
-                fst.nenner = CInt(tbnenner.Text.Trim)
-            End If
-            tools.writeFlurstCookie(gemindex.ToString, (tbFlur.Text.Trim), tbZaehler.Text.Trim, tbnenner.Text.Trim, "bgm_FST_cookie.txt")
-            eigentuemerWord(False)
-        Catch ex As Exception
-            l("btnsucheeigentumer_Click " & ex.ToString)
-        End Try
-    End Sub
-
-    Private Sub eigentuemerWord(isbaulast As Boolean)
-        Dim item As myComboBoxItem = CType(cmbGemarkungen.SelectedItem, myComboBoxItem)
-        Dim code As Integer = CInt(cmbGemarkungen.SelectedValue)
-        If item Is Nothing Then
-            MsgBox("Die Eingabe war ungültig. Bitte korrigieren!")
-            Exit Sub
-        End If
-        Dim gemtext As String = (item.mySttring).ToString
-        Dim fst As New clsFlurstueck
-        Dim fkzlist As New List(Of clsFlurstueck)
-        Dim dateinameFST As String
+        fkzlist = New List(Of clsFlurstueck)
         Try
             fst.gemcode = code
             fst.gemarkungstext = gemtext
@@ -319,12 +303,26 @@ Public Class winHaupt
                 fst.nenner = CInt(tbnenner.Text.Trim)
             End If
             fkzlist.Add(fst)
-            dateinameFST = "_" & gemtext & "_" & fst.flur & "_" & fst.zaehler & "" & fst.nenner & "_"
+            tools.writeFlurstCookie(gemindex.ToString, (tbFlur.Text.Trim), tbZaehler.Text.Trim, tbnenner.Text.Trim, "bgm_FST_cookie.txt")
+            Return fkzlist
+        Catch ex As Exception
+            l("readFlurst_Form " & ex.ToString)
+            Return Nothing
+        End Try
+    End Function
+
+    Private Sub eigentuemerWord(isbaulast As Boolean, fkzlist As List(Of clsFlurstueck), lage As String)
+        Try
+            Dim dateinameFST As String
+            dateinameFST = "_" & fkzlist.Item(0).gemarkungstext & "_" & fkzlist.Item(0).flur & "_" & fkzlist.Item(0).zaehler & "_" & fkzlist.Item(0).nenner & "_"
             Dim summe As String
             summe = "Aus ProbauG:" & Environment.NewLine
             summe = summe & makeFlurstuecksAbstrakt(fkzlist)
             summe = summe.Replace("Aus ProbauG:", "Aus Liegenschaftsbuch:")
             summe = summe & Environment.NewLine
+            summe = summe & lage & Environment.NewLine
+            summe = summe & Environment.NewLine
+
             Dim result, datei As String
             If toolsEigentuemer.geteigentuemerText(fkzlist, result) Then
                 summe = summe & Environment.NewLine & result
@@ -344,54 +342,23 @@ Public Class winHaupt
 
     Private Sub btngis4fst_click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
-
-        Dim item As myComboBoxItem = CType(cmbGemarkungen.SelectedItem, myComboBoxItem)
-        If item Is Nothing Then
-            MsgBox("Die eingabe war ungültig. Bitte korrigieren!")
-            Exit Sub
-        End If
-        Dim code As Integer = CInt(cmbGemarkungen.SelectedValue)
+        fkzlist = New List(Of clsFlurstueck)
+        fkzlist = readFlurst_Form()
         Dim index As Integer = CInt(cmbGemarkungen.SelectedIndex)
-        Dim gemtext As String = (item.mySttring).ToString
-        Dim fst As New clsFlurstueck
-        Dim fkzlist As New List(Of clsFlurstueck)
         Try
-            fst.gemcode = code
-            fst.gemarkungstext = gemtext
-            fst.flur = CInt(tbFlur.Text.Trim)
-            fst.zaehler = CInt(tbZaehler.Text.Trim)
-            If tbnenner.Text = String.Empty Then
-                fst.nenner = 0
-            Else
-                fst.nenner = CInt(tbnenner.Text.Trim)
-            End If
             tools.writeFlurstCookie(index.ToString, (tbFlur.Text.Trim), tbZaehler.Text.Trim, tbnenner.Text.Trim, "bgm_FST_cookie.txt")
-            MitFlurstueckInsGIS()
+            MitFlurstueckInsGIS(fkzlist)
         Catch ex As Exception
             l("btnsucheeigentumer_Click " & ex.ToString)
         End Try
     End Sub
 
-    Private Sub MitFlurstueckInsGIS()
+    Private Sub MitFlurstueckInsGIS(loklist As List(Of clsFlurstueck))
         l("fehler in btngis4fst_click ")
-        Dim item As myComboBoxItem = CType(cmbGemarkungen.SelectedItem, myComboBoxItem)
-        Dim code As Integer = CInt(cmbGemarkungen.SelectedValue)
-        Dim gemtext As String = (item.mySttring).ToString
-        Dim fst As New clsFlurstueck
-        Dim fkzlist As New List(Of clsFlurstueck)
         Try
-            fst.gemcode = code
-            fst.gemarkungstext = gemtext
-            fst.flur = CInt(tbFlur.Text.Trim)
-            fst.zaehler = CInt(tbZaehler.Text.Trim)
-            If tbnenner.Text = String.Empty Then
-                fst.nenner = 0
-            Else
-                fst.nenner = CInt(tbnenner.Text.Trim)
-            End If
-            fkzlist.Add(fst)
-            If tools.flurstueckExistiertImGis(fkzlist(0).flurstueckZuFKZ) Then
-                gisFuerProbaugFlurst(tbblnr.Text.Trim, fkzlist(0).flurstueckZuFKZ)
+            fst_lage = loklist.Item(0).gemarkungstext
+            If tools.flurstueckExistiertImGis(loklist(0).flurstueckZuFKZ) Then
+                gisFuerProbaugFlurst(tbblnr.Text.Trim, loklist(0).flurstueckZuFKZ)
             Else
                 MsgBox("Das Flurstück exisitert so nicht im GIS!")
             End If
@@ -400,30 +367,83 @@ Public Class winHaupt
         End Try
     End Sub
 
-    Private Sub cmbGemarkungen_SelectionChanged(sender As Object, e As SelectionChangedEventArgs) Handles cmbGemarkungen.SelectionChanged
 
-    End Sub
 
-    Private Sub btnsucheeigentumerADR_Click(sender As Object, e As RoutedEventArgs)
 
-    End Sub
 
-    Private Sub btngis4adr_Click(sender As Object, e As RoutedEventArgs)
 
-    End Sub
-
-    Private Sub btnSucheStrassehausnr_Click(sender As Object, e As RoutedEventArgs)
+    Private Sub tbStrasse_TextChanged(sender As Object, e As TextChangedEventArgs)
+        If tbStrasse Is Nothing Then Exit Sub
         e.Handled = True
 
-        lageliste = clsGIStools.getLage(tbStrasse.Text, cmbGemeinden.SelectedValue.ToString, tbHausnr.Text)
-        'For Each gema As myComboBoxItem In lageliste
-        '    cmbstrassen.Add(New myComboBoxItem With {.mySttring = gema.mySttring, .myindex = gema.myindex})
-        'Next
+        Dim oldstring As String = ""
+        Dim cb As New myComboBoxItem
+        Dim strassennamen As New List(Of myComboBoxItem)
+        lageliste = clsGIStools.getLage(tbStrasse.Text, cmbGemeinden.SelectedValue.ToString, mitfkz:=False)
+        Dim a() As String
+        Dim newstring As String = ""
+
         cmbstrassen.ItemsSource = lageliste
         cmbstrassen.DisplayMemberPath = "mySttring"
         cmbstrassen.SelectedValuePath = "myindex"
         cmbstrassen.IsDropDownOpen = True
-        'cmbstrassen.SelectedIndex = CInt(1)
+
+    End Sub
+
+    Private Sub cmbstrassen_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
+        e.Handled = True
+
+        l("cmbstrassen_SelectionChanged ")
+        Dim item As myComboBoxItem = CType(cmbstrassen.SelectedItem, myComboBoxItem)
+        Dim gemeindeitem As myComboBoxItem = CType(cmbGemeinden.SelectedItem, myComboBoxItem)
+        If item Is Nothing Then
+            MsgBox("Die Eingabe war ungültig. Bitte korrigieren!")
+            Exit Sub
+        End If
+        l(item.myindex)
+        Dim gemeindeschluessel As String = cmbGemeinden.SelectedValue.ToString
+        Dim lage As String = item.mySttring
+        Dim gemeindetext As String = gemeindeitem.mySttring
+        Dim oldstring As String = ""
+        Dim cb As New myComboBoxItem
+        Dim fst As New clsFlurstueck
+        Dim strassennamen As New List(Of myComboBoxItem)
+        lage_lage = "== Lage: " & gemeindetext & ", " & lage & " =="
+        lageliste = clsGIStools.getLage(lage, gemeindeschluessel, mitfkz:=True)
+        If lageliste.Count > 0 Then
+            'fkz zerlegen 
+            fst.flurstueckskennzeichen = lageliste.Item(0).myindex.ToString
+            fst.fkzzerlegen()
+            'gemarkungsindex = gemarkung
+            cmbGemarkungen.SelectedIndex = CInt(fst.gemcode)
+            tbFlur.Text = fst.flur.ToString
+            tbZaehler.Text = fst.zaehler.ToString
+            tbnenner.Text = fst.nenner.ToString
+            fkzlist_lage = New List(Of clsFlurstueck)
+            fkzlist_lage.Add(fst)
+            btnwordADR.IsEnabled = True
+            btngis4adr.IsEnabled = True
+        Else
+            MsgBox("Kein entsprechendes Flurstück gefunden")
+        End If
+    End Sub
+
+    Private Sub btnwordADR_Click(sender As Object, e As RoutedEventArgs)
+        'loklist = New List(Of clsFlurstueck)
+        'loklist = readFlurst_Form()
+        eigentuemerWord(False, fkzlist_lage, lage_lage)
+    End Sub
+
+    Private Sub btngis4adr_Click(sender As Object, e As RoutedEventArgs)
+        'loklist = New List(Of clsFlurstueck)
+        'loklist = readFlurst_Form()
+        Dim index As Integer = CInt(cmbGemarkungen.SelectedIndex)
+        Try
+            ' tools.writeFlurstCookie(index.ToString, (fkzlist_lage.Item(0).flur.ToString), (fkzlist_lage.Item(0).zaehler.ToString), (fkzlist_lage.Item(0).nenner.ToString), "bgm_FST_cookie.txt")
+            MitFlurstueckInsGIS(fkzlist_lage)
+        Catch ex As Exception
+            l("btnsucheeigentumer_Click " & ex.ToString)
+        End Try
     End Sub
 
     'Private Sub tbStrasseFilter_TextChanged(sender As Object, e As TextChangedEventArgs)

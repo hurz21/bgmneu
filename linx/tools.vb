@@ -6,7 +6,11 @@ Module tools
     Public genese As Integer = 1
     Public range As New clsRange
     Public flurstueckskennzeichen As String
+    Public fkzlist As New List(Of clsFlurstueck)
+    Public fkzlist_lage As New List(Of clsFlurstueck)
     Public lageliste As New List(Of myComboBoxItem)
+    Public lage_lage As String = ""
+    Public fst_lage As String = ""
 
     'die alte config mit postgis
     'Public srv_host_web As String = "http://gis.kreis-of.local"
@@ -1288,14 +1292,13 @@ Module tools
             fstREC.mydb.SQL = "use LKOF;select * FROM [LKOF].[dbo].[tbl_lieg_flurstueck] where flurstueckskennzeichen='" & flurstueckZuFKZ & "'"
             l(fstREC.mydb.SQL)
             Dim retcode = fstREC.dboeffnen(hinweis)
-            'newid = fstREC.sqlexecute(newid)
             Dim com As New SqlCommand(fstREC.mydb.SQL, fstREC.myconn)
             Dim da As New SqlDataAdapter(com)
-
             Dim reader As SqlDataReader = com.ExecuteReader()
 
             While reader.Read()
                 hinweis = reader("flurstueckskennzeichen").ToString
+                fst_lage = "== Lage: " & fst_lage & ", " & reader("lagebezeichnung").ToString & " =="
             End While
 
             retcode = fstREC.dbschliessen(hinweis)
@@ -1305,15 +1308,6 @@ Module tools
                 Return False
             End If
 
-
-            'hinweis = fstREC.getDataDT()
-            'If fstREC.dt.Rows.Count < 1 Then
-            '    Return False '"(Noch) Kein Eintrag im GIS"
-            'Else
-            '    Debug.Print(clsDBtools.fieldvalue(fstREC.dt.Rows(0).Item(0)))
-            '    Return True
-            'End If
-            'Return True
         Catch ex As Exception
             l("fehler in flurstueckExistiertImGis Abfrage gescheitert " & ex.ToString)
             Return False

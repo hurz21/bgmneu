@@ -45,36 +45,7 @@
         End Try
     End Function
 
-    'Friend Shared Function lageohneZahl(lageliste() As String) As String()
-    '    Dim neu() As String
-    '    Dim temp As String
-    '    Dim a() As String
-    '    l("lageohneZahl")
-    '    Try
-    '        ReDim neu(lageliste.Count - 1)
-    '        For i = 0 To lageliste.Count - 1
-    '            a = lageliste(i).Split(" "c)
-    '            For j = 0 To a.Count - 1
-    '                If 
-    '                neu(i) =
-    '            Next
-    '        Next
-    '    Catch ex As Exception
-    '        l("lageohneZahl " & ex.ToString)
-    '        Return Nothing
-    '    End Try
-    'End Function
 
-    'Function getstrasse() As String
-    '    Dim sql As String
-    '    Try
-    '        sql = "SELECT *  FROM   dbo.tbl_lieg_flurstueck AS f LEFT OUTER JOIN       dbo.tbl_reg_gemeinde AS g ON f.gemeinde_gemeindeschluessel = g.gemeindeschluessel " &
-    '                "where lagebezeichnung is not null and lagebezeichnung like 'am r%' and gemeinde ='Dietzenbach'  " &
-    '                "order by lagebezeichnung"
-    '    Catch ex As Exception
-
-    '    End Try
-    'End Function
 
 
 

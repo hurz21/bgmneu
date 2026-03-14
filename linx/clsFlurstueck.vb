@@ -28,8 +28,27 @@ Public Class clsFlurstueck
     Public Property weistauf As String
     Public Property gebucht As String
     Public Property fsgml As String
+    Public Property flurstueckskennzeichen As String = ""
 
     Property gemparms As New clsGemarkungsParams
+
+    Public Sub fkzzerlegen()
+        Dim test As String
+        '060734-005-00315/0001.000
+        If flurstueckskennzeichen = String.Empty Then
+            Exit Sub
+        End If
+        Try
+            gemcode = CInt(flurstueckskennzeichen.Substring(3, 3))
+            flur = CInt(flurstueckskennzeichen.Substring(7, 3))
+            zaehler = CInt(flurstueckskennzeichen.Substring(11, 5))
+            nenner = CInt(flurstueckskennzeichen.Substring(17, 4))
+            gemarkungstext = gemparms.gemcode2gemarkungstext(gemcode)
+            gemeindename = gemparms.gemcode2gemeindetext(gemcode)
+        Catch ex As Exception
+            l("fehler")
+        End Try
+    End Sub
     Public Shadows Function toString(ByVal delim As String) As String
         Dim a$, wert$
         Dim summe$ = ""

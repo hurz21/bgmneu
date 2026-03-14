@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:bgm" AllowDrop="True"
         mc:Ignorable="d" Left="1" WindowStyle="ToolWindow"    Drop="Window_Drop"
-        Title="BGM" Height="536" Width="287" Background="Beige" >
+        Title="BGM" Height="536" Width="186" Background="Beige" >
     <DockPanel Margin="5">
         <StackPanel Orientation="Vertical">
             <StackPanel Margin="5" Width="145" Name="stpAdminOnly" Background="LightGray">
@@ -25,9 +25,7 @@
                         </StackPanel>
                         <Button Name="btnBestand" Click="btnBestand_Click" Content="Bestandsliste" 
                                 Margin="5"
-                                IsEnabled="False"/>
-                        <!--<Button x:Name="btnPDFTool" Click="btnPDFTool_Click" Content="Werkzeuge"
-                                IsEnabled="False" Margin="5"/>-->
+                                IsEnabled="False"/> 
 
                     </StackPanel>
                 </GroupBox>
@@ -94,20 +92,27 @@
                                 <Label Width="75" FontSize="10">Filter:</Label>
                                 <TextBox Name="tbStrasseFilter" Width="80" TextChanged="tbStrasseFilter_TextChanged"></TextBox>
                             </StackPanel>-->
+                            <StackPanel>
+                                
                             <StackPanel Orientation="Horizontal">
-                                <Label Width="75" FontSize="10">Strasse:</Label>
-                                <TextBox Name="tbStrasse" Width="80"></TextBox>
+                                <Label Width="75" FontSize="10">Strassenfilter:</Label>
+                                <TextBox Name="tbStrasse" Width="80" TextChanged="tbStrasse_TextChanged"></TextBox>
+                                
                             </StackPanel>
+                             
+                         
+                            </StackPanel>
+                        
                             <StackPanel Orientation="Horizontal">
-                                <Label Width="75" FontSize="10">HausNr:</Label>
-                                <TextBox Name="tbHausnr" Width="80"></TextBox>
+                                
+                                <ComboBox x:Name="cmbstrassen" SelectionChanged="cmbstrassen_SelectionChanged" HorizontalAlignment="Left" Height="25"  Width="150" FontSize="10"/>
                             </StackPanel>
-                            <ComboBox x:Name="cmbstrassen" HorizontalAlignment="Left" 
-               Height="25" Width="80"  FontSize="10"/>
-                            
-                            <Button Name="btnSucheStrassehausnr" Click="btnSucheStrassehausnr_Click" >suchen</Button>
-                            <Button x:Name="btnsucheeigentumerADR" Click="btnsucheeigentumerADR_Click" Margin="0,5,0,0">Word-Datei</Button>
-                            <Button x:Name="btngis4adr" Click="btngis4adr_Click">im GIS</Button>
+
+
+                            <Button x:Name="btnwordADR" Click="btnwordADR_Click"  Margin="0,5,0,0"
+                                    IsEnabled="False">Word-Datei</Button>
+                            <Button x:Name="btngis4adr" Click="btngis4adr_Click"
+                                    IsEnabled="False">im GIS</Button>
                         </StackPanel>
                     </TabItem>
                     <TabItem Name="tabfst" Header="Flurstück" FontSize="9">
@@ -130,8 +135,8 @@
                                 <TextBox Name="tbnenner" Width="80"></TextBox>
                             </StackPanel>
                             <Button x:Name="btnsucheeigentumer" Click="btnsucheeigentumer_Click"
-              Margin="0,5,0,0">Word-Datei</Button>
-                            <Button x:Name="btngis4fst" Click="btngis4fst_click">im GIS</Button>
+              Margin="0,5,0,0" >Word-Datei</Button>
+                            <Button x:Name="btngis4fst" Click="btngis4fst_click" >im GIS</Button>
 
 
                         </StackPanel>
