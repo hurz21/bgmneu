@@ -49,6 +49,7 @@ Public Class clsProBGTools
                 Exit Sub
             Else
                 l("vor schlkeife ")
+
                 For i = 0 To rawList.Count - 1
                     rawList(i).katFST.gemarkungstext = rawList(i).katFST.gemparms.gemcode2gemarkungstext(rawList(i).katFST.gemcode)
                     rawList(i).katFST.fstueckKombi = rawList(i).katFST.buildFstueckkombi
@@ -64,6 +65,7 @@ Public Class clsProBGTools
                     rawList(i).katFST.Kennziffer_4 = rawList(i).Kennziffer_4
                     FSTausPROBAUGListe.Add(rawList(i).katFST)
                 Next
+                'fst_lage = "= Lage: " & rawList(0).katFST.gemeindename & ", " & rawList(0).katFST.gemarkungstext
             End If
             l(" MOD holeProBaugDaten ende")
         Catch ex As Exception

@@ -125,7 +125,7 @@ Public Class winDetail
             btnZumGISOBJ.IsEnabled = True
             btnZumGISPROBAUG.Content = "im GIS anzeigen"
             btnZumGISPROBAUG.Width = 100
-            btnZumGISPROBAUG.Height = 15
+            btnZumGISPROBAUG.Height = 20
         Else
             'btnUebertragMetadaten.IsEnabled = False
             tbGISinfo.Text = "Baulast ist in der Baulast-DB(MDAT) von Ingrada noch nicht vorhanden !"
@@ -146,6 +146,7 @@ Public Class winDetail
     Private Sub btnAusProbaug_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
         Dim abbruch As Boolean = False
+        tools.writeBLBlattCookie(tbBaulastNr.Text, "bgm_blattnr_cookie.txt")
         refreshGIS(CInt(tbBaulastNr.Text))
         refreshEigentuemer(CInt(tbBaulastNr.Text))
         'gidInString = clsGIStools.bildegidstring()
@@ -806,8 +807,13 @@ Public Class winDetail
 
     Private Sub btnEigentümerclip_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
-        My.Computer.Clipboard.SetText(tbEigentuemer.Text)
-        MsgBox("Inhalt wurde in die Zwischenablage kopiert. Mit Strg-v können sie die Daten z.B. in Word einfügen.")
+        If IsNothingOrEmpty(tbEigentuemer.Text) Then
+            MsgBox("Feld ist noch leer")
+        Else
+            My.Computer.Clipboard.SetText(tbEigentuemer.Text)
+            MsgBox("Inhalt wurde in die Zwischenablage kopiert. Mit Strg-v können sie die Daten z.B. in Word einfügen.")
+        End If
+
     End Sub
 
     Private Sub btnMakeworddok_Click(sender As Object, e As RoutedEventArgs)
@@ -832,8 +838,6 @@ Public Class winDetail
         e.Handled = True
         Dim summe As String
         Try
-
-
             summe = "Aus ProbauG:" & Environment.NewLine
             summe = summe & makeFlurstuecksAbstrakt(tools.FSTausPROBAUGListe)
             summe = summe & Environment.NewLine
@@ -847,7 +851,6 @@ Public Class winDetail
         Catch ex As Exception
             l("btnEigentuemerProbaug_Click " & ex.ToString)
         End Try
-
     End Sub
 
     Private Sub btnEigentuemerGIS_Click(sender As Object, e As RoutedEventArgs)
@@ -861,7 +864,6 @@ Public Class winDetail
         Else
             tbEigentuemer.Text = summe & Environment.NewLine & result
         End If
-        'FSTausPROBAUGListe
     End Sub
 
     Private Sub btnUebertragMetadaten_Click(sender As Object, e As RoutedEventArgs)

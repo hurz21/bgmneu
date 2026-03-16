@@ -78,7 +78,7 @@ Module tools
             '.CustomLocation = My.Computer.FileSystem.SpecialDirectories.Temp & "\mgis_logs\"
             .CustomLocation = logfile '
             '.BaseFileName = GisUser.username & "_" & Format(Now, "yyyyMMddhhmmss")
-            .BaseFileName = Environment.UserName & "_bgm_" & Format(Now, "yyyyMMddhhmmss")
+            .BaseFileName = Environment.UserName & "_bgm_" ' & Format(Now, "yyyyMMddhhmmss")
             .AutoFlush = True
             .Append = False
         End With
@@ -1210,6 +1210,9 @@ Module tools
                 fst.gemarkungstext & ", Flur: " &
                 fst.flur & ", Fst: " &
                 fst.zaehler & "/" & fst.nenner & " =="
+
+                'summe = summe & "== Lage: " & fst.gemeindename & ", " & lage &
+                '   " =="
             Next
             Return summe
         Catch ex As Exception
