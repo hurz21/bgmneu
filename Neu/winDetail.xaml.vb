@@ -122,13 +122,10 @@ Public Class winDetail
             End If
             Dim url = ""
             Dim themen As String
-        themen = tools.getthemen("")
-            'theme=BauenUndUmwelt,Eigene%20Daten,Grenzen,Liegenschaften
-
+            themen = tools.getthemen("")
             url = "https://gis.kreis-of.de/LKOF/asp/main.asp?" & themen & "&lay=sp_mdat_0010_F&fld=text3&typ=string&val=" & tbBaulastNr.Text.Trim & "&skipwelcome=true"
-
-
             webView.Source = New Uri(url)
+
             btnUebertragMetadaten.IsEnabled = True
                 spBL.Background = greenBrush
                 stpPDF.Visibility = Visibility.Visible
@@ -185,17 +182,7 @@ Public Class winDetail
         'refreshMap()
         showPDF()
     End Sub
-    Private Sub clearCanvas()
-        GC.Collect()
-        VGmapCanvas.Children.Clear()
-        If VGcanvasImage IsNot Nothing Then
-            VGcanvasImage.Source = Nothing
-            VGcanvasImage = Nothing
-        End If
-        VGcanvasImage = New Image
-        leeresbild(VGcanvasImage)
 
-    End Sub
     Private Sub leeresbild(canvasImage As Image)
         Dim myBitmapImage As New BitmapImage()
         Dim aufruf As String = tools.srv_host_web & "/apps/paradigma/ndman/leer.png" '"P:\a_vs\NEUPara\mgis\leer.png"
@@ -209,40 +196,9 @@ Public Class winDetail
             l("fehler in leeresbild: " & aufruf & " /// " & ex.ToString)
         End Try
     End Sub
-    Private Sub setPreviewImageFromHttpURL(url As String)
-        'https mach tprobleme
-        'Dim VGcanvasImage = New Image
-        Try
-            l(" setImageFromHttpURL ---------------------- anfang")
-            clearCanvas()
-            VGcanvasImage = New Image With {
-                .Name = "canvasImage"
-            }
-            VGmapCanvas.Children.Add(VGcanvasImage)
-            VGmapCanvas.SetZIndex(VGcanvasImage, 100)
 
-            VGmyBitmapImage = New BitmapImage
-            VGmyBitmapImage.BeginInit()
-            VGmyBitmapImage.UriSource = New Uri(url, UriKind.Absolute)
-            VGmyBitmapImage.EndInit()
-            AddHandler VGmyBitmapImage.DownloadCompleted, AddressOf vgmyBitmapImage_DownloadCompleted
-            Threading.Thread.Sleep(900)
-            'VGcanvasImage.Source = VGmyBitmapImage
-            l(" setImageFromHttpURL ---------------------- ende")
-        Catch ex As Exception
-            l("Fehler in setImageFromHttpURL: " & ex.ToString())
-        End Try
-    End Sub
-    Private Sub vgmyBitmapImage_DownloadCompleted(sender As Object, e As EventArgs)
-        VGcanvasImage.Source = VGmyBitmapImage
-        'clstools.saveImageasThumbnail2(clstools.auswahlBplan, clstools.BPLcachedir, VGmyBitmapImage)
-    End Sub
-    Private Sub refreshMap()
-        'Dim url As String = mapTools.genPreviewURL(tools.range, CInt(VGmapCanvas.Width), CInt(VGmapCanvas.Height), "flurkarte", 10, tools.gidInString)
-        'setPreviewImageFromHttpURL(url)
-        'Canvas.SetTop(VGcanvasImage, 0)
-        'Canvas.SetLeft(VGcanvasImage, 0)
-    End Sub
+
+
 
     Sub refreshProbaug(baulastblattnr As Integer, sqlquelle As String, ByRef abbruch As Boolean)
 
@@ -593,22 +549,22 @@ Public Class winDetail
         dropPDF(e)
     End Sub
 
-    Private Sub btndeleteTIFF_Click(sender As Object, e As RoutedEventArgs)
-        e.Handled = True
-        Dim mesres As MessageBoxResult
-        mesres = MessageBox.Show("Soll das Objekt wirklich gelöscht werden ? ", "Objekt löschen", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.Yes)
-        If mesres = MessageBoxResult.No Then
-            Exit Sub
-        End If
-        If clsGIStools.loescheTiffaufGISServer(tbBaulastNr.Text.Trim, tools.FSTausPROBAUGListe(0).gemarkungstext.Trim) Then
-            'imgTiff.Source = Nothing
-            MessageBox.Show("Gelöscht")
-        Else
-            MessageBox.Show("Fehler beim Löschen.")
+    'Private Sub btndeleteTIFF_Click(sender As Object, e As RoutedEventArgs)
+    '    e.Handled = True
+    '    Dim mesres As MessageBoxResult
+    '    mesres = MessageBox.Show("Soll das Objekt wirklich gelöscht werden ? ", "Objekt löschen", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.Yes)
+    '    If mesres = MessageBoxResult.No Then
+    '        Exit Sub
+    '    End If
+    '    If clsGIStools.loescheTiffaufGISServer(tbBaulastNr.Text.Trim, tools.FSTausPROBAUGListe(0).gemarkungstext.Trim) Then
+    '        'imgTiff.Source = Nothing
+    '        MessageBox.Show("Gelöscht")
+    '    Else
+    '        MessageBox.Show("Fehler beim Löschen.")
 
-        End If
-        refreshTIFFbox()
-    End Sub
+    '    End If
+    '    refreshTIFFbox()
+    'End Sub
 
     Private Sub btnPDFaufrufen_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
@@ -698,31 +654,7 @@ Public Class winDetail
         End Try
     End Sub
 
-    Private Sub btnplus_Click(sender As Object, e As RoutedEventArgs)
-        e.Handled = True
-        Dim xdifalt As Double = range.xdif / 2
-        Dim xdifnew As Double
-        range.CalcCenter()
-        xdifnew = CInt(xdifalt - (xdifalt / 4))
-        range.xl = range.xcenter - xdifnew
-        range.xh = range.xcenter + xdifnew
-        range.yl = range.ycenter - xdifnew
-        range.yh = range.ycenter + xdifnew
-        refreshMap()
-    End Sub
 
-    Private Sub btnminus_Click(sender As Object, e As RoutedEventArgs)
-        e.Handled = True
-        Dim xdifalt As Double = range.xdif / 2
-        Dim xdifnew As Double
-        range.CalcCenter()
-        xdifnew = CInt(xdifalt * 1.5)
-        range.xl = range.xcenter - xdifnew
-        range.xh = range.xcenter + xdifnew
-        range.yl = range.ycenter - xdifnew
-        range.yh = range.ycenter + xdifnew
-        refreshMap()
-    End Sub
 
     'Private Sub btndigit_Click(sender As Object, e As RoutedEventArgs)
     '    e.Handled = True
@@ -946,5 +878,18 @@ Public Class winDetail
         e.Handled = True
         Process.Start("\\kh-w-ingrada\GIS-Daten\diverses\AnleitungBGM.pdf")
 
+    End Sub
+
+    Private Sub btnAktualisere_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+        Dim url = ""
+        Dim themen As String
+        themen = tools.getthemen("")
+
+        Dim logout = "https://gis.kreis-of.de/LKOF/asp/login.asp?logout=true&m=1"
+        webView.Source = New Uri(logout)
+        Threading.Thread.Sleep(1000)
+        url = "https://gis.kreis-of.de/LKOF/asp/main.asp?" & themen & "&lay=sp_mdat_0010_F&fld=text3&typ=string&val=" & tbBaulastNr.Text.Trim & "&skipwelcome=true"
+        webView.Source = New Uri(url)
     End Sub
 End Class

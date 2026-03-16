@@ -25,7 +25,7 @@
         </Style>
     </Window.Resources>
     <DockPanel Background="Gray" Name="dpMain"  >
-        <TabControl Margin="5">
+        <TabControl Margin="1">
             <TabItem   >
                 <StackPanel Margin="5,5,15,5" Background="LightGray" Height="910">
 
@@ -79,13 +79,13 @@
                         </StackPanel>
                     </StackPanel>
 
-                    <StackPanel Name="spFST" Orientation="Vertical" Width="1250" 
+                    <StackPanel Name="spFST" Orientation="Vertical" Width="1300" 
                                 HorizontalAlignment="Left">
                         <Border BorderBrush="Green" BorderThickness="1" Margin="5" 
-                                HorizontalAlignment="Left" Width="1243">
+                                HorizontalAlignment="Left" Width="1293">
 
-                            <StackPanel HorizontalAlignment="Left">
-                                <StackPanel Orientation="Horizontal">
+                            <StackPanel HorizontalAlignment="Left"  Width="1293">
+                                <StackPanel Orientation="Horizontal" Width="700" HorizontalAlignment="Left">
 
                                     <CheckBox Name="chkQuelle" IsChecked="True" Click="chkQuelle_Click" IsEnabled="False"/>
                                     <TextBlock HorizontalAlignment="Center" Margin="2" Name="tbQuelle">Belastet aus ProbauG</TextBlock>
@@ -95,168 +95,166 @@
                                             />
                                     <Button Name="btnEigentuemerProbaug" Click="btnEigentuemerProbaug_Click" Margin="5" Height="20"
                                             Width="100"  ToolTip="Zeigt die Eigentümerdaten entsprechend der Flurstücksangaben im PROBAUG"
->Eigentümer</Button>
+                                            >Eigentümer</Button>
                                     <TextBlock Padding="5" Margin="2" 
                                                FontStyle="Normal" FontFamily="Arial Black" > P R O B A U G</TextBlock>
                                 </StackPanel>
-                                <DataGrid  x:Name="dgAusProbaug"   ItemsSource="{Binding ''}"      Margin="5"                                           
+                                <StackPanel Orientation="Horizontal" Width="1270" HorizontalAlignment="Left">
+
+                                    <DataGrid  x:Name="dgAusProbaug"   ItemsSource="{Binding ''}"      Margin="0"                                           
                                               RowStyle="{StaticResource dgRowStyleRB}"                                        
                                               ColumnHeaderStyle="{StaticResource dgHeaderStyle}"    
-                                     Width="1150"   MaxHeight="160" Height="160"
+                                     Width="1130"   MaxHeight="160" Height="160"
                                            HorizontalAlignment="Left"
                                    >
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Gemarkung"      Binding="{Binding gemarkungstext}"     />
-                                        <!--<DataGridTextColumn Header="gemnr"      Binding="{Binding gemcode}"     />-->
-                                        <DataGridTextColumn Header="Flur"  Binding="{Binding flur}" />
-                                        <!--<DataGridTextColumn Header="Zähler"   Binding="{Binding zaehler}" />
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Gemarkung"      Binding="{Binding gemarkungstext}"     />
+                                            <!--<DataGridTextColumn Header="gemnr"      Binding="{Binding gemcode}"     />-->
+                                            <DataGridTextColumn Header="Flur"  Binding="{Binding flur}" />
+                                            <!--<DataGridTextColumn Header="Zähler"   Binding="{Binding zaehler}" />
                                         <DataGridTextColumn Header="Nenner"   Binding="{Binding nenner}" />-->
-                                        <DataGridTextColumn Header="Fst"  Binding="{Binding fstueckKombi}" />
-                                        <DataGridTextColumn Header="g"  Binding="{Binding gueltig}"  ToolTipService.ToolTip="gültig" />
-                                        <DataGridTextColumn Header="BNr"  Binding="{Binding gebucht}" />
-                                        <DataGridTextColumn Header="AzJahr"  Binding="{Binding AzJahr}" />
-                                        <!--<DataGridTextColumn Header="og"  Binding="{Binding AzOG}" />-->
-                                        <DataGridTextColumn Header="AzNr"  Binding="{Binding AzNr}" />
-                                        <!--<DataGridTextColumn Header="Prefix"  Binding="{Binding Prefix}" />-->
-                                        <DataGridTextColumn Header="k1"  Binding="{Binding Kennziffer_1}" ToolTipService.ToolTip="Kennziffer1" />
-                                        <DataGridTextColumn Header="k2"  Binding="{Binding Kennziffer_2}" ToolTipService.ToolTip="Kennziffer2" />
-                                        <DataGridTextColumn Header="k3"  Binding="{Binding Kennziffer_3}" ToolTipService.ToolTip="Kennziffer3" />
-                                        <DataGridTextColumn Header="k4"  Binding="{Binding Kennziffer_4}" ToolTipService.ToolTip="Kennziffer4"  />
-                                        <!--<DataGridTextColumn Header="gebucht"  Binding="{Binding gebucht}" />-->
-                                        <!--<DataGridTextColumn Header="fs"    Binding="{Binding FS}" />-->
-                                    </DataGrid.Columns>
-                                </DataGrid>
+                                            <DataGridTextColumn Header="Fst"  Binding="{Binding fstueckKombi}" />
+                                            <DataGridTextColumn Header="g"  Binding="{Binding gueltig}"  ToolTipService.ToolTip="gültig" />
+                                            <DataGridTextColumn Header="BNr"  Binding="{Binding gebucht}" />
+                                            <DataGridTextColumn Header="AzJahr"  Binding="{Binding AzJahr}" />
+                                            <!--<DataGridTextColumn Header="og"  Binding="{Binding AzOG}" />-->
+                                            <DataGridTextColumn Header="AzNr"  Binding="{Binding AzNr}" />
+                                            <!--<DataGridTextColumn Header="Prefix"  Binding="{Binding Prefix}" />-->
+                                            <DataGridTextColumn Header="k1"  Binding="{Binding Kennziffer_1}" ToolTipService.ToolTip="Kennziffer1" />
+                                            <DataGridTextColumn Header="k2"  Binding="{Binding Kennziffer_2}" ToolTipService.ToolTip="Kennziffer2" />
+                                            <DataGridTextColumn Header="k3"  Binding="{Binding Kennziffer_3}" ToolTipService.ToolTip="Kennziffer3" />
+                                            <DataGridTextColumn Header="k4"  Binding="{Binding Kennziffer_4}" ToolTipService.ToolTip="Kennziffer4"  />
+                                            <!--<DataGridTextColumn Header="gebucht"  Binding="{Binding gebucht}" />-->
+                                            <!--<DataGridTextColumn Header="fs"    Binding="{Binding FS}" />-->
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                    <Border BorderBrush="Gray"  Margin="5" BorderThickness="2" Width="120"
+                 Drop="dropTheBomb" AllowDrop="True" VerticalAlignment="Top" Height="161"
+                   >
+                                        <StackPanel Height="237" VerticalAlignment="Top"   >
+
+
+                                            <StackPanel Name="stpPDF" Orientation="Vertical"    Drop="dropTheBomb" AllowDrop="True" 
+                                                        Height="160" >
+
+
+                                                <Border BorderBrush="Black"  Margin="5" BorderThickness="1"
+                       Drop="dropTheBomb" AllowDrop="True"
+                       Width="100" Height="100" Panel.ZIndex="2"
+                   >
+                                                    <TextBlock Padding="5" Margin="0,9,0,-1">Drop PDF here</TextBlock>
+                                                    <!--<Image Name="imgTiff" VerticalAlignment="Top"    Drop="dropTheBomb" AllowDrop="True"></Image>-->
+                                                </Border>
+                                                <TextBlock Name="tbFiledate" Padding="0" />
+
+
+                                                <Button x:Name="btnPDFaufrufen" Click="btnPDFaufrufen_Click"  Margin="5"
+                                                           Panel.ZIndex="10" Visibility="Visible"
+                                                           Height="30">PDF anzeigen</Button>
+                                                <TextBlock Name="tbPDFvorhanden" Margin="5"/>
+
+                                                <Button Name="btnProtokoll" Click="btnProtokoll_Click"    Background="LightGray" >Logfiles</Button>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+
+
+                                </StackPanel>
                             </StackPanel>
                         </Border>
                         <Border BorderBrush="Black" BorderThickness="1" Margin="5"
-                                Width="1243"
+                                Width="1293"
                                 HorizontalAlignment="Left">
 
-                            <StackPanel Name="spBL">
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="left" >
+                            <StackPanel Name="spBL"  Width="1340">
+                                <StackPanel Orientation="Horizontal" Width="1340">
+
+                                    <StackPanel Orientation="Vertical" >
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="left" >
 
 
-                                    <Button Name="btnZumGIS" Click="btnZumGIS_Click" 
-                                            Content="Flurstück im GIS" Width="100"    
-                                             Height="20"  Padding="-2" Margin="5"  
-                                            ToolTip="Zeigt das Flurstück im GIS"
-                                            HorizontalAlignment="Right"/>
-                                    <Button Name="btnZumGISOBJ" Click="btnZumGISOBJ_Click" 
-                                            Content="Baulast zeigen" Width="100"    
-                               Height="20"  Padding="-2" Margin="5" HorizontalAlignment="Right"
-                                            ToolTip="Zeigt die Baulast im GIS. Diese Möglichkeit geht nur dann wenn das Objekt bereits erfasst wurde!"/>
-                                    <Button Name="btnUebertragMetadaten" IsEnabled="true" Click="btnUebertragMetadaten_Click"
-                                            Margin="5"  Height="20" Width="100">
-                                        Übertrag</Button>
-                                    <Button Name="btnEigentuemerGIS" Click="btnEigentuemerGIS_Click" Margin="5" Height="20"
-                                            Width="100" 
-                                            ToolTip="Zeigt die Eigentümerdaten entsprechend der Flurstücksangaben im GIS">
-                                        Eigentümer</Button>
+                                            <Button Name="btnZumGIS" Click="btnZumGIS_Click" 
+                                                      Content="Flurstück im GIS" Width="100"    
+                                                       Height="20"  Padding="-2" Margin="5"  
+                                                      ToolTip="Zeigt das Flurstück im GIS"
+                                                      HorizontalAlignment="Right"/>
+                                            <Button Name="btnZumGISOBJ" Click="btnZumGISOBJ_Click" 
+                                                      Content="Baulast zeigen" Width="100"    
+                                         Height="20"  Padding="-2" Margin="5" HorizontalAlignment="Right"
+                                                      ToolTip="Zeigt die Baulast im GIS. Diese Möglichkeit geht nur dann wenn das Objekt bereits erfasst wurde!"/>
+                                            <Button Name="btnUebertragMetadaten" IsEnabled="true" Click="btnUebertragMetadaten_Click"
+              Margin="5"  Height="20" Width="100">
+                                                Übertrag</Button>
+                                            <Button Name="btnEigentuemerGIS" Click="btnEigentuemerGIS_Click" Margin="5" Height="20"
+              Width="100" 
+              ToolTip="Zeigt die Eigentümerdaten entsprechend der Flurstücksangaben im GIS">
+                                                Eigentümer</Button>
+                                         
 
-                                    <TextBlock Margin="2" Padding="15"   FontStyle="Normal" FontFamily="Arial Black"> G I S</TextBlock>
-                                    <!--<Button x:Name="btndigit" Click="btndigit_Click" Content=" digitalisieren "
-                                            Background="red" Height="15" 
-                                            Padding="-2" Margin="5" HorizontalAlignment="Right"/>-->
+                                            <TextBlock Margin="2" Padding="15"   FontStyle="Normal" FontFamily="Arial Black"> G I S</TextBlock>
+                                            <!--<Button x:Name="btndigit" Click="btndigit_Click" Content=" digitalisieren "
+              Background="red" Height="15" 
+              Padding="-2" Margin="5" HorizontalAlignment="Right"/>-->
 
+                                        </StackPanel>
+                                        <DataGrid  x:Name="dgAusGIS"   ItemsSource="{Binding ''}"    Margin="0"                                             
+                                                RowStyle="{StaticResource dgRowStyleRB}"                                              
+                                                ColumnHeaderStyle="{StaticResource dgHeaderStyle}"    
+                                            Width="1130"    Height="160"
+                                             HorizontalAlignment="Left"
+     >
+                                            <DataGrid.Columns>
+                                                <DataGridTextColumn Header="Gemarkung"      Binding="{Binding gemarkungstext}"     />
+                                                <!--<DataGridTextColumn Header="gemnr"      Binding="{Binding gemcode}"     />-->
+                                                <DataGridTextColumn Header="Flur"  Binding="{Binding flur}" />
+                                                <!--<DataGridTextColumn Header="Zähler"   Binding="{Binding zaehler}" />
+          <DataGridTextColumn Header="Nenner"   Binding="{Binding nenner}" />-->
+                                                <DataGridTextColumn Header=""  Binding="{Binding fstueckKombi}" />
+                                                <DataGridTextColumn Header="BNr"  Binding="{Binding gebucht}" />
+                                                <DataGridTextColumn Header="Gemeinde"    Binding="{Binding gemeindename}" />
+                                                <DataGridTextColumn Header="Info"    Binding="{Binding fsgml}" />
+                                                <DataGridTextColumn Header="az"    Binding="{Binding AzOG}" />
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                    </StackPanel>
+                                    <StackPanel  Height="160"   Background="AliceBlue">
+
+
+                                        <TextBlock Width="100" Margin="5" Padding="5">Eigentümer:</TextBlock>
+
+                                        <TextBox Name="tbEigentuemer"  HorizontalAlignment="Left"
+                                Width="102"  Height="160" 
+                                Margin="0" TextWrapping="Wrap" 
+                                AcceptsReturn="True" AcceptsTab="True" />
+                                        <Button Name="btnEigentümerclip" Click="btnEigentümerclip_Click" 
+                                                      Margin="1" Width="100" HorizontalAlignment="Left"
+                                            >in Zwischenablage</Button>                
+                                        <Button Name="btnMakeworddok" Click="btnMakeworddok_Click" Width="100" HorizontalAlignment="Left"
+                                                    Margin="1">
+                                            Word
+                                        </Button>
+                                    </StackPanel>
                                 </StackPanel>
-                                <DataGrid  x:Name="dgAusGIS"   ItemsSource="{Binding ''}"    Margin="5"                                             
-                                              RowStyle="{StaticResource dgRowStyleRB}"                                              
-                                              ColumnHeaderStyle="{StaticResource dgHeaderStyle}"    
-                                          Width="1150"   MaxHeight="160" Height="160"
-                                           HorizontalAlignment="Left"
-                                   >
-                                    <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Gemarkung"      Binding="{Binding gemarkungstext}"     />
-                                        <!--<DataGridTextColumn Header="gemnr"      Binding="{Binding gemcode}"     />-->
-                                        <DataGridTextColumn Header="Flur"  Binding="{Binding flur}" />
-                                        <!--<DataGridTextColumn Header="Zähler"   Binding="{Binding zaehler}" />
-                                        <DataGridTextColumn Header="Nenner"   Binding="{Binding nenner}" />-->
-                                        <DataGridTextColumn Header=""  Binding="{Binding fstueckKombi}" />
-                                        <DataGridTextColumn Header="BNr"  Binding="{Binding gebucht}" />
-                                        <DataGridTextColumn Header="Gemeinde"    Binding="{Binding gemeindename}" />
-                                        <DataGridTextColumn Header="Info"    Binding="{Binding fsgml}" />
-                                        <DataGridTextColumn Header="az"    Binding="{Binding AzOG}" />
-                                    </DataGrid.Columns>
-                                </DataGrid>
                             </StackPanel>
                         </Border>
 
                     </StackPanel>
 
-                    <StackPanel Orientation="Horizontal" Panel.ZIndex="1">
-                        <Border BorderBrush="Gray"  Margin="5" BorderThickness="2" Width="120"
-                                  Drop="dropTheBomb" AllowDrop="True" VerticalAlignment="Top" Height="261"
-                                    >
-                            <StackPanel Height="267" VerticalAlignment="Top"   >
-
-
-                                <StackPanel Name="stpPDF" Orientation="Vertical"    Drop="dropTheBomb" AllowDrop="True"  Height="350" >
-                                    <TextBlock Width="100" Margin="5">PDF:</TextBlock>
-
-                                    <Border BorderBrush="Black"  Margin="5" BorderThickness="1"
-                                        Drop="dropTheBomb" AllowDrop="True"
-                                        Width="100" Height="150" Panel.ZIndex="2"
-                                    >
-                                        <TextBlock Padding="5" Margin="0,9,0,-1">Drop PDF here</TextBlock>
-                                        <!--<Image Name="imgTiff" VerticalAlignment="Top"    Drop="dropTheBomb" AllowDrop="True"></Image>-->
-                                    </Border>
-                                    <TextBlock Name="tbFiledate" Padding="5" />
-                                    <Button Name="btndeleteTIFF" Click="btndeleteTIFF_Click" Content=" X " Margin="5"
-                                    Foreground="Red"    FontWeight="Black" Background="LightGray" Visibility="Collapsed"
-                                    ToolTip="TIFF- und PDF-Datei auf Server löschen"/>
-
-                                    <Button x:Name="btnPDFaufrufen" Click="btnPDFaufrufen_Click"  Margin="5"
-                                            Panel.ZIndex="10" Visibility="Visible"
-                                            Height="30">PDF anzeigen</Button>
-                                    <TextBlock Name="tbPDFvorhanden" Margin="5"/>
-
-                                    <Button Name="btnProtokoll" Click="btnProtokoll_Click"    Background="LightGray" >Logfiles</Button>
-                                </StackPanel>
-                            </StackPanel>
-                        </Border>
-
-                        <StackPanel  Margin="5" Visibility="Collapsed">
-                            <TextBlock Width="100" Margin="5">Bemerkung.:</TextBlock>
-                            <TextBox Name="tbBemerkung" Width="250"  Height="100" Margin="5"/>
-                        </StackPanel>
-
-                        <StackPanel   Margin="5" Width="1120"  Height="300" >
+                    <StackPanel Orientation="Horizontal" Panel.ZIndex="1"> 
+                        <StackPanel   Margin="5" Width="1290"  Height="390" >
                             <StackPanel Orientation="Horizontal">
 
-                                <StackPanel >
 
-
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="left">
-
-                                        <TextBlock Width="100" Margin="5" Padding="5">Eigentümer:</TextBlock>
-
-                                    </StackPanel>
-                                    <TextBox Name="tbEigentuemer"  HorizontalAlignment="Left"
-                                     Width="102"  Height="200" 
-                                     Margin="5" TextWrapping="Wrap" 
-                                     AcceptsReturn="True" AcceptsTab="True" />
-                                    <Button Name="btnEigentümerclip" Click="btnEigentümerclip_Click" 
-                                    Margin="5" Width="100" HorizontalAlignment="Left"
-              >in Zwischenablage</Button>
-                                    <Button Name="btnMakeworddok" Click="btnMakeworddok_Click" Width="100" HorizontalAlignment="Left"
-                                    Margin="5">
-                                        Word
-                                    </Button>
+                                <StackPanel Width="1200" Name="spGIS" HorizontalAlignment="Left">
+                                    <wv2:WebView2 Name="webView" Width="1130" Height="400" HorizontalAlignment="Left" Source="https://www.google.de" />
                                 </StackPanel>
-                                <StackPanel Width="1100" Name="spGIS" HorizontalAlignment="Left">
-                                    <wv2:WebView2 Name="webView" Width="1000" Height="400" HorizontalAlignment="Left" Source="https://www.google.de" />
-                                </StackPanel>
+                                <Button Name="btnAktualisere" Click="btnAktualisere_Click" Panel.ZIndex="2" Width="60"
+                                        HorizontalAlignment="Left">aktualisieren</Button>
                             </StackPanel>
                         </StackPanel>
                         <StackPanel>
                             <StackPanel Orientation="Horizontal" IsEnabled="True" HorizontalAlignment="Center"/>
-                            <Canvas  x:Name="VGmapCanvas"      Panel.ZIndex="10"   Margin="0,0,0,0" 
-                                 Width="350" Height="350" Visibility="Collapsed"
-                                      HorizontalAlignment="Left" VerticalAlignment="Top">
-
-                                <Image Name="VGcanvasImage"  Width="350" Height="350" Margin="0,0,0,0" 
-                               HorizontalAlignment="Left" VerticalAlignment="Top"        />
-                            </Canvas>
+                           
                         </StackPanel>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
