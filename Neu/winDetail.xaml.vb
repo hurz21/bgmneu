@@ -115,20 +115,29 @@ Public Class winDetail
                 MsgBox("Die im GIS-Baulastkataster hinterlegten Flurstücksinfos sind mangelhaft. Bitte verbessern!")
 
             End If
+            Dim url = ""
+            Dim themen As String
+        themen = tools.getthemen("")
+            'theme=BauenUndUmwelt,Eigene%20Daten,Grenzen,Liegenschaften
+
+            url = "https://gis.kreis-of.de/LKOF/asp/main.asp?" & themen & "&lay=sp_mdat_0010_F&fld=text3&typ=string&val=" & tbBaulastNr.Text.Trim & "&skipwelcome=true"
+
+
+            webView.Source = New Uri(url)
             btnUebertragMetadaten.IsEnabled = True
-            spBL.Background = greenBrush
-            stpPDF.Visibility = Visibility.Visible
-            dgAusGIS.DataContext = tools.FSTausGISListe
-            tbGISinfo.Text = ""
-            tbGISinfo2.Text = ""
-            btnZumGIS.IsEnabled = True
-            btnZumGISOBJ.IsEnabled = True
-            btnZumGISPROBAUG.Content = "im GIS anzeigen"
-            btnZumGISPROBAUG.Width = 100
-            btnZumGISPROBAUG.Height = 20
-        Else
-            'btnUebertragMetadaten.IsEnabled = False
-            tbGISinfo.Text = "Baulast ist in der Baulast-DB(MDAT) von Ingrada noch nicht vorhanden !"
+                spBL.Background = greenBrush
+                stpPDF.Visibility = Visibility.Visible
+                dgAusGIS.DataContext = tools.FSTausGISListe
+                tbGISinfo.Text = ""
+                tbGISinfo2.Text = ""
+                btnZumGIS.IsEnabled = True
+                btnZumGISOBJ.IsEnabled = True
+                btnZumGISPROBAUG.Content = "im GIS anzeigen"
+                btnZumGISPROBAUG.Width = 100
+                btnZumGISPROBAUG.Height = 20
+            Else
+                'btnUebertragMetadaten.IsEnabled = False
+                tbGISinfo.Text = "Baulast ist in der Baulast-DB(MDAT) von Ingrada noch nicht vorhanden !"
             tbGISinfo2.Text = "Bitte nutzen sie den Knopf 'im GIS erfassen' !"
             stpPDF.Visibility = Visibility.Collapsed
             btnZumGIS.IsEnabled = False

@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:bgm"
+        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen"
         Title="BGM - BaulastenGISManager 0.11" Height="966" Width="1319">
     <Window.Resources>
@@ -242,8 +243,8 @@
                                         mach daraus Worddokument
                                     </Button>
                                 </StackPanel>
-                                <StackPanel Width="900" Name="spGIS">
-                                    
+                                <StackPanel Width="1100" Name="spGIS" HorizontalAlignment="Left">
+                                    <wv2:WebView2 Name="webView" Width="1000" Height="400" HorizontalAlignment="Left" Source="https://www.google.de" />
                                 </StackPanel>
                             </StackPanel>
                         </StackPanel>

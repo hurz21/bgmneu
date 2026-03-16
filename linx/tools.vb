@@ -11,6 +11,7 @@ Module tools
     Public lageliste As New List(Of myComboBoxItem)
     Public lage_lage As String = ""
     Public fst_lage As String = ""
+    Dim url As String = ""
 
     'die alte config mit postgis
     'Public srv_host_web As String = "http://gis.kreis-of.local"
