@@ -12,6 +12,10 @@ Public Class winDetail
     Public Property targetGISTabelle As String = "hartmann"
     Dim modus As String = "neu"
     Dim nurlesen As Boolean = True
+    'Private Async Sub Window_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
+    '    Await webView.EnsureCoreWebView2Async()
+    '    webView.Source = New Uri("https://www.google.de")
+    'End Sub
     Sub New(gisID As String, _nurlesen As Boolean)
         InitializeComponent()
         If IsNumeric(gisID) AndAlso CInt(gisID) < 1 Then
@@ -31,6 +35,7 @@ Public Class winDetail
     Private Sub winDetail_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         e.Handled = True
         Dim abbruch As Boolean = False
+        Dim version = Microsoft.Web.WebView2.Core.CoreWebView2Environment.GetAvailableBrowserVersionString()
         l("windetail loaded anfang")
         'btndigit.Visibility = Visibility.Collapsed
 #If DEBUG Then

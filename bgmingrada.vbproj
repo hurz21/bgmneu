@@ -14,6 +14,8 @@
     <Deterministic>true</Deterministic>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
     <PublishUrl>\\gis\gdvell\apps\bgm\</PublishUrl>
     <Install>false</Install>
     <InstallFrom>Unc</InstallFrom>
@@ -29,8 +31,6 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
@@ -123,13 +123,16 @@
       <HintPath>.\DocumentFormat.OpenXml.Framework.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Web.WebView2.Core, Version=1.0.3856.49, Culture=neutral, PublicKeyToken=2a8ab48044d2601e, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.Web.WebView2.1.0.3856.49\lib\net462\Microsoft.Web.WebView2.Core.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\Microsoft.Web.WebView2.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Web.WebView2.WinForms, Version=1.0.3856.49, Culture=neutral, PublicKeyToken=2a8ab48044d2601e, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.Web.WebView2.1.0.3856.49\lib\net462\Microsoft.Web.WebView2.WinForms.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\Microsoft.Web.WebView2.WinForms.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Web.WebView2.Wpf, Version=1.0.3856.49, Culture=neutral, PublicKeyToken=2a8ab48044d2601e, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.Web.WebView2.1.0.3856.49\lib\net462\Microsoft.Web.WebView2.Wpf.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\Microsoft.Web.WebView2.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -341,6 +344,12 @@
   <ItemGroup>
     <Content Include="DocumentFormat.OpenXml.dll" />
     <Content Include="DocumentFormat.OpenXml.Framework.dll" />
+    <Content Include="Microsoft.Web.WebView2.Core.dll" />
+    <Resource Include="Microsoft.Web.WebView2.Core.xml" />
+    <Content Include="Microsoft.Web.WebView2.WinForms.dll" />
+    <Resource Include="Microsoft.Web.WebView2.WinForms.xml" />
+    <Content Include="Microsoft.Web.WebView2.Wpf.dll" />
+    <Resource Include="Microsoft.Web.WebView2.Wpf.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
@@ -349,9 +358,11 @@
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>copy $(targetfilename) \\gis\gdvell\apps\bgm\bgmIngrada.exe 
-copy $(targetfilename) W:\diverses\bgmIngrada.exe 
+copy $(targetfilename) W:\diverses\bgmingrada\bgmIngrada.exe 
+
+
  
- 
+ copy $(targetfilename) C:\kreisoffenbach\bgmingrada\bgmIngrada.exe 
 )</PostBuildEvent>
   </PropertyGroup>
   <Import Project="packages\Microsoft.Web.WebView2.1.0.3856.49\build\Microsoft.Web.WebView2.targets" Condition="Exists('packages\Microsoft.Web.WebView2.1.0.3856.49\build\Microsoft.Web.WebView2.targets')" />

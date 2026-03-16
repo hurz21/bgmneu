@@ -236,11 +236,11 @@
                                      Margin="5" TextWrapping="Wrap" 
                                      AcceptsReturn="True" AcceptsTab="True" />
                                     <Button Name="btnEigentümerclip" Click="btnEigentümerclip_Click" 
-                                    Margin="5" Width="20" HorizontalAlignment="Left"
-              >in die Zwischenablage kopieren</Button>
-                                    <Button Name="btnMakeworddok" Click="btnMakeworddok_Click" Width="20" HorizontalAlignment="Left"
+                                    Margin="5" Width="100" HorizontalAlignment="Left"
+              >in Zwischenablage</Button>
+                                    <Button Name="btnMakeworddok" Click="btnMakeworddok_Click" Width="100" HorizontalAlignment="Left"
                                     Margin="5">
-                                        mach daraus Worddokument
+                                        Word
                                     </Button>
                                 </StackPanel>
                                 <StackPanel Width="1100" Name="spGIS" HorizontalAlignment="Left">
