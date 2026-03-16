@@ -189,7 +189,7 @@
               Width="100" 
               ToolTip="Zeigt die Eigentümerdaten entsprechend der Flurstücksangaben im GIS">
                                                 Eigentümer</Button>
-                                         
+
 
                                             <TextBlock Margin="2" Padding="15"   FontStyle="Normal" FontFamily="Arial Black"> G I S</TextBlock>
                                             <!--<Button x:Name="btndigit" Click="btndigit_Click" Content=" digitalisieren "
@@ -228,7 +228,7 @@
                                 AcceptsReturn="True" AcceptsTab="True" />
                                         <Button Name="btnEigentümerclip" Click="btnEigentümerclip_Click" 
                                                       Margin="1" Width="100" HorizontalAlignment="Left"
-                                            >in Zwischenablage</Button>                
+                                            >in Zwischenablage</Button>
                                         <Button Name="btnMakeworddok" Click="btnMakeworddok_Click" Width="100" HorizontalAlignment="Left"
                                                     Margin="1">
                                             Word
@@ -240,13 +240,14 @@
 
                     </StackPanel>
 
-                    <StackPanel Orientation="Horizontal" Panel.ZIndex="1"> 
+                    <StackPanel Orientation="Horizontal" Panel.ZIndex="1">
                         <StackPanel   Margin="5" Width="1290"  Height="390" >
                             <StackPanel Orientation="Horizontal">
 
 
                                 <StackPanel Width="1200" Name="spGIS" HorizontalAlignment="Left">
-                                    <wv2:WebView2 Name="webView" Width="1130" Height="400" HorizontalAlignment="Left" Source="https://www.google.de" />
+                                    
+                                    
                                 </StackPanel>
                                 <Button Name="btnAktualisere" Click="btnAktualisere_Click" Panel.ZIndex="2" Width="60"
                                         HorizontalAlignment="Left">aktualisieren</Button>
@@ -254,7 +255,7 @@
                         </StackPanel>
                         <StackPanel>
                             <StackPanel Orientation="Horizontal" IsEnabled="True" HorizontalAlignment="Center"/>
-                           
+
                         </StackPanel>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
