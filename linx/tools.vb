@@ -1273,13 +1273,13 @@ Module tools
             l(ex.ToString)
         End Try
     End Sub
-    Public Function makeurl4FST(v As String, results As String) As String
+    Public Function makeurl4FST(baseurl As String, flurstueckskennzeichen As String) As String
         l("in makurl")
         Try
             '&skipwelcome=true
-            v = v & "app=sp_lieg&obj=flu&fld=flurstueckskennzeichen&typ=string&val="
-            v = v & results & "&skipwelcome=true"
-            Return v
+            baseurl = baseurl & "app=sp_lieg&obj=flu&fld=flurstueckskennzeichen&typ=string&val="
+            baseurl = baseurl & flurstueckskennzeichen & "&skipwelcome=true"
+            Return baseurl
             'https://gis.kreis-of.de/LKOF/asp/main.asp?app=sp_lieg&obj=flu&fld=flurstueckskennzeichen&typ=string&val=060729-005-00490/0000.000&skipwelcome=true
             ' Die endung  .000  ist wichtig - sonst gehts nicht
         Catch ex As Exception

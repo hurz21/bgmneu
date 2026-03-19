@@ -35,7 +35,6 @@ Public Class winDetail
     Private Sub winDetail_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         e.Handled = True
         Dim abbruch As Boolean = False
-        Dim version = Microsoft.Web.WebView2.Core.CoreWebView2Environment.GetAvailableBrowserVersionString()
         l("windetail loaded anfang")
         'btndigit.Visibility = Visibility.Collapsed
 #If DEBUG Then
@@ -46,6 +45,8 @@ Public Class winDetail
         If IsNumeric(tbBaulastNr.Text) Then
             refreshProbaug(CInt(tbBaulastNr.Text), quelleSQL, abbruch)
             If abbruch Then
+                'flurstueckskennzeichen = tools.FSTausPROBAUGListe(0).flurstueckZuFKZ
+                'starteGISueberFLST(srv_host_web, flurstueckskennzeichen)
                 Close()
                 Return
                 'End
@@ -115,16 +116,16 @@ Public Class winDetail
                 tbGISinfo2.Text = " in die Baulast-DB übertragen!"
                 Exit Sub
             End If
-            ObjektGuid = tools.FSTausGISListe(0).GUID
+            'ObjektGuid = tools.FSTausGISListe(0).GUID
             If tools.FSTausGISListe Is Nothing Then
                 MsgBox("Die im GIS-Baulastkataster hinterlegten Flurstücksinfos sind mangelhaft. Bitte verbessern!")
 
             End If
-            Dim url = ""
-            Dim themen As String
-            themen = tools.getthemen("")
-            url = "https://gis.kreis-of.de/LKOF/asp/main.asp?" & themen & "&lay=sp_mdat_0010_F&fld=text3&typ=string&val=" & tbBaulastNr.Text.Trim & "&skipwelcome=true"
-            webView.Source = New Uri(url)
+            'Dim url = ""
+            'Dim themen As String
+            'themen = tools.getthemen("")
+            'url = "https://gis.kreis-of.de/LKOF/asp/main.asp?" & themen & "&lay=sp_mdat_0010_F&fld=text3&typ=string&val=" & tbBaulastNr.Text.Trim & "&skipwelcome=true"
+            'webView.Source = New Uri(url)
 
             btnUebertragMetadaten.IsEnabled = True
                 spBL.Background = greenBrush
@@ -136,17 +137,22 @@ Public Class winDetail
                 btnZumGISOBJ.IsEnabled = True
                 btnZumGISPROBAUG.Content = "im GIS anzeigen"
                 btnZumGISPROBAUG.Width = 100
-                btnZumGISPROBAUG.Height = 20
-            Else
+            btnZumGISPROBAUG.Height = 20
+            flurstueckskennzeichen = tools.FSTausGISListe(0).flurstueckZuFKZ
+            starteGISueberFLST(srv_host_web, flurstueckskennzeichen)
+        Else
                 'btnUebertragMetadaten.IsEnabled = False
                 tbGISinfo.Text = "Baulast ist in der Baulast-DB(MDAT) von Ingrada noch nicht vorhanden !"
-            tbGISinfo2.Text = "Bitte nutzen sie den Knopf 'im GIS erfassen' !"
+            tbGISinfo2.Text = "Das GIS startet nun automatisch!"
             stpPDF.Visibility = Visibility.Collapsed
             btnZumGIS.IsEnabled = False
             btnZumGISOBJ.IsEnabled = False
             btnZumGISPROBAUG.Content = "im GIS erfassen"
             btnZumGISPROBAUG.Width = 400
             btnZumGISPROBAUG.Height = 30
+
+            flurstueckskennzeichen = tools.FSTausPROBAUGListe(0).flurstueckZuFKZ
+            starteGISueberFLST(srv_host_web, flurstueckskennzeichen)
         End If
 
         l("getSerialFromBasis---------------------- ende")
@@ -880,16 +886,35 @@ Public Class winDetail
 
     End Sub
 
-    Private Sub btnAktualisere_Click(sender As Object, e As RoutedEventArgs)
-        e.Handled = True
+
+    Private Sub starteGISueberBLObjekt(baseurl As String)
         Dim url = ""
         Dim themen As String
-        themen = tools.getthemen("")
+        themen = tools.getthemen("").Trim
+
+        Dim logout = baseurl & "/login.asp?logout=true&m=1"
+        Process.Start(logout)
+        Threading.Thread.Sleep(1000)
+        url = baseurl & "?" & themen & "&lay=sp_mdat_0010_F&fld=text3&typ=string&val=" & tbBaulastNr.Text.Trim & "&skipwelcome=true"
+        Process.Start(url)
+    End Sub
+    Private Sub starteGISueberFLST(baseurl As String, flurstueckkennzeichen As String)
+        '"https://gis.kreis-of.de/LKOF/asp/login.asp
+        Dim url = ""
+        Dim themen As String
+        themen = tools.getthemen("").Trim
 
         Dim logout = "https://gis.kreis-of.de/LKOF/asp/login.asp?logout=true&m=1"
-        webView.Source = New Uri(logout)
+        Process.Start(logout)
+
+        'https://gis.kreis-of.de/LKOF/asp/login.asp?logout=true&m=1
+        'baseurl = baseurl & "app=sp_lieg&obj=flu&fld=flurstueckskennzeichen&typ=string&val="
+        'baseurl = baseurl & flurstueckskennzeichen & "&skipwelcome=true"
+
+
         Threading.Thread.Sleep(1000)
-        url = "https://gis.kreis-of.de/LKOF/asp/main.asp?" & themen & "&lay=sp_mdat_0010_F&fld=text3&typ=string&val=" & tbBaulastNr.Text.Trim & "&skipwelcome=true"
-        webView.Source = New Uri(url)
+
+        url = baseurl & "?" & themen & "&app=sp_lieg&obj=flu&fld=flurstueckskennzeichen&typ=string&val=" & flurstueckskennzeichen & "&skipwelcome=true"
+        Process.Start(url)
     End Sub
 End Class

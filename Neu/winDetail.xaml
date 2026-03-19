@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:bgm"
-        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen"
         Title="BGM - BaulastenGISManager 0.11" Height="966" Width="1319">
     <Window.Resources>
@@ -246,17 +245,13 @@
 
 
                                 <StackPanel Width="1200" Name="spGIS" HorizontalAlignment="Left">
-                                    
-                                    
+
+
                                 </StackPanel>
-                                <Button Name="btnAktualisere" Click="btnAktualisere_Click" Panel.ZIndex="2" Width="60"
-                                        HorizontalAlignment="Left">aktualisieren</Button>
+                             
                             </StackPanel>
                         </StackPanel>
-                        <StackPanel>
-                            <StackPanel Orientation="Horizontal" IsEnabled="True" HorizontalAlignment="Center"/>
-
-                        </StackPanel>
+                       
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
 

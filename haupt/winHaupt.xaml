@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:bgm" AllowDrop="True"
         mc:Ignorable="d" Left="1" WindowStyle="ToolWindow"    Drop="Window_Drop"
-        Title="BGM" Height="536" Width="186" Background="Beige" >
+        Title="BGM" Height="536" Width="196" Background="Beige" >
     <DockPanel Margin="5">
         <StackPanel Orientation="Vertical">
             <StackPanel Margin="5" Width="145" Name="stpAdminOnly" Background="LightGray">

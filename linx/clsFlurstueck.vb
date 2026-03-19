@@ -28,7 +28,7 @@ Public Class clsFlurstueck
     Public Property weistauf As String
     Public Property gebucht As String
     Public Property fsgml As String
-    Public Property flurstueckskennzeichen As String = ""
+
 
     Property gemparms As New clsGemarkungsParams
 

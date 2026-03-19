@@ -344,7 +344,7 @@ copy $(targetfilename) W:\diverses\bgmingrada\bgmIngrada.exe
 
 
  
- copy $(targetfilename) C:\kreisoffenbach\bgmingrada\bgmIngrada.exe 
+ rem copy $(targetfilename) C:\kreisoffenbach\bgmingrada\bgmIngrada.exe 
 )</PostBuildEvent>
   </PropertyGroup>
 </Project>

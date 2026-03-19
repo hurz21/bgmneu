@@ -413,7 +413,8 @@ Public Class winHaupt
         lageliste = clsGIStools.getLage(lage, gemeindeschluessel, mitfkz:=True)
         If lageliste.Count > 0 Then
             'fkz zerlegen 
-            fst.flurstueckskennzeichen = lageliste.Item(0).myindex.ToString
+            fst.Flurstuecksskennzeichen = lageliste.Item(0).myindex.ToString
+            '   flurstueckskennzeichen
             fst.fkzzerlegen()
             'gemarkungsindex = gemarkung
             cmbGemarkungen.SelectedIndex = CInt(fst.gemcode)
