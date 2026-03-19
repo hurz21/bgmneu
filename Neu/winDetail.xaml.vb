@@ -138,8 +138,8 @@ Public Class winDetail
                 btnZumGISPROBAUG.Content = "im GIS anzeigen"
                 btnZumGISPROBAUG.Width = 100
             btnZumGISPROBAUG.Height = 20
-            flurstueckskennzeichen = tools.FSTausGISListe(0).flurstueckZuFKZ
-            starteGISueberFLST(srv_host_web, flurstueckskennzeichen)
+            tools.FSTausGISListe(0).Flurstuecksskennzeichen = tools.FSTausGISListe(0).flurstueckZuFKZ
+            starteGISueberFLST(srv_host_web, tools.FSTausGISListe(0).Flurstuecksskennzeichen)
         Else
                 'btnUebertragMetadaten.IsEnabled = False
                 tbGISinfo.Text = "Baulast ist in der Baulast-DB(MDAT) von Ingrada noch nicht vorhanden !"
@@ -151,8 +151,8 @@ Public Class winDetail
             btnZumGISPROBAUG.Width = 400
             btnZumGISPROBAUG.Height = 30
 
-            flurstueckskennzeichen = tools.FSTausPROBAUGListe(0).flurstueckZuFKZ
-            starteGISueberFLST(srv_host_web, flurstueckskennzeichen)
+            tools.FSTausGISListe(0).Flurstuecksskennzeichen = tools.FSTausPROBAUGListe(0).flurstueckZuFKZ
+            starteGISueberFLST(srv_host_web, tools.FSTausGISListe(0).Flurstuecksskennzeichen)
         End If
 
         l("getSerialFromBasis---------------------- ende")
@@ -362,14 +362,14 @@ Public Class winDetail
                 Exit Sub
             End If
             If tools.FSTausGISListe.Count > 0 Then
-                flurstueckskennzeichen = tools.FSTausGISListe(0).flurstueckZuFKZ
+                tools.FSTausGISListe(0).Flurstuecksskennzeichen = tools.FSTausGISListe(0).flurstueckZuFKZ
                 'url = makeurl4FST("https://gis.kreis-of.de/LKOF/asp/main.asp?", flurstueckskennzeichen)
                 'url = "https://gis.kreis-of.de/LKOF/extensions/logout.asp?removeLostSession=true"
                 'Process.Start(url)
-                url = tools.makeurl4FST("https://gis.kreis-of.de/LKOF/asp/main.asp?", flurstueckskennzeichen)
+                url = tools.makeurl4FST("https://gis.kreis-of.de/LKOF/asp/main.asp?", tools.FSTausGISListe(0).Flurstuecksskennzeichen)
                 l("url " & url)
                 Process.Start(url)
-                l(flurstueckskennzeichen)
+                l(tools.FSTausGISListe(0).Flurstuecksskennzeichen)
             Else
                 MsgBox("Keine Flurstücke zugeordnet!!!  GIS wird ohne Flurstück gestartet!")
                 url = "https://gis.kreis-of.de/LKOF/asp/main.asp?"
@@ -914,7 +914,7 @@ Public Class winDetail
 
         Threading.Thread.Sleep(1000)
 
-        url = baseurl & "?" & themen & "&app=sp_lieg&obj=flu&fld=flurstueckskennzeichen&typ=string&val=" & flurstueckskennzeichen & "&skipwelcome=true"
+        url = baseurl & "?" & themen & "&app=sp_lieg&obj=flu&fld=flurstueckskennzeichen&typ=string&val=" & flurstueckkennzeichen & "&skipwelcome=true"
         Process.Start(url)
     End Sub
 End Class

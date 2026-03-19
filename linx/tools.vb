@@ -5,7 +5,7 @@ Module tools
     Public kategorie_guid As String = "88AFE39F-78FC-4053-BE6D-315E3745CF45"
     Public genese As Integer = 1
     Public range As New clsRange
-    Public flurstueckskennzeichen As String
+    'Public flurstueckskennzeichen As String
     Public fkzlist As New List(Of clsFlurstueck)
     Public fkzlist_lage As New List(Of clsFlurstueck)
     Public lageliste As New List(Of myComboBoxItem)

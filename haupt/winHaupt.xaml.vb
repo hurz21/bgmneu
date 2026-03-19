@@ -417,7 +417,7 @@ Public Class winHaupt
             '   flurstueckskennzeichen
             fst.fkzzerlegen()
             'gemarkungsindex = gemarkung
-            cmbGemarkungen.SelectedIndex = CInt(fst.gemcode)
+            'cmbGemarkungen.SelectedIndex = CInt(fst.gemcode)
             tbFlur.Text = fst.flur.ToString
             tbZaehler.Text = fst.zaehler.ToString
             tbnenner.Text = fst.nenner.ToString
@@ -431,14 +431,14 @@ Public Class winHaupt
     End Sub
 
     Private Sub btnwordADR_Click(sender As Object, e As RoutedEventArgs)
-        'loklist = New List(Of clsFlurstueck)
+        'Dim loklist = New List(Of clsFlurstueck)
         'loklist = readFlurst_Form()
         eigentuemerWord(False, fkzlist_lage, lage_lage)
     End Sub
 
     Private Sub btngis4adr_Click(sender As Object, e As RoutedEventArgs)
-        'loklist = New List(Of clsFlurstueck)
-        'loklist = readFlurst_Form()
+        Dim loklist = New List(Of clsFlurstueck)
+        loklist = readFlurst_Form()
         Dim index As Integer = CInt(cmbGemarkungen.SelectedIndex)
         Try
             ' tools.writeFlurstCookie(index.ToString, (fkzlist_lage.Item(0).flur.ToString), (fkzlist_lage.Item(0).zaehler.ToString), (fkzlist_lage.Item(0).nenner.ToString), "bgm_FST_cookie.txt")
