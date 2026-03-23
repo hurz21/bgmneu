@@ -128,21 +128,22 @@ Public Class winDetail
             'webView.Source = New Uri(url)
 
             btnUebertragMetadaten.IsEnabled = True
-                spBL.Background = greenBrush
-                stpPDF.Visibility = Visibility.Visible
-                dgAusGIS.DataContext = tools.FSTausGISListe
-                tbGISinfo.Text = ""
-                tbGISinfo2.Text = ""
-                btnZumGIS.IsEnabled = True
-                btnZumGISOBJ.IsEnabled = True
-                btnZumGISPROBAUG.Content = "im GIS anzeigen"
-                btnZumGISPROBAUG.Width = 100
+            spBL.Background = greenBrush
+            stpPDF.Visibility = Visibility.Visible
+            dgAusGIS.DataContext = tools.FSTausGISListe
+            tbGISinfo.Text = ""
+            tbGISinfo2.Text = ""
+            btnZumGIS.IsEnabled = True
+            btnZumGISOBJ.IsEnabled = True
+            btnZumGISPROBAUG.Content = "im GIS anzeigen"
+            btnZumGISPROBAUG.Width = 100
             btnZumGISPROBAUG.Height = 20
-            tools.FSTausGISListe(0).Flurstuecksskennzeichen = tools.FSTausGISListe(0).flurstueckZuFKZ
-            starteGISueberFLST(srv_host_web, tools.FSTausGISListe(0).Flurstuecksskennzeichen)
+            'tools.FSTausGISListe(0).Flurstuecksskennzeichen = tools.FSTausGISListe(0).flurstueckZuFKZ
+            Dim fkz As String = bildeflurstuecksstring(tools.FSTausGISListe)
+            starteGISueberFLST(srv_host_web, fkz)
         Else
-                'btnUebertragMetadaten.IsEnabled = False
-                tbGISinfo.Text = "Baulast ist in der Baulast-DB(MDAT) von Ingrada noch nicht vorhanden !"
+            'btnUebertragMetadaten.IsEnabled = False
+            tbGISinfo.Text = "Baulast ist in der Baulast-DB(MDAT) von Ingrada noch nicht vorhanden !"
             tbGISinfo2.Text = "Das GIS startet nun automatisch!"
             stpPDF.Visibility = Visibility.Collapsed
             btnZumGIS.IsEnabled = False
@@ -151,8 +152,9 @@ Public Class winDetail
             btnZumGISPROBAUG.Width = 400
             btnZumGISPROBAUG.Height = 30
 
-            tools.FSTausGISListe(0).Flurstuecksskennzeichen = tools.FSTausPROBAUGListe(0).flurstueckZuFKZ
-            starteGISueberFLST(srv_host_web, tools.FSTausGISListe(0).Flurstuecksskennzeichen)
+            'tools.FSTausGISListe(0).Flurstuecksskennzeichen = tools.FSTausPROBAUGListe(0).flurstueckZuFKZ
+            Dim fkz As String = bildeflurstuecksstring(tools.FSTausGISListe)
+            starteGISueberFLST(srv_host_web, fkz)
         End If
 
         l("getSerialFromBasis---------------------- ende")
@@ -354,23 +356,39 @@ Public Class winDetail
         e.Handled = True
         Dim url As String
         '91197
+        Dim lokfkzliste As String = ""
+        Dim treffer As Integer = 0
+        Dim fkztemp As String
         Try
-            If tools.flurstueckExistiertImGis(tools.FSTausGISListe(0).flurstueckZuFKZ) Then
-            Else
-                MsgBox("Flurstück existiert so nicht im GIS !  " & Environment.NewLine &
-                       tools.FSTausGISListe(0).flurstueckZuFKZ)
-                Exit Sub
-            End If
-            If tools.FSTausGISListe.Count > 0 Then
-                tools.FSTausGISListe(0).Flurstuecksskennzeichen = tools.FSTausGISListe(0).flurstueckZuFKZ
-                'url = makeurl4FST("https://gis.kreis-of.de/LKOF/asp/main.asp?", flurstueckskennzeichen)
-                'url = "https://gis.kreis-of.de/LKOF/extensions/logout.asp?removeLostSession=true"
-                'Process.Start(url)
-                url = tools.makeurl4FST("https://gis.kreis-of.de/LKOF/asp/main.asp?", tools.FSTausGISListe(0).Flurstuecksskennzeichen)
-                l("url " & url)
-                Process.Start(url)
-                l(tools.FSTausGISListe(0).Flurstuecksskennzeichen)
-            Else
+            'hier besser eine schleife über alle flurstücke
+            For i = 0 To tools.FSTausGISListe.Count - 1
+                If tools.flurstueckExistiertImGis(tools.FSTausGISListe(i).flurstueckZuFKZ) Then
+                    treffer += 1
+                    fkztemp = tools.FSTausGISListe(i).flurstueckZuFKZ
+                    ' tools.FSTausGISListe(i).Flurstuecksskennzeichen = tools.FSTausGISListe(i).flurstueckZuFKZ
+                    'url = makeurl4FST("https://gis.kreis-of.de/LKOF/asp/main.asp?", flurstueckskennzeichen)
+                    'url = "https://gis.kreis-of.de/
+                    'LKOF/extensions/logout.asp?removeLostSession=true"
+                    'Process.Start(url)
+                    If treffer = 1 Then
+                        lokfkzliste = fkztemp
+                    Else
+                        lokfkzliste = lokfkzliste & "," & fkztemp
+                    End If
+
+                    url = tools.makeurl4FST("https://gis.kreis-of.de/LKOF/asp/main.asp?", lokfkzliste)
+                    l("url " & url)
+                    Process.Start(url)
+                    l(tools.FSTausGISListe(0).Flurstuecksskennzeichen)
+                Else
+                    'MsgBox("Flurstück existiert so nicht im GIS !  " & Environment.NewLine &
+                    '       tools.FSTausGISListe(0).flurstueckZuFKZ)
+                    'Exit Sub
+                End If
+
+            Next
+
+            If tools.FSTausGISListe.Count < 1 Then
                 MsgBox("Keine Flurstücke zugeordnet!!!  GIS wird ohne Flurstück gestartet!")
                 url = "https://gis.kreis-of.de/LKOF/asp/main.asp?"
                 l("url " & url)
@@ -720,7 +738,7 @@ Public Class winDetail
 
     Private Sub btnZumGISPROBAUG_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
-        gisFuerProbaugFlurst(tbBaulastNr.Text.Trim, tools.FSTausPROBAUGListe(0).flurstueckZuFKZ)
+        gisFuerProbaugFlurst(tbBaulastNr.Text.Trim, tools.FSTausPROBAUGListe)
     End Sub
 
 
@@ -905,7 +923,7 @@ Public Class winDetail
         themen = tools.getthemen("").Trim
 
         Dim logout = "https://gis.kreis-of.de/LKOF/asp/login.asp?logout=true&m=1"
-        Process.Start(logout)
+        'Process.Start(logout)
 
         'https://gis.kreis-of.de/LKOF/asp/login.asp?logout=true&m=1
         'baseurl = baseurl & "app=sp_lieg&obj=flu&fld=flurstueckskennzeichen&typ=string&val="

@@ -1240,35 +1240,48 @@ Module tools
             Return "fehler"
         End Try
     End Function
-    Public Sub gisFuerProbaugFlurst(baulast As String, flurstueckskennzeichen As String)
-
+    Public Sub gisFuerProbaugFlurst(baulast As String, flstliste As List(Of clsFlurstueck))
+        Dim fkztemp As String = ""
         Dim url As String
+        Dim treffer As Integer = 0
         ' C:\kreisoffenbach\mgis\ingradaadapter.exe    suchmodus=flurstueck gemarkung="Hainhausen" flur="4" fstueck="387/1" 
         '91197
-        Dim zwischen As String
+        Dim zwischen, lokfkzliste As String
         Try
-            If tools.flurstueckExistiertImGis(flurstueckskennzeichen) Then
-            Else
-                MessageBox.Show("Flurstück existiert so nicht im GIS! " & Environment.NewLine &
-                                flurstueckskennzeichen)
+            For i = 0 To flstliste.Count - 1
+                fkztemp = flstliste(i).flurstueckZuFKZ
+                If tools.flurstueckExistiertImGis(fkztemp) Then
+                    treffer += 1
+                    If treffer = 1 Then
+                        lokfkzliste = fkztemp
+                    Else
+                        lokfkzliste = lokfkzliste & "," & fkztemp
+                    End If
+                Else
+                    'MessageBox.Show("Flurstück existiert so nicht im GIS! " & Environment.NewLine &
+                    '            flurstueckskennzeichen)
 
-            End If
+                End If
+            Next
             zwischen = baulast
             My.Computer.Clipboard.SetText(zwischen)
-            If flurstueckskennzeichen.Length > 1 Then
+            If lokfkzliste.Length > 1 Then
                 'url = makeurl4FST("https://gis.kreis-of.de/LKOF/asp/main.asp?", flurstueckskennzeichen)
                 'url = "https://gis.kreis-of.de/LKOF/extensions/logout.asp?removeLostSession=true"
                 'Process.Start(url)
-                url = makeurl4FST("https://gis.kreis-of.de/LKOF/asp/main.asp?", flurstueckskennzeichen)
+                url = makeurl4FST("https://gis.kreis-of.de/LKOF/asp/main.asp?", lokfkzliste)
+                url = url.Replace("?&", "?").Replace("&&", "&")
                 l("url " & url)
                 Process.Start(url)
-                l(flurstueckskennzeichen)
+                l(lokfkzliste)
             Else
                 MsgBox("Keine Flurstücke zugeordnet!!!  GIS wird ohne Flurstück gestartet!")
                 url = "https://gis.kreis-of.de/LKOF/asp/main.asp?"
                 l("url " & url)
                 Process.Start(url)
             End If
+
+
         Catch ex As Exception
             l(ex.ToString)
         End Try
@@ -1279,6 +1292,7 @@ Module tools
             '&skipwelcome=true
             baseurl = baseurl & "app=sp_lieg&obj=flu&fld=flurstueckskennzeichen&typ=string&val="
             baseurl = baseurl & flurstueckskennzeichen & "&skipwelcome=true"
+            baseurl = baseurl.Replace("?&", "?").Replace("&&", "&")
             Return baseurl
             'https://gis.kreis-of.de/LKOF/asp/main.asp?app=sp_lieg&obj=flu&fld=flurstueckskennzeichen&typ=string&val=060729-005-00490/0000.000&skipwelcome=true
             ' Die endung  .000  ist wichtig - sonst gehts nicht
@@ -1380,6 +1394,26 @@ Module tools
             zaehler = ""
             nenner = ""
             Return False
+        End Try
+    End Function
+    Public Function bildeflurstuecksstring(fSTausGISListe As List(Of clsFlurstueck)) As String
+        Dim lokfkzliste As String
+        Dim treffer As Integer = 0
+        Dim fkztemp As String = ""
+        Try
+            For i = 0 To fSTausGISListe.Count - 1
+                treffer += 1
+                fkztemp = fSTausGISListe(i).flurstueckZuFKZ
+                If treffer = 1 Then
+                    lokfkzliste = fkztemp
+                Else
+                    lokfkzliste = lokfkzliste & "," & fkztemp
+                End If
+            Next
+            Return lokfkzliste
+        Catch ex As Exception
+            l("bildeflurstuecksstring-- " & ex.ToString)
+            Return ""
         End Try
     End Function
 End Module

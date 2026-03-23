@@ -359,7 +359,7 @@ Public Class winHaupt
         Try
             fst_lage = loklist.Item(0).gemarkungstext
             If tools.flurstueckExistiertImGis(loklist(0).flurstueckZuFKZ) Then
-                gisFuerProbaugFlurst(tbblnr.Text.Trim, loklist(0).flurstueckZuFKZ)
+                gisFuerProbaugFlurst(tbblnr.Text.Trim, loklist)
             Else
                 MsgBox("Das Flurstück exisitert so nicht im GIS!")
             End If
