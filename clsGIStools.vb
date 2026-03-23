@@ -245,25 +245,25 @@ Public Class clsGIStools
     '    End Try
     'End Function
 
-    Friend Shared Function loescheTiffaufGISServer(baulastnr As String, gemarkung As String) As Boolean
-        Dim aufruf, hinweis As String
-        l(" MOD loescheTiffaufGISServer anfang")
-        Try
-            aufruf = "http://gis.kreis-of.local/cgi-bin/apps/neugis/dbgrab/dbgrab.cgi?user=feinen_j&modus=prepbaulast&tiff=" & baulastnr.Trim &
-                    "&gemarkung=" & gemarkung.Trim.ToLower
-            l("droptiff aufruf " & aufruf)
-            Dim result = meineHttpNet.meinHttpJob("", aufruf, hinweis, tools.enc, 5000)
-            If result.ToLower.Contains("fehler") Then
-                Return False
-            Else
-                Return True
-            End If
-            l(" MOD loescheTiffaufGISServer ende: " & result)
-        Catch ex As Exception
-            l("Fehler in loescheTiffaufGISServer: " & ex.ToString())
-            Return False
-        End Try
-    End Function
+    'Friend Shared Function loescheTiffaufGISServer(baulastnr As String, gemarkung As String) As Boolean
+    '    Dim aufruf, hinweis As String
+    '    l(" MOD loescheTiffaufGISServer anfang")
+    '    Try
+    '        aufruf = "http://gis.kreis-of.local/cgi-bin/apps/neugis/dbgrab/dbgrab.cgi?user=feinen_j&modus=prepbaulast&tiff=" & baulastnr.Trim &
+    '                "&gemarkung=" & gemarkung.Trim.ToLower
+    '        l("droptiff aufruf " & aufruf)
+    '        Dim result = meineHttpNet.meinHttpJob("", aufruf, hinweis, tools.enc, 5000)
+    '        If result.ToLower.Contains("fehler") Then
+    '            Return False
+    '        Else
+    '            Return True
+    '        End If
+    '        l(" MOD loescheTiffaufGISServer ende: " & result)
+    '    Catch ex As Exception
+    '        l("Fehler in loescheTiffaufGISServer: " & ex.ToString())
+    '        Return False
+    '    End Try
+    'End Function
 
     Public Shared Function copyOnlyPDF(baulastblattnr As String) As String
         Dim hinweis As String

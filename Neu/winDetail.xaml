@@ -216,27 +216,32 @@
                                             </DataGrid.Columns>
                                         </DataGrid>
                                     </StackPanel>
-                                    <StackPanel  Height="160"   Background="AliceBlue">
-
-
-                                        <TextBlock Width="100" Margin="5" Padding="5">Eigentümer:</TextBlock>
-
-                                        <TextBox Name="tbEigentuemer"  HorizontalAlignment="Left"
-                                Width="102"  Height="160" 
-                                Margin="0" TextWrapping="Wrap" 
-                                AcceptsReturn="True" AcceptsTab="True" />
-                                        <Button Name="btnEigentümerclip" Click="btnEigentümerclip_Click" 
-                                                      Margin="1" Width="100" HorizontalAlignment="Left"
-                                            >in Zwischenablage</Button>
-                                        <Button Name="btnMakeworddok" Click="btnMakeworddok_Click" Width="100" HorizontalAlignment="Left"
-                                                    Margin="1">
-                                            Word
-                                        </Button>
-                                    </StackPanel>
+                            
                                 </StackPanel>
                             </StackPanel>
                         </Border>
+                        <StackPanel  Height="300"   Background="AliceBlue">
 
+
+                            <TextBlock Width="100" Margin="5" Padding="5">Eigentümer:</TextBlock>
+                            <StackPanel Orientation="Horizontal">
+                                
+                            <TextBox Name="tbEigentuemer"  HorizontalAlignment="Left"
+ Width="1000" Height="200"
+                                    Margin="0" TextWrapping="Wrap" 
+                                    AcceptsReturn="True" AcceptsTab="True" />
+                            <StackPanel>
+                                      <Button Name="btnEigentümerclip" Click="btnEigentümerclip_Click" 
+                          Margin="1" Width="100" HorizontalAlignment="Left"
+                >in Zwischenablage</Button>
+                            <Button Name="btnMakeworddok" Click="btnMakeworddok_Click" Width="100" HorizontalAlignment="Left"
+                        Margin="1">
+                                Word
+                            </Button>
+                            </StackPanel>
+                            </StackPanel>
+                      
+                        </StackPanel>
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal" Panel.ZIndex="1">
