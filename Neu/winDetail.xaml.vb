@@ -69,6 +69,9 @@ Public Class winDetail
             End If
 
         End If
+        Dim nummer = tbBaulastNr.Text
+        Dim text = tools.FSTausGISListe(0).gemarkungstext & "Flur: " & tools.FSTausGISListe(0).flur
+        WriteCookie(nummer, text)
 
         setTitle()
         showPDF()
@@ -450,7 +453,7 @@ Public Class winDetail
                     '                                "Die Datei existiert bereits!", MessageBoxButton.YesNo, MessageBoxImage.Error, MessageBoxResult.No)
                     'If mesres = MessageBoxResult.Yes Then
                     l(" MOD dropped 4 " & filenames(0).ToLower & " nach " & zielname)
-                        IO.File.Copy(filenames(0).ToLower, zielname, True)
+                    IO.File.Copy(filenames(0).ToLower, zielname, True)
                     'der DB-eintrag existiert bereits also nichts weiter erforderlich
                     If toolsEigentuemer.existiertPDFinMDAT_FILES(tbBaulastNr.Text.Trim) Then
                         '
@@ -490,6 +493,8 @@ Public Class winDetail
                     'MsgBox("DB für die Datei wurde gesetzt!" & Environment.NewLine & tbBaulastNr.Text.Trim & endung.Trim)
                 End If
             End If
+
+
             l(" MOD dropped ende")
         Catch ex As Exception
             l("Fehler in dropped: " & zielname & Environment.NewLine & zielname.Trim.ToLower & "   " & ex.ToString())

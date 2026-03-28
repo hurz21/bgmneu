@@ -21,9 +21,8 @@ Public Class winHaupt
         Dim gemarkung, flur, zaehler, nenner, gemarkungsindex As String
         Dim gemeinde, strasse, hausnr, lage, gemeindeindex As String
 
-        LoadHistory()
-        ComboHistory.ItemsSource = Nothing
-        ComboHistory.ItemsSource = historyList
+        LoadHistory() : ComboHistory.ItemsSource = Nothing : ComboHistory.ItemsSource = historyList
+        ComboHistory.DisplayMemberPath = "Anzeige"
 
         tools.readFSTCookie(gemarkung, flur, zaehler, nenner, "bgm_FST_cookie.txt")
         gemarkungsindex = gemarkung
@@ -116,11 +115,13 @@ Public Class winHaupt
         '    MsgBox("bitte geben sie eine blnr ein!")
         '    Exit Sub
         'End If
-        WriteHistoryCookie(tbblnr.Text)
+
+
+
         tools.writeBLBlattCookie(tbblnr.Text, "bgm_blattnr_cookie.txt")
         Dim neu As New winDetail((tbblnr.Text), False) ' 0=modus neu
         neu.ShowDialog()
-        LoadHistory()
+        LoadHistory() : ComboHistory.ItemsSource = Nothing : ComboHistory.ItemsSource = historyList
     End Sub
 
     Private Sub Window_Drop(sender As Object, e As DragEventArgs)
@@ -458,8 +459,13 @@ Public Class winHaupt
 
     Private Sub ComboHistory_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
         e.Handled = True
-        If ComboHistory.SelectedItem IsNot Nothing Then
-            tbblnr.Text = ComboHistory.SelectedItem.ToString()
+        'If ComboHistory.SelectedItem IsNot Nothing Then
+        '    tbblnr.Text = ComboHistory.SelectedItem.ToString()
+        'End If
+
+        Dim item = TryCast(ComboHistory.SelectedItem, HistoryItem)
+        If item IsNot Nothing Then
+            tbblnr.Text = item.Nummer
         End If
     End Sub
 

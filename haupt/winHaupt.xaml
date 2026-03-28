@@ -22,7 +22,7 @@
                             <TextBox x:Name="tbblnr" HorizontalAlignment="Center"
                                  Width="70" Height="25" Margin="5">
                             </TextBox>
-                            <ComboBox x:Name="ComboHistory" Height="30"  Width="63"
+                            <ComboBox x:Name="ComboHistory" Height="25"  Width="63"
                       SelectionChanged="ComboHistory_SelectionChanged"/>
 
                             <!--<Button Content="Save" Height="30" Margin="5"

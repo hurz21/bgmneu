@@ -3,8 +3,9 @@
 
 Module tools
     Public historyFile As String = "history.txt"
+
     Public maxItems As Integer = 20
-    Public historyList As New List(Of String)
+    Public historyList As New List(Of HistoryItem)
 
     Public kategorie_guid As String = "88AFE39F-78FC-4053-BE6D-315E3745CF45"
     Public genese As Integer = 1
@@ -70,29 +71,79 @@ Module tools
     Public enc As System.Text.Encoding = System.Text.Encoding.GetEncoding(1252)
 
     ' 🔑 WriteHistoryCookie Funktion
-    Public Sub WriteHistoryCookie(value As String)
-        If String.IsNullOrWhiteSpace(value) Then Exit Sub
+    'Public Sub WriteHistoryCookie(value As String)
+    '    If String.IsNullOrWhiteSpace(value) Then Exit Sub
+    '    Dim locfile As String
+    '    ' Falls schon vorhanden → entfernen
+    '    historyList.Remove(value)
 
-        ' Falls schon vorhanden → entfernen
-        historyList.Remove(value)
+    '    ' Neu oben einfügen
+    '    historyList.Insert(0, value)
 
-        ' Neu oben einfügen
-        historyList.Insert(0, value)
+    '    ' Max 20 Einträge
+    '    If historyList.Count > maxItems Then
+    '        historyList = historyList.Take(maxItems).ToList()
+    '    End If
 
-        ' Max 20 Einträge
+    '    Dim testfolder = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
+    '    Dim test = IO.Path.Combine(testfolder, "bgm\cookies")
+    '    locfile = IO.Path.Combine(test, historyFile)
+    '    ' In Datei speichern
+    '    IO.File.WriteAllLines(locfile, historyList)
+
+    '    ' ComboBox aktualisieren
+    '    LoadHistory()
+    'End Sub
+    Public Sub WriteCookie(nummer As String, text As String)
+        If String.IsNullOrWhiteSpace(nummer) Then Exit Sub
+
+        Dim anzeige = nummer & "-" & text
+
+        ' vorhandenen Eintrag entfernen (nach Nummer!)
+        historyList.RemoveAll(Function(x) x.Nummer = nummer)
+
+        ' neu hinzufügen (oben)
+        historyList.Insert(0, New HistoryItem With {
+            .Nummer = nummer,
+            .Anzeige = anzeige
+        })
+
+        ' max 20
         If historyList.Count > maxItems Then
             historyList = historyList.Take(maxItems).ToList()
         End If
 
-        ' In Datei speichern
-        IO.File.WriteAllLines(historyFile, historyList)
+        Dim testfolder = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
+        Dim test = IO.Path.Combine(testfolder, "bgm\cookies")
+        Dim locfile = IO.Path.Combine(test, historyFile)
 
-        ' ComboBox aktualisieren
+        ' speichern
+        Dim lines = historyList.Select(Function(x) x.Nummer & "|" & x.Anzeige)
+        IO.File.WriteAllLines(locfile, lines)
+
         LoadHistory()
     End Sub
     Public Sub LoadHistory()
-        If IO.File.Exists(historyFile) Then
-            historyList = IO.File.ReadAllLines(historyFile).ToList()
+        Dim locfile As String
+        Dim testfolder = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
+        Dim test = IO.Path.Combine(testfolder, "bgm\cookies")
+        locfile = IO.Path.Combine(test, historyFile)
+        'If IO.File.Exists(locfile) Then
+        '    historyList = IO.File.ReadAllLines(locfile).ToList()
+        'End If
+
+        historyList.Clear()
+
+        If IO.File.Exists(locfile) Then
+            For Each line In IO.File.ReadAllLines(locfile)
+                Dim parts = line.Split("|"c)
+                If parts.Length = 2 Then
+                    historyList.Add(New HistoryItem With {
+                        .Nummer = parts(0),
+                        .Anzeige = parts(1)
+                    })
+                End If
+            Next
         End If
 
 

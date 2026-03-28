@@ -147,6 +147,7 @@
     </Compile>
     <Compile Include="clsCombo.vb" />
     <Compile Include="clsGIStools.vb" />
+    <Compile Include="clsHistoryItem.vb" />
     <Compile Include="clsProBGTools.vb" />
     <Compile Include="eigentuemer\clsAdress.vb" />
     <Compile Include="eigentuemer\clsDatenbankZugriff.vb" />
