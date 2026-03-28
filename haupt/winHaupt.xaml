@@ -8,20 +8,25 @@
         Title="BGM" Height="536" Width="196" Background="Beige" >
     <DockPanel Margin="5">
         <StackPanel Orientation="Vertical">
-            <StackPanel Margin="5" Width="145" Name="stpAdminOnly" Background="LightGray">
-                <Button Name="btnNeu" Click="btnNeu_Click" Content="Neu" Margin="5" 
-                    IsEnabled="False" Visibility="Collapsed"/>
-                <GroupBox Name="grpBaulasten" Background="LightGray" Height="145">
-                    <StackPanel>
+            <StackPanel Margin="1" Width="185" Name="stpAdminOnly" Background="LightGray">
+                <!--<Button Name="btnNeu" Click="btnNeu_Click" Content="Neu" Margin="5" 
+                    IsEnabled="False" Visibility="Collapsed"/>-->
+                <GroupBox Name="grpBaulasten" Background="LightGray" Height="145" Width="180">
+                    <StackPanel Width="160">
 
                         <Button Name="btnEdit" Click="btnEdit_Click" Content="zu Baulast" 
                             IsDefault="True" Margin="5" 
                              Drop="Window_Drop" AllowDrop="True"/>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                            <TextBlock >Nr:</TextBlock>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Width="150" Margin="1">
+                            
                             <TextBox x:Name="tbblnr" HorizontalAlignment="Center"
-                                 Width="70" >
+                                 Width="70" Height="25" Margin="5">
                             </TextBox>
+                            <ComboBox x:Name="ComboHistory" Height="30"  Width="63"
+                      SelectionChanged="ComboHistory_SelectionChanged"/>
+
+                            <!--<Button Content="Save" Height="30" Margin="5"
+                    Click="ButtonSaveHistory_Click"/>-->
                         </StackPanel>
                         <Button Name="btnBestand" Click="btnBestand_Click" Content="Bestandsliste" 
                                 Margin="5"

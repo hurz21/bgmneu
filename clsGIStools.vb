@@ -65,6 +65,7 @@ Public Class clsGIStools
                 tfst.gemeindename = (fstREC.dt.Rows(i).Item("text7")).ToString.Trim
                 tfst.gemarkungstext = (fstREC.dt.Rows(i).Item("text8")).ToString.Trim
                 tfst.AzOG = (fstREC.dt.Rows(i).Item("text5")).ToString.Trim
+                tfst.fstueckKombi = tfst.buildFstueckkombi
                 'tfst.gemeindename = (fstREC.dt.Rows(i).Item("")).ToString.Trim
                 Try
 
@@ -271,7 +272,7 @@ Public Class clsGIStools
         Dim ziel = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
         ziel = IO.Path.Combine(ziel, baulastblattnr & ".pdf")
         Try
-            If toolsEigentuemer.existiertPDF(baulastblattnr.Trim) Then
+            If toolsEigentuemer.existiertPDFinMDAT_FILES(baulastblattnr.Trim) Then
                 '"\\kh-w-ingrada\lkof\data\upload\FILES\LKOF\sp_mdat\dat\BAUL4ST_" & tbBaulastNr.Text & ".pdf"
                 IO.File.Copy(quelle, ziel, True)
                 'Process.Start(ziel)

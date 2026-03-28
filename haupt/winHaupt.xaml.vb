@@ -20,6 +20,11 @@ Public Class winHaupt
         tbblnr.Text = tools.readBLBlattCookie("bgm_blattnr_cookie.txt")
         Dim gemarkung, flur, zaehler, nenner, gemarkungsindex As String
         Dim gemeinde, strasse, hausnr, lage, gemeindeindex As String
+
+        LoadHistory()
+        ComboHistory.ItemsSource = Nothing
+        ComboHistory.ItemsSource = historyList
+
         tools.readFSTCookie(gemarkung, flur, zaehler, nenner, "bgm_FST_cookie.txt")
         gemarkungsindex = gemarkung
             tbFlur.Text = flur
@@ -70,6 +75,7 @@ Public Class winHaupt
         Title = "BGM " & " V.: " & bgmVersion
         istgeladen = True
     End Sub
+    ' Auswahl -> in TextBox schreiben
 
 
     Private Shared Function isAutho() As Boolean
@@ -83,11 +89,11 @@ Public Class winHaupt
                 Environment.UserName.ToLower = "neis_h"
     End Function
 
-    Private Sub btnNeu_Click(sender As Object, e As RoutedEventArgs)
-        e.Handled = True
-        Dim neu As New winDetail("0", False) ' 0=modus neu
-        neu.ShowDialog()
-    End Sub
+    'Private Sub btnNeu_Click(sender As Object, e As RoutedEventArgs)
+    '    e.Handled = True
+    '    Dim neu As New winDetail("0", False) ' 0=modus neu
+    '    neu.ShowDialog()
+    'End Sub
 
     Private Sub btnBestand_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
@@ -110,9 +116,11 @@ Public Class winHaupt
         '    MsgBox("bitte geben sie eine blnr ein!")
         '    Exit Sub
         'End If
+        WriteHistoryCookie(tbblnr.Text)
         tools.writeBLBlattCookie(tbblnr.Text, "bgm_blattnr_cookie.txt")
         Dim neu As New winDetail((tbblnr.Text), False) ' 0=modus neu
         neu.ShowDialog()
+        LoadHistory()
     End Sub
 
     Private Sub Window_Drop(sender As Object, e As DragEventArgs)
@@ -447,6 +455,20 @@ Public Class winHaupt
             l("btnsucheeigentumer_Click " & ex.ToString)
         End Try
     End Sub
+
+    Private Sub ComboHistory_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
+        e.Handled = True
+        If ComboHistory.SelectedItem IsNot Nothing Then
+            tbblnr.Text = ComboHistory.SelectedItem.ToString()
+        End If
+    End Sub
+
+    'Private Sub ButtonSaveHistory_Click(sender As Object, e As RoutedEventArgs)
+    '    ' Button klick -> speichern
+    '    e.Handled = True
+    '    WriteHistoryCookie(tbblnr.Text)
+
+    'End Sub
 
     'Private Sub tbStrasseFilter_TextChanged(sender As Object, e As TextChangedEventArgs)
     '    'If tbStrasseFilter Is Nothing Then Exit Sub

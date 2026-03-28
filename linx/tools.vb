@@ -2,6 +2,10 @@
 
 
 Module tools
+    Public historyFile As String = "history.txt"
+    Public maxItems As Integer = 20
+    Public historyList As New List(Of String)
+
     Public kategorie_guid As String = "88AFE39F-78FC-4053-BE6D-315E3745CF45"
     Public genese As Integer = 1
     Public range As New clsRange
@@ -64,6 +68,35 @@ Module tools
     Public fstREC As New clsDBspecMSSQL
     Public anzahltiff, anzahl_dateiexitiert, anzahl_blattNrIst0, anzahlKatasterFormellOK, anzahlGeloschte, vierergeloescht, anzahl_mitSerial As Integer
     Public enc As System.Text.Encoding = System.Text.Encoding.GetEncoding(1252)
+
+    ' 🔑 WriteHistoryCookie Funktion
+    Public Sub WriteHistoryCookie(value As String)
+        If String.IsNullOrWhiteSpace(value) Then Exit Sub
+
+        ' Falls schon vorhanden → entfernen
+        historyList.Remove(value)
+
+        ' Neu oben einfügen
+        historyList.Insert(0, value)
+
+        ' Max 20 Einträge
+        If historyList.Count > maxItems Then
+            historyList = historyList.Take(maxItems).ToList()
+        End If
+
+        ' In Datei speichern
+        IO.File.WriteAllLines(historyFile, historyList)
+
+        ' ComboBox aktualisieren
+        LoadHistory()
+    End Sub
+    Public Sub LoadHistory()
+        If IO.File.Exists(historyFile) Then
+            historyList = IO.File.ReadAllLines(historyFile).ToList()
+        End If
+
+
+    End Sub
     Sub setLogfile(logfile As String)
         With My.Log.DefaultFileLogWriter
             '#If DEBUG Then
@@ -71,9 +104,17 @@ Module tools
             logfile = "d:\" & "" ' & Environment.UserName & "_"
             Dim testfolder = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
             IO.Directory.CreateDirectory(IO.Path.Combine(testfolder,
-                                 "bgm"))
+                                 "bgm\logs"))
+            IO.Directory.CreateDirectory(IO.Path.Combine(testfolder,
+                                 "bgm\cookies"))
+            IO.Directory.CreateDirectory(IO.Path.Combine(testfolder,
+                                 "bgm\div"))
+            'testfolder = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
+
+            'IO.Directory.CreateDirectory(IO.Path.Combine(testfolder,
+            '                     "bgm"))
             logfile = IO.Path.Combine(Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),
-                                 "bgm")
+                                 "bgm\logs")
             '#Else
             '#End If
             '.CustomLocation = My.Computer.FileSystem.SpecialDirectories.Temp & "\mgis_logs\"
@@ -1338,7 +1379,9 @@ Module tools
         Dim result As String
         Try
             Dim testfolder = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
-            cookiefile = IO.Path.Combine(testfolder, cookiefile)
+
+            Dim test = IO.Path.Combine(testfolder, "bgm\cookies")
+            cookiefile = IO.Path.Combine(test, cookiefile)
             result = IO.File.ReadAllText(cookiefile)
             Return result
         Catch ex As Exception
@@ -1352,7 +1395,8 @@ Module tools
         Dim result As String = ""
         Try
             Dim testfolder = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
-            cookiefile = IO.Path.Combine(testfolder, cookiefile)
+            Dim test = IO.Path.Combine(testfolder, "bgm\cookies")
+            cookiefile = IO.Path.Combine(test, cookiefile)
             IO.File.WriteAllText(cookiefile, text)
         Catch ex As Exception
             l("fehler in writeBLBlattCookie   gescheitert " & ex.ToString)
@@ -1363,9 +1407,10 @@ Module tools
         'Dim cookiefile = "bgm_FST_cookie.txt"
         Dim result As String = ""
         Dim testfolder = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
+        Dim test = IO.Path.Combine(testfolder, "bgm\cookies")
         Try
             result = gemarkung.Trim & "," & flur.Trim & "," & zaehler.Trim & "," & nenner.Trim & ","
-            cookiefile = IO.Path.Combine(testfolder, cookiefile)
+            cookiefile = IO.Path.Combine(test, cookiefile)
             IO.File.WriteAllText(cookiefile, result)
         Catch ex As Exception
             l("fehler in writeFlurstCookie   gescheitert " & ex.ToString)
@@ -1378,7 +1423,8 @@ Module tools
         Dim a() As String
         Try
             Dim testfolder = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
-            cookiefile = IO.Path.Combine(testfolder, cookiefile)
+            Dim test = IO.Path.Combine(testfolder, "bgm\cookies")
+            cookiefile = IO.Path.Combine(test, cookiefile)
             result = IO.File.ReadAllText(cookiefile)
             l("result")
             a = result.Split(","c)

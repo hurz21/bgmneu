@@ -140,7 +140,7 @@ Public Class winDetail
             btnZumGISPROBAUG.Height = 20
             'tools.FSTausGISListe(0).Flurstuecksskennzeichen = tools.FSTausGISListe(0).flurstueckZuFKZ
             Dim fkz As String = bildeflurstuecksstring(tools.FSTausGISListe)
-            starteGISueberFLST(srv_host_web, fkz)
+            'starteGISueberFLST(srv_host_web, fkz)
         Else
             'btnUebertragMetadaten.IsEnabled = False
             tbGISinfo.Text = "Baulast ist in der Baulast-DB(MDAT) von Ingrada noch nicht vorhanden !"
@@ -154,7 +154,7 @@ Public Class winDetail
 
             'tools.FSTausGISListe(0).Flurstuecksskennzeichen = tools.FSTausPROBAUGListe(0).flurstueckZuFKZ
             Dim fkz As String = bildeflurstuecksstring(tools.FSTausGISListe)
-            starteGISueberFLST(srv_host_web, fkz)
+            'starteGISueberFLST(srv_host_web, fkz)
         End If
 
         l("getSerialFromBasis---------------------- ende")
@@ -437,46 +437,57 @@ Public Class winDetail
             If filenames(0).ToLower.EndsWith(".pdf") Then
                 endung = ".pdf"
             End If
-            l(" MOD dropped 2")
+            l(" MOD dropped 2" & tools.FSTausGISListe.Count)
             If filenames(0).ToLower.EndsWith(endung) Then
                 l(" MOD dropped 3")
                 zielname = IO.Path.Combine(srv_unc_path & "BAUL4ST_" & tbBaulastNr.Text.Trim & endung).Trim
+
                 Dim fi As New IO.FileInfo(zielname)
                 If fi.Exists Then
-                    Dim mesres = MessageBox.Show("Möchten Sie die Datei überschreiben ?" & Environment.NewLine &
-                                                    "  Ja    - Überschreiben " & Environment.NewLine &
-                                                    "  Nein - Abbruch",
-                                                    "Die Datei existiert bereits!", MessageBoxButton.YesNo, MessageBoxImage.Error, MessageBoxResult.No)
-                    If mesres = MessageBoxResult.Yes Then
-                        l(" MOD dropped 4 " & filenames(0).ToLower & " nach " & zielname)
+                    'Dim mesres = MessageBox.Show("Möchten Sie die Datei überschreiben ?" & Environment.NewLine &
+                    '                                "  Ja    - Überschreiben " & Environment.NewLine &
+                    '                                "  Nein - Abbruch",
+                    '                                "Die Datei existiert bereits!", MessageBoxButton.YesNo, MessageBoxImage.Error, MessageBoxResult.No)
+                    'If mesres = MessageBoxResult.Yes Then
+                    l(" MOD dropped 4 " & filenames(0).ToLower & " nach " & zielname)
                         IO.File.Copy(filenames(0).ToLower, zielname, True)
-                        'der DB-eintrag existiert bereits also nichts weiter erforderlich
-                        If toolsEigentuemer.existiertPDF(tbBaulastNr.Text.Trim) Then
-                            '
-                        Else
-                            Dim erfolg As Boolean = toolsEigentuemer.insertBaulastPdfInMDAT_Dateien(tbBaulastNr.Text & ".pdf", ObjektGuid)
-                            If erfolg Then
-                                MsgBox("DB für die Datei wurde gesetzt!" & Environment.NewLine & tbBaulastNr.Text.Trim & endung.Trim)
-                            Else
-                                MsgBox("DB für die Datei wurde NICHT gesetzt! Fehler (\dokumente\bgm)")
-                            End If
-                        End If
-                        MsgBox("Datei wurde aktualisiert!" & Environment.NewLine & tbBaulastNr.Text.Trim & endung.Trim)
+                    'der DB-eintrag existiert bereits also nichts weiter erforderlich
+                    If toolsEigentuemer.existiertPDFinMDAT_FILES(tbBaulastNr.Text.Trim) Then
+                        '
                     Else
-                        Exit Sub
+                        Dim erfolg As Boolean
+                        For i = 0 To tools.FSTausGISListe.Count - 1
+
+                            erfolg = toolsEigentuemer.insertBaulastPdfInMDAT_Dateien(tbBaulastNr.Text & ".pdf", tools.FSTausGISListe(i).GUID)
+
+                            If erfolg Then
+                                l("DB für die Datei wurde gesetzt!" & Environment.NewLine & tbBaulastNr.Text.Trim & endung.Trim & " " & tools.FSTausGISListe(i).GUID)
+                            Else
+                                l("DB für die Datei wurde NICHT gesetzt! Fehler (\dokumente\bgm)" & " " & tools.FSTausGISListe(i).GUID)
+                            End If
+                        Next
                     End If
+                    MsgBox("Datei wurde aktualisiert!" & Environment.NewLine & tbBaulastNr.Text.Trim & endung.Trim)
+                    'Else
+                    '    Exit Sub
+                    'End If
                 Else
                     l(" MOD dropped 4 " & filenames(0).ToLower & " nach " & zielname)
                     IO.File.Copy(filenames(0).ToLower, zielname, True)
                     MsgBox("Datei wurde aktualisiert!" & Environment.NewLine & tbBaulastNr.Text.Trim & endung.Trim)
                     'hier muss der db-eintrag gemacht werden                    'insert
-                    Dim erfolg As Boolean = toolsEigentuemer.insertBaulastPdfInMDAT_Dateien(tbBaulastNr.Text & ".pdf", ObjektGuid)
-                    If erfolg Then
-                        MsgBox("DB für die Datei wurde gesetzt!" & Environment.NewLine & tbBaulastNr.Text.Trim & endung.Trim)
-                    Else
-                        MsgBox("DB für die Datei wurde NICHT gesetzt! Fehler (\dokumente\bgm)")
-                    End If
-                    MsgBox("DB für die Datei wurde gesetzt!" & Environment.NewLine & tbBaulastNr.Text.Trim & endung.Trim)
+                    Dim erfolg As Boolean
+                    For i = 0 To tools.FSTausGISListe.Count - 1
+
+                        erfolg = toolsEigentuemer.insertBaulastPdfInMDAT_Dateien(tbBaulastNr.Text & ".pdf", tools.FSTausGISListe(i).GUID)
+
+                        If erfolg Then
+                            l("DB für die Datei wurde gesetzt!" & Environment.NewLine & tbBaulastNr.Text.Trim & endung.Trim & " " & tools.FSTausGISListe(i).GUID)
+                        Else
+                            l("DB für die Datei wurde NICHT gesetzt! Fehler (\dokumente\bgm)" & " " & tools.FSTausGISListe(i).GUID)
+                        End If
+                    Next
+                    'MsgBox("DB für die Datei wurde gesetzt!" & Environment.NewLine & tbBaulastNr.Text.Trim & endung.Trim)
                 End If
             End If
             l(" MOD dropped ende")
@@ -608,7 +619,7 @@ Public Class winDetail
         ziel = IO.Path.Combine(ziel, tbBaulastNr.Text & ".pdf")
         Try
 
-            If toolsEigentuemer.existiertPDF(tbBaulastNr.Text.Trim) Then
+            If toolsEigentuemer.existiertPDFinMDAT_FILES(tbBaulastNr.Text.Trim) Then
 
                 '"\\kh-w-ingrada\lkof\data\upload\FILES\LKOF\sp_mdat\dat\BAUL4ST_" & tbBaulastNr.Text & ".pdf"
                 IO.File.Copy(quelle, ziel, True)
@@ -900,7 +911,7 @@ Public Class winDetail
 
     Private Sub btnBaulastLoeschen_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
-        Process.Start("\\kh-w-ingrada\GIS-Daten\diverses\AnleitungBGM.pdf")
+        Process.Start("\\kh-w-ingrada\GIS-Daten\diverses\bgmingrada\AnleitungBGM.pdf")
 
     End Sub
 

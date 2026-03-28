@@ -173,7 +173,7 @@ Public Class toolsEigentuemer
             Return False
         End Try
     End Function
-    Public Shared Function existiertPDF(baulast As String) As Boolean
+    Public Shared Function existiertPDFinMDAT_FILES(baulast As String) As Boolean
         Dim hinweis As String
         fstREC.mydb.SQL = "select * from [LKOF_Bearb].[dbo].[tbl_mdat_dateien] where file_key='BAUL4ST_" & baulast.Trim & ".pdf'"
         l(fstREC.mydb.SQL)
@@ -185,7 +185,7 @@ Public Class toolsEigentuemer
                 Return True
             End If
         Catch ex As Exception
-            l("existiertPDF " & ex.ToString)
+            l("existiertPDFinMDAT_FILES " & ex.ToString)
             Return False
         End Try
     End Function
