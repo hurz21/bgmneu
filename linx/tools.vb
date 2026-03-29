@@ -1150,7 +1150,7 @@ Module tools
         themen = tools.getthemen("")
         'theme=BauenUndUmwelt,Eigene%20Daten,Grenzen,Liegenschaften
         If IsNumeric(baulastblatt) Then
-            url = "https://gis.kreis-of.de/LKOF/asp/main.asp?" & themen & "&lay=sp_mdat_0010_F&fld=text3&typ=string&val=" & baulastblatt & "&skipwelcome=true"
+            url = "https://gis.kreis-of.de/LKOF/asp/main.asp?" & themen & "&app=sp_mdat&lay=sp_mdat_0010_F&fld=text3&typ=string&val=" & baulastblatt & "&skipwelcome=true"
             Process.Start(url)
         Else
             MsgBox("Die BaulastNr. '" & baulastblatt & "' ist ungültig!")

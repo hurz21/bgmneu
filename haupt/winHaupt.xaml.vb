@@ -23,6 +23,7 @@ Public Class winHaupt
 
         LoadHistory() : ComboHistory.ItemsSource = Nothing : ComboHistory.ItemsSource = historyList
         ComboHistory.DisplayMemberPath = "Anzeige"
+        ComboHistory.IsDropDownOpen = True
 
         tools.readFSTCookie(gemarkung, flur, zaehler, nenner, "bgm_FST_cookie.txt")
         gemarkungsindex = gemarkung
@@ -271,7 +272,7 @@ Public Class winHaupt
     End Sub
 
     Private Sub btnBaulastImGIS_Click(sender As Object, e As RoutedEventArgs)
-        'https://gis.kreis-of.de/LKOF/asp/main.asp?lay=sp_mdat_0010_F&fld=text3&typ=string&val=10001&skipwelcome=true
+        'https://gis.kreis-of.de/LKOF/asp/main.asp?app=sp_mdat&lay=sp_mdat_0010_F&fld=text3&typ=string&val=10001&skipwelcome=true
         e.Handled = True
         tools.writeBLBlattCookie(tbblnr.Text.Trim, "bgm_blattnr_cookie.txt")
         baulastAlsObjImGisZeigen(tbblnr.Text.Trim)

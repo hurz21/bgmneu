@@ -70,7 +70,7 @@ Public Class winDetail
 
         End If
         Dim nummer = tbBaulastNr.Text
-        Dim text = tools.FSTausGISListe(0).gemarkungstext & "Flur: " & tools.FSTausGISListe(0).flur
+        Dim text = tools.FSTausGISListe(0).gemarkungstext & ",Flur: " & tools.FSTausGISListe(0).flur
         WriteCookie(nummer, text)
 
         setTitle()
@@ -763,7 +763,7 @@ Public Class winDetail
         e.Handled = True
         baulastAlsObjImGisZeigen(tbBaulastNr.Text.Trim)
         'Dim url As String
-        ''  https://gis.kreis-of.de/LKOF/asp/main.asp?lay=sp_mdat_0010_F&fld=text3&typ=string&val=1001&skipwelcome=true
+        ''  https://gis.kreis-of.de/LKOF/asp/main.asp?app=sp_mdat&lay=sp_mdat_0010_F&fld=text3&typ=string&val=1001&skipwelcome=true
         ''91197
         ''11368 hat keine gültigen flurstuecke	
         'Try
