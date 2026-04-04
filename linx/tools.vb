@@ -7,7 +7,8 @@ Module tools
     Public maxItems As Integer = 20
     Public historyList As New List(Of HistoryItem)
 
-    Public kategorie_guid As String = "88AFE39F-78FC-4053-BE6D-315E3745CF45"
+    Public kategorie_guid_Baulasten As String = "88AFE39F-78FC-4053-BE6D-315E3745CF45"
+    Public kategorie_guid_Bplaene As String = "F52CBA15-FAFF-4EDD-BBD3-B821920F1360"
     Public genese As Integer = 1
     Public range As New clsRange
     'Public flurstueckskennzeichen As String
@@ -26,7 +27,7 @@ Module tools
     'Public srv_unc_path As String = "\\gis\gdvell"
 
     'neu ingrada
-    'SELECT * FROM [LKOF_Bearb].[dbo].[tbl_mdat_datensatz] where kategorie_guid='88AFE39F-78FC-4053-BE6D-315E3745CF45'    '
+    'SELECT * FROM [LKOF_Bearb].[dbo].[tbl_mdat_datensatz] where kategorie_guid_Baulasten='88AFE39F-78FC-4053-BE6D-315E3745CF45'    '
     Public srv_host_web As String = "https://gis.kreis-of.de/LKOF/asp/main.asp"
     Public srv_host As String = "KH-W-INGRADA"
     'Public srv_schema As String = "paradigma_userdata"
@@ -638,7 +639,7 @@ Module tools
 
 
     Sub initKatasterGemarkungtext()
-        katasterGem(0) = "Bieber                             ;725"
+        katasterGem(0) = "                              ; "
         katasterGem(1) = "Buchschlag                         ;726"
         katasterGem(2) = "Bürgel                             ;727"
         katasterGem(3) = "Dietesheim                         ;728"
@@ -1509,8 +1510,51 @@ Module tools
             Next
             Return lokfkzliste
         Catch ex As Exception
-            l("bildeflurstuecksstring-- " & ex.ToString)
+            l("fehler in bildeflurstuecksstring-- " & ex.ToString)
             Return ""
+        End Try
+    End Function
+
+    Friend Function sucheNachBplaenen(gemarkung As String, bplNNamensFilter As String, bplankategorie As String) As List(Of myComboBoxItem)
+        Dim liste As New List(Of myComboBoxItem)
+        Dim bpl As myComboBoxItem
+        Dim hinweis As String = ""
+        ' SELECT *  FROM [LKOF_Bearb].[dbo].[tbl_mdat_datensatz] where kategorie_guid_Baulasten='F52CBA15-FAFF-4EDD-BBD3-B821920F1360' and text1 ='Seligenstadt'
+        Try
+            l(" MOD ---------------------- anfang")
+            l("getSerialFromBasis---------------------- anfang")
+            'fstREC.mydb.SQL = "select * from " & tools.srv_schema & "." & tools.srv_tablename & " where jahr_blattnr ='" & BaulastNR & "' order by gemcode, flur, zaehler, nenner"
+
+            If bplNNamensFilter = String.Empty Then
+                fstREC.mydb.SQL = "SELECT * FROM [LKOF_Bearb].[dbo].[tbl_mdat_datensatz]" &
+                        " where kategorie_guid='" & bplankategorie & "' " &
+                        " and text2='" & gemarkung.Trim & "' order by text1, text2, text3, text4"
+            Else
+                fstREC.mydb.SQL = "SELECT * FROM [LKOF_Bearb].[dbo].[tbl_mdat_datensatz]" &
+                        " where kategorie_guid='" & bplankategorie & "' " &
+                        " and text2='" & gemarkung.Trim &
+                        "' and (text3 like '%" & bplNNamensFilter & "%' or text4 like '%" & bplNNamensFilter & "%')" &
+                        " order by text1, text2, text3, text4"
+            End If
+
+
+            l(fstREC.mydb.SQL)
+            hinweis = fstREC.getDataDT()
+            If fstREC.dt.Rows.Count < 1 Then
+                Return liste
+            Else
+                For i = 0 To fstREC.dt.Rows.Count - 1
+                    bpl = New myComboBoxItem
+                    bpl.myindex = fstREC.dt.Rows(i).Item("text3").ToString
+                    bpl.mySttring = fstREC.dt.Rows(i).Item("text3").ToString & " -> " & fstREC.dt.Rows(i).Item("text4").ToString
+                    liste.Add(bpl)
+                Next
+                Return liste
+            End If
+
+        Catch ex As Exception
+            l("fehler in sucheNachBplaenen-- " & ex.ToString)
+            Return liste
         End Try
     End Function
 End Module

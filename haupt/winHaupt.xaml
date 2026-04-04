@@ -5,35 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:bgm" AllowDrop="True"
         mc:Ignorable="d" Left="1" WindowStyle="ToolWindow"    Drop="Window_Drop"
-        Title="BGM" Height="536" Width="196" Background="Beige" >
+        Title="BGM" Height="336" Width="279" Background="Beige" >
     <DockPanel Margin="5">
-        <StackPanel Orientation="Vertical">
+        <StackPanel Orientation="Vertical"  >
+            
             <StackPanel Margin="1" Width="185" Name="stpAdminOnly" Background="LightGray">
                 <!--<Button Name="btnNeu" Click="btnNeu_Click" Content="Neu" Margin="5" 
                     IsEnabled="False" Visibility="Collapsed"/>-->
-                <GroupBox Name="grpBaulasten" Background="LightGray" Height="145" Width="180">
-                    <StackPanel Width="160">
-
-                        <Button Name="btnEdit" Click="btnEdit_Click" Content="zu Baulast" 
-                            IsDefault="True" Margin="5" 
-                             Drop="Window_Drop" AllowDrop="True"/>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Width="150" Margin="1">
-                            
-                            <TextBox x:Name="tbblnr" HorizontalAlignment="Center"
-                                 Width="70" Height="25" Margin="5">
-                            </TextBox>
-                            <ComboBox x:Name="ComboHistory" Height="25"  Width="63"
-                      SelectionChanged="ComboHistory_SelectionChanged"/>
-
-                            <!--<Button Content="Save" Height="30" Margin="5"
-                    Click="ButtonSaveHistory_Click"/>-->
-                        </StackPanel>
-                        <Button Name="btnBestand" Click="btnBestand_Click" Content="Bestandsliste" 
-                                Margin="5"
-                                IsEnabled="False"/> 
-
-                    </StackPanel>
-                </GroupBox>
 
             </StackPanel>
             <StackPanel IsEnabled="True" Visibility="Collapsed">
@@ -50,109 +28,149 @@
                 <Button Name="btnRevers" Margin="5" IsEnabled="False" Visibility="Collapsed">Flurstücke zu Eigentümer
 
                 </Button>
-                <GroupBox Name="gbBaulast" BorderThickness="3" BorderBrush="Black">
-                    <StackPanel>
-                        
-                    <Button Name="btnBaulast4FST" Margin="5" Click="btnBaulast4FST_Click" 
-                        IsEnabled="False" Visibility="Collapsed">Baulast zum Flurstück
-                    </Button>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
-                        <TextBlock  >Baulast-Nr:</TextBlock>
-                            <TextBox x:Name="tbBaulast2" HorizontalAlignment="Center"
-                                 Width="70" TextChanged="tbBaulast2_TextChanged" >
 
-                            </TextBox>
-                    </StackPanel>
-                    <Button Name="btnBaulastdisplay"  Click="btnBaulastdisplay_Click"
-                        IsEnabled="False">Baulast anzeigen
-
-                    </Button>
-                
-                    </StackPanel>
-                </GroupBox>
 
             </StackPanel>
-            <Button Name="btnShowPDF1" Click="btnShowPDF_Click" Visibility="Visible" 
-                    IsEnabled="True" Margin="5,5,5,0" ToolTip="zeigt unmittelbar die PDF-Datei der Baulast an">
-                Baulast als PDF
-            </Button>
-            <Button Name="btnBaulastImGIS" Click="btnBaulastImGIS_Click" Content="Baulast im GIS" Margin="5,0,5,5"
-                    ToolTip="zeigt unmittelbar die Baulast im GIS an"/>
+
             <Button Name="btnGIS" Click="btnGIS_Click" Content="GIS" Margin="5,9,5,5" Visibility="Collapsed"
                     ToolTip="zeigt unmittelbar die PDF-Datei der Baulast an"/>
-          
 
-            <Button Name="btnbplan"   Click="btnbplan_Click" Visibility="Collapsed" Margin="5">Bebauungspläne            </Button>
-            <GroupBox x:Name="grpEigentuemer" Height="290" Width="170" Header="Eigentümer"
-                      Background="LightGray">
-                <TabControl x:Name="tabEig" FontSize="10">
-                    <TabItem Name="tabadr" Header="Lage" FontSize="9">
+
+            <Button Name="btnbplan"   Click="btnbplan_Click" Visibility="Collapsed" Margin="5">Bebauungspläne</Button>
+
+            <TabControl x:Name="tabEig" FontSize="10">
+                <TabItem Header="Baulast" Name="tabBaulast" FontSize="9">
+                    <StackPanel Height="277">
+
+                        <Button Name="btnEdit" Click="btnEdit_Click" Content="Baulast bearbeiten" 
+          IsDefault="True" Margin="15"
+           Drop="Window_Drop" AllowDrop="True"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Width="150" Margin="1">
+
+                            <TextBox x:Name="tbblnr" HorizontalAlignment="Center"
+               Width="70" Height="25" Margin="5">
+                            </TextBox>
+                            <ComboBox x:Name="ComboHistory" Height="25"  Width="63"
+    SelectionChanged="ComboHistory_SelectionChanged"/>
+
+                            <!--<Button Content="Save" Height="30" Margin="5"
+  Click="ButtonSaveHistory_Click"/>-->
+                        </StackPanel>
+                        <Button Name="btnBestand" Click="btnBestand_Click" Content="Bestandsliste" 
+             Margin="15"
+              IsEnabled="False"/>
                         <StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <Label Width="75" FontSize="10">Gemeinde:</Label>
-                                <ComboBox x:Name="cmbGemeinden" HorizontalAlignment="Left" 
-                                            Height="25" Width="80"  FontSize="10"/>
-                            </StackPanel>
-                            <!--<StackPanel Orientation="Horizontal">
+                            <Button Name="btnShowPDF1" Click="btnShowPDF_Click" Visibility="Visible" 
+           IsEnabled="True" Margin="15" ToolTip="zeigt unmittelbar die PDF-Datei der Baulast an">
+                                Baulast als PDF
+                            </Button>
+                            <Button Name="btnBaulastImGIS" Margin="15" Click="btnBaulastImGIS_Click" Content="Baulast im GIS"  
+           ToolTip="zeigt unmittelbar die Baulast im GIS an"/>
+                            <!--<Button Name="btnBaulast4FST" Margin="5" Click="btnBaulast4FST_Click" 
+          IsEnabled="False" Visibility="Collapsed">Baulast zum Flurstück
+                                </Button>-->
+
+                            <!--<Button Name="btnBaulastdisplay"  Click="btnBaulastdisplay_Click"
+          IsEnabled="False">Baulast anzeigen
+
+                                </Button>-->
+
+                        </StackPanel>
+                    </StackPanel>
+                </TabItem>
+                <TabItem Name="tabadr" Header="Adresse" FontSize="9">
+                    <StackPanel Height="277">
+                        <StackPanel Orientation="Horizontal" >
+                            <Label Width="75" FontSize="10">Gemeinde:</Label>
+                            <ComboBox x:Name="cmbGemeinden" HorizontalAlignment="Left" 
+                                            Height="25" Width="180"  FontSize="10"/>
+                        </StackPanel>
+                        <!--<StackPanel Orientation="Horizontal">
                                 <Label Width="75" FontSize="10">Filter:</Label>
                                 <TextBox Name="tbStrasseFilter" Width="80" TextChanged="tbStrasseFilter_TextChanged"></TextBox>
                             </StackPanel>-->
-                            <StackPanel>
-                                
+                        <StackPanel>
+
                             <StackPanel Orientation="Horizontal">
                                 <Label Width="75" FontSize="10">Strassenfilter:</Label>
-                                <TextBox Name="tbStrasse" Width="80" TextChanged="tbStrasse_TextChanged"></TextBox>
-                                
-                            </StackPanel>
-                             
-                         
-                            </StackPanel>
-                        
-                            <StackPanel Orientation="Horizontal">
-                                
-                                <ComboBox x:Name="cmbstrassen" SelectionChanged="cmbstrassen_SelectionChanged" HorizontalAlignment="Left" Height="25"  Width="150" FontSize="10"/>
-                            </StackPanel>
+                                <TextBox Name="tbStrasse" Width="180" TextChanged="tbStrasse_TextChanged"></TextBox>
 
-
-                            <Button x:Name="btnwordADR" Click="btnwordADR_Click"  Margin="0,5,0,0"
-                                    IsEnabled="False">Word-Datei</Button>
-                            <Button x:Name="btngis4adr" Click="btngis4adr_Click"
-                                    IsEnabled="False">im GIS</Button>
-                        </StackPanel>
-                    </TabItem>
-                    <TabItem Name="tabfst" Header="Flurstück" FontSize="9">
-                        <StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <Label Width="75" FontSize="10">Gemarkung:</Label>
-                                <ComboBox x:Name="cmbGemarkungen" HorizontalAlignment="Left" 
-                      Height="25" Width="80"  FontSize="10"/>
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <Label Width="75" FontSize="10">Flur:</Label>
-                                <TextBox Name="tbFlur" Width="80"></TextBox>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <Label Width="75" FontSize="10">Zähler:</Label>
-                                <TextBox Name="tbZaehler" Width="80"></TextBox>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <Label Width="75" FontSize="10">Nenner:</Label>
-                                <TextBox Name="tbnenner" Width="80"></TextBox>
-                            </StackPanel>
-                            <Button x:Name="btnsucheeigentumer" Click="btnsucheeigentumer_Click"
-              Margin="0,5,0,0" >Word-Datei</Button>
-                            <Button x:Name="btngis4fst" Click="btngis4fst_click" >im GIS</Button>
 
 
                         </StackPanel>
-                    </TabItem>
-                
-                </TabControl>
-              
-                
-           
 
-            </GroupBox>
+                        <StackPanel Orientation="Horizontal">
+
+                            <ComboBox x:Name="cmbstrassen" SelectionChanged="cmbstrassen_SelectionChanged" 
+                                          HorizontalAlignment="Left" Height="25"  Width="250" FontSize="10"/>
+                        </StackPanel>
+
+
+                        <Button x:Name="btnwordADR" Click="btnwordADR_Click"   Margin="15"
+                                    IsEnabled="False">Eigentümer-Word-Datei</Button>
+                        <Button x:Name="btngis4adr" Click="btngis4adr_Click"  Margin="15"
+                                    IsEnabled="False">Adresse im GIS</Button>
+                    </StackPanel>
+                </TabItem>
+                <TabItem Name="tabfst" Header="Flurstück" FontSize="9">
+                    <StackPanel Height="277">
+                        <StackPanel Orientation="Horizontal">
+                            <Label Width="75" FontSize="10">Gemarkung:</Label>
+                            <ComboBox x:Name="cmbGemarkungen" HorizontalAlignment="Left" SelectionChanged="cmbGemarkungen_SelectionChanged"
+                      Height="25" Width="180"  FontSize="10"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Width="75" FontSize="10">Flur:</Label>
+                            <TextBox Name="tbFlur" Width="180"></TextBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Width="75" FontSize="10">Zähler:</Label>
+                            <TextBox Name="tbZaehler" Width="180"></TextBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Width="75" FontSize="10">Nenner:</Label>
+                            <TextBox Name="tbnenner" Width="180"></TextBox>
+                        </StackPanel>
+                        <Button x:Name="btnsucheeigentumer" Click="btnsucheeigentumer_Click" Margin="15"
+               >Eigentümer-Word-Datei</Button>
+                        <Button x:Name="btngis4fst" Click="btngis4fst_click"  Margin="15">Flurstück im GIS</Button>
+
+
+                    </StackPanel>
+                </TabItem>
+                <TabItem FontSize="9" Name="tabbBplan" Header="B-Plan" Height="25" VerticalAlignment="Top">
+                    <StackPanel Height="277">
+
+                        <StackPanel Orientation="Horizontal" Visibility="Hidden">
+                            <Label Width="75" FontSize="10">Gemeinde:</Label>
+                            <ComboBox x:Name="cmbGemeinden2" HorizontalAlignment="Left" SelectionChanged="cmbGemeinden2_SelectionChanged"
+                   Height="25" Width="180"  FontSize="10"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Width="75" FontSize="10">Gemarkung:</Label>
+                            <ComboBox x:Name="cmbGemarkungen2" HorizontalAlignment="Left" 
+                                      SelectionChanged="cmbGemarkungen2_SelectionChanged"
+                                        Height="25" Width="180"  FontSize="10"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Width="75" FontSize="10">Filter:</Label>
+                            <TextBox Name="tbbplantfilter" Width="180" TextChanged="tbbplantfilter_TextChanged"></TextBox>
+
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+
+                            <ComboBox x:Name="cmbbplaene" SelectionChanged="cmbbplaene_SelectionChanged" 
+                   HorizontalAlignment="Left" Height="25" IsDropDownOpen="True"  Width="255" FontSize="10"/>
+                        </StackPanel>
+                        <Button x:Name="btngis4BPlAN" Click="btngis4BPlAN_Click" Margin="15">B-Plan im GIS</Button>
+                    </StackPanel>
+                </TabItem>
+            </TabControl>
+
+
+
+
         </StackPanel>
     </DockPanel>
 </Window>

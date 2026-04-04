@@ -110,7 +110,7 @@ Public Class winDetail
         Dim greenBrush As SolidColorBrush = New SolidColorBrush(Colors.LightGreen)
         Dim schonvorhanden As Boolean = False
 
-        schonvorhanden = clsGIStools.getBaulastFromBaulastMDAT(BaulastBlattNr, kategorie_guid) 'füllt fstREC
+        schonvorhanden = clsGIStools.getBaulastFromBaulastMDAT(BaulastBlattNr, kategorie_guid_Baulasten) 'füllt fstREC
 
         If schonvorhanden Then
             tools.FSTausGISListe = clsGIStools.fstGISdt2ObjListe()
@@ -892,7 +892,7 @@ Public Class winDetail
             " int1=" & bl.probaugNotationFST.flur & ", int2=" & bl.probaugNotationFST.zaehler & ", " &
             " int3=" & bl.probaugNotationFST.nenner & ", int4=" & bl.probaugNotationFST.gemcode & ", " &
             " memo='" & mmemo & "', tooltip='" & tooltip & "' " &
-            " where kategorie_guid='" & kategorie_guid & "' " &
+            " where kategorie_guid_Baulasten='" & kategorie_guid_Baulasten & "' " &
             " and text3='" & bl.blattnr & "' " &
             " and text2='" & bl.baulastnr & "' "
 

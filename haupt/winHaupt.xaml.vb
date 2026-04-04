@@ -40,7 +40,7 @@ Public Class winHaupt
             'MessageBox.Show("Sie haben keine Berechtigung für diese Anwendung. Abbruch!")
             'Close() 
             stpAdminOnly.Visibility = Visibility.Visible
-            grpBaulasten.Height = 99
+
             btnEdit.IsEnabled = False
         End If
         initKatasterGemarkungtext()
@@ -65,6 +65,12 @@ Public Class winHaupt
         cmbGemarkungen.SelectedValuePath = "myindex"
         cmbGemarkungen.IsDropDownOpen = False
         cmbGemarkungen.SelectedIndex = CInt(gemarkungsindex)
+
+        cmbGemarkungen2.ItemsSource = gamarkungsitems
+        cmbGemarkungen2.DisplayMemberPath = "mySttring"
+        cmbGemarkungen2.SelectedValuePath = "myindex"
+        cmbGemarkungen2.IsDropDownOpen = False
+        cmbGemarkungen2.SelectedIndex = CInt(0)
 
         cmbGemeinden.ItemsSource = gameindeitems
         cmbGemeinden.DisplayMemberPath = "mySttring"
@@ -192,15 +198,15 @@ Public Class winHaupt
 
                 '''''  baulastnr = getBaulastNr(tools.FSTausGISListe(0)) '????
                 If Not IsNumeric(baulastnr) Then
-                    tbBaulast2.Text = "keine BL"
+
                     lastPDF = ""
-                    btnBaulastdisplay.IsEnabled = False
+
                     tbFlurstueckDisplay.Text = tbFlurstueckDisplay.Text & Environment.NewLine &
                          "Keine Baulast gefunden."
                 Else
 
-                    tbBaulast2.Text = baulastnr
-                    btnBaulastdisplay.IsEnabled = True
+
+
                     tbFlurstueckDisplay.Text = tbFlurstueckDisplay.Text & Environment.NewLine &
                        "BaulastNr: " & baulastnr
                 End If
@@ -218,32 +224,26 @@ Public Class winHaupt
     End Sub
 
 
-    Private Sub btnBaulastdisplay_Click(sender As Object, e As RoutedEventArgs)
-        e.Handled = True
-        'If tbBaulast2.Text.Length < 1 Or (Not IsNumeric(tbBaulast2.Text.Trim)) Then
-        '    MessageBox.Show("Sie sollten zuerst eine BaulastNummer eingeben!")
-        '    Exit Sub
-        'End If
-        'If lastPDF.Length < 1 Then
-        MessageBox.Show("Es werden 2 Fenster angezeigt. Das " & Environment.NewLine &
-               " 1. Fenster zeigt allg. Infos zur Baulast und das" & Environment.NewLine &
-               " 2. Fenster zeigt die PDF zur Baulast" & Environment.NewLine & Environment.NewLine & Environment.NewLine &
-               "Sie können die Baulast-PDF mit 'speichern unter...'  abspeichern.", "Baulast ansehen",
-               MessageBoxButton.OK, MessageBoxImage.Information)
-        Dim neu As New winDetail((tbBaulast2.Text), True) ' 0=modus neu
-        neu.ShowDialog()
-        'Else
-        '    Process.Start(lastPDF)
-        'End If
-    End Sub
+    'Private Sub btnBaulastdisplay_Click(sender As Object, e As RoutedEventArgs)
+    '    e.Handled = True
+    '    'If tbBaulast2.Text.Length < 1 Or (Not IsNumeric(tbBaulast2.Text.Trim)) Then
+    '    '    MessageBox.Show("Sie sollten zuerst eine BaulastNummer eingeben!")
+    '    '    Exit Sub
+    '    'End If
+    '    'If lastPDF.Length < 1 Then
+    '    MessageBox.Show("Es werden 2 Fenster angezeigt. Das " & Environment.NewLine &
+    '           " 1. Fenster zeigt allg. Infos zur Baulast und das" & Environment.NewLine &
+    '           " 2. Fenster zeigt die PDF zur Baulast" & Environment.NewLine & Environment.NewLine & Environment.NewLine &
+    '           "Sie können die Baulast-PDF mit 'speichern unter...'  abspeichern.", "Baulast ansehen",
+    '           MessageBoxButton.OK, MessageBoxImage.Information)
+    '    Dim neu As New winDetail((tbBaulast2.Text), True) ' 0=modus neu
+    '    neu.ShowDialog()
+    '    'Else
+    '    '    Process.Start(lastPDF)
+    '    'End If
+    'End Sub
 
-    Private Sub tbBaulast2_TextChanged(sender As Object, e As TextChangedEventArgs)
-        e.Handled = True
-        If istgeladen Then
 
-            btnBaulastdisplay.IsEnabled = True
-        End If
-    End Sub
     Private Sub btnBaulast4FST_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
 
@@ -253,7 +253,7 @@ Public Class winHaupt
         e.Handled = True
         'feststellen ob es die baulast gibt - sonst 
         'besteht die gefahr, dass eine veraltete PDF gezogen wird
-        If clsGIStools.getBaulastFromBaulastMDAT(CInt(tbblnr.Text.Trim), kategorie_guid) Then
+        If clsGIStools.getBaulastFromBaulastMDAT(CInt(tbblnr.Text.Trim), kategorie_guid_Baulasten) Then
             lastPDF = clsGIStools.copyOnlyPDF(tbblnr.Text.Trim)
             If lastPDF.ToLower.StartsWith("fehler") Or
                lastPDF.ToLower.StartsWith("keine") Then
@@ -451,7 +451,7 @@ Public Class winHaupt
         loklist = readFlurst_Form()
         Dim index As Integer = CInt(cmbGemarkungen.SelectedIndex)
         Try
-            ' tools.writeFlurstCookie(index.ToString, (fkzlist_lage.Item(0).flur.ToString), (fkzlist_lage.Item(0).zaehler.ToString), (fkzlist_lage.Item(0).nenner.ToString), "bgm_FST_cookie.txt")
+            ' tools.writeFlurstCookie(gemaIndex.ToString, (fkzlist_lage.Item(0).flur.ToString), (fkzlist_lage.Item(0).zaehler.ToString), (fkzlist_lage.Item(0).nenner.ToString), "bgm_FST_cookie.txt")
             MitFlurstueckInsGIS(fkzlist_lage)
         Catch ex As Exception
             l("btnsucheeigentumer_Click " & ex.ToString)
@@ -468,6 +468,69 @@ Public Class winHaupt
         If item IsNot Nothing Then
             tbblnr.Text = item.Nummer
         End If
+    End Sub
+
+    Private Sub cmbGemeinden2_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
+        ' SELECT *  FROM [LKOF_Bearb].[dbo].[tbl_mdat_datensatz] where kategorie_guid_Baulasten='F52CBA15-FAFF-4EDD-BBD3-B821920F1360' and text1 ='Seligenstadt'
+        e.Handled = True
+        If Not istgeladen Then Exit Sub
+    End Sub
+
+    Private Sub tbbplantfilter_TextChanged(sender As Object, e As TextChangedEventArgs)
+        e.Handled = True
+
+        If Not istgeladen Then Exit Sub
+        Dim item As myComboBoxItem = CType(cmbGemarkungen2.SelectedItem, myComboBoxItem)
+        Dim gemavalue As String = item.mySttring.ToString
+        Dim bplanListe As New List(Of myComboBoxItem)
+        Try
+
+            ' SELECT *  FROM [LKOF_Bearb].[dbo].[tbl_mdat_datensatz] where kategorie_guid_Baulasten='F52CBA15-FAFF-4EDD-BBD3-B821920F1360' and text1 ='Seligenstadt'
+            bplanListe = tools.sucheNachBplaenen(gemavalue.ToString, tbbplantfilter.Text, kategorie_guid_Bplaene)
+            cmbbplaene.ItemsSource = bplanListe
+            cmbbplaene.DisplayMemberPath = "mySttring"
+            cmbbplaene.SelectedValuePath = "myindex"
+            cmbbplaene.IsDropDownOpen = True
+        Catch ex As Exception
+            l("tbbplantfilter_TextChanged " & ex.ToString)
+        End Try
+    End Sub
+
+    Private Sub cmbGemarkungen2_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
+        e.Handled = True
+        If Not istgeladen Then Exit Sub
+        Dim item As myComboBoxItem = CType(cmbGemarkungen2.SelectedItem, myComboBoxItem)
+        Dim gemavalue As String = item.mySttring.ToString
+        Dim bplanListe As New List(Of myComboBoxItem)
+        Try
+
+            ' SELECT *  FROM [LKOF_Bearb].[dbo].[tbl_mdat_datensatz] where kategorie_guid_Baulasten='F52CBA15-FAFF-4EDD-BBD3-B821920F1360' and text1 ='Seligenstadt'
+            bplanListe = tools.sucheNachBplaenen(gemavalue.ToString, tbbplantfilter.Text, kategorie_guid_Bplaene)
+            cmbbplaene.ItemsSource = bplanListe
+            cmbbplaene.DisplayMemberPath = "mySttring"
+            cmbbplaene.SelectedValuePath = "myindex"
+            cmbbplaene.IsDropDownOpen = True
+        Catch ex As Exception
+            l("btnsucheeigentumer_Click " & ex.ToString)
+        End Try
+    End Sub
+
+    Private Sub cmbbplaene_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
+        e.Handled = True
+        If Not istgeladen Then Exit Sub
+        Dim item As myComboBoxItem = CType(cmbbplaene.SelectedItem, myComboBoxItem)
+        Dim gemavalue As String = item.mySttring.ToString
+        Dim gemaindex As String = item.myindex.ToString
+        Dim bplanListe As New List(Of myComboBoxItem)
+    End Sub
+
+    Private Sub btngis4BPlAN_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+    End Sub
+
+    Private Sub cmbGemarkungen_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
+        e.Handled = True
+
     End Sub
 
     'Private Sub ButtonSaveHistory_Click(sender As Object, e As RoutedEventArgs)
