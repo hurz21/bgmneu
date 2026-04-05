@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+         xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
         xmlns:local="clr-namespace:bgm" AllowDrop="True"
         mc:Ignorable="d" Left="1" WindowStyle="ToolWindow"    Drop="Window_Drop"
         Title="BGM" Height="336" Width="279" Background="Beige" >
@@ -12,7 +13,7 @@
             <StackPanel Margin="1" Width="185" Name="stpAdminOnly" Background="LightGray">
                 <!--<Button Name="btnNeu" Click="btnNeu_Click" Content="Neu" Margin="5" 
                     IsEnabled="False" Visibility="Collapsed"/>-->
-
+             
             </StackPanel>
             <StackPanel IsEnabled="True" Visibility="Collapsed">
                 <Button Name="btngetFlurstück" Margin="5" Click="btngetFlurstueck_Click"  >Flurstück wählen
@@ -171,6 +172,9 @@
 
                         <Button x:Name="btngis4BPlAN" Click="btngis4BPlAN_Click" Margin="15" IsEnabled="False">B-Plan im GIS</Button>
                     </StackPanel>
+                </TabItem>
+                <TabItem Name="tbitemTest" Header="test">
+                    <!--<wv2:WebView2 x:Name="MyWebView" Visibility="Visible" Height="200" />-->
                 </TabItem>
             </TabControl>
 

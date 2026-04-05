@@ -1,5 +1,7 @@
 ﻿Imports System.ComponentModel
+Imports System.Security.Policy
 Imports DocumentFormat.OpenXml.Drawing
+
 
 Public Class winHaupt
     Private istgeladen As Boolean = False
@@ -11,7 +13,9 @@ Public Class winHaupt
         InitializeComponent()
     End Sub
     Private Sub winHaupt_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
+
         e.Handled = True
+
         setLogfile(logfile) : l("Start " & Now) : l("mgisversion:" & bgmVersion)
         initdb()
         tbblnr.Text = "6428"
@@ -27,7 +31,7 @@ Public Class winHaupt
 
         tools.readFSTCookie(gemarkung, flur, zaehler, nenner, "bgm_FST_cookie.txt")
         gemarkungsindex = gemarkung
-            tbFlur.Text = flur
+        tbFlur.Text = flur
         tbZaehler.Text = zaehler
         tbnenner.Text = nenner
 
@@ -81,7 +85,9 @@ Public Class winHaupt
         'cmbGemeinden.SelectedIndex = CInt(gemeindeindex)
 
         Title = "BGM " & " V.: " & bgmVersion
+
         istgeladen = True
+
     End Sub
     ' Auswahl -> in TextBox schreiben
 
@@ -554,13 +560,26 @@ Public Class winHaupt
         End Try
     End Sub
 
-    Private Sub btngis4BPlAN_Click(sender As Object, e As RoutedEventArgs)
+    Private Async Sub btngis4BPlAN_Click(sender As Object, e As RoutedEventArgs)
+        ' Pfad/Umgebung: WebView2-Runtime erforderlich
+        'Await MyWebView.EnsureCoreWebView2Async()
         e.Handled = True
         'https://gis.kreis-of.de/LKOF/asp/main.asp?&app=sp_mdat&lay=sp_mdat_0013_F&fld=ident&typ=string&val=1674&skipwelcome=true  
         'https://gis.kreis-of.de/LKOF/asp/main.asp?app=sp_mdat&lay=sp_mdat_0013_F&fld=ident&typ=string&val=1674&skipwelcome=true
         'https://gis.kreis-of.de/LKOF/asp/main.asp?&app=sp_mdat&lay=sp_mdat_0013_F&fld=ident&typ=string&val=1134&skipwelcome=true
         'https://gis.kreis-of.de/LKOF/asp/main.asp?&app=sp_mdat&lay=sp_mdat_0013_F&fld=ident&typ=string&val=1134&skipwelcome=true
-        tools.bplanAlsObjImGisZeigen(aktbplan.ident)
+        Dim url = ""
+
+        Dim logout = "https://gis.kreis-of.de/LKOF/asp/login.asp?logout=true&m=1"
+        url = logout
+        'AddHandler MyWebView.CoreWebView2.NavigationCompleted, AddressOf NavigationCompletedHandler
+        'MyWebView.Source = New Uri(url)
+        Process.Start(logout)
+        Threading.Thread.Sleep(1000)
+        url = tools.bplanAlsObjImGisZeigen(aktbplan.ident)
+        Process.Start(url)
+
+
     End Sub
 
     Private Sub cmbGemarkungen_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
@@ -582,7 +601,18 @@ Public Class winHaupt
     '    'lageliste = clsGIStools.getLage(tbStrasseFilter.Text, cmbGemeinden.SelectedValue.ToString, tbHausnr.Text)
     '    ''lageliste = mapTools.lageohneZahl(lageliste)
     'End Sub
+    'Private Sub NavigationCompletedHandler(sender As Object, e As CoreWebView2NavigationCompletedEventArgs)
+    '    ' Sobald die Navigation fertig ist, WebView unsichtbar machen
+    '    Dispatcher.Invoke(Sub()
+    '                          MyWebView.Visibility = Visibility.Visible
+    '                          Dim url = tools.bplanAlsObjImGisZeigen(aktbplan.ident)
+    '                          Process.Start(url)
+    '                          ' Oder MyWebView.Visibility = Visibility.Hidden
+    '                      End Sub)
 
+    '    ' Optional: Event abmelden
+    '    RemoveHandler MyWebView.CoreWebView2.NavigationCompleted, AddressOf NavigationCompletedHandler
+    'End Sub
 
 
 End Class

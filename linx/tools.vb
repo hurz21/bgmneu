@@ -1144,26 +1144,26 @@ Module tools
     '        Return thema
     '    End Try
     'End Function
-    Public Sub bplanAlsObjImGisZeigen(ident As Integer)
+    Public Function bplanAlsObjImGisZeigen(ident As Integer) As String
         Dim url As String
         Dim themen As String
         themen = tools.getthemen("")
 
         'url = "https://gis.kreis-of.de/LKOF/extensions/logout.asp?removeLostSession=true"
 
-        Dim logout = "https://gis.kreis-of.de/LKOF/asp/login.asp?logout=true&m=1"
-        Process.Start(logout)
-        Threading.Thread.Sleep(3000)
+
 
 
         If IsNumeric(ident) Then
             url = "https://gis.kreis-of.de/LKOF/asp/main.asp?" & themen &
                 "&app=sp_mdat&lay=sp_mdat_0013_F&fld=ident&typ=string&val=" & ident & "&skipwelcome=true"
-            Process.Start(url)
+            '  Process.Start(url)
+            Return url
         Else
-            MsgBox("Die Bplan ident. '" & ident & "' ist ungültig!")
+            'MsgBox("Die Bplan ident. '" & ident & "' ist ungültig!")
+            Return ""
         End If
-    End Sub
+    End Function
     Public Sub baulastAlsObjImGisZeigen(baulastblatt As String)
         Dim url As String
         Dim themen As String
