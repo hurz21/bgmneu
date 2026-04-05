@@ -36,11 +36,12 @@ Public Class winHaupt
         If isAutho() Then
             'its ok  21478  21504
             '"POLYGON ((479015 5538655,479033 5538660,479035 5538656,479017 5538650,479015 5538655))" 
+
         Else
             'MessageBox.Show("Sie haben keine Berechtigung für diese Anwendung. Abbruch!")
             'Close() 
             stpAdminOnly.Visibility = Visibility.Visible
-
+            tabEig.SelectedIndex = 3
             btnEdit.IsEnabled = False
         End If
         initKatasterGemarkungtext()
@@ -75,8 +76,9 @@ Public Class winHaupt
         cmbGemeinden.ItemsSource = gameindeitems
         cmbGemeinden.DisplayMemberPath = "mySttring"
         cmbGemeinden.SelectedValuePath = "myindex"
-        cmbGemarkungen.IsDropDownOpen = True
-        cmbGemeinden.SelectedIndex = CInt(gemeindeindex)
+        cmbGemeinden.IsDropDownOpen = True
+        cmbGemeinden.SelectedIndex = 13
+        'cmbGemeinden.SelectedIndex = CInt(gemeindeindex)
 
         Title = "BGM " & " V.: " & bgmVersion
         istgeladen = True
@@ -89,7 +91,7 @@ Public Class winHaupt
         Return Environment.UserName.ToLower = "benes_c" Or
                 Environment.UserName.ToLower = "hartmann_s" Or
                 Environment.UserName.ToLower = "briese_j" Or
-                Environment.UserName.ToLower = "feinen_j" Or
+                Environment.UserName.ToLower = "feinen_jl" Or
                 Environment.UserName.ToLower = "thieme_m" Or
                 Environment.UserName.ToLower = "zahnlückenpimpf" Or
                 Environment.UserName.ToLower = "neis_h"
@@ -517,15 +519,48 @@ Public Class winHaupt
 
     Private Sub cmbbplaene_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
         e.Handled = True
-        If Not istgeladen Then Exit Sub
-        Dim item As myComboBoxItem = CType(cmbbplaene.SelectedItem, myComboBoxItem)
-        Dim gemavalue As String = item.mySttring.ToString
-        Dim gemaindex As String = item.myindex.ToString
+        Dim bplantext As String
+        Dim bplanindex As String
+        Dim bplanitem As myComboBoxItem
         Dim bplanListe As New List(Of myComboBoxItem)
+
+        Dim gemitem As myComboBoxItem
+        If Not istgeladen Then Exit Sub
+        Try
+
+            bplanitem = CType(cmbbplaene.SelectedItem, myComboBoxItem)
+            If bplanitem Is Nothing Then
+                Exit Sub
+            End If
+            bplantext = bplanitem.mySttring.ToString
+            bplanindex = bplanitem.myindex.ToString
+
+            gemitem = CType(cmbGemarkungen2.SelectedItem, myComboBoxItem)
+
+            If gemitem Is Nothing Then
+                MsgBox("Die Eingabe war ungültig. Bitte korrigieren!")
+                Exit Sub
+            End If
+            Dim gemcode As Integer = CInt(cmbGemarkungen2.SelectedValue)
+            Dim gemindex As Integer = CInt(cmbGemarkungen2.SelectedIndex)
+            Dim gemtext As String = (gemitem.mySttring).ToString
+
+            btngis4BPlAN.IsEnabled = True
+            aktbplan = tools.getAllData4ThisBplanIdentNr(bplanindex)
+            tbBplanAbstract.Text = aktbplan.bildeTextOhneWarnung
+            tbBplanWarnung.Text = aktbplan.warnung
+        Catch ex As Exception
+            l("cmbbplaene_SelectionChanged " & ex.ToString)
+        End Try
     End Sub
 
     Private Sub btngis4BPlAN_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
+        'https://gis.kreis-of.de/LKOF/asp/main.asp?&app=sp_mdat&lay=sp_mdat_0013_F&fld=ident&typ=string&val=1674&skipwelcome=true  
+        'https://gis.kreis-of.de/LKOF/asp/main.asp?app=sp_mdat&lay=sp_mdat_0013_F&fld=ident&typ=string&val=1674&skipwelcome=true
+        'https://gis.kreis-of.de/LKOF/asp/main.asp?&app=sp_mdat&lay=sp_mdat_0013_F&fld=ident&typ=string&val=1134&skipwelcome=true
+        'https://gis.kreis-of.de/LKOF/asp/main.asp?&app=sp_mdat&lay=sp_mdat_0013_F&fld=ident&typ=string&val=1134&skipwelcome=true
+        tools.bplanAlsObjImGisZeigen(aktbplan.ident)
     End Sub
 
     Private Sub cmbGemarkungen_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)

@@ -167,6 +167,7 @@
       <DependentUpon>winFlurstueck.xaml</DependentUpon>
     </Compile>
     <Compile Include="glob1.vb" />
+    <Compile Include="haupt\clsBplan.vb" />
     <Compile Include="haupt\clsChecks.vb" />
     <Compile Include="haupt\winHaupt.xaml.vb">
       <DependentUpon>winHaupt.xaml</DependentUpon>

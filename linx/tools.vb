@@ -3,7 +3,7 @@
 
 Module tools
     Public historyFile As String = "history.txt"
-
+    Public aktbplan As New clsBplan
     Public maxItems As Integer = 20
     Public historyList As New List(Of HistoryItem)
 
@@ -732,7 +732,7 @@ Module tools
         gemeinde(11) = "11;Rodgau                             "
         gemeinde(12) = "12;Rödermark                          "
         gemeinde(13) = "13;Seligenstadt                       "
-        'gemeinde(14) = "8 ;Muehlheim                          "
+        gemeinde(14) = "0 ;                          "
 
     End Function
 
@@ -1144,7 +1144,26 @@ Module tools
     '        Return thema
     '    End Try
     'End Function
+    Public Sub bplanAlsObjImGisZeigen(ident As Integer)
+        Dim url As String
+        Dim themen As String
+        themen = tools.getthemen("")
 
+        'url = "https://gis.kreis-of.de/LKOF/extensions/logout.asp?removeLostSession=true"
+
+        Dim logout = "https://gis.kreis-of.de/LKOF/asp/login.asp?logout=true&m=1"
+        Process.Start(logout)
+        Threading.Thread.Sleep(3000)
+
+
+        If IsNumeric(ident) Then
+            url = "https://gis.kreis-of.de/LKOF/asp/main.asp?" & themen &
+                "&app=sp_mdat&lay=sp_mdat_0013_F&fld=ident&typ=string&val=" & ident & "&skipwelcome=true"
+            Process.Start(url)
+        Else
+            MsgBox("Die Bplan ident. '" & ident & "' ist ungültig!")
+        End If
+    End Sub
     Public Sub baulastAlsObjImGisZeigen(baulastblatt As String)
         Dim url As String
         Dim themen As String
@@ -1545,7 +1564,7 @@ Module tools
             Else
                 For i = 0 To fstREC.dt.Rows.Count - 1
                     bpl = New myComboBoxItem
-                    bpl.myindex = fstREC.dt.Rows(i).Item("text3").ToString
+                    bpl.myindex = fstREC.dt.Rows(i).Item("ident").ToString
                     bpl.mySttring = fstREC.dt.Rows(i).Item("text3").ToString & " -> " & fstREC.dt.Rows(i).Item("text4").ToString
                     liste.Add(bpl)
                 Next
@@ -1555,6 +1574,44 @@ Module tools
         Catch ex As Exception
             l("fehler in sucheNachBplaenen-- " & ex.ToString)
             Return liste
+        End Try
+    End Function
+
+    Friend Function getAllData4ThisBplanIdentNr(bplanindex As String) As clsBplan
+        Dim apl As New clsBplan
+        Dim hinweis As String
+        l(" getAllData4ThisBplanIdentNr  " & bplanindex)
+        Try
+            fstREC.mydb.SQL = "SELECT *  FROM [LKOF_Bearb].[dbo].[tbl_mdat_datensatz] where kategorie_guid='" & kategorie_guid_Bplaene &
+                "' and ident =" & bplanindex
+            l(fstREC.mydb.SQL)
+            hinweis = fstREC.getDataDT()
+            If fstREC.dt.Rows.Count < 1 Then
+                Return apl 'darf nicht vorkommen
+            Else
+                For i = 0 To fstREC.dt.Rows.Count - 1
+                    apl = New clsBplan
+                    apl.ident = CInt(clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("ident")).ToString)
+                    apl.gemeindetext = clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("text1")).ToString
+                    apl.gemarkungstext = clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("text2")).ToString
+                    apl.bplnummer = clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("text3")).ToString
+                    apl.bplbeschreibung = clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("text4")).ToString
+                    apl.nutzung = clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("text5")).ToString
+                    apl.warnung = clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("text6")).ToString
+                    apl.ueberlagertvon = clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("text7")).ToString
+                    apl.ueberlagertselbst = clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("text8")).ToString
+                    apl.flaeche = clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("int1")).ToString
+                    apl.rechtswirksam = clsDBtools.fieldvalueDate(fstREC.dt.Rows(i).Item("date2"))
+                    apl.aufstellung = clsDBtools.fieldvalueDate(fstREC.dt.Rows(i).Item("date1"))
+
+
+                Next
+                Return apl
+            End If
+            Return apl
+        Catch ex As Exception
+            l("fehler in getAllData4ThisBplanIdentNr-- " & ex.ToString)
+            Return apl
         End Try
     End Function
 End Module

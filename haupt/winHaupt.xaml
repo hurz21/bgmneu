@@ -139,10 +139,10 @@
 
                     </StackPanel>
                 </TabItem>
-                <TabItem FontSize="9" Name="tabbBplan" Header="B-Plan" Height="25" VerticalAlignment="Top">
+                <TabItem FontSize="9" Name="tabbBplan" Header="B-Plan">
                     <StackPanel Height="277">
 
-                        <StackPanel Orientation="Horizontal" Visibility="Hidden">
+                        <StackPanel Orientation="Horizontal" Visibility="Collapsed">
                             <Label Width="75" FontSize="10">Gemeinde:</Label>
                             <ComboBox x:Name="cmbGemeinden2" HorizontalAlignment="Left" SelectionChanged="cmbGemeinden2_SelectionChanged"
                    Height="25" Width="180"  FontSize="10"/>
@@ -151,19 +151,25 @@
                             <Label Width="75" FontSize="10">Gemarkung:</Label>
                             <ComboBox x:Name="cmbGemarkungen2" HorizontalAlignment="Left" 
                                       SelectionChanged="cmbGemarkungen2_SelectionChanged"
-                                        Height="25" Width="180"  FontSize="10"/>
+                                        Height="25" Width="170"  FontSize="10"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Label Width="75" FontSize="10">Filter:</Label>
-                            <TextBox Name="tbbplantfilter" Width="180" TextChanged="tbbplantfilter_TextChanged"></TextBox>
+                            <TextBox Name="tbbplantfilter" Width="170" TextChanged="tbbplantfilter_TextChanged"></TextBox>
 
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
 
                             <ComboBox x:Name="cmbbplaene" SelectionChanged="cmbbplaene_SelectionChanged" 
-                   HorizontalAlignment="Left" Height="25" IsDropDownOpen="True"  Width="255" FontSize="10"/>
+                   HorizontalAlignment="Left" Height="25" IsDropDownOpen="True"  Width="245" FontSize="10"
+                                      />
                         </StackPanel>
-                        <Button x:Name="btngis4BPlAN" Click="btngis4BPlAN_Click" Margin="15">B-Plan im GIS</Button>
+                        <TextBox Name="tbBplanAbstract" AcceptsReturn="True" AcceptsTab="True" Height="100" TextWrapping="NoWrap">
+                        </TextBox>
+                        <TextBox Name="tbBplanWarnung" AcceptsReturn="True" AcceptsTab="True"   TextWrapping="NoWrap"
+                                 Foreground="Red" FontFamily="Arial Black"/>
+
+                        <Button x:Name="btngis4BPlAN" Click="btngis4BPlAN_Click" Margin="15" IsEnabled="False">B-Plan im GIS</Button>
                     </StackPanel>
                 </TabItem>
             </TabControl>
