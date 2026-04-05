@@ -12,10 +12,7 @@ Public Class winDetail
     Public Property targetGISTabelle As String = "hartmann"
     Dim modus As String = "neu"
     Dim nurlesen As Boolean = True
-    'Private Async Sub Window_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
-    '    Await webView.EnsureCoreWebView2Async()
-    '    webView.Source = New Uri("https://www.google.de")
-    'End Sub
+
     Sub New(gisID As String, _nurlesen As Boolean)
         InitializeComponent()
         If IsNumeric(gisID) AndAlso CInt(gisID) < 1 Then
@@ -124,11 +121,7 @@ Public Class winDetail
                 MsgBox("Die im GIS-Baulastkataster hinterlegten Flurstücksinfos sind mangelhaft. Bitte verbessern!")
 
             End If
-            'Dim url = ""
-            'Dim themen As String
-            'themen = tools.getthemen("")
-            'url = "https://gis.kreis-of.de/LKOF/asp/main.asp?" & themen & "&lay=sp_mdat_0010_F&fld=text3&typ=string&val=" & tbBaulastNr.Text.Trim & "&skipwelcome=true"
-            'webView.Source = New Uri(url)
+
 
             btnUebertragMetadaten.IsEnabled = True
             spBL.Background = greenBrush
@@ -368,11 +361,7 @@ Public Class winDetail
                 If tools.flurstueckExistiertImGis(tools.FSTausGISListe(i).flurstueckZuFKZ) Then
                     treffer += 1
                     fkztemp = tools.FSTausGISListe(i).flurstueckZuFKZ
-                    ' tools.FSTausGISListe(i).Flurstuecksskennzeichen = tools.FSTausGISListe(i).flurstueckZuFKZ
-                    'url = makeurl4FST("https://gis.kreis-of.de/LKOF/asp/main.asp?", flurstueckskennzeichen)
-                    'url = "https://gis.kreis-of.de/
-                    'LKOF/extensions/logout.asp?removeLostSession=true"
-                    'Process.Start(url)
+
                     If treffer = 1 Then
                         lokfkzliste = fkztemp
                     Else

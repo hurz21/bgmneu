@@ -99,7 +99,7 @@ Public Class winHaupt
         Return Environment.UserName.ToLower = "benes_c" Or
                 Environment.UserName.ToLower = "hartmann_s" Or
                 Environment.UserName.ToLower = "briese_j" Or
-                Environment.UserName.ToLower = "feinen_j" Or
+                Environment.UserName.ToLower = "feinen_jd" Or
                 Environment.UserName.ToLower = "thieme_m" Or
                 Environment.UserName.ToLower = "zahnlückenpimpf" Or
                 Environment.UserName.ToLower = "neis_h"
@@ -512,6 +512,7 @@ Public Class winHaupt
         Dim item As myComboBoxItem = CType(cmbGemarkungen2.SelectedItem, myComboBoxItem)
         Dim gemavalue As String = item.mySttring.ToString
         Dim bplanListe As New List(Of myComboBoxItem)
+        'Dim pdfListe As New List(Of myComboBoxItem)
         Try
 
             ' SELECT *  FROM [LKOF_Bearb].[dbo].[tbl_mdat_datensatz] where kategorie_guid='F52CBA15-FAFF-4EDD-BBD3-B821920F1360' and text1 ='Seligenstadt'
@@ -520,6 +521,14 @@ Public Class winHaupt
             cmbbplaene.DisplayMemberPath = "mySttring"
             cmbbplaene.SelectedValuePath = "myindex"
             cmbbplaene.IsDropDownOpen = True
+
+            'pdfListe = tools.sucheNachBplaenen(gemavalue.ToString, tbbplantfilter.Text, kategorie_guid_Bplaene)
+            'cmbbplaene.ItemsSource = bplanListe
+            'cmbbplaene.DisplayMemberPath = "mySttring"
+            'cmbbplaene.SelectedValuePath = "myindex"
+            'cmbbplaene.IsDropDownOpen = True
+
+
         Catch ex As Exception
             l("btnsucheeigentumer_Click " & ex.ToString)
         End Try
@@ -531,11 +540,10 @@ Public Class winHaupt
         Dim bplanindex As String
         Dim bplanitem As myComboBoxItem
         Dim bplanListe As New List(Of myComboBoxItem)
-
+        Dim bplanPDFListe As New List(Of myComboBoxItem)
         Dim gemitem As myComboBoxItem
         If Not istgeladen Then Exit Sub
         Try
-
             bplanitem = CType(cmbbplaene.SelectedItem, myComboBoxItem)
             If bplanitem Is Nothing Then
                 Exit Sub
@@ -554,9 +562,19 @@ Public Class winHaupt
             Dim gemtext As String = (gemitem.mySttring).ToString
 
             btngis4BPlAN.IsEnabled = True
-            aktbplan = tools.getAllData4ThisBplanIdentNr(bplanindex)
+            aktbplan = tools.getAllMetaData4ThisBplanIdentNr(bplanindex)
             tbBplanAbstract.Text = aktbplan.bildeTextOhneWarnung
             tbBplanWarnung.Text = aktbplan.warnung
+            'jetzt die dateien
+
+            bplanPDFListe = tools.getAllPDFFiles4GUID(aktbplan.object_guid, "\\kh-w-ingrada\lkof\data\upload\FILES\LKOF\sp_mdat\dat\")
+            cmbbplPDF.ItemsSource = bplanPDFListe
+            cmbbplPDF.DisplayMemberPath = "mySttring"
+            cmbbplPDF.SelectedValuePath = "myindex"
+            cmbbplPDF.IsDropDownOpen = True
+
+
+
         Catch ex As Exception
             l("cmbbplaene_SelectionChanged " & ex.ToString)
         End Try
@@ -564,10 +582,8 @@ Public Class winHaupt
 
     Private Async Sub btngis4BPlAN_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
-        'https://gis.kreis-of.de/LKOF/asp/main.asp?&app=sp_mdat&lay=sp_mdat_0013_F&fld=ident&typ=string&val=1674&skipwelcome=true  
-        'https://gis.kreis-of.de/LKOF/asp/main.asp?app=sp_mdat&lay=sp_mdat_0013_F&fld=ident&typ=string&val=1674&skipwelcome=true
-        'https://gis.kreis-of.de/LKOF/asp/main.asp?&app=sp_mdat&lay=sp_mdat_0013_F&fld=ident&typ=string&val=1134&skipwelcome=true
-        'https://gis.kreis-of.de/LKOF/asp/main.asp?&app=sp_mdat&lay=sp_mdat_0013_F&fld=ident&typ=string&val=1134&skipwelcome=true
+        'https://gis.kreis-of.de/LKOF/asp/main.asp?&app=sp_mdat&lay=sp_mdat_0013_F&fld=ident&typ=string&val=1674&skipwelcome=true   
+        'https://gis.kreis-of.de/LKOF/asp/main.asp?&app=sp_mdat&lay=sp_mdat_0013_F&fld=ident&typ=string&val=1134&skipwelcome=true 
         Dim url = ""
 
         Dim logout = "https://gis.kreis-of.de/LKOF/asp/login.asp?logout=true&m=1"
@@ -578,8 +594,6 @@ Public Class winHaupt
         End If
         url = tools.bplanAlsObjImGisZeigen(aktbplan.ident)
         Process.Start(url)
-
-
     End Sub
 
     Private Sub cmbGemarkungen_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
@@ -593,6 +607,34 @@ Public Class winHaupt
         gisLogouten = isChecked
         My.Settings.ImmerLogouten = isChecked
         My.Settings.Save()
+    End Sub
+
+    Private Sub cmbbplPDF_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
+        e.Handled = True
+        Dim zieldatei As String
+        Dim pdfitem As myComboBoxItem
+        Dim fi As IO.FileInfo
+        Dim quelldatei As String
+        Dim immer_aus_dem_cache_die_bplanpdfs As Boolean = True
+        Try
+            pdfitem = CType(cmbbplPDF.SelectedItem, myComboBoxItem)
+            quelldatei = pdfitem.myindex
+            fi = New IO.FileInfo(quelldatei)
+
+            zieldatei = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
+            zieldatei = IO.Path.Combine(zieldatei, "bgm\cache")
+            zieldatei = IO.Path.Combine(zieldatei, fi.Name)
+
+            fi = New IO.FileInfo(zieldatei)
+            If fi.Exists And immer_aus_dem_cache_die_bplanpdfs Then
+                Process.Start(zieldatei)
+            Else
+                IO.File.Copy(quelldatei, zieldatei)
+                Process.Start(zieldatei)
+            End If
+        Catch ex As Exception
+            l("cmbbplPDF_SelectionChanged " & ex.ToString)
+        End Try
     End Sub
 
     'Private Sub ButtonSaveHistory_Click(sender As Object, e As RoutedEventArgs)
@@ -609,18 +651,7 @@ Public Class winHaupt
     '    'lageliste = clsGIStools.getLage(tbStrasseFilter.Text, cmbGemeinden.SelectedValue.ToString, tbHausnr.Text)
     '    ''lageliste = mapTools.lageohneZahl(lageliste)
     'End Sub
-    'Private Sub NavigationCompletedHandler(sender As Object, e As CoreWebView2NavigationCompletedEventArgs)
-    '    ' Sobald die Navigation fertig ist, WebView unsichtbar machen
-    '    Dispatcher.Invoke(Sub()
-    '                          MyWebView.Visibility = Visibility.Visible
-    '                          Dim url = tools.bplanAlsObjImGisZeigen(aktbplan.ident)
-    '                          Process.Start(url)
-    '                          ' Oder MyWebView.Visibility = Visibility.Hidden
-    '                      End Sub)
 
-    '    ' Optional: Event abmelden
-    '    RemoveHandler MyWebView.CoreWebView2.NavigationCompleted, AddressOf NavigationCompletedHandler
-    'End Sub
 
 
 End Class

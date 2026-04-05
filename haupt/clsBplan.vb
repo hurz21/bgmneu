@@ -10,6 +10,7 @@
     Public Property flaeche As String
     Public Property ueberlagertvon As String
     Public Property ueberlagertselbst As String
+    Public Property object_guid As String
     Public Property verboten As Boolean
     Public Property rechtswirksam As Date
     Public Property aufstellung As Date
@@ -20,7 +21,7 @@
             text.Append("Gemeinde:" & vbTab & gemeindetext & Environment.NewLine)
             text.Append("Gemarkung:" & vbTab & gemarkungstext & Environment.NewLine)
             text.Append("Kurzname:" & vbTab & bplnummer & Environment.NewLine)
-            text.Append("Titel:" & vbTab & bplbeschreibung & Environment.NewLine)
+            text.Append("Titel:" & vbTab & vbTab & bplbeschreibung & Environment.NewLine)
             text.Append("Nutzung:" & vbTab & nutzung & Environment.NewLine)
             text.Append("Überlagert:" & vbTab & ueberlagertselbst & Environment.NewLine)
             text.Append("ÜberlagertVon:" & vbTab & ueberlagertvon & Environment.NewLine)

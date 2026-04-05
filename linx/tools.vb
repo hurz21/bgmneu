@@ -162,6 +162,8 @@ Module tools
                                  "bgm\cookies"))
             IO.Directory.CreateDirectory(IO.Path.Combine(testfolder,
                                  "bgm\div"))
+            IO.Directory.CreateDirectory(IO.Path.Combine(testfolder,
+                                 "bgm\cache"))
             'testfolder = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
 
             'IO.Directory.CreateDirectory(IO.Path.Combine(testfolder,
@@ -1588,10 +1590,10 @@ Module tools
         End Try
     End Function
 
-    Friend Function getAllData4ThisBplanIdentNr(bplanindex As String) As clsBplan
+    Friend Function getAllMetaData4ThisBplanIdentNr(bplanindex As String) As clsBplan
         Dim apl As New clsBplan
         Dim hinweis As String
-        l(" getAllData4ThisBplanIdentNr  " & bplanindex)
+        l(" getAllMetaData4ThisBplanIdentNr  " & bplanindex)
         Try
             fstREC.mydb.SQL = "SELECT *  FROM [LKOF_Bearb].[dbo].[tbl_mdat_datensatz] where kategorie_guid='" & kategorie_guid_Bplaene &
                 "' and ident =" & bplanindex
@@ -1614,6 +1616,8 @@ Module tools
                     apl.flaeche = clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("int1")).ToString
                     apl.rechtswirksam = clsDBtools.fieldvalueDate(fstREC.dt.Rows(i).Item("date2"))
                     apl.aufstellung = clsDBtools.fieldvalueDate(fstREC.dt.Rows(i).Item("date1"))
+                    apl.object_guid = clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("guid")).ToString
+                    apl.object_guid = clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("guid")).ToString.ToUpper
 
 
                 Next
@@ -1621,8 +1625,44 @@ Module tools
             End If
             Return apl
         Catch ex As Exception
-            l("fehler in getAllData4ThisBplanIdentNr-- " & ex.ToString)
+            l("fehler in getAllMetaData4ThisBplanIdentNr-- " & ex.ToString)
             Return apl
+        End Try
+    End Function
+
+    Friend Function getAllPDFFiles4GUID(object_guid As String, quellpfad As String) As List(Of myComboBoxItem)
+        Dim pdfliste As New List(Of myComboBoxItem)
+        Dim pdf As New myComboBoxItem
+        Dim hinweis As String
+        l(" getAllPDFFiles4GUID  " & object_guid)
+        Try
+            'fstREC.mydb.SQL = "SELECT *  FROM [LKOF_Bearb].[dbo].[tbl_mdat_datensatz] where kategorie_guid='" & kategorie_guid_Bplaene &
+            '    "' and ident =" & bplanindex
+
+            'select * from [LKOF_Bearb].[dbo].[tbl_mdat_dateien] where file_key like 'BPL4N%'
+            ''                  and object_guid='de97242d-99c2-438b-a1f0-f76b56df9473' order by sys_stamp_in desc
+
+            fstREC.mydb.SQL = "Select * From [LKOF_Bearb].[dbo].[tbl_mdat_dateien] Where  file_key like 'BPL4N%'  " &
+                " and object_guid='" & object_guid & "'"
+            l(fstREC.mydb.SQL)
+            hinweis = fstREC.getDataDT()
+            If fstREC.dt.Rows.Count < 1 Then
+                Return pdfliste 'darf nicht vorkommen
+            Else
+                For i = 0 To fstREC.dt.Rows.Count - 1
+                    pdf = New myComboBoxItem
+                    pdf.myindex = (clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("file_key")).ToString)
+                    pdf.myindex = quellpfad & pdf.myindex
+                    pdf.mySttring = clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("file_name")).ToString
+                    pdfliste.Add(pdf)
+                Next
+                Return pdfliste
+            End If
+            Return pdfliste
+
+        Catch ex As Exception
+            l("fehler in getAllPDFFiles4GUID-- " & ex.ToString)
+            Return pdfliste
         End Try
     End Function
 End Module
