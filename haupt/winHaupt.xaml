@@ -155,7 +155,7 @@
                         <StackPanel Orientation="Horizontal">
 
                             <ComboBox x:Name="cmbbplaene" SelectionChanged="cmbbplaene_SelectionChanged" 
-                   HorizontalAlignment="Left" Height="25" IsDropDownOpen="False"  Width="245" FontSize="10"
+                                       HorizontalAlignment="Left" Height="25" IsDropDownOpen="False"  Width="245" FontSize="10"
                                       />
                         </StackPanel>
                         <TextBox Name="tbBplanAbstract" AcceptsReturn="True" AcceptsTab="True" Height="100" TextWrapping="NoWrap">
@@ -165,9 +165,12 @@
 
                         <Button x:Name="btngis4BPlAN" Click="btngis4BPlAN_Click" Margin="15,0,15,10" 
                                 IsEnabled="False">B-Plan im GIS</Button>
-                        <ComboBox x:Name="cmbbplPDF" SelectionChanged="cmbbplPDF_SelectionChanged"  
-HorizontalAlignment="Left" Height="25" IsDropDownOpen="False"    FontSize="10"
-                   />
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock x:Name="tbAnzahlBplanPDFs" Width="100" Padding="5" Margin="20,0,10,0"/>
+                            <ComboBox x:Name="cmbbplPDF" SelectionChanged="cmbbplPDF_SelectionChanged"  
+                                    HorizontalAlignment="Left" Height="25" IsDropDownOpen="False"    FontSize="10"
+                                                       />
+                        </StackPanel>
                     </StackPanel>
                 </TabItem>
                 <TabItem Name="tbitemTest" Header="__">

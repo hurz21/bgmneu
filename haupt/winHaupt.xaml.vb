@@ -573,6 +573,7 @@ Public Class winHaupt
             cmbbplPDF.SelectedValuePath = "myindex"
             cmbbplPDF.IsDropDownOpen = True
 
+            tbAnzahlBplanPDFs.Text = "Anhänge: " & bplanPDFListe.Count
 
 
         Catch ex As Exception
