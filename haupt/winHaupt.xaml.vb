@@ -481,7 +481,7 @@ Public Class winHaupt
     End Sub
 
     Private Sub cmbGemeinden2_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
-        ' SELECT *  FROM [LKOF_Bearb].[dbo].[tbl_mdat_datensatz] where kategorie_guid_Baulasten='F52CBA15-FAFF-4EDD-BBD3-B821920F1360' and text1 ='Seligenstadt'
+        ' SELECT *  FROM [LKOF_Bearb].[dbo].[tbl_mdat_datensatz] where kategorie_guid='F52CBA15-FAFF-4EDD-BBD3-B821920F1360' and text1 ='Seligenstadt'
         e.Handled = True
         If Not istgeladen Then Exit Sub
     End Sub
@@ -495,7 +495,7 @@ Public Class winHaupt
         Dim bplanListe As New List(Of myComboBoxItem)
         Try
 
-            ' SELECT *  FROM [LKOF_Bearb].[dbo].[tbl_mdat_datensatz] where kategorie_guid_Baulasten='F52CBA15-FAFF-4EDD-BBD3-B821920F1360' and text1 ='Seligenstadt'
+            ' SELECT *  FROM [LKOF_Bearb].[dbo].[tbl_mdat_datensatz] where kategorie_guid='F52CBA15-FAFF-4EDD-BBD3-B821920F1360' and text1 ='Seligenstadt'
             bplanListe = tools.sucheNachBplaenen(gemavalue.ToString, tbbplantfilter.Text, kategorie_guid_Bplaene)
             cmbbplaene.ItemsSource = bplanListe
             cmbbplaene.DisplayMemberPath = "mySttring"
@@ -514,7 +514,7 @@ Public Class winHaupt
         Dim bplanListe As New List(Of myComboBoxItem)
         Try
 
-            ' SELECT *  FROM [LKOF_Bearb].[dbo].[tbl_mdat_datensatz] where kategorie_guid_Baulasten='F52CBA15-FAFF-4EDD-BBD3-B821920F1360' and text1 ='Seligenstadt'
+            ' SELECT *  FROM [LKOF_Bearb].[dbo].[tbl_mdat_datensatz] where kategorie_guid='F52CBA15-FAFF-4EDD-BBD3-B821920F1360' and text1 ='Seligenstadt'
             bplanListe = tools.sucheNachBplaenen(gemavalue.ToString, tbbplantfilter.Text, kategorie_guid_Bplaene)
             cmbbplaene.ItemsSource = bplanListe
             cmbbplaene.DisplayMemberPath = "mySttring"

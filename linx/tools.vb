@@ -28,7 +28,7 @@ Module tools
     'Public srv_unc_path As String = "\\gis\gdvell"
 
     'neu ingrada
-    'SELECT * FROM [LKOF_Bearb].[dbo].[tbl_mdat_datensatz] where kategorie_guid_Baulasten='88AFE39F-78FC-4053-BE6D-315E3745CF45'    '
+    'SELECT * FROM [LKOF_Bearb].[dbo].[tbl_mdat_datensatz] where kategorie_guid='88AFE39F-78FC-4053-BE6D-315E3745CF45'    '
     Public srv_host_web As String = "https://gis.kreis-of.de/LKOF/asp/main.asp"
     Public srv_host As String = "KH-W-INGRADA"
     'Public srv_schema As String = "paradigma_userdata"
@@ -733,7 +733,7 @@ Module tools
         gemeinde(11) = "11;Rodgau                             "
         gemeinde(12) = "12;Rödermark                          "
         gemeinde(13) = "13;Seligenstadt                       "
-        gemeinde(14) = "0 ;                          "
+        'gemeinde(14) = "0 ;                          "
 
     End Function
 
@@ -1549,7 +1549,7 @@ Module tools
         Dim liste As New List(Of myComboBoxItem)
         Dim bpl As myComboBoxItem
         Dim hinweis As String = ""
-        ' SELECT *  FROM [LKOF_Bearb].[dbo].[tbl_mdat_datensatz] where kategorie_guid_Baulasten='F52CBA15-FAFF-4EDD-BBD3-B821920F1360' and text1 ='Seligenstadt'
+        ' SELECT *  FROM [LKOF_Bearb].[dbo].[tbl_mdat_datensatz] where kategorie_guid='F52CBA15-FAFF-4EDD-BBD3-B821920F1360' and text1 ='Seligenstadt'
         Try
             l(" MOD ---------------------- anfang")
             l("getSerialFromBasis---------------------- anfang")

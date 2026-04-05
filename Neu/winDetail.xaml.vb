@@ -897,7 +897,7 @@ Public Class winDetail
             " int1=" & bl.probaugNotationFST.flur & ", int2=" & bl.probaugNotationFST.zaehler & ", " &
             " int3=" & bl.probaugNotationFST.nenner & ", int4=" & bl.probaugNotationFST.gemcode & ", " &
             " memo='" & mmemo & "', tooltip='" & tooltip & "' " &
-            " where kategorie_guid_Baulasten='" & kategorie_guid_Baulasten & "' " &
+            " where kategorie_guid='" & kategorie_guid_Baulasten & "' " &
             " and text3='" & bl.blattnr & "' " &
             " and text2='" & bl.baulastnr & "' "
 

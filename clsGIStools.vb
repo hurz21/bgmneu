@@ -142,7 +142,7 @@ Public Class clsGIStools
             l("getSerialFromBasis---------------------- anfang")
             'fstREC.mydb.SQL = "select * from " & tools.srv_schema & "." & tools.srv_tablename & " where jahr_blattnr ='" & BaulastNR & "' order by gemcode, flur, zaehler, nenner"
             fstREC.mydb.SQL = "SELECT * FROM [LKOF_Bearb].[dbo].[tbl_mdat_datensatz]" &
-                         " where kategorie_guid_Baulasten='" & kategorie_guid & "' " &
+                         " where kategorie_guid='" & kategorie_guid & "' " &
                          " and text3='" & BaulastNR & "' order by text8, int1, int2, int3"
 
 
@@ -299,7 +299,7 @@ Public Class clsGIStools
             l("tbStrasseFilter " & tbStrasseFilter)
 
             'fstREC.mydb.SQL = "SELECT * FROM [LKOF_Bearb].[dbo].[tbl_mdat_datensatz]" &
-            '             " where kategorie_guid_Baulasten='" & kategorie_guid_Baulasten & "' " &
+            '             " where kategorie_guid='" & kategorie_guid & "' " &
             '             " and text3='" & BaulastNR & "' order by text8, int1, int2, int3"
 
 
