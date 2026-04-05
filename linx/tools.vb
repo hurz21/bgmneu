@@ -2,6 +2,7 @@
 
 
 Module tools
+    Public gisLogouten As Boolean = True
     Public historyFile As String = "history.txt"
     Public aktbplan As New clsBplan
     Public maxItems As Integer = 20
@@ -1169,6 +1170,11 @@ Module tools
         Dim themen As String
         themen = tools.getthemen("")
         'theme=BauenUndUmwelt,Eigene%20Daten,Grenzen,Liegenschaften
+        Dim logout = "https://gis.kreis-of.de/LKOF/asp/login.asp?logout=true&m=1"
+        If gisLogouten Then
+            Process.Start(logout)
+            Threading.Thread.Sleep(1000)
+        End If
         If IsNumeric(baulastblatt) Then
             url = "https://gis.kreis-of.de/LKOF/asp/main.asp?" & themen & "&app=sp_mdat&lay=sp_mdat_0010_F&fld=text3&typ=string&val=" & baulastblatt & "&skipwelcome=true"
             Process.Start(url)
@@ -1378,9 +1384,14 @@ Module tools
             zwischen = baulast
             My.Computer.Clipboard.SetText(zwischen)
             If lokfkzliste.Length > 1 Then
-                'url = makeurl4FST("https://gis.kreis-of.de/LKOF/asp/main.asp?", flurstueckskennzeichen)
-                'url = "https://gis.kreis-of.de/LKOF/extensions/logout.asp?removeLostSession=true"
-                'Process.Start(url)
+
+                Dim logout = "https://gis.kreis-of.de/LKOF/asp/login.asp?logout=true&m=1"
+                If gisLogouten Then
+                    Process.Start(logout)
+                    Threading.Thread.Sleep(1000)
+                End If
+
+
                 url = makeurl4FST("https://gis.kreis-of.de/LKOF/asp/main.asp?", lokfkzliste)
                 url = url.Replace("?&", "?").Replace("&&", "&")
                 l("url " & url)

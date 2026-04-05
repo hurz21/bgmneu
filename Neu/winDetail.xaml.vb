@@ -378,6 +378,11 @@ Public Class winDetail
                     Else
                         lokfkzliste = lokfkzliste & "," & fkztemp
                     End If
+                    Dim logout = "https://gis.kreis-of.de/LKOF/asp/login.asp?logout=true&m=1"
+                    If gisLogouten Then
+                        Process.Start(logout)
+                        Threading.Thread.Sleep(1000)
+                    End If
 
                     url = tools.makeurl4FST("https://gis.kreis-of.de/LKOF/asp/main.asp?", lokfkzliste)
                     l("url " & url)
@@ -950,5 +955,9 @@ Public Class winDetail
 
         url = baseurl & "?" & themen & "&app=sp_lieg&obj=flu&fld=flurstueckskennzeichen&typ=string&val=" & flurstueckkennzeichen & "&skipwelcome=true"
         Process.Start(url)
+    End Sub
+
+    Private Sub btnZumGIS_Click(sender As Object, e As Object)
+
     End Sub
 End Class

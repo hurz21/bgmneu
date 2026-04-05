@@ -67,19 +67,12 @@
                             </Button>
                             <Button Name="btnBaulastImGIS" Margin="15" Click="btnBaulastImGIS_Click" Content="Baulast im GIS"  
            ToolTip="zeigt unmittelbar die Baulast im GIS an"/>
-                            <!--<Button Name="btnBaulast4FST" Margin="5" Click="btnBaulast4FST_Click" 
-          IsEnabled="False" Visibility="Collapsed">Baulast zum Flurstück
-                                </Button>-->
-
-                            <!--<Button Name="btnBaulastdisplay"  Click="btnBaulastdisplay_Click"
-          IsEnabled="False">Baulast anzeigen
-
-                                </Button>-->
+         
 
                         </StackPanel>
                     </StackPanel>
                 </TabItem>
-                <TabItem Name="tabadr" Header="Adresse" FontSize="9">
+                <TabItem Name="tabadr" Header="Adresse" FontSize="9" Height="26" VerticalAlignment="Top">
                     <StackPanel Height="277">
                         <StackPanel Orientation="Horizontal" >
                             <Label Width="75" FontSize="10">Gemeinde:</Label>
@@ -173,8 +166,9 @@
                         <Button x:Name="btngis4BPlAN" Click="btngis4BPlAN_Click" Margin="15" IsEnabled="False">B-Plan im GIS</Button>
                     </StackPanel>
                 </TabItem>
-                <TabItem Name="tbitemTest" Header="test">
+                <TabItem Name="tbitemTest" Header="__">
                     <!--<wv2:WebView2 x:Name="MyWebView" Visibility="Visible" Height="200" />-->
+                    <CheckBox Name="chkbImmerLogouten" IsChecked="True" Click="chkbImmerLogouten_Click">Vor GIS-Aufruf alte Sitzung beenden</CheckBox>
                 </TabItem>
             </TabControl>
 

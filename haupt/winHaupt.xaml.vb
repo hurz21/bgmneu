@@ -34,7 +34,9 @@ Public Class winHaupt
         tbFlur.Text = flur
         tbZaehler.Text = zaehler
         tbnenner.Text = nenner
-
+        Dim stored = My.Settings.ImmerLogouten ' Boolean (Default: True)
+        chkbImmerLogouten.IsChecked = stored
+        gisLogouten = stored
 
 
         If isAutho() Then
@@ -97,7 +99,7 @@ Public Class winHaupt
         Return Environment.UserName.ToLower = "benes_c" Or
                 Environment.UserName.ToLower = "hartmann_s" Or
                 Environment.UserName.ToLower = "briese_j" Or
-                Environment.UserName.ToLower = "feinen_jl" Or
+                Environment.UserName.ToLower = "feinen_j" Or
                 Environment.UserName.ToLower = "thieme_m" Or
                 Environment.UserName.ToLower = "zahnlückenpimpf" Or
                 Environment.UserName.ToLower = "neis_h"
@@ -561,8 +563,6 @@ Public Class winHaupt
     End Sub
 
     Private Async Sub btngis4BPlAN_Click(sender As Object, e As RoutedEventArgs)
-        ' Pfad/Umgebung: WebView2-Runtime erforderlich
-        'Await MyWebView.EnsureCoreWebView2Async()
         e.Handled = True
         'https://gis.kreis-of.de/LKOF/asp/main.asp?&app=sp_mdat&lay=sp_mdat_0013_F&fld=ident&typ=string&val=1674&skipwelcome=true  
         'https://gis.kreis-of.de/LKOF/asp/main.asp?app=sp_mdat&lay=sp_mdat_0013_F&fld=ident&typ=string&val=1674&skipwelcome=true
@@ -572,10 +572,10 @@ Public Class winHaupt
 
         Dim logout = "https://gis.kreis-of.de/LKOF/asp/login.asp?logout=true&m=1"
         url = logout
-        'AddHandler MyWebView.CoreWebView2.NavigationCompleted, AddressOf NavigationCompletedHandler
-        'MyWebView.Source = New Uri(url)
-        Process.Start(logout)
-        Threading.Thread.Sleep(1000)
+        If gisLogouten Then
+            Process.Start(logout)
+            Threading.Thread.Sleep(1000)
+        End If
         url = tools.bplanAlsObjImGisZeigen(aktbplan.ident)
         Process.Start(url)
 
@@ -585,6 +585,14 @@ Public Class winHaupt
     Private Sub cmbGemarkungen_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
         e.Handled = True
 
+    End Sub
+
+    Private Sub chkbImmerLogouten_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+        Dim isChecked = If(chkbImmerLogouten.IsChecked, True, False)
+        gisLogouten = isChecked
+        My.Settings.ImmerLogouten = isChecked
+        My.Settings.Save()
     End Sub
 
     'Private Sub ButtonSaveHistory_Click(sender As Object, e As RoutedEventArgs)
