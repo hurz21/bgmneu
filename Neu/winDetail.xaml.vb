@@ -373,7 +373,7 @@ Public Class winDetail
                         Threading.Thread.Sleep(1000)
                     End If
 
-                    url = tools.makeurl4FST("https://gis.kreis-of.de/LKOF/asp/main.asp?", lokfkzliste)
+                    url = tools.makeurl4FST("https://gis.kreis-of.de/LKOF/asp/main.asp?", lokfkzliste, tools.themendefinitionsdatei)
                     l("url " & url)
                     Process.Start(url)
                     l(tools.FSTausGISListe(0).Flurstuecksskennzeichen)
@@ -755,7 +755,7 @@ Public Class winDetail
 
     Private Sub btnZumGISOBJ_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
-        baulastAlsObjImGisZeigen(tbBaulastNr.Text.Trim)
+        baulastAlsObjImGisZeigen(tbBaulastNr.Text.Trim, tools.themendefinitionsdatei)
         'Dim url As String
         ''  https://gis.kreis-of.de/LKOF/asp/main.asp?app=sp_mdat&lay=sp_mdat_0010_F&fld=text3&typ=string&val=1001&skipwelcome=true
         ''91197
@@ -918,7 +918,7 @@ Public Class winDetail
     Private Sub starteGISueberBLObjekt(baseurl As String)
         Dim url = ""
         Dim themen As String
-        themen = tools.getthemen("").Trim
+        themen = tools.getthemen("", tools.themendefinitionsdatei).Trim
 
         Dim logout = baseurl & "/login.asp?logout=true&m=1"
         Process.Start(logout)
@@ -930,7 +930,7 @@ Public Class winDetail
         '"https://gis.kreis-of.de/LKOF/asp/login.asp
         Dim url = ""
         Dim themen As String
-        themen = tools.getthemen("").Trim
+        themen = tools.getthemen("", tools.themendefinitionsdatei).Trim
 
         Dim logout = "https://gis.kreis-of.de/LKOF/asp/login.asp?logout=true&m=1"
         'Process.Start(logout)

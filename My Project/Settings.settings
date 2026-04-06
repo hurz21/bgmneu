@@ -5,5 +5,8 @@
     <Setting Name="ImmerLogouten" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="Themendatei" Type="System.String" Scope="User">
+      <Value Profile="(Default)">themendateiBaulasten.txt</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

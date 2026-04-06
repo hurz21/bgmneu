@@ -2,6 +2,7 @@
 
 
 Module tools
+    Public themendefinitionsdatei As String = "themendateiBaulasten.txt"
     Public gisLogouten As Boolean = True
     Public historyFile As String = "history.txt"
     Public aktbplan As New clsBplan
@@ -1147,10 +1148,10 @@ Module tools
     '        Return thema
     '    End Try
     'End Function
-    Public Function bplanAlsObjImGisZeigen(ident As Integer) As String
+    Public Function bplanAlsObjImGisZeigen(ident As Integer, themendatei As String) As String
         Dim url As String
         Dim themen As String
-        themen = tools.getthemen("")
+        themen = tools.getthemen("", themendatei)
 
         'url = "https://gis.kreis-of.de/LKOF/extensions/logout.asp?removeLostSession=true"
 
@@ -1167,10 +1168,10 @@ Module tools
             Return ""
         End If
     End Function
-    Public Sub baulastAlsObjImGisZeigen(baulastblatt As String)
+    Public Sub baulastAlsObjImGisZeigen(baulastblatt As String, themendatei As String)
         Dim url As String
         Dim themen As String
-        themen = tools.getthemen("")
+        themen = tools.getthemen("", themendatei)
         'theme=BauenUndUmwelt,Eigene%20Daten,Grenzen,Liegenschaften
         Dim logout = "https://gis.kreis-of.de/LKOF/asp/login.asp?logout=true&m=1"
         If gisLogouten Then
@@ -1184,23 +1185,24 @@ Module tools
             MsgBox("Die BaulastNr. '" & baulastblatt & "' ist ungültig!")
         End If
     End Sub
-    Friend Function getthemen(url As String) As String
+    Friend Function getthemen(url As String, themendefinitionsdatei As String) As String
         Dim exepath, themendatei As String
         Dim theme As String
+        Dim a() As String
         Try
             exepath = AppDomain.CurrentDomain.BaseDirectory
 #If DEBUG Then
             exepath = "W:\diverses"
 #End If
             l("exepath: " & exepath)
-            themendatei = IO.Path.Combine(exepath, "themendateiBaulasten.txt")
+            themendatei = IO.Path.Combine(exepath, themendefinitionsdatei)
             l("themendatei: " & themendatei)
             Dim fi As New IO.FileInfo(themendatei)
             If fi.Exists Then
                 theme = IO.File.ReadAllText(themendatei)
                 l("eingelesen: " & theme)
-
-                Return theme
+                a = theme.Split(";"c)
+                Return a(1).Trim
             Else
                 l("fehler themendatei: ''")
                 Return ""
@@ -1394,7 +1396,7 @@ Module tools
                 End If
 
 
-                url = makeurl4FST("https://gis.kreis-of.de/LKOF/asp/main.asp?", lokfkzliste)
+                url = makeurl4FST("https://gis.kreis-of.de/LKOF/asp/main.asp?", lokfkzliste, tools.themendefinitionsdatei)
                 url = url.Replace("?&", "?").Replace("&&", "&")
                 l("url " & url)
                 Process.Start(url)
@@ -1411,12 +1413,14 @@ Module tools
             l(ex.ToString)
         End Try
     End Sub
-    Public Function makeurl4FST(baseurl As String, flurstueckskennzeichen As String) As String
+    Public Function makeurl4FST(baseurl As String, flurstueckskennzeichen As String, themendatei As String) As String
         l("in makurl")
         Try
-            '&skipwelcome=true
+            Dim themen As String
+            themen = tools.getthemen("", themendatei)
+
             baseurl = baseurl & "app=sp_lieg&obj=flu&fld=flurstueckskennzeichen&typ=string&val="
-            baseurl = baseurl & flurstueckskennzeichen & "&skipwelcome=true"
+            baseurl = baseurl & flurstueckskennzeichen & "&" & themen & "&skipwelcome=true"
             baseurl = baseurl.Replace("?&", "?").Replace("&&", "&")
             Return baseurl
             'https://gis.kreis-of.de/LKOF/asp/main.asp?app=sp_lieg&obj=flu&fld=flurstueckskennzeichen&typ=string&val=060729-005-00490/0000.000&skipwelcome=true

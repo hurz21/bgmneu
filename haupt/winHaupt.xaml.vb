@@ -1,6 +1,7 @@
 ﻿Imports System.ComponentModel
 Imports System.Security.Policy
 Imports DocumentFormat.OpenXml.Drawing
+Imports DocumentFormat.OpenXml.Spreadsheet
 
 
 Public Class winHaupt
@@ -34,9 +35,14 @@ Public Class winHaupt
         tbFlur.Text = flur
         tbZaehler.Text = zaehler
         tbnenner.Text = nenner
+
         Dim stored = My.Settings.ImmerLogouten ' Boolean (Default: True)
         chkbImmerLogouten.IsChecked = stored
         gisLogouten = stored
+
+
+        tools.themendefinitionsdatei = My.Settings.Themendatei
+
 
 
         If isAutho() Then
@@ -56,6 +62,23 @@ Public Class winHaupt
         katasterGemarkungslist = splitKatasterGemarkung()
         Dim gameindeitems As New List(Of myComboBoxItem)
         Dim gamarkungsitems As New List(Of myComboBoxItem)
+        Dim themendateien As New List(Of myComboBoxItem)
+
+        themendateien.Add(New myComboBoxItem With {.mySttring = "Baulasten", .myindex = "themendateiBaulasten.txt"})
+        themendateien.Add(New myComboBoxItem With {.mySttring = "Bauaufsicht", .myindex = "themendateiBauaufsicht.txt"})
+        themendateien.Add(New myComboBoxItem With {.mySttring = "Denkmalschutz", .myindex = "themendateiDenkmalschutz.txt"})
+        themendateien.Add(New myComboBoxItem With {.mySttring = "Umwelt", .myindex = "themendateiUmwelt.txt"})
+        themendateien.Add(New myComboBoxItem With {.mySttring = "Immissionsschutz", .myindex = "themendateiImmissionsschutz.txt"})
+        themendateien.Add(New myComboBoxItem With {.mySttring = "UNB", .myindex = "themendateiUNB.txt"})
+        themendateien.Add(New myComboBoxItem With {.mySttring = "UWBB", .myindex = "themendateiUWBB.txt"})
+
+        cmbThemendatei.ItemsSource = themendateien
+        cmbThemendatei.DisplayMemberPath = "mySttring"
+        cmbThemendatei.SelectedValuePath = "myindex"
+        cmbThemendatei.IsDropDownOpen = False
+        cmbThemendatei.SelectedValue = My.Settings.Themendatei
+
+
 
         For Each gema As myComboBoxItem In katasterGemarkungslist
             gamarkungsitems.Add(New myComboBoxItem With {.mySttring = gema.mySttring, .myindex = gema.myindex})
@@ -285,7 +308,7 @@ Public Class winHaupt
         'https://gis.kreis-of.de/LKOF/asp/main.asp?app=sp_mdat&lay=sp_mdat_0010_F&fld=text3&typ=string&val=10001&skipwelcome=true
         e.Handled = True
         tools.writeBLBlattCookie(tbblnr.Text.Trim, "bgm_blattnr_cookie.txt")
-        baulastAlsObjImGisZeigen(tbblnr.Text.Trim)
+        baulastAlsObjImGisZeigen(tbblnr.Text.Trim, tools.themendefinitionsdatei)
     End Sub
 
     Private Sub btnsucheeigentumer_Click(sender As Object, e As RoutedEventArgs)
@@ -593,7 +616,7 @@ Public Class winHaupt
             Process.Start(logout)
             Threading.Thread.Sleep(1000)
         End If
-        url = tools.bplanAlsObjImGisZeigen(aktbplan.ident)
+        url = tools.bplanAlsObjImGisZeigen(aktbplan.ident, tools.themendefinitionsdatei)
         Process.Start(url)
     End Sub
 
@@ -635,6 +658,28 @@ Public Class winHaupt
             End If
         Catch ex As Exception
             l("cmbbplPDF_SelectionChanged " & ex.ToString)
+        End Try
+    End Sub
+
+    Private Sub cmbThemendatei_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
+        e.Handled = True
+        If Not istgeladen Then Exit Sub
+
+        Dim dateiitem As myComboBoxItem
+        Dim fi As IO.FileInfo
+        Dim themendatei As String
+        Dim immer_aus_dem_cache_die_bplanpdfs As Boolean = True
+        Try
+            dateiitem = CType(cmbThemendatei.SelectedItem, myComboBoxItem)
+            themendatei = dateiitem.myindex
+            tools.themendefinitionsdatei = themendatei.Trim
+
+
+            My.Settings.Themendatei = themendatei.Trim
+            My.Settings.Save()
+
+        Catch ex As Exception
+            l("cmbThemendatei_SelectionChanged " & ex.ToString)
         End Try
     End Sub
 

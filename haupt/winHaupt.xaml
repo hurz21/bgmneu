@@ -101,7 +101,7 @@
                         </StackPanel>
 
 
-                        <Button x:Name="btnwordADR" Click="btnwordADR_Click"   Margin="15"
+                        <Button x:Name="btnwordADR" Click="btnwordADR_Click" Style="{StaticResource lessButton}"  Margin="15"
                                     IsEnabled="False">Eigentümer-Word-Datei</Button>
                         <Button x:Name="btngis4adr" Click="btngis4adr_Click"  Margin="15,0,15,0"
                                     IsEnabled="False">Adresse im GIS</Button>
@@ -126,7 +126,8 @@
                             <Label Width="75" FontSize="10">Nenner:</Label>
                             <TextBox Name="tbnenner" Width="180"></TextBox>
                         </StackPanel>
-                        <Button x:Name="btnsucheeigentumer" Click="btnsucheeigentumer_Click" Margin="15"
+                        <Button x:Name="btnsucheeigentumer" Click="btnsucheeigentumer_Click"   Margin="15"
+                                Style="{StaticResource lessButton}" 
                >Eigentümer-Word-Datei</Button>
                         <Button x:Name="btngis4fst" Click="btngis4fst_click"  Margin="15,0,15,0">Flurstück im GIS</Button>
 
@@ -173,8 +174,26 @@
                         </StackPanel>
                     </StackPanel>
                 </TabItem>
-                <TabItem Name="tbitemTest" Header="__">
-                    <CheckBox Name="chkbImmerLogouten" IsChecked="True" Click="chkbImmerLogouten_Click">Vor GIS-Aufruf alte Sitzung beenden</CheckBox>
+                <TabItem>
+                    <TabItem.Header>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE115;" FontSize="9" Margin="0,0,6,0"/>
+                     
+                        </StackPanel>
+                    </TabItem.Header>
+                    <!-- Inhalt -->
+
+                    <StackPanel>
+
+                        <CheckBox Name="chkbImmerLogouten" IsChecked="True" Margin="5"
+                              Click="chkbImmerLogouten_Click">Vor GIS-Aufruf alte Sitzung beenden</CheckBox>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Padding="5,10,0,0">Themen:</TextBlock>
+                            <ComboBox x:Name="cmbThemendatei" HorizontalAlignment="Left" 
+                 Height="25" Width="180" Margin="5" FontSize="10"
+                                  SelectionChanged="cmbThemendatei_SelectionChanged"/>
+                        </StackPanel>
+                    </StackPanel>
                 </TabItem>
             </TabControl>
 
