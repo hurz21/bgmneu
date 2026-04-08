@@ -67,7 +67,7 @@ Module tools
     Public gem(37) As String
     Public gemeinde(13) As String
     Public katasterGem(35) As String
-    Public rawList As New List(Of clsBaulast)
+    Public rawListOfclsBaulast As New List(Of clsBaulast)
     Public list4Geloscht As New List(Of clsBaulast)
     Public fstREC As New clsDBspecMSSQL
     Public anzahltiff, anzahl_dateiexitiert, anzahl_blattNrIst0, anzahlKatasterFormellOK, anzahlGeloschte, vierergeloescht, anzahl_mitSerial As Integer
@@ -907,7 +907,7 @@ Module tools
         Return True
         Try
             l("loescheEintragInRawList---------------------- anfang")
-            For Each lok As clsBaulast In rawList
+            For Each lok As clsBaulast In rawListOfclsBaulast
                 If lok.bauortNr = geloescht.bauortNr And
                    lok.blattnr = geloescht.blattnr And
                    lok.geloescht = False Then
@@ -981,7 +981,7 @@ Module tools
                         "Kat. zaehler: " & trenn)
 
             l("getAllSerials---------------------- anfang 2")
-            For Each lok As clsBaulast In rawList
+            For Each lok As clsBaulast In rawListOfclsBaulast
                 Console.WriteLine("getAllSerials " & iz)
                 If lok.blattnr = "90764" Then
                     Debug.Print("")
@@ -1196,6 +1196,8 @@ Module tools
 #End If
             l("exepath: " & exepath)
             themendatei = IO.Path.Combine(exepath, themendefinitionsdatei)
+            l("themendatei: " & themendatei)
+            themendatei = themendatei.Replace("bgmingrada\", "")
             l("themendatei: " & themendatei)
             Dim fi As New IO.FileInfo(themendatei)
             If fi.Exists Then

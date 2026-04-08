@@ -53,7 +53,7 @@ Public Class winHaupt
             'MessageBox.Show("Sie haben keine Berechtigung für diese Anwendung. Abbruch!")
             'Close() 
             stpAdminOnly.Visibility = Visibility.Visible
-            tabEig.SelectedIndex = 3
+            tabEig.SelectedIndex = 1
             btnEdit.IsEnabled = False
         End If
         initKatasterGemarkungtext()
@@ -122,7 +122,7 @@ Public Class winHaupt
         Return Environment.UserName.ToLower = "benes_c" Or
                 Environment.UserName.ToLower = "hartmann_s" Or
                 Environment.UserName.ToLower = "briese_j" Or
-                Environment.UserName.ToLower = "feinen_jd" Or
+                Environment.UserName.ToLower = "feinen_j" Or
                 Environment.UserName.ToLower = "thieme_m" Or
                 Environment.UserName.ToLower = "zahnlückenpimpf" Or
                 Environment.UserName.ToLower = "neis_h"
@@ -404,7 +404,7 @@ Public Class winHaupt
             If tools.flurstueckExistiertImGis(loklist(0).flurstueckZuFKZ) Then
                 gisFuerProbaugFlurst(tbblnr.Text.Trim, loklist)
             Else
-                MsgBox("Das Flurstück exisitert so nicht im GIS!")
+                MsgBox("Das Flurstück exisitert nicht im GIS!")
             End If
         Catch ex As Exception
             l("fehler in btngis4fst_click " & ex.ToString)

@@ -40,11 +40,11 @@ Public Class clsGIStools
             Return Nothing
         End Try
     End Function
-    Shared Function fstGISdt2ObjListe() As List(Of clsFlurstueck)
+    Shared Function fstMDATdt2ObjListe() As List(Of clsFlurstueck)
         Dim tfst As New clsFlurstueck
         Dim liste As New List(Of clsFlurstueck)
         Try
-            l(" MOD fstGISdt2ObjListe anfang")
+            l(" MOD fstMDATdt2ObjListe anfang")
             For i = 0 To fstREC.dt.Rows.Count - 1
                 tfst = New clsFlurstueck
                 tfst.GUID = ((fstREC.dt.Rows(i).Item("guid")).ToString.Trim)
@@ -78,9 +78,9 @@ Public Class clsGIStools
                 liste.Add(tfst)
             Next
             Return liste
-            l(" MOD fstGISdt2ObjListe ende")
+            l(" MOD fstMDATdt2ObjListe ende")
         Catch ex As Exception
-            l("Fehler in fstGISdt2ObjListe: " & ex.ToString())
+            l("Fehler in fstMDATdt2ObjListe: " & ex.ToString())
             Return liste
         End Try
     End Function
@@ -89,7 +89,7 @@ Public Class clsGIStools
         Dim tfst As New clsFlurstueck
         Dim liste As New List(Of clsFlurstueck)
         Try
-            l(" MOD fstGISdt2ObjListe anfang")
+            l(" MOD fstMDATdt2ObjListe anfang")
             For i = 0 To fSTausPROBAUGListe.Count - 1
                 tfst = New clsFlurstueck
                 tfst.gemcode = CInt(fSTausPROBAUGListe.Item(i).gemcode)
@@ -106,9 +106,9 @@ Public Class clsGIStools
                 liste.Add(tfst)
             Next
             Return liste
-            l(" MOD fstGISdt2ObjListe ende")
+            l(" MOD fstMDATdt2ObjListe ende")
         Catch ex As Exception
-            l("Fehler in fstGISdt2ObjListe: " & ex.ToString())
+            l("Fehler in fstMDATdt2ObjListe: " & ex.ToString())
             Return liste
         End Try
     End Function
@@ -135,6 +135,12 @@ Public Class clsGIStools
             Return "Fehler in getGISrecord2: " & ex.ToString()
         End Try
     End Function
+    ''' <summary>
+    ''' liefert die DATATABLE aus MDAT zur baulast
+    ''' </summary>
+    ''' <param name="BaulastNR"></param>
+    ''' <param name="kategorie_guid"></param>
+    ''' <returns></returns>
     Friend Shared Function getBaulastFromBaulastMDAT(BaulastNR As Integer, kategorie_guid As String) As Boolean
         Dim hinweis As String
         Try
@@ -144,8 +150,6 @@ Public Class clsGIStools
             fstREC.mydb.SQL = "SELECT * FROM [LKOF_Bearb].[dbo].[tbl_mdat_datensatz]" &
                          " where kategorie_guid='" & kategorie_guid & "' " &
                          " and text3='" & BaulastNR & "' order by text8, int1, int2, int3"
-
-
             l(fstREC.mydb.SQL)
             hinweis = fstREC.getDataDT()
             If fstREC.dt.Rows.Count < 1 Then

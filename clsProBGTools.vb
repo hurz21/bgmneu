@@ -1,7 +1,13 @@
 ﻿Imports System.Data
 Public Class clsProBGTools
     Shared Property ProbauGIstOracle As Boolean = False
-
+    ''' <summary>
+    ''' rawListOfclBaulast wird um die katasterdaten erweitert
+    ''' ,\n bei abbruch : es gibt keine daten hierzu in probaug
+    ''' </summary>
+    ''' <param name="baulastblattnr"></param>
+    ''' <param name="quelleSQL"></param>
+    ''' <param name="abbruch"></param>
     Public Shared Sub holeProBaugDaten(baulastblattnr As Integer, quelleSQL As String, ByRef abbruch As Boolean)
         Dim sql, sqlgeschlossen As String
         abbruch = False
@@ -28,44 +34,45 @@ Public Class clsProBGTools
 
             'sqlgeschlossen = "SELECT  feld3 from obj01bla "
             sqlgeschlossen = sql
-            initBaulastBlattnr(sql, sqlgeschlossen) ' liefert balistDT1 und geschlossenDT as dt
+            initBaulastBlattnr(sql, sqlgeschlossen) ' liefert rawListOfclsBaulast !!!!
 
-            If rawList Is Nothing Then
+            If rawListOfclsBaulast Is Nothing Then
                 abbruch = True
                 Exit Sub
             End If
-            Debug.Print(rawList.Count.ToString)
-            If rawList.Count < 1 Then
+            Debug.Print(rawListOfclsBaulast.Count.ToString)
+            If rawListOfclsBaulast.Count < 1 Then
 
                 MessageBox.Show("Probaug lieferte keine sauberen Daten zu BaulastBlattNr: " & baulastblattnr & "." & Environment.NewLine &
                                 "Ausweg: " & Environment.NewLine &
                                 "Bitte  " & Environment.NewLine &
                                 "- entweder   zuerst auf ProbauG-Seite in Ordnung bringen," & Environment.NewLine &
-                                "  oder    -falls sie die BL im GIS löschen wollen- :" & Environment.NewLine &
-                                "- Gehen sie im Hauptformular über den Knopf: 'Baulast im GIS'" & Environment.NewLine &
-                                "  und löschen Sie die Baulast im GIS !" & Environment.NewLine
+                                "  oder   " & Environment.NewLine &
+                                "- falls sie die Baulast im GIS löschen wollen:" & Environment.NewLine &
+                                "    -> Gehen sie im Hauptformular über den Knopf: 'Baulast im GIS'" & Environment.NewLine &
+                                "    -> und löschen Sie die Baulast im GIS !" & Environment.NewLine
                                 )
                 abbruch = True
                 Exit Sub
             Else
                 l("vor schlkeife ")
 
-                For i = 0 To rawList.Count - 1
-                    rawList(i).katFST.gemarkungstext = rawList(i).katFST.gemparms.gemcode2gemarkungstext(rawList(i).katFST.gemcode)
-                    rawList(i).katFST.fstueckKombi = rawList(i).katFST.buildFstueckkombi
-                    rawList(i).katFST.gueltig = rawList(i).gueltig
-                    rawList(i).katFST.gebucht = rawList(i).baulastnr
-                    rawList(i).katFST.Prefix = rawList(i).Prefix
-                    rawList(i).katFST.AzNr = rawList(i).AzNr
-                    rawList(i).katFST.AzJahr = rawList(i).AzJahr
-                    rawList(i).katFST.AzOG = rawList(i).AzOG
-                    rawList(i).katFST.Kennziffer_1 = rawList(i).Kennziffer_1
-                    rawList(i).katFST.Kennziffer_2 = rawList(i).Kennziffer_2
-                    rawList(i).katFST.Kennziffer_3 = rawList(i).Kennziffer_3
-                    rawList(i).katFST.Kennziffer_4 = rawList(i).Kennziffer_4
-                    FSTausPROBAUGListe.Add(rawList(i).katFST)
+                For i = 0 To rawListOfclsBaulast.Count - 1
+                    rawListOfclsBaulast(i).katFST.gemarkungstext = rawListOfclsBaulast(i).katFST.gemparms.gemcode2gemarkungstext(rawListOfclsBaulast(i).katFST.gemcode)
+                    rawListOfclsBaulast(i).katFST.fstueckKombi = rawListOfclsBaulast(i).katFST.buildFstueckkombi
+                    rawListOfclsBaulast(i).katFST.gueltig = rawListOfclsBaulast(i).gueltig
+                    rawListOfclsBaulast(i).katFST.gebucht = rawListOfclsBaulast(i).baulastnr
+                    rawListOfclsBaulast(i).katFST.Prefix = rawListOfclsBaulast(i).Prefix
+                    rawListOfclsBaulast(i).katFST.AzNr = rawListOfclsBaulast(i).AzNr
+                    rawListOfclsBaulast(i).katFST.AzJahr = rawListOfclsBaulast(i).AzJahr
+                    rawListOfclsBaulast(i).katFST.AzOG = rawListOfclsBaulast(i).AzOG
+                    rawListOfclsBaulast(i).katFST.Kennziffer_1 = rawListOfclsBaulast(i).Kennziffer_1
+                    rawListOfclsBaulast(i).katFST.Kennziffer_2 = rawListOfclsBaulast(i).Kennziffer_2
+                    rawListOfclsBaulast(i).katFST.Kennziffer_3 = rawListOfclsBaulast(i).Kennziffer_3
+                    rawListOfclsBaulast(i).katFST.Kennziffer_4 = rawListOfclsBaulast(i).Kennziffer_4
+                    FSTausPROBAUGListe.Add(rawListOfclsBaulast(i).katFST)
                 Next
-                'fst_lage = "= Lage: " & rawList(0).katFST.gemeindename & ", " & rawList(0).katFST.gemarkungstext
+                'fst_lage = "= Lage: " & rawListOfclsBaulast(0).katFST.gemeindename & ", " & rawListOfclsBaulast(0).katFST.gemarkungstext
             End If
             l(" MOD holeProBaugDaten ende")
         Catch ex As Exception
@@ -160,6 +167,12 @@ Public Class clsProBGTools
         End If
         Return geschlossenDT
     End Function
+    ''' <summary>
+    ''' liefert rawListOfclsBaulast
+    ''' </summary>
+    ''' <param name="sql"></param>
+    ''' <param name="sqlgeschlossen"></param>
+    ''' <returns></returns>
     Friend Shared Function initBaulastBlattnr(sql As String, sqlgeschlossen As String) As String
 
         'order nach laufnr
@@ -201,8 +214,8 @@ Public Class clsProBGTools
             ___showdispatcher("datentabelle " & balistDT1.Rows.Count & " baulasten eingelesen" & Environment.NewLine)
             ___showdispatcher("baulasten liste erstellen ")
 
-            rawList = dtnachobj(balistDT1, geschlossenDT)
-            If rawList Is Nothing Then
+            rawListOfclsBaulast = dtnachobj(balistDT1, geschlossenDT)
+            If rawListOfclsBaulast Is Nothing Then
                 MessageBox.Show("Die Probaug Daten dieser Baulast " & "sind nicht in Ordnung. " & vbCrLf &
                     "  " & vbCrLf &
                     "  " & vbCrLf &
@@ -215,14 +228,14 @@ Public Class clsProBGTools
             ___showdispatcher("baulasten liste jetzt erweitern ... ")
             ___showdispatcher("")
             l(" MOD initBaulastBlattnr 5")
-            objErweitern(rawList, anzahltiff, anzahl_dateiexitiert, anzahl_blattNrIst0) 'balist
+            objErweitern(rawListOfclsBaulast, anzahltiff, anzahl_dateiexitiert, anzahl_blattNrIst0) 'balist
             ___showdispatcher("prüfen ob katasterdaten Ok " & Environment.NewLine)
             l(" MOD initBaulastBlattnr 6")
-            istKatasterFormellOK(rawList, anzahlKatasterFormellOK)
+            istKatasterFormellOK(rawListOfclsBaulast, anzahlKatasterFormellOK)
             ___showdispatcher("prüfen ob katasterdaten Ok  - abgeschlossen" & Environment.NewLine)
             ___showdispatcher("Liste der als gelöscht markierten Objekte bilden" & Environment.NewLine)
             l(" MOD initBaulastBlattnr 7")
-            'list4Geloscht = tools.bildeGeloeschteListe(rawList, anzahlGeloschte)
+            'list4Geloscht = tools.bildeGeloeschteListe(rawListOfclsBaulast, anzahlGeloschte)
 
             ___showdispatcher("Liste der als gelöscht markierten Objekte  - abgeschlossen" & Environment.NewLine)
             ___showdispatcher("Alle als gelöscht markierten objekte löschen" & Environment.NewLine)
@@ -232,7 +245,7 @@ Public Class clsProBGTools
             Dim katnichtOKAberMitTiff_summe As String
             ___showdispatcher("Prüfen ob Baulasten mit Tiff aber ohne Katasterangaben " & Environment.NewLine)
             l(" MOD initBaulastBlattnr 9")
-            istKatnichtOKaberTiffVorhanden(rawList, katnichtOKAberMitTiff_summe)
+            istKatnichtOKaberTiffVorhanden(rawListOfclsBaulast, katnichtOKAberMitTiff_summe)
 
             ___showdispatcher("Prüfen ob Baulasten mit Tiff aber ohne Katasterangaben  - abgeschlossen" & Environment.NewLine)
             ___showdispatcher("baulasten liste jetzt erweitern - abgeschlossen " & Environment.NewLine)
@@ -290,20 +303,20 @@ Public Class clsProBGTools
             ___showdispatcher("datentabelle " & balistDT1.Rows.Count & " baulasten eingelesen" & Environment.NewLine)
             ___showdispatcher("baulasten liste erstellen ")
 
-            rawList = dtnachobj2(balistDT1, geschlossenDT)
+            rawListOfclsBaulast = dtnachobj2(balistDT1, geschlossenDT)
             l(" MOD initBaulastBlattnr 4")
             ___showdispatcher(" - abgeschlossen" & Environment.NewLine)
             ___showdispatcher("baulasten liste jetzt erweitern ... ")
             ___showdispatcher("")
             l(" MOD initBaulastBlattnr 5")
-            objErweitern(rawList, anzahltiff, anzahl_dateiexitiert, anzahl_blattNrIst0) 'balist
+            objErweitern(rawListOfclsBaulast, anzahltiff, anzahl_dateiexitiert, anzahl_blattNrIst0) 'balist
             ___showdispatcher("prüfen ob katasterdaten Ok " & Environment.NewLine)
             l(" MOD initBaulastBlattnr 6")
-            istKatasterFormellOK(rawList, anzahlKatasterFormellOK)
+            istKatasterFormellOK(rawListOfclsBaulast, anzahlKatasterFormellOK)
             ___showdispatcher("prüfen ob katasterdaten Ok  - abgeschlossen" & Environment.NewLine)
             ___showdispatcher("Liste der als gelöscht markierten Objekte bilden" & Environment.NewLine)
             l(" MOD initBaulastBlattnr 7")
-            'list4Geloscht = tools.bildeGeloeschteListe(rawList, anzahlGeloschte)
+            'list4Geloscht = tools.bildeGeloeschteListe(rawListOfclsBaulast, anzahlGeloschte)
 
             ___showdispatcher("Liste der als gelöscht markierten Objekte  - abgeschlossen" & Environment.NewLine)
             ___showdispatcher("Alle als gelöscht markierten objekte löschen" & Environment.NewLine)
@@ -313,7 +326,7 @@ Public Class clsProBGTools
             Dim katnichtOKAberMitTiff_summe As String
             ___showdispatcher("Prüfen ob Baulasten mit Tiff aber ohne Katasterangaben " & Environment.NewLine)
             l(" MOD initBaulastBlattnr 9")
-            istKatnichtOKaberTiffVorhanden(rawList, katnichtOKAberMitTiff_summe)
+            istKatnichtOKaberTiffVorhanden(rawListOfclsBaulast, katnichtOKAberMitTiff_summe)
 
             ___showdispatcher("Prüfen ob Baulasten mit Tiff aber ohne Katasterangaben  - abgeschlossen" & Environment.NewLine)
             ___showdispatcher("baulasten liste jetzt erweitern - abgeschlossen " & Environment.NewLine)
@@ -415,25 +428,25 @@ Public Class clsProBGTools
 
 
 
-            Debug.Print(rawList.Count.ToString)
-            If rawList.Count < 1 Then
+            Debug.Print(rawListOfclsBaulast.Count.ToString)
+            If rawListOfclsBaulast.Count < 1 Then
                 'MessageBox.Show("Probaug lieferte keine sauberen Daten zu BaulastBlattNr: " & baulastblattnr & ". Bitte zuerst auf ProbauG-Seite in Ordnung bringen.")
             Else
                 l("vor schlkeife ")
-                For i = 0 To rawList.Count - 1
-                    rawList(i).katFST.gemarkungstext = rawList(i).katFST.gemparms.gemcode2gemarkungstext(rawList(i).katFST.gemcode)
-                    rawList(i).katFST.fstueckKombi = rawList(i).katFST.buildFstueckkombi
-                    rawList(i).katFST.gueltig = rawList(i).gueltig
-                    rawList(i).katFST.gebucht = rawList(i).baulastnr
-                    rawList(i).katFST.Prefix = rawList(i).Prefix
-                    rawList(i).katFST.AzNr = rawList(i).AzNr
-                    rawList(i).katFST.AzJahr = rawList(i).AzJahr
-                    rawList(i).katFST.AzOG = rawList(i).AzOG
-                    rawList(i).katFST.Kennziffer_1 = rawList(i).Kennziffer_1
-                    rawList(i).katFST.Kennziffer_2 = rawList(i).Kennziffer_2
-                    rawList(i).katFST.Kennziffer_3 = rawList(i).Kennziffer_3
-                    rawList(i).katFST.Kennziffer_4 = rawList(i).Kennziffer_4
-                    FSTausPROBAUGListe.Add(rawList(i).katFST)
+                For i = 0 To rawListOfclsBaulast.Count - 1
+                    rawListOfclsBaulast(i).katFST.gemarkungstext = rawListOfclsBaulast(i).katFST.gemparms.gemcode2gemarkungstext(rawListOfclsBaulast(i).katFST.gemcode)
+                    rawListOfclsBaulast(i).katFST.fstueckKombi = rawListOfclsBaulast(i).katFST.buildFstueckkombi
+                    rawListOfclsBaulast(i).katFST.gueltig = rawListOfclsBaulast(i).gueltig
+                    rawListOfclsBaulast(i).katFST.gebucht = rawListOfclsBaulast(i).baulastnr
+                    rawListOfclsBaulast(i).katFST.Prefix = rawListOfclsBaulast(i).Prefix
+                    rawListOfclsBaulast(i).katFST.AzNr = rawListOfclsBaulast(i).AzNr
+                    rawListOfclsBaulast(i).katFST.AzJahr = rawListOfclsBaulast(i).AzJahr
+                    rawListOfclsBaulast(i).katFST.AzOG = rawListOfclsBaulast(i).AzOG
+                    rawListOfclsBaulast(i).katFST.Kennziffer_1 = rawListOfclsBaulast(i).Kennziffer_1
+                    rawListOfclsBaulast(i).katFST.Kennziffer_2 = rawListOfclsBaulast(i).Kennziffer_2
+                    rawListOfclsBaulast(i).katFST.Kennziffer_3 = rawListOfclsBaulast(i).Kennziffer_3
+                    rawListOfclsBaulast(i).katFST.Kennziffer_4 = rawListOfclsBaulast(i).Kennziffer_4
+                    FSTausPROBAUGListe.Add(rawListOfclsBaulast(i).katFST)
                 Next
             End If
             l(" MOD holeProBaugDaten ende")
@@ -473,25 +486,25 @@ Public Class clsProBGTools
     '        'sqlgeschlossen = "SELECT  feld3 from obj01bla "
     '        sqlgeschlossen = sql
     '        initBaulastBlattnr(sql, sqlgeschlossen) ' liefert balistDT1 und geschlossenDT as dt
-    '        Debug.Print(rawList.Count.ToString)
-    '        If rawList.Count < 1 Then
+    '        Debug.Print(rawListOfclsBaulast.Count.ToString)
+    '        If rawListOfclsBaulast.Count < 1 Then
     '            MessageBox.Show("Probaug lieferte keine sauberen Daten zu BaulastBlattNr: " & baulastblattnr & ". Bitte zuerst auf ProbauG-Seite in Ordnung bringen.")
     '        Else
     '            l("vor schlkeife ")
-    '            For i = 0 To rawList.Count - 1
-    '                rawList(i).katFST.gemarkungstext = rawList(i).katFST.gemparms.gemcode2gemarkungstext(rawList(i).katFST.gemcode)
-    '                rawList(i).katFST.fstueckKombi = rawList(i).katFST.buildFstueckkombi
-    '                rawList(i).katFST.gueltig = rawList(i).gueltig
-    '                rawList(i).katFST.gebucht = rawList(i).baulastnr
-    '                rawList(i).katFST.Prefix = rawList(i).Prefix
-    '                rawList(i).katFST.AzNr = rawList(i).AzNr
-    '                rawList(i).katFST.AzJahr = rawList(i).AzJahr
-    '                rawList(i).katFST.AzOG = rawList(i).AzOG
-    '                rawList(i).katFST.Kennziffer_1 = rawList(i).Kennziffer_1
-    '                rawList(i).katFST.Kennziffer_2 = rawList(i).Kennziffer_2
-    '                rawList(i).katFST.Kennziffer_3 = rawList(i).Kennziffer_3
-    '                rawList(i).katFST.Kennziffer_4 = rawList(i).Kennziffer_4
-    '                FSTausPROBAUGListe.Add(rawList(i).katFST)
+    '            For i = 0 To rawListOfclsBaulast.Count - 1
+    '                rawListOfclsBaulast(i).katFST.gemarkungstext = rawListOfclsBaulast(i).katFST.gemparms.gemcode2gemarkungstext(rawListOfclsBaulast(i).katFST.gemcode)
+    '                rawListOfclsBaulast(i).katFST.fstueckKombi = rawListOfclsBaulast(i).katFST.buildFstueckkombi
+    '                rawListOfclsBaulast(i).katFST.gueltig = rawListOfclsBaulast(i).gueltig
+    '                rawListOfclsBaulast(i).katFST.gebucht = rawListOfclsBaulast(i).baulastnr
+    '                rawListOfclsBaulast(i).katFST.Prefix = rawListOfclsBaulast(i).Prefix
+    '                rawListOfclsBaulast(i).katFST.AzNr = rawListOfclsBaulast(i).AzNr
+    '                rawListOfclsBaulast(i).katFST.AzJahr = rawListOfclsBaulast(i).AzJahr
+    '                rawListOfclsBaulast(i).katFST.AzOG = rawListOfclsBaulast(i).AzOG
+    '                rawListOfclsBaulast(i).katFST.Kennziffer_1 = rawListOfclsBaulast(i).Kennziffer_1
+    '                rawListOfclsBaulast(i).katFST.Kennziffer_2 = rawListOfclsBaulast(i).Kennziffer_2
+    '                rawListOfclsBaulast(i).katFST.Kennziffer_3 = rawListOfclsBaulast(i).Kennziffer_3
+    '                rawListOfclsBaulast(i).katFST.Kennziffer_4 = rawListOfclsBaulast(i).Kennziffer_4
+    '                FSTausPROBAUGListe.Add(rawListOfclsBaulast(i).katFST)
     '            Next
     '        End If
     '        l(" MOD holeProBaugDaten ende")

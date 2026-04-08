@@ -4,6 +4,7 @@ Imports DocumentFormat.OpenXml.Office.MetaAttributes
 
 
 Public Class winDetail
+    Property schonObjekteInMDATvorhanden As Boolean = False
     Property VGmyBitmapImage As New BitmapImage
     Private istgeladen As Boolean = False
     Public Property ObjektGuid As String = "88AFE39F-78FC-4053-BE6D-315E3745CF45" '=kategorie
@@ -32,6 +33,8 @@ Public Class winDetail
     Private Sub winDetail_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         e.Handled = True
         Dim abbruch As Boolean = False
+        Dim cookietext As String = ""
+
         l("windetail loaded anfang")
         'btndigit.Visibility = Visibility.Collapsed
 #If DEBUG Then
@@ -44,35 +47,43 @@ Public Class winDetail
             If abbruch Then
                 'flurstueckskennzeichen = tools.FSTausPROBAUGListe(0).flurstueckZuFKZ
                 'starteGISueberFLST(srv_host_web, flurstueckskennzeichen)
+
                 Close()
                 Return
                 'End
             End If
-            refreshGIS(CInt(tbBaulastNr.Text))
+
+            schonObjekteInMDATvorhanden = refreshGIS(CInt(tbBaulastNr.Text))
             Dim summe = ""
             summe = makeFlurstuecksAbstrakt(tools.FSTausGISListe)
             summe = summe & Environment.NewLine
             Dim result As String
+
             If toolsEigentuemer.geteigentuemerText(tools.FSTausGISListe, result) Then
                 tbEigentuemer.Text = summe & Environment.NewLine & result
-                'If tbEigentuemer.Text.Contains("keine eigen") Then
-
-                'End If
+                cookietext = tools.FSTausGISListe(0).gemarkungstext & ",Flur: " & tools.FSTausGISListe(0).flur
             Else
-                summe = makeFlurstuecksAbstrakt(FSTausPROBAUGListe)
-                summe = summe & Environment.NewLine
-                tbEigentuemer.Text = summe & Environment.NewLine & result ' toolsEigentuemer.geteigentuemerText(tools.FSTausPROBAUGListe)
+                If toolsEigentuemer.geteigentuemerText(tools.FSTausPROBAUGListe, result) Then
+
+                    summe = makeFlurstuecksAbstrakt(tools.FSTausPROBAUGListe)
+                    summe = summe & Environment.NewLine
+                    tbEigentuemer.Text = summe & Environment.NewLine & result ' toolsEigentuemer.geteigentuemerText(tools.FSTausPROBAUGListe)
+                    cookietext = tools.FSTausPROBAUGListe(0).gemarkungstext & ",Flur: " & tools.FSTausPROBAUGListe(0).flur
+                End If
                 'MsgBox(result)
             End If
 
         End If
         Dim nummer = tbBaulastNr.Text
-        Dim text = tools.FSTausGISListe(0).gemarkungstext & ",Flur: " & tools.FSTausGISListe(0).flur
-        WriteCookie(nummer, text)
+
+        WriteCookie(nummer, cookietext)
 
         setTitle()
         showPDF()
         istgeladen = True
+        If schonObjekteInMDATvorhanden Then
+        Else
+        End If
         l("windetail loaded ende")
     End Sub
 
@@ -84,9 +95,9 @@ Public Class winDetail
 
     Private Sub refreshTIFFbox()
         'refreshTiffBitmap()
-        If rawList.Count > 0 Then
+        If rawListOfclsBaulast.Count > 0 Then
 
-            Dim fi As New IO.FileInfo(rawList(0).datei)
+            Dim fi As New IO.FileInfo(rawListOfclsBaulast(0).datei)
             If fi.Exists Then
                 tbFiledate.Text = "Scan: " & fi.LastWriteTime.ToShortDateString
                 tbFiledate.Foreground = New SolidColorBrush(Colors.Green)
@@ -100,29 +111,37 @@ Public Class winDetail
             tbFiledate.Text = "keine gisdaten"
         End If
     End Sub
-
-    Private Sub refreshGIS(BaulastBlattNr As Integer)
+    ''' <summary>
+    ''' liefert volle tools.FSTausGISListe (alle FST aus MDAT bei schon vorhandener baulast)
+    ''' liefert leere  tools.FSTausGISListe bei fehlender baulast
+    ''' TRUE - schon objekte im MDAT vorhanden
+    ''' FALSE- keine objekte im MDAT vorhanden
+    ''' </summary>
+    ''' <param name="BaulastBlattNr"></param>
+    Private Function refreshGIS(BaulastBlattNr As Integer) As Boolean
         dgAusGIS.DataContext = Nothing
         tools.FSTausGISListe.Clear()
         Dim greenBrush As SolidColorBrush = New SolidColorBrush(Colors.LightGreen)
-        Dim schonvorhanden As Boolean = False
+        Dim BaulastIstSchonvorhanden As Boolean = False
 
-        schonvorhanden = clsGIStools.getBaulastFromBaulastMDAT(BaulastBlattNr, kategorie_guid_Baulasten) 'füllt fstREC
-
-        If schonvorhanden Then
-            tools.FSTausGISListe = clsGIStools.fstGISdt2ObjListe()
+        BaulastIstSchonvorhanden = clsGIStools.getBaulastFromBaulastMDAT(BaulastBlattNr, kategorie_guid_Baulasten) 'füllt fstREC
+#If DEBUG Then
+        BaulastIstSchonvorhanden = False
+        tools.FSTausGISListe.Clear()
+#End If
+        If BaulastIstSchonvorhanden Then
+            tools.FSTausGISListe = clsGIStools.fstMDATdt2ObjListe()
             If tools.FSTausGISListe.Count < 1 Then
                 tbGISinfo.Text = "Mit dem Knopf 'Übertrag' können Sie die Flurstücksinfos zum GIS"
                 tbGISinfo2.Text = " in die Baulast-DB übertragen!"
-                Exit Sub
+
+                Return False
             End If
             'ObjektGuid = tools.FSTausGISListe(0).GUID
             If tools.FSTausGISListe Is Nothing Then
-                MsgBox("Die im GIS-Baulastkataster hinterlegten Flurstücksinfos sind mangelhaft. Bitte verbessern!")
-
+                'MsgBox("Die im GIS-Baulastkataster hinterlegten Flurstücksinfos sind mangelhaft. Bitte verbessern!")
+                Return False
             End If
-
-
             btnUebertragMetadaten.IsEnabled = True
             spBL.Background = greenBrush
             stpPDF.Visibility = Visibility.Visible
@@ -137,10 +156,12 @@ Public Class winDetail
             'tools.FSTausGISListe(0).Flurstuecksskennzeichen = tools.FSTausGISListe(0).flurstueckZuFKZ
             Dim fkz As String = bildeflurstuecksstring(tools.FSTausGISListe)
             'starteGISueberFLST(srv_host_web, fkz)
+            Return True
         Else
+            'baulast ist noch nicht in MDAT
             'btnUebertragMetadaten.IsEnabled = False
             tbGISinfo.Text = "Baulast ist in der Baulast-DB(MDAT) von Ingrada noch nicht vorhanden !"
-            tbGISinfo2.Text = "Das GIS startet nun automatisch!"
+            tbGISinfo2.Text = "--------------------" ' "Das GIS startet nun automatisch!"
             stpPDF.Visibility = Visibility.Collapsed
             btnZumGIS.IsEnabled = False
             btnZumGISOBJ.IsEnabled = False
@@ -149,12 +170,13 @@ Public Class winDetail
             btnZumGISPROBAUG.Height = 30
 
             'tools.FSTausGISListe(0).Flurstuecksskennzeichen = tools.FSTausPROBAUGListe(0).flurstueckZuFKZ
-            Dim fkz As String = bildeflurstuecksstring(tools.FSTausGISListe)
+            'Dim fkz As String = bildeflurstuecksstring(tools.FSTausGISListe)
             'starteGISueberFLST(srv_host_web, fkz)
+            Return False
         End If
 
         l("getSerialFromBasis---------------------- ende")
-    End Sub
+    End Function
 
 
 
@@ -203,7 +225,13 @@ Public Class winDetail
 
 
 
-
+    ''' <summary>
+    ''' füllt FSTausPROBAUGListe
+    ''' , bei ABBRUCH: es gibt keine daten in probaug
+    ''' </summary>
+    ''' <param name="baulastblattnr"></param>
+    ''' <param name="sqlquelle"></param>
+    ''' <param name="abbruch"></param>
     Sub refreshProbaug(baulastblattnr As Integer, sqlquelle As String, ByRef abbruch As Boolean)
 
         Try
@@ -211,22 +239,23 @@ Public Class winDetail
             dgAusProbaug.DataContext = Nothing
             tools.FSTausPROBAUGListe.Clear()
 
-            clsProBGTools.holeProBaugDaten(baulastblattnr, sqlquelle, abbruch) ' füllt FSTausPROBAUGListe
+            clsProBGTools.holeProBaugDaten(baulastblattnr, sqlquelle, abbruch) ' füllt FSTausPROBAUGListe und rawListOfclsBaulast
             'abbruch = False
             If abbruch Then
                 'MsgBox("Anwendung wird beendet !")
+                'es gibt keine daten in probaug
                 abbruch = True
                 Exit Sub
             End If
             'clsProBGTools.holeProBaugDatenZusatz(baulastblattnr, sqlquelle)
             dgAusProbaug.DataContext = FSTausPROBAUGListe
-            tbBauort.Text = rawList(0).bauortNr
-            tbDatum1.Text = rawList(0).datum1
-            tbgueltig.Text = rawList(0).gueltig
-            tbGemeinde.Text = rawList(0).gemeindeText
-            tbBaulastNr2.Text = rawList(0).baulastnr
-            tbBlattnr.Text = rawList(0).blattnr
-            tblaufNR.Text = CType(rawList(0).laufnr, String)
+            tbBauort.Text = rawListOfclsBaulast(0).bauortNr
+            tbDatum1.Text = rawListOfclsBaulast(0).datum1
+            tbgueltig.Text = rawListOfclsBaulast(0).gueltig
+            tbGemeinde.Text = rawListOfclsBaulast(0).gemeindeText
+            tbBaulastNr2.Text = rawListOfclsBaulast(0).baulastnr
+            tbBlattnr.Text = rawListOfclsBaulast(0).blattnr
+            tblaufNR.Text = CType(rawListOfclsBaulast(0).laufnr, String)
 
             l(" MOD refreshProbaug ende")
         Catch ex As Exception
@@ -240,11 +269,11 @@ Public Class winDetail
 
         'Try
         '    l(" MOD refreshTiffBitmap anfang")
-        '    If rawList(0).dateiExistiert Then
+        '    If rawListOfclsBaulast(0).dateiExistiert Then
         '        'btnTiffaufrufen.Visibility = Visibility.Visible 
         '        bitmap.BeginInit()
         '        bitmap.CacheOption = BitmapCacheOption.OnLoad ' verhindert fehler beim löschen
-        '        bitmap.UriSource = New Uri(rawList(0).datei)
+        '        bitmap.UriSource = New Uri(rawListOfclsBaulast(0).datei)
         '        bitmap.EndInit()
         '        imgTiff.Source = bitmap
         '        bitmap = Nothing
@@ -305,7 +334,7 @@ Public Class winDetail
     '    Dim datei2 As String = ""
     '    Try
     '        l("writeallWithSerials---------------------- anfang")
-    '        For Each lok As clsBaulast In rawList
+    '        For Each lok As clsBaulast In rawListOfclsBaulast
     '            Console.WriteLine("getAllSerials " & iz)
     '            If lok.blattnr = "8001" Then
     '                Debug.Print("")
@@ -518,8 +547,8 @@ Public Class winDetail
     '            zielname = IO.Path.Combine(srv_unc_path & "\fkat\baulasten", tools.FSTausPROBAUGListe(0).gemarkungstext.Trim & "\" & tbBaulastNr.Text.Trim & ".tiff").ToLower.Trim
     '            l(" MOD dropped 4 " & filenames(0).ToLower & " nach " & zielname)
     '            IO.File.Copy(filenames(0).ToLower, zielname, True)
-    '            rawList(0).dateiExistiert = True
-    '            rawList(0).datei = zielname
+    '            rawListOfclsBaulast(0).dateiExistiert = True
+    '            rawListOfclsBaulast(0).datei = zielname
     '            l(" MOD dropped 5")
     '            'pdfdatei erzeugen
     '            clsTIFFtools.zerlegeMultipageTIFF(zielname, tools.baulastenoutDir)
@@ -707,7 +736,7 @@ Public Class winDetail
     '                                tools.wkt & vbNewLine & vbNewLine &
     '                                    "Möchten Sie diese Geometrie übernehmen? (j/n) ", "Geometrie übernehmen", MessageBoxButton.YesNo, MessageBoxImage.Question)
     '        If msgres = MessageBoxResult.Yes Then
-    '            For Each item As clsBaulast In rawList
+    '            For Each item As clsBaulast In rawListOfclsBaulast
     '                item.serial = tools.wkt
     '            Next
     '            'writeallWithSerials(CBool(cbAuchUnguetige.IsChecked), 2, targetGISTabelle) '1=aus katasterdaten übernommen
@@ -748,7 +777,11 @@ Public Class winDetail
 
     Private Sub btnZumGISPROBAUG_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
-        gisFuerProbaugFlurst(tbBaulastNr.Text.Trim, tools.FSTausPROBAUGListe)
+        'If schonObjekteInMDATvorhanden Then
+
+        'Else
+        '    gisFuerProbaugFlurst(tbBaulastNr.Text.Trim, tools.FSTausPROBAUGListe)
+        'End If
     End Sub
 
 
@@ -854,7 +887,7 @@ Public Class winDetail
     Private Sub uebertrageAlleMetadatenNachGIS()
         l("uebertrageAlleMetadatenNachGIS")
         Try
-            For Each bl As clsBaulast In rawList
+            For Each bl As clsBaulast In rawListOfclsBaulast
                 If transferItem2gis(bl) Then
                     l("uebertrageAlleMetadatenNachGIS item ok ")
                 Else

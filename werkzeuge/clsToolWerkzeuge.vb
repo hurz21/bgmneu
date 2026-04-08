@@ -2,7 +2,7 @@
 
 Public Class clsToolWerkzeuge
 
-    'ausgabeKatNichtOk(rawList, "c:\baulastenout\Baulasten_katNichtOK" & Now.ToString("yyyyMMddhhmm") & ".csv")
+    'ausgabeKatNichtOk(rawListOfclsBaulast, "c:\baulastenout\Baulasten_katNichtOK" & Now.ToString("yyyyMMddhhmm") & ".csv")
     Shared Function init() As String
         Dim datei As String = tools.baulastenoutDir & "\Baulasten_katNichtOK" & Now.ToString("yyyyMMddhhmm") & ".csv"
         'Dim sql As String
@@ -12,7 +12,7 @@ Public Class clsToolWerkzeuge
         'sql = clsProBGTools.getSQLProbaug(2026)
         'clsProBGTools.initBaulastBlattnr(sql)
         'datei = "c:\baulastenout\Baulasten_katNichtOK" & Now.ToString("yyyyMMddhhmm") & ".csv"
-        'clsToolWerkzeuge.ausgabeKatNichtOk(rawList, datei)
+        'clsToolWerkzeuge.ausgabeKatNichtOk(rawListOfclsBaulast, datei)
         Dim sql, sqlgeschlossen As String
         sql = "select * from gisview2 order by feld9 desc"
         sql = "SELECT OBJ01BL.FELD4, OBJ01BL.FELD5, OBJ01BL.FELD9, " &
@@ -76,18 +76,18 @@ Public Class clsToolWerkzeuge
         ___showdispatcher("datentabelle " & balistDT1.Rows.Count & " baulasten eingelesen" & Environment.NewLine)
         ___showdispatcher("baulasten liste erstellen ")
 
-        rawList = dtnachobj(balistDT1, geschlossenDT)
+        rawListOfclsBaulast = dtnachobj(balistDT1, geschlossenDT)
 
         ___showdispatcher(" - abgeschlossen" & Environment.NewLine)
         ___showdispatcher("baulasten liste jetzt erweitern ... ")
         ___showdispatcher("")
-        objErweitern(rawList, anzahltiff, anzahl_dateiexitiert, anzahl_blattNrIst0)
+        objErweitern(rawListOfclsBaulast, anzahltiff, anzahl_dateiexitiert, anzahl_blattNrIst0)
         ___showdispatcher("prüfen ob katasterdaten Ok " & Environment.NewLine)
-        istKatasterFormellOK(rawList, anzahlKatasterFormellOK)
+        istKatasterFormellOK(rawListOfclsBaulast, anzahlKatasterFormellOK)
         ___showdispatcher("prüfen ob katasterdaten Ok  - abgeschlossen" & Environment.NewLine)
         ___showdispatcher("Liste der als gelöscht markierten Objekte bilden" & Environment.NewLine)
 
-        list4Geloscht = tools.bildeGeloeschteListe(rawList, anzahlGeloschte)
+        list4Geloscht = tools.bildeGeloeschteListe(rawListOfclsBaulast, anzahlGeloschte)
 
         ___showdispatcher("Liste der als gelöscht markierten Objekte  - abgeschlossen" & Environment.NewLine)
         ___showdispatcher("Alle als gelöscht markierten objekte löschen" & Environment.NewLine)
@@ -96,7 +96,7 @@ Public Class clsToolWerkzeuge
         Dim katnichtOKAberMitTiff_summe As String
         ___showdispatcher("Prüfen ob Baulasten mit Tiff aber ohne Katasterangaben " & Environment.NewLine)
 
-        istKatnichtOKaberTiffVorhanden(rawList, katnichtOKAberMitTiff_summe)
+        istKatnichtOKaberTiffVorhanden(rawListOfclsBaulast, katnichtOKAberMitTiff_summe)
 
         ___showdispatcher("Prüfen ob Baulasten mit Tiff aber ohne Katasterangaben  - abgeschlossen" & Environment.NewLine)
         ___showdispatcher("baulasten liste jetzt erweitern - abgeschlossen " & Environment.NewLine)
@@ -108,7 +108,7 @@ Public Class clsToolWerkzeuge
         ___showdispatcher("   anzahlGeloschtMarkiert: " & anzahlGeloschte & Environment.NewLine)
         ___showdispatcher("   real gelöscht: " & vierergeloescht & Environment.NewLine)
         ' getAllSerials(anzahl_mitSerial, OUTohneFlurstueck:="c:\baulastenout\ohneFlurstueck.txt")
-        clsToolWerkzeuge.ausgabeKatNichtOk(rawList, datei)
+        clsToolWerkzeuge.ausgabeKatNichtOk(rawListOfclsBaulast, datei)
 
         Return datei
     End Function

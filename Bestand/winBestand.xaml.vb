@@ -19,7 +19,7 @@
 
     Private Sub refreshProbaug()
         clsToolWerkzeuge.init()
-        dgProbaug.DataContext = rawList
+        dgProbaug.DataContext = rawListOfclsBaulast
     End Sub
 
     Private Sub refreshGISBestand(sql As String)

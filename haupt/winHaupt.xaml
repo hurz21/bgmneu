@@ -62,11 +62,11 @@
               IsEnabled="False"/>
                         <StackPanel>
                             <Button Name="btnShowPDF1" Click="btnShowPDF_Click" Visibility="Visible" 
-           IsEnabled="True" Margin="15,0,15,0" ToolTip="zeigt unmittelbar die PDF-Datei der Baulast an">
+           IsEnabled="True" Margin="15,0,15,0" ToolTip="zeigt unmittelbar die PDF-Datei der Baulast an"             Style="{StaticResource lessButton}" >
                                 Baulast als PDF
                             </Button>
                             <Button Name="btnBaulastImGIS" Margin="15" Click="btnBaulastImGIS_Click" Content="Baulast im GIS"  
-           ToolTip="zeigt unmittelbar die Baulast im GIS an"/>
+           ToolTip="zeigt unmittelbar die Baulast im GIS an" />
 
 
                         </StackPanel>
