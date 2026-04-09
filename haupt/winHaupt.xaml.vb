@@ -28,7 +28,7 @@ Public Class winHaupt
 
         LoadHistory() : ComboHistory.ItemsSource = Nothing : ComboHistory.ItemsSource = historyList
         ComboHistory.DisplayMemberPath = "Anzeige"
-        ComboHistory.IsDropDownOpen = True
+
 
         tools.readFSTCookie(gemarkung, flur, zaehler, nenner, "bgm_FST_cookie.txt")
         gemarkungsindex = gemarkung
@@ -39,16 +39,11 @@ Public Class winHaupt
         Dim stored = My.Settings.ImmerLogouten ' Boolean (Default: True)
         chkbImmerLogouten.IsChecked = stored
         gisLogouten = stored
-
-
         tools.themendefinitionsdatei = My.Settings.Themendatei
-
-
-
         If isAutho() Then
             'its ok  21478  21504
             '"POLYGON ((479015 5538655,479033 5538660,479035 5538656,479017 5538650,479015 5538655))" 
-
+            ComboHistory.IsDropDownOpen = True
         Else
             'MessageBox.Show("Sie haben keine Berechtigung für diese Anwendung. Abbruch!")
             'Close() 
@@ -398,16 +393,18 @@ Public Class winHaupt
     End Sub
 
     Private Sub MitFlurstueckInsGIS(loklist As List(Of clsFlurstueck))
-        l("fehler in btngis4fst_click ")
+        l("fehler in MitFlurstueckInsGIS ")
         Try
             fst_lage = loklist.Item(0).gemarkungstext
+            l("fst_lage " & fst_lage)
             If tools.flurstueckExistiertImGis(loklist(0).flurstueckZuFKZ) Then
+                l("flurstück zu adresse existiert")
                 gisFuerProbaugFlurst(tbblnr.Text.Trim, loklist)
             Else
                 MsgBox("Das Flurstück exisitert nicht im GIS!")
             End If
         Catch ex As Exception
-            l("fehler in btngis4fst_click " & ex.ToString)
+            l("fehler in MitFlurstueckInsGIS " & ex.ToString)
         End Try
     End Sub
 
@@ -419,6 +416,7 @@ Public Class winHaupt
     Private Sub tbStrasse_TextChanged(sender As Object, e As TextChangedEventArgs)
         If tbStrasse Is Nothing Then Exit Sub
         e.Handled = True
+        Exit Sub
 
         Dim oldstring As String = ""
         Dim cb As New myComboBoxItem
@@ -441,7 +439,7 @@ Public Class winHaupt
         Dim item As myComboBoxItem = CType(cmbstrassen.SelectedItem, myComboBoxItem)
         Dim gemeindeitem As myComboBoxItem = CType(cmbGemeinden.SelectedItem, myComboBoxItem)
         If item Is Nothing Then
-            MsgBox("Die Eingabe war ungültig. Bitte korrigieren!")
+            'MsgBox("Die Eingabe war ungültig. Bitte korrigieren!")
             Exit Sub
         End If
         l(item.myindex)
@@ -468,6 +466,7 @@ Public Class winHaupt
             fkzlist_lage.Add(fst)
             btnwordADR.IsEnabled = True
             btngis4adr.IsEnabled = True
+
         Else
             MsgBox("Kein entsprechendes Flurstück gefunden")
         End If
@@ -486,6 +485,7 @@ Public Class winHaupt
         Try
             ' tools.writeFlurstCookie(gemaIndex.ToString, (fkzlist_lage.Item(0).flur.ToString), (fkzlist_lage.Item(0).zaehler.ToString), (fkzlist_lage.Item(0).nenner.ToString), "bgm_FST_cookie.txt")
             MitFlurstueckInsGIS(fkzlist_lage)
+            l("adresse wird angezeigt")
         Catch ex As Exception
             l("btnsucheeigentumer_Click " & ex.ToString)
         End Try
@@ -681,6 +681,33 @@ Public Class winHaupt
         Catch ex As Exception
             l("cmbThemendatei_SelectionChanged " & ex.ToString)
         End Try
+    End Sub
+
+    Private Sub btnTutorial_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+        Process.Start("https://gis.kreis-of.de/LKOF/upload/tutorial/videos.html")
+    End Sub
+
+    Private Sub cmbGemeinden_SelectionChanged(sender As Object, e As SelectionChangedEventArgs) Handles cmbGemeinden.SelectionChanged
+        e.Handled = True
+        tbStrasse.Text = ""
+        cmbstrassen.ItemsSource = Nothing
+    End Sub
+
+    Private Sub btnSucheadresse_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+
+        Dim oldstring As String = ""
+        Dim cb As New myComboBoxItem
+        Dim strassennamen As New List(Of myComboBoxItem)
+        lageliste = clsGIStools.getLage(tbStrasse.Text, cmbGemeinden.SelectedValue.ToString, mitfkz:=False)
+        Dim a() As String
+        Dim newstring As String = ""
+
+        cmbstrassen.ItemsSource = lageliste
+        cmbstrassen.DisplayMemberPath = "mySttring"
+        cmbstrassen.SelectedValuePath = "myindex"
+        cmbstrassen.IsDropDownOpen = True
     End Sub
 
     'Private Sub ButtonSaveHistory_Click(sender As Object, e As RoutedEventArgs)

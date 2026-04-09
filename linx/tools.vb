@@ -1368,6 +1368,7 @@ Module tools
         Dim fkztemp As String = ""
         Dim url As String
         Dim treffer As Integer = 0
+        l("gisFuerProbaugFlurst ")
         ' C:\kreisoffenbach\mgis\ingradaadapter.exe    suchmodus=flurstueck gemarkung="Hainhausen" flur="4" fstueck="387/1" 
         '91197
         Dim zwischen, lokfkzliste As String
@@ -1387,6 +1388,7 @@ Module tools
 
                 End If
             Next
+            l("treffer " & treffer)
             zwischen = baulast
             My.Computer.Clipboard.SetText(zwischen)
             If lokfkzliste.Length > 1 Then
@@ -1403,16 +1405,15 @@ Module tools
                 l("url " & url)
                 Process.Start(url)
                 l(lokfkzliste)
+                l("fertig abgeschickt ")
             Else
                 MsgBox("Keine Flurstücke zugeordnet!!!  GIS wird ohne Flurstück gestartet!")
                 url = "https://gis.kreis-of.de/LKOF/asp/main.asp?"
                 l("url " & url)
                 Process.Start(url)
             End If
-
-
         Catch ex As Exception
-            l(ex.ToString)
+            l("gisFuerProbaugFlurst " & ex.ToString)
         End Try
     End Sub
     Public Function makeurl4FST(baseurl As String, flurstueckskennzeichen As String, themendatei As String) As String

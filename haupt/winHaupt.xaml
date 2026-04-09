@@ -86,9 +86,9 @@
                         <StackPanel>
 
                             <StackPanel Orientation="Horizontal">
-                                <Label Width="75" FontSize="10">Strassenfilter:</Label>
-                                <TextBox Name="tbStrasse" Width="180" TextChanged="tbStrasse_TextChanged"></TextBox>
-
+                                <Label Width="75" FontSize="10" Padding="0,12,0,0">Strassenfilter:</Label>
+                                <TextBox Name="tbStrasse" Width="110" Height="25" TextChanged="tbStrasse_TextChanged"></TextBox>
+                                <Button Name="btnSucheadresse" Click="btnSucheadresse_Click" Margin="5">Suchen</Button>
                             </StackPanel>
 
 
@@ -193,6 +193,7 @@
                  Height="25" Width="180" Margin="5" FontSize="10"
                                   SelectionChanged="cmbThemendatei_SelectionChanged"/>
                         </StackPanel>
+                        <Button Name="btnTutorial" Click="btnTutorial_Click" Margin="5">Tutorials</Button>
                     </StackPanel>
                 </TabItem>
             </TabControl>
