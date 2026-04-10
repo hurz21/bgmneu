@@ -1672,4 +1672,83 @@ Module tools
             Return pdfliste
         End Try
     End Function
+
+    Friend Function erzeugeCSVDateiBestand(csvdatei As String) As Boolean
+        Dim dt As DataTable
+        Dim hinweis As String = ""
+        Dim sw As IO.StreamWriter
+
+        Dim sb As New Text.StringBuilder
+        Dim t As String = ";"
+        Dim fi As IO.FileInfo
+        Dim fo As IO.FileInfo
+        Try
+            sw = New IO.StreamWriter(csvdatei)
+            sw.AutoFlush = True
+            sb.Append("Gemeinde" & t)
+            sb.Append("Gemarkung" & t)
+            sb.Append("BlattNr" & t)
+            sb.Append("laufnr" & t)
+            sb.Append("Kennz" & t)
+            sb.Append("flur" & t)
+            sb.Append("zaehler" & t)
+            sb.Append("nenner")
+
+            sw.WriteLine(sb.ToString)
+
+
+            fstREC.mydb.SQL = "SELECT * FROM [LKOF_Bearb].[dbo].[tbl_mdat_datensatz]" &
+                        " where kategorie_guid='" & kategorie_guid_Baulasten & "' " &
+                        "  order by text7, text8, text3, text2,text1,int1,int2,int3"
+            l(fstREC.mydb.SQL)
+            hinweis = fstREC.getDataDT()
+            If fstREC.dt.Rows.Count < 1 Then
+                Return False 'darf nicht vorkommen
+            Else
+
+                For i = 0 To fstREC.dt.Rows.Count - 1
+                    sb = New Text.StringBuilder
+
+                    sb.Append((clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("text7")).ToString) & t)
+                    sb.Append((clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("text8")).ToString) & t)
+                    sb.Append((clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("text3")).ToString) & t)
+                    sb.Append((clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("text2")).ToString) & t)
+                    sb.Append((clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("text1")).ToString) & t)
+                    sb.Append((clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("int1")).ToString) & t)
+                    sb.Append((clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("int2")).ToString) & t)
+                    sb.Append((clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("int3")).ToString))
+                    sw.WriteLine(sb.ToString)
+                    sb.Clear()
+                Next
+                'For i = 0 To fstREC.dt.Rows.Count - 1
+                '    Dim datei = srv_unc_path & "BAUL4ST_" & clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("text3")).ToString & ".pdf"
+                '    fi = New IO.FileInfo(datei)
+                '    Dim quelldatei As String
+
+                '    If Not fi.Exists Then
+                '        If clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("text8")).ToString.ToLower = String.Empty Then
+                '        Else
+                '            quelldatei = "L:\fkat\baulasten\" & clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("text8")).ToString.ToLower
+                '            quelldatei = quelldatei & "\" & clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("text3")).ToString & ".pdf"
+                '            fo = New IO.FileInfo(quelldatei)
+                '            If fo.Exists Then
+                '                IO.File.Copy(quelldatei, datei)
+                '            Else
+                '            End If
+                '            sw.WriteLine("fehlt" & datei)
+                '        End If
+
+
+                '    End If
+                'Next
+            End If
+            sw.Close()
+            sw.Dispose()
+            Return True
+        Catch ex As Exception
+            l("fehler in getAllPDFFiles4GUID-- " & ex.ToString)
+            Return False
+        End Try
+    End Function
+
 End Module

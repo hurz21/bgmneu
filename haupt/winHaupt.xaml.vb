@@ -129,11 +129,7 @@ Public Class winHaupt
     '    neu.ShowDialog()
     'End Sub
 
-    Private Sub btnBestand_Click(sender As Object, e As RoutedEventArgs)
-        e.Handled = True
-        Dim best As New winBestand()
-        best.Show()
-    End Sub
+
 
     Private Sub btnGIS_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True

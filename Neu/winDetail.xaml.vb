@@ -1,6 +1,7 @@
 ﻿Imports System.Security.Policy
 Imports System.Text
 Imports DocumentFormat.OpenXml.Office.MetaAttributes
+Imports DocumentFormat.OpenXml.Office2010.Word
 
 
 Public Class winDetail
@@ -126,8 +127,8 @@ Public Class winDetail
 
         BaulastIstSchonvorhanden = clsGIStools.getBaulastFromBaulastMDAT(BaulastBlattNr, kategorie_guid_Baulasten) 'füllt fstREC
 #If DEBUG Then
-        BaulastIstSchonvorhanden = False
-        tools.FSTausGISListe.Clear()
+        'BaulastIstSchonvorhanden = False
+        'tools.FSTausGISListe.Clear()
 #End If
         If BaulastIstSchonvorhanden Then
             tools.FSTausGISListe = clsGIStools.fstMDATdt2ObjListe()
@@ -982,4 +983,85 @@ Public Class winDetail
     Private Sub btnZumGIS_Click(sender As Object, e As Object)
 
     End Sub
+
+    Private Sub btnBestand_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+
+        Dim zieldatei As String
+        zieldatei = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
+        zieldatei = IO.Path.Combine(zieldatei, "bgm\cache")
+        zieldatei = IO.Path.Combine(zieldatei, "ausgabe.csv")
+        If tools.erzeugeCSVDateiBestand(zieldatei) Then
+            Process.Start(zieldatei)
+        Else
+            MsgBox("Fehler bei der erzeugung der CSV-Datei: " & zieldatei)
+        End If
+
+
+    End Sub
+
+    Private Sub btnPDFExistenzpruefen_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+
+        Dim zieldatei As String
+        zieldatei = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
+        zieldatei = IO.Path.Combine(zieldatei, "bgm\cache")
+        zieldatei = IO.Path.Combine(zieldatei, "ausgabe.txt")
+        If pruefeExistenzDerPDFdateien(zieldatei) Then
+            Process.Start(zieldatei)
+        Else
+            MsgBox("Fehler bei der erzeugung der CSV-Datei: " & zieldatei)
+        End If
+    End Sub
+
+    Friend Function pruefeExistenzDerPDFdateien(csvdatei As String) As Boolean
+        Dim dt As DataTable
+        Dim hinweis As String = ""
+        Dim sw As IO.StreamWriter
+
+        Dim sb As New Text.StringBuilder
+        Dim t As String = ";"
+        Dim fi As IO.FileInfo
+        Dim fo As IO.FileInfo
+        Try
+            sw = New IO.StreamWriter(csvdatei)
+            sw.AutoFlush = True
+            fstREC.mydb.SQL = "SELECT distinct text7, text8, text3 FROM [LKOF_Bearb].[dbo].[tbl_mdat_datensatz]" &
+                        " where kategorie_guid='" & kategorie_guid_Baulasten & "' " &
+                        "  order by text7, text8, text3 "
+            l(fstREC.mydb.SQL)
+            hinweis = fstREC.getDataDT()
+            If fstREC.dt.Rows.Count < 1 Then
+                Return False 'darf nicht vorkommen
+            Else
+                Dim datei As String
+                For i = 0 To fstREC.dt.Rows.Count - 1
+                    datei = srv_unc_path & "BAUL4ST_" & clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("text3")).ToString & ".pdf"
+                    fi = New IO.FileInfo(datei)
+                    Dim quelldatei As String
+                    'tbEigentuemer.Text = i.ToString & Environment.NewLine & " " & datei & Environment.NewLine
+                    'Application.DoEvents()
+                    If Not fi.Exists Then
+                        If clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("text8")).ToString.ToLower = String.Empty Then
+                        Else
+                            quelldatei = "L:\fkat\baulasten\" & clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("text8")).ToString.ToLower
+                            quelldatei = quelldatei & "\" & clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("text3")).ToString & ".pdf"
+                            fo = New IO.FileInfo(quelldatei)
+                            If fo.Exists Then
+                                IO.File.Copy(quelldatei, datei)
+                            Else
+                            End If
+                            sw.WriteLine("fehlt" & datei)
+                        End If
+                    End If
+                Next
+            End If
+            sw.Close()
+            sw.Dispose()
+            Return True
+        Catch ex As Exception
+            l("fehler in getAllPDFFiles4GUID-- " & ex.ToString)
+            Return False
+        End Try
+    End Function
 End Class

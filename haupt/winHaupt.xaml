@@ -49,7 +49,8 @@
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Width="150" Margin="1">
 
                             <TextBox x:Name="tbblnr" HorizontalAlignment="Center"
-               Width="70" Height="25" Margin="5">
+               Width="70" Height="25" Margin="5" Padding="2" FontSize="11">
+                               
                             </TextBox>
                             <ComboBox x:Name="ComboHistory" Height="25"  Width="63"
     SelectionChanged="ComboHistory_SelectionChanged"/>
@@ -57,9 +58,7 @@
                             <!--<Button Content="Save" Height="30" Margin="5"
   Click="ButtonSaveHistory_Click"/>-->
                         </StackPanel>
-                        <Button Name="btnBestand" Click="btnBestand_Click" Content="Bestandsliste" 
-             Margin="15"
-              IsEnabled="False"/>
+                     
                         <StackPanel>
                             <Button Name="btnShowPDF1" Click="btnShowPDF_Click" Visibility="Visible" 
            IsEnabled="True" Margin="15,0,15,0" ToolTip="zeigt unmittelbar die PDF-Datei der Baulast an"             Style="{StaticResource lessButton}" >
@@ -87,7 +86,7 @@
 
                             <StackPanel Orientation="Horizontal">
                                 <Label Width="75" FontSize="10" Padding="0,12,0,0">Strassenfilter:</Label>
-                                <TextBox Name="tbStrasse" Width="110" Height="25" TextChanged="tbStrasse_TextChanged"></TextBox>
+                                <TextBox Name="tbStrasse" Width="110" Height="25" Padding="2" FontSize="11" TextChanged="tbStrasse_TextChanged"></TextBox>
                                 <Button Name="btnSucheadresse" Click="btnSucheadresse_Click" Margin="5">Suchen</Button>
                             </StackPanel>
 
@@ -150,7 +149,9 @@
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Label Width="75" FontSize="10">Filter:</Label>
-                            <TextBox Name="tbbplantfilter" Width="170" TextChanged="tbbplantfilter_TextChanged"></TextBox>
+                            <TextBox Name="tbbplantfilter" Width="170" Padding="2" FontSize="11" TextChanged="tbbplantfilter_TextChanged">
+                                
+                            </TextBox>
 
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
@@ -160,6 +161,7 @@
                                       />
                         </StackPanel>
                         <TextBox Name="tbBplanAbstract" AcceptsReturn="True" AcceptsTab="True" Height="100" TextWrapping="NoWrap">
+                          
                         </TextBox>
                         <TextBox Name="tbBplanWarnung" AcceptsReturn="True" AcceptsTab="True"   TextWrapping="Wrap"
                                  Foreground="Red" FontFamily="Arial Black" Height="35"/>

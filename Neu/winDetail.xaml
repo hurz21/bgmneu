@@ -216,7 +216,7 @@
                                             </DataGrid.Columns>
                                         </DataGrid>
                                     </StackPanel>
-                            
+
                                 </StackPanel>
                             </StackPanel>
                         </Border>
@@ -225,22 +225,26 @@
 
                             <TextBlock Width="100" Margin="5" Padding="5">Eigentümer:</TextBlock>
                             <StackPanel Orientation="Horizontal">
-                                
-                            <TextBox Name="tbEigentuemer"  HorizontalAlignment="Left"
+
+                                <TextBox Name="tbEigentuemer"  HorizontalAlignment="Left"
  Width="1000" Height="200"
                                     Margin="0" TextWrapping="Wrap" 
                                     AcceptsReturn="True" AcceptsTab="True" />
-                            <StackPanel>
-                                      <Button Name="btnEigentümerclip" Click="btnEigentümerclip_Click" 
+                                <StackPanel>
+                                    <Button Name="btnEigentümerclip" Click="btnEigentümerclip_Click" 
                           Margin="1" Width="100" HorizontalAlignment="Left"
                 >in Zwischenablage</Button>
-                            <Button Name="btnMakeworddok" Click="btnMakeworddok_Click" Width="100" HorizontalAlignment="Left"
+                                    <Button Name="btnMakeworddok" Click="btnMakeworddok_Click" Width="100" HorizontalAlignment="Left"
                         Margin="1">
-                                Word
-                            </Button>
+                                        Word
+                                    </Button>
+                                    <Button Name="btnBestand" Click="btnBestand_Click" Content="Bestandsliste" 
+Margin="0"  IsEnabled="True"/>
+                                    <Button Name="btnpdfexist" Click="btnPDFExistenzpruefen_Click" Content="Existieren die PDFs ?" 
+Margin="0"  IsEnabled="True"/>
+                                </StackPanel>
                             </StackPanel>
-                            </StackPanel>
-                      
+
                         </StackPanel>
                     </StackPanel>
 
@@ -253,10 +257,10 @@
 
 
                                 </StackPanel>
-                             
+
                             </StackPanel>
                         </StackPanel>
-                       
+
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
 
