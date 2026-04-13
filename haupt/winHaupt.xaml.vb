@@ -106,8 +106,18 @@ Public Class winHaupt
 
         Title = "BGM " & " V.: " & bgmVersion
 
+
+        dummyaufrufStarten
         istgeladen = True
 
+    End Sub
+
+    Private Sub dummyaufrufStarten()
+        Dim logout = "https://gis.kreis-of.de/LKOF/asp/login.asp?logout=true&m=1"
+        If gisLogouten Then
+            Process.Start(logout)
+            Process.Start(logout)
+        End If
     End Sub
     ' Auswahl -> in TextBox schreiben
 
