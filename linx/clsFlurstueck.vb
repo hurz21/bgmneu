@@ -10,6 +10,13 @@ Public Class clsFlurstueck
     Protected Sub OnPropertyChanged(ByVal prop As String)
         RaiseEvent PropertyChanged(Me, New PropertyChangedEventArgs(prop))
     End Sub
+
+    Public ReadOnly Property Anzeige As String
+        Get
+            Return $"{gemarkungstext} - Flur {flur}, {zaehler}/{nenner} ({AZ})"
+        End Get
+    End Property
+    Public Property index As Integer = 0
     Property Flurstuecksskennzeichen As String = ""
     Property GUID As String = ""
     Property HSchl As String = ""
@@ -28,6 +35,7 @@ Public Class clsFlurstueck
     Public Property weistauf As String
     Public Property gebucht As String
     Public Property fsgml As String
+    Public Property AZ As String
 
 
     Property gemparms As New clsGemarkungsParams

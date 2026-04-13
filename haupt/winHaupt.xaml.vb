@@ -66,6 +66,7 @@ Public Class winHaupt
         themendateien.Add(New myComboBoxItem With {.mySttring = "Immissionsschutz", .myindex = "themendateiImmissionsschutz.txt"})
         themendateien.Add(New myComboBoxItem With {.mySttring = "UNB", .myindex = "themendateiUNB.txt"})
         themendateien.Add(New myComboBoxItem With {.mySttring = "UWBB", .myindex = "themendateiUWBB.txt"})
+        themendateien.Add(New myComboBoxItem With {.mySttring = "Schornsteinfegerei", .myindex = "themendateiFeger.txt"})
 
         cmbThemendatei.ItemsSource = themendateien
         cmbThemendatei.DisplayMemberPath = "mySttring"
@@ -107,7 +108,11 @@ Public Class winHaupt
         Title = "BGM " & " V.: " & bgmVersion
 
 
-        dummyaufrufStarten
+        dummyaufrufStarten()
+        Dim liste As List(Of clsFlurstueck) = cls20Cookies.LadeFlurstuecke()
+        cmb20fst.ItemsSource = liste
+        'cmb20fst.SelectedIndex = liste(0).index
+
         istgeladen = True
 
     End Sub
@@ -116,7 +121,7 @@ Public Class winHaupt
         Dim logout = "https://gis.kreis-of.de/LKOF/asp/login.asp?logout=true&m=1"
         If gisLogouten Then
             Process.Start(logout)
-            Process.Start(logout)
+            'Process.Start(logout)
         End If
     End Sub
     ' Auswahl -> in TextBox schreiben
@@ -406,6 +411,9 @@ Public Class winHaupt
             If tools.flurstueckExistiertImGis(loklist(0).flurstueckZuFKZ) Then
                 l("flurstück zu adresse existiert")
                 gisFuerProbaugFlurst(tbblnr.Text.Trim, loklist)
+                loklist(0).AZ = tbFSTbemerkung.Text
+                loklist(0).index = cmbGemarkungen.SelectedIndex
+                cls20Cookies.SpeichereFlurstueck(loklist(0))
             Else
                 MsgBox("Das Flurstück exisitert nicht im GIS!")
             End If
@@ -714,6 +722,32 @@ Public Class winHaupt
         cmbstrassen.DisplayMemberPath = "mySttring"
         cmbstrassen.SelectedValuePath = "myindex"
         cmbstrassen.IsDropDownOpen = True
+    End Sub
+
+    Private Sub cmb20fst_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
+        e.Handled = True
+        Dim fst = TryCast(cmb20fst.SelectedItem, clsFlurstueck)
+        If fst IsNot Nothing Then
+            Dim neu As New myComboBoxItem
+            neu.myindex = fst.index.ToString
+            neu.mySttring = fst.gemarkungstext
+            'txtGemarkung.Text = fst.gemarkungstext 
+            cmbGemarkungen.SelectedIndex = CInt(neu.myindex)
+            tbFlur.Text = fst.flur.ToString
+            tbZaehler.Text = fst.zaehler.ToString
+            tbnenner.Text = fst.nenner.ToString
+            tbFSTbemerkung.Text = fst.AZ
+        End If
+    End Sub
+
+
+
+    Private Sub tabItem1_Clicked(sender As Object, e As MouseButtonEventArgs)
+        cmb20fst.IsDropDownOpen = True
+    End Sub
+
+    Private Sub cmb20adr_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
+
     End Sub
 
     'Private Sub ButtonSaveHistory_Click(sender As Object, e As RoutedEventArgs)

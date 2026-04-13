@@ -20,6 +20,8 @@ Public Class clsAdress
     Sub New()
         ' TODO: Complete member initialization 
     End Sub
+    Property index As Integer
+    Property AZ As String
     Property Quelle As String 'halo oder lage oder fehlt
     Public Property strassennameNORM() As String
         Get

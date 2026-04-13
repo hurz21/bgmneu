@@ -87,10 +87,23 @@
                             <StackPanel Orientation="Horizontal">
                                 <Label Width="75" FontSize="10" Padding="0,12,0,0">Strassenfilter:</Label>
                                 <TextBox Name="tbStrasse" Width="110" Height="25" Padding="2" FontSize="11" TextChanged="tbStrasse_TextChanged"></TextBox>
-                                <Button Name="btnSucheadresse" Click="btnSucheadresse_Click" Margin="5">Suchen</Button>
+                               
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Name="btnSucheadresse" Click="btnSucheadresse_Click"
+                                        Width="152"
+                                        Margin="75,0,0,0">Suchen</Button>
+                                <ComboBox x:Name="cmb20adr" HorizontalAlignment="Left" Margin="0,0,0,0"
+                                    SelectionChanged="cmb20adr_SelectionChanged" 
+                                     DisplayMemberPath="Anzeige"
+                                      SelectedItem="{Binding SelectedAdresse}" 
+                                      Height="30"   FontSize="10"/>
                             </StackPanel>
 
-
+                            <StackPanel Orientation="Horizontal">
+                                <Label Width="75" FontSize="10">Az./Info:</Label>
+                                <TextBox Name="tbFSTbemerkungadr" Width="180"></TextBox>
+                            </StackPanel>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal">
@@ -106,7 +119,12 @@
                                     IsEnabled="False">Adresse im GIS</Button>
                     </StackPanel>
                 </TabItem>
-                <TabItem Name="tabfst" Header="Flurstück" FontSize="9">
+                <TabItem Name="tabfst"   FontSize="9"  VerticalAlignment="Top">
+                    <TabItem.Header>
+                        <Label Content="Flurstück" FontSize="9"   Height="24"  VerticalAlignment="Top"  
+                               MouseLeftButtonDown="tabItem1_Clicked" 
+                 />
+                    </TabItem.Header>
                     <StackPanel Height="277">
                         <StackPanel Orientation="Horizontal">
                             <Label Width="75" FontSize="10">Gemarkung:</Label>
@@ -125,12 +143,24 @@
                             <Label Width="75" FontSize="10">Nenner:</Label>
                             <TextBox Name="tbnenner" Width="180"></TextBox>
                         </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Width="75" FontSize="10">Az./Info:</Label>
+                            <TextBox Name="tbFSTbemerkung" Width="180"></TextBox>
+                        </StackPanel>
+                     
+                        <StackPanel Orientation="Horizontal" Margin="15">
+                            
+                        <Button x:Name="btngis4fst" Click="btngis4fst_click"  Margin="15,0,0,0"
+                                Width="187" HorizontalAlignment="Left">Flurstück im GIS</Button>
+                        <ComboBox x:Name="cmb20fst" HorizontalAlignment="Left" Margin="0,0,0,0"
+                                  SelectionChanged="cmb20fst_SelectionChanged" 
+                                   DisplayMemberPath="Anzeige"
+                                    SelectedItem="{Binding SelectedFlurstueck}" 
+                                    Height="30"   FontSize="10"/>
+                        </StackPanel>
                         <Button x:Name="btnsucheeigentumer" Click="btnsucheeigentumer_Click"   Margin="15"
-                                Style="{StaticResource lessButton}" 
-               >Eigentümer-Word-Datei</Button>
-                        <Button x:Name="btngis4fst" Click="btngis4fst_click"  Margin="15,0,15,0">Flurstück im GIS</Button>
-
-
+                 Style="{StaticResource lessButton}" Width="203" 
+>Eigentümer-Word-Datei</Button>
                     </StackPanel>
                 </TabItem>
                 <TabItem FontSize="9" Name="tabbBplan" Header="B-Plan" Height="26" VerticalAlignment="Top">

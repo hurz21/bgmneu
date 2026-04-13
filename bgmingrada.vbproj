@@ -143,6 +143,7 @@
     <Compile Include="Bestand\winBestand.xaml.vb">
       <DependentUpon>winBestand.xaml</DependentUpon>
     </Compile>
+    <Compile Include="cls20Cookies.vb" />
     <Compile Include="clsCombo.vb" />
     <Compile Include="clsGIStools.vb" />
     <Compile Include="clsHistoryItem.vb" />
@@ -339,12 +340,14 @@
     </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>copy $(targetfilename) \\gis\gdvell\apps\bgm\bgmIngrada.exe 
+    <PostBuildEvent>
+
+if $(ConfigurationName) == Release (
+copy $(targetfilename) \\gis\gdvell\apps\bgm\bgmIngrada.exe 
 copy $(targetfilename) W:\diverses\bgmingrada\bgmIngrada.exe 
-
-
  
- rem copy $(targetfilename) C:\kreisoffenbach\bgmingrada\bgmIngrada.exe 
-)</PostBuildEvent>
+)
+ 
+</PostBuildEvent>
   </PropertyGroup>
 </Project>
