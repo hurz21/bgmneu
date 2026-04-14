@@ -53,7 +53,7 @@
 
                             <TextBox x:Name="tbblnr" HorizontalAlignment="Center"
                Width="70" Height="25" Margin="5" Padding="2" FontSize="11">
-                               
+
                             </TextBox>
                             <ComboBox x:Name="ComboHistory" Height="25"  Width="63"
     SelectionChanged="ComboHistory_SelectionChanged"/>
@@ -61,7 +61,7 @@
                             <!--<Button Content="Save" Height="30" Margin="5"
   Click="ButtonSaveHistory_Click"/>-->
                         </StackPanel>
-                     
+
                         <StackPanel>
                             <Button Name="btnShowPDF1" Click="btnShowPDF_Click" Visibility="Visible" 
            IsEnabled="True" Margin="15,0,15,0" ToolTip="zeigt unmittelbar die PDF-Datei der Baulast an"             Style="{StaticResource lessButton}" >
@@ -93,39 +93,44 @@
                             <StackPanel Orientation="Horizontal">
                                 <Label Width="75" FontSize="10" Padding="0,12,0,0">Strassenfilter:</Label>
                                 <TextBox Name="tbStrasse" Width="180" Height="25" Padding="2" FontSize="11" TextChanged="tbStrasse_TextChanged"></TextBox>
-                               
+
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <Button Name="btnSucheadresse" Click="btnSucheadresse_Click"
-                                        Width="152"
+                                        Width="180"
                                         Margin="75,0,0,0">Suchen</Button>
-                                <ComboBox x:Name="cmb20adr" HorizontalAlignment="Left" Margin="0,0,0,0"
-                                    SelectionChanged="cmb20adr_SelectionChanged" 
-                                     DisplayMemberPath="Anzeige"
-                                      SelectedItem="{Binding SelectedAdresse}" 
-                                      Height="30" Width="25"  FontSize="10"/>
+
                             </StackPanel>
 
-                            <StackPanel Orientation="Horizontal">
-                                <Label Width="75" FontSize="10">Az./Info:</Label>
-                                <TextBox Name="tbFSTbemerkungadr" Width="180"></TextBox>
-                            </StackPanel>
+
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <StackPanel Orientation="Horizontal"  >
 
                             <ComboBox x:Name="cmbstrassen" SelectionChanged="cmbstrassen_SelectionChanged" 
-                                          HorizontalAlignment="Left" Height="25"  Width="250" FontSize="10"/>
+                                          HorizontalAlignment="Left" Height="25"  Width="180"
+                                       Margin="75,0,0,0" FontSize="10"/>
                         </StackPanel>
 
+                        <StackPanel>
 
-                
-                        <Button x:Name="btngis4adr" Click="btngis4adr_Click"  Margin="15,15,15,0"
-                                    IsEnabled="False">Adresse im GIS</Button>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,0">
+                                <Label Width="75" FontSize="10" ToolTip="Geben sie hier das Az. oder anderen signifikanten Text ein.">Az./Info:</Label>
+                                <TextBox Name="tbADRbemerkung" Width="180"></TextBox>
+                            </StackPanel>
+                            <Button x:Name="btngis4adr" Click="btngis4adr_Click"  Margin="75,0,0,0" 
+                                    IsEnabled="False" Width="180">Adresse im GIS</Button>
+                            <ComboBox x:Name="cmb20adr"  Margin="75,0,0,0" MouseEnter="cmb20adr_MouseEnter"
+           SelectionChanged="cmb20adr_SelectionChanged" 
+            DisplayMemberPath="Anzeige"
+             SelectedItem="{Binding SelectedAdresse}" 
+             Height="30" Width="180"  FontSize="10"/>
+                        </StackPanel>
+
 
                         <Button x:Name="btnwordADR" Click="btnwordADR_Click" 
                                  HorizontalAlignment="Center"
-                                Style="{StaticResource lessButton}"  Margin="15"
+                                Style="{StaticResource lessButton}"  Margin="0"
                     IsEnabled="False">Eigentümer-Word-Datei</Button>
                     </StackPanel>
                 </TabItem>
@@ -153,15 +158,15 @@
                             <TextBox Name="tbnenner" Width="180"></TextBox>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <Label Width="75" FontSize="10">Az./Info:</Label>
+                            <Label Width="75" FontSize="10" ToolTip="Geben sie hier das Az. oder anderen signifikanten Text ein.">Az./Info:</Label>
                             <TextBox Name="tbFSTbemerkung" Width="180"></TextBox>
                         </StackPanel>
-                     
+
                         <StackPanel Orientation="Horizontal" Margin="15" HorizontalAlignment="Center">
-                            
-                        <Button x:Name="btngis4fst" Click="btngis4fst_click"  Margin="0,0,0,0"
+
+                            <Button x:Name="btngis4fst" Click="btngis4fst_click"  Margin="0,0,0,0"
                                 Width="177" HorizontalAlignment="Left">Flurstück im GIS</Button>
-                        <ComboBox x:Name="cmb20fst" HorizontalAlignment="Left" Margin="0,0,0,0"
+                            <ComboBox x:Name="cmb20fst" HorizontalAlignment="Left" Margin="0,0,0,0"
                                   SelectionChanged="cmb20fst_SelectionChanged" 
                                    DisplayMemberPath="Anzeige"  Width="25"
                                     SelectedItem="{Binding SelectedFlurstueck}" 
@@ -193,7 +198,7 @@
                         <StackPanel Orientation="Horizontal">
                             <Label Width="75" FontSize="10">Filter:</Label>
                             <TextBox Name="tbbplantfilter" Width="170" Padding="2" FontSize="11" TextChanged="tbbplantfilter_TextChanged">
-                                
+
                             </TextBox>
 
                         </StackPanel>
@@ -204,7 +209,7 @@
                                       />
                         </StackPanel>
                         <TextBox Name="tbBplanAbstract" AcceptsReturn="True" AcceptsTab="True" Height="100" TextWrapping="NoWrap">
-                          
+
                         </TextBox>
                         <TextBox Name="tbBplanWarnung" AcceptsReturn="True" AcceptsTab="True"   TextWrapping="Wrap"
                                  Foreground="Red" FontFamily="Arial Black" Height="35"/>

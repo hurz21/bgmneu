@@ -58,24 +58,29 @@
     Public Shared Sub SpeichereAdresse(adr As clsAdress)
         Dim path = GetCookieFilePath("alle20ADRcookies.txt")
         Dim liste As New List(Of String)
+        Try
 
-        ' Bestehende laden
-        If IO.File.Exists(path) Then
-            liste = IO.File.ReadAllLines(path).ToList()
-        End If
 
-        Dim neuerEintrag = $"{adr.gemeindeName}|{adr.strasseName}  |{adr.fkz}|{adr.index}|{adr.AZ}"
+            ' Bestehende laden
+            If IO.File.Exists(path) Then
+                liste = IO.File.ReadAllLines(path).ToList()
+            End If
 
-        ' Entferne vorhandenen gleichen Eintrag (Duplikate vermeiden)
-        liste = liste.Where(Function(x) x <> neuerEintrag).ToList()
+            Dim neuerEintrag = $"{adr.gemeindeName}|{adr.strasseName}  |{adr.fkz}|{adr.index}|{adr.AZ}"
 
-        ' Neuen oben einfügen
-        liste.Insert(0, neuerEintrag)
+            ' Entferne vorhandenen gleichen Eintrag (Duplikate vermeiden)
+            liste = liste.Where(Function(x) x <> neuerEintrag).ToList()
 
-        ' Auf 20 begrenzen
-        liste = liste.Take(20).ToList()
+            ' Neuen oben einfügen
+            liste.Insert(0, neuerEintrag)
 
-        IO.File.WriteAllLines(path, liste)
+            ' Auf 20 begrenzen
+            liste = liste.Take(20).ToList()
+
+            IO.File.WriteAllLines(path, liste)
+        Catch ex As Exception
+            l("fehler in SpeichereAdresse" & ex.ToString)
+        End Try
     End Sub
     Public Shared Function LadeAdressen() As List(Of clsAdress)
         Dim path = GetCookieFilePath("alle20adrcookies.txt")

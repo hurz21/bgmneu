@@ -1,6 +1,7 @@
 ﻿Imports System.ComponentModel
 Imports System.Security.Policy
 Imports DocumentFormat.OpenXml.Drawing
+Imports DocumentFormat.OpenXml.EMMA
 Imports DocumentFormat.OpenXml.Spreadsheet
 
 
@@ -10,6 +11,7 @@ Public Class winHaupt
     Private lastPDF As String = ""
     Private baulastnr As String = ""
     Public fst As New clsFlurstueck
+    Public aktadr As New clsAdress
     Sub New()
         InitializeComponent()
     End Sub
@@ -345,6 +347,7 @@ Public Class winHaupt
         fkzlist = New List(Of clsFlurstueck)
         Try
             fst.gemcode = code
+
             fst.gemarkungstext = gemtext
             fst.flur = CInt(tbFlur.Text.Trim)
             fst.zaehler = CInt(tbZaehler.Text.Trim)
@@ -399,13 +402,16 @@ Public Class winHaupt
         Dim index As Integer = CInt(cmbGemarkungen.SelectedIndex)
         Try
             tools.writeFlurstCookie(index.ToString, (tbFlur.Text.Trim), tbZaehler.Text.Trim, tbnenner.Text.Trim, "bgm_FST_cookie.txt")
-            MitFlurstueckInsGIS(fkzlist)
+            MitFlurstueckInsGIS(fkzlist, tbFSTbemerkung.Text, False)
+            aktualisiereFSTHistory()
         Catch ex As Exception
             l("btnsucheeigentumer_Click " & ex.ToString)
         End Try
     End Sub
 
-    Private Sub MitFlurstueckInsGIS(loklist As List(Of clsFlurstueck))
+
+
+    Private Sub MitFlurstueckInsGIS(loklist As List(Of clsFlurstueck), azinfo As String, imAdressModus As Boolean)
         l("fehler in MitFlurstueckInsGIS ")
         Try
             fst_lage = loklist.Item(0).gemarkungstext
@@ -413,9 +419,13 @@ Public Class winHaupt
             If tools.flurstueckExistiertImGis(loklist(0).flurstueckZuFKZ) Then
                 l("flurstück zu adresse existiert")
                 gisFuerProbaugFlurst(tbblnr.Text.Trim, loklist)
-                loklist(0).AZ = tbFSTbemerkung.Text
+                loklist(0).AZ = azinfo 'tbFSTbemerkung.Text
                 loklist(0).index = cmbGemarkungen.SelectedIndex
-                cls20Cookies.SpeichereFlurstueck(loklist(0))
+                If imAdressModus Then
+                Else
+
+                    cls20Cookies.SpeichereFlurstueck(loklist(0))
+                End If
             Else
                 MsgBox("Das Flurstück exisitert nicht im GIS!")
             End If
@@ -459,15 +469,19 @@ Public Class winHaupt
             Exit Sub
         End If
         l(item.myindex)
-        Dim gemeindeschluessel As String = cmbGemeinden.SelectedValue.ToString
-        Dim lage As String = item.mySttring
-        Dim gemeindetext As String = gemeindeitem.mySttring
-        Dim oldstring As String = ""
+        aktadr.gemeindebigNRstring = cmbGemeinden.SelectedValue.ToString
+        'Dim gemeindeschluessel As String = cmbGemeinden.SelectedValue.ToString
+        aktadr.strasseName = item.mySttring
+        'Dim lage As String = item.mySttring
+        aktadr.gemeindeName = gemeindeitem.mySttring
+        'Dim gemeindetext As String = gemeindeitem.mySttring
+        'Dim oldstring As String = ""
         Dim cb As New myComboBoxItem
         Dim fst As New clsFlurstueck
         Dim strassennamen As New List(Of myComboBoxItem)
-        lage_lage = "== Lage: " & gemeindetext & ", " & lage & " =="
-        lageliste = clsGIStools.getLage(lage, gemeindeschluessel, mitfkz:=True)
+        lage_lage = "== Lage: " & aktadr.gemeindeName & ", " & aktadr.strasseName & " =="
+        lageliste = clsGIStools.getLage(aktadr.strasseName, aktadr.gemeindebigNRstring, mitfkz:=True)
+        'lageliste = clsGIStools.getLage(lage, gemeindeschluessel, mitfkz:=True)
         If lageliste.Count > 0 Then
 
             'fkz zerlegen 
@@ -485,13 +499,13 @@ Public Class winHaupt
             btnwordADR.IsEnabled = True
             btngis4adr.IsEnabled = True
             If lageliste IsNot Nothing Then
-                Dim adr As New clsAdress
-                adr.gemeindeName = gemeindetext.ToString
-                adr.strasseName = lage.ToString
-                adr.fkz = fst.Flurstuecksskennzeichen
-                adr.index = cmbGemeinden.SelectedIndex
-                adr.AZ = tbFSTbemerkungadr.Text
-                cls20Cookies.SpeichereAdresse(adr)
+                'Dim adr As New clsAdress
+                'aktadr.gemeindeName = gemeindetext.ToString
+                'aktadr.strasseName = lage.ToString
+                aktadr.fkz = fst.Flurstuecksskennzeichen
+                aktadr.index = cmbGemeinden.SelectedIndex
+                aktadr.AZ = tbADRbemerkung.Text
+
             End If
         Else
             MsgBox("Kein entsprechendes Flurstück gefunden")
@@ -505,15 +519,32 @@ Public Class winHaupt
     End Sub
 
     Private Sub btngis4adr_Click(sender As Object, e As RoutedEventArgs)
+
         Dim loklist = New List(Of clsFlurstueck)
         loklist = readFlurst_Form()
         Dim index As Integer = CInt(cmbGemarkungen.SelectedIndex)
+        'Dim adr As New clsAdress
         Try
             ' tools.writeFlurstCookie(gemaIndex.ToString, (fkzlist_lage.Item(0).flur.ToString), (fkzlist_lage.Item(0).zaehler.ToString), (fkzlist_lage.Item(0).nenner.ToString), "bgm_FST_cookie.txt")
-            MitFlurstueckInsGIS(fkzlist_lage)
+            MitFlurstueckInsGIS(fkzlist_lage, tbADRbemerkung.Text, True)
+
+            aktadr.AZ = tbADRbemerkung.Text 'tbFSTbemerkung.Text
+            aktadr.index = cmbGemarkungen.SelectedIndex
+            cls20Cookies.SpeichereAdresse(aktadr)
+
             l("adresse wird angezeigt")
+            aktualisierenAdressHistory()
         Catch ex As Exception
             l("btnsucheeigentumer_Click " & ex.ToString)
+        End Try
+    End Sub
+
+    Private Sub aktualisierenAdressHistory()
+        Try
+            Dim aliste As List(Of clsAdress) = cls20Cookies.LadeAdressen()
+            cmb20adr.ItemsSource = aliste
+        Catch ex As Exception
+            l("aktualisierenAdressHistory " & ex.ToString)
         End Try
     End Sub
 
@@ -784,20 +815,18 @@ Public Class winHaupt
         End If
     End Sub
 
-    'Private Sub ButtonSaveHistory_Click(sender As Object, e As RoutedEventArgs)
-    '    ' Button klick -> speichern
-    '    e.Handled = True
-    '    WriteHistoryCookie(tbblnr.Text)
+    Private Sub cmb20adr_MouseEnter(sender As Object, e As MouseEventArgs)
+        cmb20adr.IsDropDownOpen = True
+    End Sub
 
-    'End Sub
-
-    'Private Sub tbStrasseFilter_TextChanged(sender As Object, e As TextChangedEventArgs)
-    '    'If tbStrasseFilter Is Nothing Then Exit Sub
-    '    'e.Handled = True
-
-    '    'lageliste = clsGIStools.getLage(tbStrasseFilter.Text, cmbGemeinden.SelectedValue.ToString, tbHausnr.Text)
-    '    ''lageliste = mapTools.lageohneZahl(lageliste)
-    'End Sub
+    Private Sub aktualisiereFSTHistory()
+        Try
+            Dim liste As List(Of clsFlurstueck) = cls20Cookies.LadeFlurstuecke()
+            cmb20fst.ItemsSource = liste
+        Catch ex As Exception
+            l("aktualisiereFSTHistory " & ex.ToString)
+        End Try
+    End Sub
 
 
 
