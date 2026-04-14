@@ -1,4 +1,6 @@
 ﻿
+Imports DocumentFormat.OpenXml.Drawing
+
 Public Class clsAdress
     Implements ICloneable
     Implements IDisposable
@@ -20,6 +22,12 @@ Public Class clsAdress
     Sub New()
         ' TODO: Complete member initialization 
     End Sub
+
+    Public ReadOnly Property Anzeige As String
+        Get
+            Return $"{gemeindeName} -  {strasseName}, ({AZ})"
+        End Get
+    End Property
     Property index As Integer
     Property AZ As String
     Property Quelle As String 'halo oder lage oder fehlt
@@ -258,6 +266,8 @@ Public Class clsAdress
         End Try
     End Function
     Public Property gemeindebigNRstring As String
+    Public Property fkz As String
+
     Public Function gemeindeNrBig() As String
         Dim tbignr = "4380"
         Dim s$ = gemeindeNr.ToString

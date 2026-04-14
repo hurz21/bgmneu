@@ -101,7 +101,7 @@ Public Class winHaupt
         cmbGemeinden.ItemsSource = gameindeitems
         cmbGemeinden.DisplayMemberPath = "mySttring"
         cmbGemeinden.SelectedValuePath = "myindex"
-        cmbGemeinden.IsDropDownOpen = True
+        cmbGemeinden.IsDropDownOpen = False
         cmbGemeinden.SelectedIndex = 13
         'cmbGemeinden.SelectedIndex = CInt(gemeindeindex)
 
@@ -111,6 +111,8 @@ Public Class winHaupt
         dummyaufrufStarten()
         Dim liste As List(Of clsFlurstueck) = cls20Cookies.LadeFlurstuecke()
         cmb20fst.ItemsSource = liste
+        Dim aliste As List(Of clsAdress) = cls20Cookies.LadeAdressen()
+        cmb20adr.ItemsSource = aliste
         'cmb20fst.SelectedIndex = liste(0).index
 
         istgeladen = True
@@ -467,12 +469,14 @@ Public Class winHaupt
         lage_lage = "== Lage: " & gemeindetext & ", " & lage & " =="
         lageliste = clsGIStools.getLage(lage, gemeindeschluessel, mitfkz:=True)
         If lageliste.Count > 0 Then
+
             'fkz zerlegen 
+
             fst.Flurstuecksskennzeichen = lageliste.Item(0).myindex.ToString
             '   flurstueckskennzeichen
             fst.fkzzerlegen()
             'gemarkungsindex = gemarkung
-            'cmbGemarkungen.SelectedIndex = CInt(fst.gemcode)
+            'cmbGemarkungen.SelectedIndex = CInt(adr.gemcode)
             tbFlur.Text = fst.flur.ToString
             tbZaehler.Text = fst.zaehler.ToString
             tbnenner.Text = fst.nenner.ToString
@@ -480,7 +484,15 @@ Public Class winHaupt
             fkzlist_lage.Add(fst)
             btnwordADR.IsEnabled = True
             btngis4adr.IsEnabled = True
-
+            If lageliste IsNot Nothing Then
+                Dim adr As New clsAdress
+                adr.gemeindeName = gemeindetext.ToString
+                adr.strasseName = lage.ToString
+                adr.fkz = fst.Flurstuecksskennzeichen
+                adr.index = cmbGemeinden.SelectedIndex
+                adr.AZ = tbFSTbemerkungadr.Text
+                cls20Cookies.SpeichereAdresse(adr)
+            End If
         Else
             MsgBox("Kein entsprechendes Flurstück gefunden")
         End If
@@ -714,7 +726,9 @@ Public Class winHaupt
         Dim oldstring As String = ""
         Dim cb As New myComboBoxItem
         Dim strassennamen As New List(Of myComboBoxItem)
+        Dim adr As New clsAdress
         lageliste = clsGIStools.getLage(tbStrasse.Text, cmbGemeinden.SelectedValue.ToString, mitfkz:=False)
+
         Dim a() As String
         Dim newstring As String = ""
 
@@ -731,7 +745,7 @@ Public Class winHaupt
             Dim neu As New myComboBoxItem
             neu.myindex = fst.index.ToString
             neu.mySttring = fst.gemarkungstext
-            'txtGemarkung.Text = fst.gemarkungstext 
+            'txtGemarkung.Text = adr.gemarkungstext 
             cmbGemarkungen.SelectedIndex = CInt(neu.myindex)
             tbFlur.Text = fst.flur.ToString
             tbZaehler.Text = fst.zaehler.ToString
@@ -742,12 +756,32 @@ Public Class winHaupt
 
 
 
-    Private Sub tabItem1_Clicked(sender As Object, e As MouseButtonEventArgs)
+    Private Sub tabItemFST_Clicked(sender As Object, e As MouseButtonEventArgs)
+
         cmb20fst.IsDropDownOpen = True
     End Sub
 
     Private Sub cmb20adr_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
+        e.Handled = True
+        Dim adr = TryCast(cmb20adr.SelectedItem, clsAdress)
+        If adr IsNot Nothing Then
+            Dim neu As New myComboBoxItem
+            neu.myindex = adr.index.ToString
+            neu.mySttring = adr.gemeindeName
+            'txtGemarkung.Text = adr.gemarkungstext 
+            cmbGemeinden.SelectedIndex = CInt(neu.myindex)
+            tbStrasse.Text = adr.strasseName.ToString.Substring(0, 3)
+            'tb.Text = adr.zaehler.ToString
+            'tbnenner.Text = adr.nenner.ToString
+            tbFSTbemerkung.Text = adr.AZ
+            Dim loklist As New List(Of clsFlurstueck)
+            Dim lokfst As New clsFlurstueck
+            lokfst.Flurstuecksskennzeichen = adr.fkz
+            lokfst.fkzzerlegen()
+            loklist.Add(lokfst)
 
+            gisFuerProbaugFlurst(tbblnr.Text.Trim, loklist)
+        End If
     End Sub
 
     'Private Sub ButtonSaveHistory_Click(sender As Object, e As RoutedEventArgs)
