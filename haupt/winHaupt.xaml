@@ -39,7 +39,7 @@
 
             <Button Name="btnbplan"   Click="btnbplan_Click" Visibility="Collapsed" Margin="5">Bebauungspläne</Button>
 
-            <TabControl x:Name="tabEig" FontSize="10">
+            <TabControl x:Name="tabEig" FontSize="9" >
                 <TabItem  Name="tabBaulast"  FontSize="9"   VerticalAlignment="Top">
                     <TabItem.Header>
                         <Label Content="Baulast" FontSize="9"      />
@@ -166,15 +166,19 @@
 
                             <Button x:Name="btngis4fst" Click="btngis4fst_click"  Margin="0,0,0,0"
                                 Width="177" HorizontalAlignment="Left">Flurstück im GIS</Button>
+                         
                             <ComboBox x:Name="cmb20fst" HorizontalAlignment="Left" Margin="0,0,0,0"
                                   SelectionChanged="cmb20fst_SelectionChanged" 
                                    DisplayMemberPath="Anzeige"  Width="25"
                                     SelectedItem="{Binding SelectedFlurstueck}" 
                                     Height="30"   FontSize="10"/>
                         </StackPanel>
-                        <Button x:Name="btnsucheeigentumer" Click="btnsucheeigentumer_Click" 
-                                HorizontalAlignment="Center" Margin="15"
-                 Style="{StaticResource lessButton}" Width="203" 
+                        <Button x:Name="btnfst2PG" Click="btnfst2PG_Click"  Margin="35,0,0,0"
+                                  IsEnabled="False"   Width="177" HorizontalAlignment="Left" Style="{StaticResource lessButton}">Flurstück im ProBauG</Button>
+                        <Button x:Name="btnsucheeigentumer" Click="btnsucheeigentumer_Click"
+                               
+                                HorizontalAlignment="left" Margin="35,0,0,0"
+                 Style="{StaticResource lessButton}" Width="177" 
 >Eigentümer-Word-Datei</Button>
                     </StackPanel>
                 </TabItem>
@@ -222,6 +226,30 @@
                                     HorizontalAlignment="Left" Height="25" IsDropDownOpen="False"    FontSize="10"
                                                        />
                         </StackPanel>
+                    </StackPanel>
+                </TabItem>
+                <TabItem Name="tabProbaug" FontSize="9" VerticalAlignment="Top" HorizontalContentAlignment="Left">
+                <TabItem.Header     >
+                        <Label Content="ProBauG Az." FontSize="9"  VerticalAlignment="Top"   />
+                    </TabItem.Header>
+                    <StackPanel Background="LightGray" HorizontalAlignment="Stretch" >
+                        <StackPanel Orientation="Horizontal" Height="30">
+                            <TextBlock Width="20"> Jahr:</TextBlock>
+                            <TextBox x:Name="tbPGJahr">2026</TextBox>
+                            <TextBlock Width="20"> Az:</TextBlock>
+                            <TextBox x:Name="tbPGnr">80006</TextBox>
+                            <Button x:Name="tbPGsuchestarten" Click="tbPGsuchestarten_Click" 
+                                    Margin="15,0,0,0" Width="100"
+                                    Content="Suchen"></Button>
+                            <ComboBox x:Name="cmbPGNR"  Margin="0,0,0,0"  
+SelectionChanged="cmbPGNR_SelectionChanged" 
+ DisplayMemberPath="Anzeige"
+  SelectedItem="{Binding SelectedAdresse}" 
+  Height="30" Width="18"  FontSize="10"/>
+
+                        </StackPanel>
+                        <TextBox Name="tbPGresult" Height="220"  AcceptsReturn="True" Width="270" ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                 AcceptsTab="True"   TextWrapping="Wrap"/>
                     </StackPanel>
                 </TabItem>
                 <TabItem>

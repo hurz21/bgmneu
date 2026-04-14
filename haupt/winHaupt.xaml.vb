@@ -1,5 +1,6 @@
 ﻿Imports System.ComponentModel
 Imports System.Security.Policy
+Imports System.Text
 Imports DocumentFormat.OpenXml.Drawing
 Imports DocumentFormat.OpenXml.EMMA
 Imports DocumentFormat.OpenXml.Spreadsheet
@@ -356,6 +357,7 @@ Public Class winHaupt
             Else
                 fst.nenner = CInt(tbnenner.Text.Trim)
             End If
+
             fkzlist.Add(fst)
             tools.writeFlurstCookie(gemindex.ToString, (tbFlur.Text.Trim), tbZaehler.Text.Trim, tbnenner.Text.Trim, "bgm_FST_cookie.txt")
             Return fkzlist
@@ -828,6 +830,62 @@ Public Class winHaupt
         End Try
     End Sub
 
+    Private Sub tbPGsuchestarten_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+        Dim fstliste As List(Of clsFlurstueck)
+        Dim metadata As List(Of myComboBoxItem)
+        fstliste = probaug.klaereanzahlFST(tbPGJahr.Text, tbPGnr.Text, metadata)
+        Dim fkzstring = probaug.bildeFKZstring(fstliste)
+        Dim flurstueckskennzeichen = fkzstring
+        tools.gisLogoutUndStartFKZ(flurstueckskennzeichen, gisLogouten)
 
+        Dim result As String
+        result = fstliste.Count & " gültige Flurstücke wurden gefunden!" & Environment.NewLine
 
+        Dim sb As New StringBuilder
+        For i = 0 To metadata.Count - 1
+            If metadata(i).mySttring.Trim = String.Empty Then
+            Else
+                sb.Append(metadata(i).myindex & ": " & metadata(i).mySttring & Environment.NewLine)
+            End If
+        Next
+        tbPGresult.Text = result & sb.ToString
+    End Sub
+
+    Private Sub cmbPGNR_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
+
+    End Sub
+
+    Private Sub btnfst2PG_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+        Dim probaugVorgange As New List(Of myComboBoxItem)
+        fkzlist = New List(Of clsFlurstueck)
+        fkzlist = readFlurst_Form()
+        Dim a As String
+        Dim index As Integer = CInt(cmbGemarkungen.SelectedIndex)
+        If fkzlist(0).nenner = 0 Then
+            fkzlist(0).fstueckKombi = fkzlist(0).zaehler.ToString
+        Else
+            fkzlist(0).fstueckKombi = fkzlist(0).zaehler & "/" & fkzlist(0).nenner
+        End If
+        Try
+            probaugVorgange = probaug.getVorgaengeZuFlurstueck(fkzlist(0))
+            If probaugVorgange.Count < 1 Then
+                MsgBox("Keine vorgänge gefunden")
+            End If
+            Dim sb As New StringBuilder
+            For i = 0 To probaugVorgange.Count - 1
+                sb.Append(probaugVorgange(i).myindex & "-" & probaugVorgange(i).mySttring & Environment.NewLine)
+            Next
+            a = sb.ToString
+            Dim path = cls20Cookies.GetCookieFilePath("vorgang_cookies.txt")
+            IO.File.WriteAllText(path, a)
+            'tools.writeFlurstCookie(index.ToString, (tbFlur.Text.Trim), tbZaehler.Text.Trim, tbnenner.Text.Trim, "bgm_FST_cookie.txt")
+            'MitFlurstueckInsGIS(fkzlist, tbFSTbemerkung.Text, False)
+            'aktualisiereFSTHistory()
+        Catch ex As Exception
+            l("fehler btnsucheeigentumer_Click " & ex.ToString)
+        End Try
+
+    End Sub
 End Class

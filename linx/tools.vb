@@ -1393,19 +1393,7 @@ Module tools
             My.Computer.Clipboard.SetText(zwischen)
             If lokfkzliste.Length > 1 Then
 
-                Dim logout = "https://gis.kreis-of.de/LKOF/asp/login.asp?logout=true&m=1"
-                If gisLogouten Then
-                    Process.Start(logout)
-                    Threading.Thread.Sleep(1000)
-                End If
-
-
-                url = makeurl4FST("https://gis.kreis-of.de/LKOF/asp/main.asp?", lokfkzliste, tools.themendefinitionsdatei)
-                url = url.Replace("?&", "?").Replace("&&", "&")
-                l("url " & url)
-                Process.Start(url)
-                l(lokfkzliste)
-                l("fertig abgeschickt ")
+                url = gisLogoutUndStartFKZ(lokfkzliste, gisLogouten)
             Else
                 MsgBox("Keine Flurstücke zugeordnet!!!  GIS wird ohne Flurstück gestartet!")
                 url = "https://gis.kreis-of.de/LKOF/asp/main.asp?"
@@ -1416,6 +1404,27 @@ Module tools
             l("gisFuerProbaugFlurst " & ex.ToString)
         End Try
     End Sub
+
+    Public Function gisLogoutUndStartFKZ(lokfkzliste As String, mitlogout As Boolean) As String
+        Dim url As String
+        Dim logout = "https://gis.kreis-of.de/LKOF/asp/login.asp?logout=true&m=1"
+        Try
+            If mitlogout Then
+                Process.Start(logout)
+                Threading.Thread.Sleep(1000)
+            End If
+            url = makeurl4FST("https://gis.kreis-of.de/LKOF/asp/main.asp?", lokfkzliste, tools.themendefinitionsdatei)
+            url = url.Replace("?&", "?").Replace("&&", "&")
+            l("url " & url)
+            Process.Start(url)
+            l(lokfkzliste)
+            l("fertig abgeschickt ")
+            Return url
+        Catch ex As Exception
+            l("gisLogoutUndStartFKZ " & ex.ToString)
+        End Try
+    End Function
+
     Public Function makeurl4FST(baseurl As String, flurstueckskennzeichen As String, themendatei As String) As String
         l("in makurl")
         Try

@@ -192,6 +192,7 @@
     <Compile Include="Neu\winDetail.xaml.vb">
       <DependentUpon>winDetail.xaml</DependentUpon>
     </Compile>
+    <Compile Include="probaug.vb" />
     <Compile Include="werkzeuge\clsToolWerkzeuge.vb" />
     <Compile Include="werkzeuge\winWerkzeuge.xaml.vb">
       <DependentUpon>winWerkzeuge.xaml</DependentUpon>
