@@ -117,9 +117,9 @@ Public Class winHaupt
         Dim aliste As List(Of clsAdress) = cls20Cookies.LadeAdressen()
         cmb20adr.ItemsSource = aliste
         'cmb20fst.SelectedIndex = liste(0).index
-
+        Dim vorhabenliste As List(Of clsPGvorhaben) = cls20Cookies.LadePGcookies()
+        cmbPGNR.ItemsSource = vorhabenliste
         istgeladen = True
-
     End Sub
 
     Private Sub dummyaufrufStarten()
@@ -832,9 +832,18 @@ Public Class winHaupt
 
     Private Sub tbPGsuchestarten_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
+        suchePG(True)
+    End Sub
+
+    Private Sub suchePG(savecookie As Boolean)
+        Dim vorhaben1 As String
         Dim fstliste As List(Of clsFlurstueck)
         Dim metadata As List(Of myComboBoxItem)
-        fstliste = probaug.klaereanzahlFST(tbPGJahr.Text, tbPGnr.Text, metadata)
+        fstliste = probaug.klaereanzahlFST(tbPGJahr.Text, tbPGnr.Text, metadata, vorhaben1)
+        If fstliste Is Nothing Then
+            MsgBox("Das Aktenzeichen ist ungültig!")
+            Exit Sub
+        End If
         Dim fkzstring = probaug.bildeFKZstring(fstliste)
         Dim flurstueckskennzeichen = fkzstring
         tools.gisLogoutUndStartFKZ(flurstueckskennzeichen, gisLogouten)
@@ -850,10 +859,18 @@ Public Class winHaupt
             End If
         Next
         tbPGresult.Text = result & sb.ToString
+        If savecookie Then cls20Cookies.PGcookiespeichern(tbPGJahr.Text, tbPGnr.Text, vorhaben1)
     End Sub
 
     Private Sub cmbPGNR_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
-
+        e.Handled = True
+        e.Handled = True
+        Dim adr = TryCast(cmbPGNR.SelectedItem, clsPGvorhaben)
+        If adr IsNot Nothing Then
+            tbPGJahr.Text = adr.jahr
+            tbPGnr.Text = adr.nr
+            suchePG(False)
+        End If
     End Sub
 
     Private Sub btnfst2PG_Click(sender As Object, e As RoutedEventArgs)
@@ -861,31 +878,65 @@ Public Class winHaupt
         Dim probaugVorgange As New List(Of myComboBoxItem)
         fkzlist = New List(Of clsFlurstueck)
         fkzlist = readFlurst_Form()
-        Dim a As String
-        Dim index As Integer = CInt(cmbGemarkungen.SelectedIndex)
-        If fkzlist(0).nenner = 0 Then
-            fkzlist(0).fstueckKombi = fkzlist(0).zaehler.ToString
-        Else
-            fkzlist(0).fstueckKombi = fkzlist(0).zaehler & "/" & fkzlist(0).nenner
-        End If
+        Dim neuertext As String
+        Dim index As Integer
+
+
+
+        index = CInt(cmbGemarkungen.SelectedIndex)
+        berechneFstueckkombiOhneNull(fkzlist(0))
+
         Try
             probaugVorgange = probaug.getVorgaengeZuFlurstueck(fkzlist(0))
             If probaugVorgange.Count < 1 Then
                 MsgBox("Keine vorgänge gefunden")
             End If
-            Dim sb As New StringBuilder
-            For i = 0 To probaugVorgange.Count - 1
-                sb.Append(probaugVorgange(i).myindex & "-" & probaugVorgange(i).mySttring & Environment.NewLine)
-            Next
-            a = sb.ToString
-            Dim path = cls20Cookies.GetCookieFilePath("vorgang_cookies.txt")
-            IO.File.WriteAllText(path, a)
+
+            neuertext = bildePGvorgangCookieString(probaugVorgange)
+            MsgBox("Es wurde(n) " & probaugVorgange.Count & " Vorgänge gefunden:" & Environment.NewLine & Environment.NewLine &
+                   neuertext & Environment.NewLine & Environment.NewLine &
+                    Environment.NewLine & Environment.NewLine &
+                   "Diese vorgänge werden unter dem Reiter 'ProBauG' der Combobox zuaddiert!")
+            mergeToPGCookie(neuertext)
+
+            'IO.File.WriteAllText(path, neuertext)
             'tools.writeFlurstCookie(index.ToString, (tbFlur.Text.Trim), tbZaehler.Text.Trim, tbnenner.Text.Trim, "bgm_FST_cookie.txt")
             'MitFlurstueckInsGIS(fkzlist, tbFSTbemerkung.Text, False)
-            'aktualisiereFSTHistory()
+            aktualisierePGvorgaengeHistory()
         Catch ex As Exception
             l("fehler btnsucheeigentumer_Click " & ex.ToString)
         End Try
 
+    End Sub
+
+    Private Sub aktualisierePGvorgaengeHistory()
+        Dim vorhabenliste As List(Of clsPGvorhaben) = cls20Cookies.LadePGcookies()
+        cmbPGNR.ItemsSource = vorhabenliste
+    End Sub
+
+    Private Shared Sub mergeToPGCookie(a As String)
+        Dim path = cls20Cookies.GetCookieFilePath("PGvorgangcookies.txt")
+        Dim alterText As String = ""
+        If IO.File.Exists(path) Then
+            alterText = IO.File.ReadAllText(path)
+        End If
+        Dim neuerText = a & Environment.NewLine & alterText
+        IO.File.WriteAllText(path, neuerText)
+    End Sub
+
+    Private Shared Function bildePGvorgangCookieString(probaugVorgange As List(Of myComboBoxItem)) As String
+        Dim sb As New StringBuilder
+        For i = 0 To probaugVorgange.Count - 1
+            sb.Append(probaugVorgange(i).myindex.Trim & "|" & probaugVorgange(i).mySttring.Trim & Environment.NewLine)
+        Next
+        Return sb.ToString
+    End Function
+
+    Private Shared Sub berechneFstueckkombiOhneNull(fst As clsFlurstueck)
+        If fst.nenner = 0 Then
+            fst.fstueckKombi = fst.zaehler.ToString
+        Else
+            fst.fstueckKombi = fst.zaehler & "/" & fst.nenner
+        End If
     End Sub
 End Class

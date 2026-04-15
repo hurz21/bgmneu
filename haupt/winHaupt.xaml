@@ -40,10 +40,10 @@
             <Button Name="btnbplan"   Click="btnbplan_Click" Visibility="Collapsed" Margin="5">Bebauungspläne</Button>
 
             <TabControl x:Name="tabEig" FontSize="9" >
-                <TabItem  Name="tabBaulast"  FontSize="9"   VerticalAlignment="Top">
-                    <TabItem.Header>
+                <TabItem  Name="tabBaulast"  FontSize="9" Header="Baulast"  VerticalAlignment="Top">
+                    <!--<TabItem.Header>
                         <Label Content="Baulast" FontSize="9"      />
-                    </TabItem.Header>
+                    </TabItem.Header>-->
                     <StackPanel Height="287">
 
                         <Button Name="btnEdit" Click="btnEdit_Click" Content="Baulast bearbeiten" 
@@ -74,10 +74,10 @@
                         </StackPanel>
                     </StackPanel>
                 </TabItem>
-                <TabItem Name="tabadr"   FontSize="9"  VerticalAlignment="Top">
-                    <TabItem.Header>
+                <TabItem Name="tabadr" Header="Adresse"  FontSize="9"  VerticalAlignment="Top">
+                    <!--<TabItem.Header>
                         <Label Content="Adresse" FontSize="9"     VerticalAlignment="Top"  />
-                    </TabItem.Header>
+                    </TabItem.Header>-->
                     <StackPanel Height="277">
                         <StackPanel Orientation="Horizontal" >
                             <Label Width="75" FontSize="10">Gemeinde:</Label>
@@ -134,11 +134,11 @@
                     IsEnabled="False">Eigentümer-Word-Datei</Button>
                     </StackPanel>
                 </TabItem>
-                <TabItem Name="tabfst"   FontSize="9"    VerticalAlignment="Top">
-                    <TabItem.Header>
+                <TabItem Name="tabfst"   FontSize="9" Header="Flurstück"   VerticalAlignment="Top">
+                    <!--<TabItem.Header>
                         <Label Content="Flurstück" FontSize="9"     
                                MouseLeftButtonDown="tabItemFST_Clicked"  />
-                    </TabItem.Header>
+                    </TabItem.Header>-->
                     <StackPanel Height="277">
                         <StackPanel Orientation="Horizontal">
                             <Label Width="75" FontSize="10">Gemarkung:</Label>
@@ -174,7 +174,7 @@
                                     Height="30"   FontSize="10"/>
                         </StackPanel>
                         <Button x:Name="btnfst2PG" Click="btnfst2PG_Click"  Margin="35,0,0,0"
-                                  IsEnabled="False"   Width="177" HorizontalAlignment="Left" Style="{StaticResource lessButton}">Flurstück im ProBauG</Button>
+                                  IsEnabled="True"   Width="177" HorizontalAlignment="Left" Style="{StaticResource lessButton}">Flurstück im ProBauG</Button>
                         <Button x:Name="btnsucheeigentumer" Click="btnsucheeigentumer_Click"
                                
                                 HorizontalAlignment="left" Margin="35,0,0,0"
@@ -182,10 +182,10 @@
 >Eigentümer-Word-Datei</Button>
                     </StackPanel>
                 </TabItem>
-                <TabItem FontSize="9" Name="tabbBplan"    VerticalAlignment="Top">
-                    <TabItem.Header>
+                <TabItem FontSize="9" Name="tabbBplan"  Header="B-Plan"  VerticalAlignment="Top">
+                    <!--<TabItem.Header>
                         <Label Content="B-Plan" FontSize="9"    VerticalAlignment="Top"  />
-                    </TabItem.Header>
+                    </TabItem.Header>-->
                     <StackPanel Height="297">
 
                         <StackPanel Orientation="Horizontal" Visibility="Collapsed">
@@ -228,10 +228,10 @@
                         </StackPanel>
                     </StackPanel>
                 </TabItem>
-                <TabItem Name="tabProbaug" FontSize="9" VerticalAlignment="Top" HorizontalContentAlignment="Left">
-                <TabItem.Header     >
+                <TabItem Name="tabProbaug" FontSize="9" Header="ProBauG Az." VerticalAlignment="Top" HorizontalContentAlignment="Left">
+                <!--<TabItem.Header     >
                         <Label Content="ProBauG Az." FontSize="9"  VerticalAlignment="Top"   />
-                    </TabItem.Header>
+                    </TabItem.Header>-->
                     <StackPanel Background="LightGray" HorizontalAlignment="Stretch" >
                         <StackPanel Orientation="Horizontal" Height="30">
                             <TextBlock Width="20"> Jahr:</TextBlock>
@@ -242,17 +242,17 @@
                                     Margin="15,0,0,0" Width="100"
                                     Content="Suchen"></Button>
                             <ComboBox x:Name="cmbPGNR"  Margin="0,0,0,0"  
-SelectionChanged="cmbPGNR_SelectionChanged" 
- DisplayMemberPath="Anzeige"
-  SelectedItem="{Binding SelectedAdresse}" 
-  Height="30" Width="18"  FontSize="10"/>
+                                        SelectionChanged="cmbPGNR_SelectionChanged" 
+                                         DisplayMemberPath="Anzeige"
+                                          SelectedItem="{Binding SelectedAdresse}" 
+                                          Height="30" Width="18"  FontSize="10"/>
 
                         </StackPanel>
                         <TextBox Name="tbPGresult" Height="220"  AcceptsReturn="True" Width="270" ScrollViewer.VerticalScrollBarVisibility="Auto"
                                  AcceptsTab="True"   TextWrapping="Wrap"/>
                     </StackPanel>
                 </TabItem>
-                <TabItem>
+                <TabItem                            >
                     <TabItem.Header>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE115;" FontSize="9"  />

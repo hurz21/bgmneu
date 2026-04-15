@@ -59,8 +59,6 @@
         Dim path = GetCookieFilePath("alle20ADRcookies.txt")
         Dim liste As New List(Of String)
         Try
-
-
             ' Bestehende laden
             If IO.File.Exists(path) Then
                 liste = IO.File.ReadAllLines(path).ToList()
@@ -101,6 +99,51 @@
             Next
         End If
 
+        Return result
+    End Function
+
+    Friend Shared Sub PGcookiespeichern(jahr As String, nr As String, vorhaben1 As String)
+        Dim path = GetCookieFilePath("PGvorgangCookies.txt")
+        Dim liste As New List(Of String)
+        Try
+            ' Bestehende laden
+            If IO.File.Exists(path) Then
+                liste = IO.File.ReadAllLines(path).ToList()
+            End If
+
+            Dim neuerEintrag = $"{jahr}|{nr}  |{vorhaben1} "
+
+            ' Entferne vorhandenen gleichen Eintrag (Duplikate vermeiden)
+            liste = liste.Where(Function(x) x <> neuerEintrag).ToList()
+
+            ' Neuen oben einfügen
+            liste.Insert(0, neuerEintrag)
+
+            ' Auf 20 begrenzen
+            liste = liste.Take(50).ToList()
+
+            IO.File.WriteAllLines(path, liste)
+        Catch ex As Exception
+            l("fehler in SpeichereAdresse" & ex.ToString)
+        End Try
+    End Sub
+
+    Public Shared Function LadePGcookies() As List(Of clsPGvorhaben)
+        Dim path = GetCookieFilePath("PGvorgangCookies.txt")
+        Dim result As New List(Of clsPGvorhaben)
+
+        If IO.File.Exists(path) Then
+            For Each line In IO.File.ReadAllLines(path)
+                Dim parts = line.Split("|"c)
+                If parts.Length = 3 Then
+                    result.Add(New clsPGvorhaben With {
+                    .jahr = parts(0).Trim,
+                    .nr = (parts(1)).Trim,
+                    .vorhaben1 = (parts(2).Trim)
+                })
+                End If
+            Next
+        End If
         Return result
     End Function
 End Class

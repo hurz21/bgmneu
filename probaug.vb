@@ -31,7 +31,9 @@ Public Class probaug
             Return ""
         End Try
     End Function
-    Public Shared Function klaereanzahlFST(jahr As String, vorgangsnummer As String, ByRef metadata As List(Of myComboBoxItem)) As List(Of clsFlurstueck)
+    Public Shared Function klaereanzahlFST(jahr As String, vorgangsnummer As String,
+                                           ByRef metadata As List(Of myComboBoxItem),
+                                           ByRef vorhaben1 As String) As List(Of clsFlurstueck)
         Dim fstliste As New List(Of clsFlurstueck)
         Dim dt As DataTable
         Dim sql = "" '"select * from GISVIEW6 where feld7='2026' and feld9='80006'"
@@ -46,7 +48,7 @@ Public Class probaug
         Dim meta As New myComboBoxItem
         Try
             dt = probaug.getbalist2MSSQL(sql)
-            metadata = probaug.dt2meta(dt)
+            metadata = probaug.dt2meta(dt, vorhaben1)
 
             fstliste = probaug.dt2obj(dt)
 
@@ -57,7 +59,7 @@ Public Class probaug
         End Try
     End Function
 
-    Private Shared Function dt2meta(dt As DataTable) As List(Of myComboBoxItem)
+    Private Shared Function dt2meta(dt As DataTable, ByRef vorhaben As String) As List(Of myComboBoxItem)
         l("in dt2meta: ")
         Dim test As Integer
         Dim meta As New myComboBoxItem
@@ -213,6 +215,7 @@ Public Class probaug
                 Exit For
 
             Next
+            vorhaben = clsDBtools.fieldvalue(dt.Rows(0).Item("FELD4")).Trim
             Return metaliste
         Catch ex As Exception
             l("Fehler in dt2obj: " & ex.ToString())
@@ -582,8 +585,9 @@ Public Class probaug
 
             For i = 0 To dt.Rows.Count - 1
                 cb = New myComboBoxItem
-                cb.myindex = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD1")).Trim '
-                cb.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD3")).Trim '
+                cb.myindex = clsString.cleanLayerString(clsDBtools.fieldvalue(dt.Rows(i).Item("FELD1"))).Trim & "|" &
+                               clsString.cleanLayerString(clsDBtools.fieldvalue(dt.Rows(i).Item("FELD3"))).Trim
+                cb.mySttring = clsString.cleanLayerString(clsDBtools.fieldvalue(dt.Rows(i).Item("FELD4"))).Trim
                 vlist.Add(cb)
             Next
             Return vlist
