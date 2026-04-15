@@ -97,96 +97,128 @@ Public Class probaug
                 metaliste.Add(meta)
                 meta = New myComboBoxItem
                 meta.myindex = "Bauort"
-                meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD11")).Trim
+                meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD11")).Trim &
+                    ", Gemarkung: " & clsDBtools.fieldvalue(dt.Rows(i).Item("FELD12")).Trim &
+                    ", Flur: " & clsDBtools.fieldvalue(dt.Rows(i).Item("FELD13")).Trim &
+                    ", Fst: " & clsDBtools.fieldvalue(dt.Rows(i).Item("FELD14")).Trim
+
                 metaliste.Add(meta)
-                meta = New myComboBoxItem
-                meta.myindex = "Gemarkung"
-                meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD12")).Trim
-                metaliste.Add(meta)
-                meta = New myComboBoxItem
-                meta.myindex = "Flur"
-                meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD13")).Trim
-                metaliste.Add(meta)
-                meta = New myComboBoxItem
-                meta.myindex = "Flurstück"
-                meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD14")).Trim
-                metaliste.Add(meta)
+                'meta = New myComboBoxItem
+                'meta.myindex = "Gemarkung"
+                'meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD12")).Trim
+                'metaliste.Add(meta)
+                'meta = New myComboBoxItem
+                'meta.myindex = "Flur"
+                'meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD13")).Trim
+                'metaliste.Add(meta)
+                'meta = New myComboBoxItem
+                'meta.myindex = "Flurstück"
+                'meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD14")).Trim
+                'metaliste.Add(meta)
                 meta = New myComboBoxItem
                 meta.myindex = "anrede"
-                meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD15")).Trim
+                meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD15")).Trim &
+                     " " & clsDBtools.fieldvalue(dt.Rows(i).Item("FELD16")).Trim &
+                     " " & clsDBtools.fieldvalue(dt.Rows(i).Item("FELD17")).Trim &
+                     " " & clsDBtools.fieldvalue(dt.Rows(i).Item("FELD18")).Trim &
+                     " " & clsDBtools.fieldvalue(dt.Rows(i).Item("FELD19")).Trim &
+                     " " & clsDBtools.fieldvalue(dt.Rows(i).Item("FELD20")).Trim
+
                 metaliste.Add(meta)
-                meta = New myComboBoxItem
-                meta.myindex = "Titel"
-                meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD16")).Trim
-                metaliste.Add(meta)
-                meta = New myComboBoxItem
-                meta.myindex = "Zusatz 1"
-                meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD17")).Trim
-                metaliste.Add(meta)
-                meta = New myComboBoxItem
-                meta.myindex = "Zusatz 2"
-                meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD18")).Trim
-                metaliste.Add(meta)
-                meta = New myComboBoxItem
-                meta.myindex = "Vorname"
-                meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD19")).Trim
-                metaliste.Add(meta)
-                meta = New myComboBoxItem
-                meta.myindex = "Name"
-                meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD20")).Trim
-                metaliste.Add(meta)
+                'meta = New myComboBoxItem
+                'meta.myindex = "Titel"
+                'meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD16")).Trim
+                'metaliste.Add(meta)
+                'meta = New myComboBoxItem
+                'meta.myindex = "Zusatz 1"
+                'meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD17")).Trim
+                'metaliste.Add(meta)
+                'meta = New myComboBoxItem
+                'meta.myindex = "Zusatz 2"
+                'meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD18")).Trim
+                'metaliste.Add(meta)
+                'meta = New myComboBoxItem
+                'meta.myindex = "Vorname"
+                'meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD19")).Trim
+                'metaliste.Add(meta)
+                'meta = New myComboBoxItem
+                'meta.myindex = "Name"
+                'meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD20")).Trim
+                'metaliste.Add(meta)
                 meta = New myComboBoxItem
                 meta.myindex = "Straße"
-                meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD21")).Trim
+                meta.myindex = "Adresse (Bauh.)"
+                meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD21")).Trim &
+                       " " & clsDBtools.fieldvalue(dt.Rows(i).Item("FELD22")).Trim &
+                       ", " & clsDBtools.fieldvalue(dt.Rows(i).Item("FELD23")).Trim &
+                       " " & clsDBtools.fieldvalue(dt.Rows(i).Item("FELD24")).Trim
+
+
                 metaliste.Add(meta)
                 meta = New myComboBoxItem
-                meta.myindex = "Hausnr"
-                meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD22")).Trim
-                metaliste.Add(meta)
+                'meta.myindex = "Hausnr"
+                'meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD22")).Trim
+                'metaliste.Add(meta)
+                'meta = New myComboBoxItem
+                'meta.myindex = "plz"
+                'meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD23")).Trim
+                'metaliste.Add(meta)
+                'meta = New myComboBoxItem
+                'meta.myindex = "Ort"
+                'meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD24")).Trim
+                'metaliste.Add(meta)
                 meta = New myComboBoxItem
-                meta.myindex = "plz"
-                meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD23")).Trim
+                meta.myindex = "Strasse" '25
+                meta.myindex = "Adresse (Bauort)"
+                meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD33")).Trim &
+                    ", " & clsDBtools.fieldvalue(dt.Rows(i).Item("FELD32")).Trim &
+                    ", " & clsDBtools.fieldvalue(dt.Rows(i).Item("FELD25")).Trim &
+                    ", " & clsDBtools.fieldvalue(dt.Rows(i).Item("FELD26")).Trim
+
                 metaliste.Add(meta)
-                meta = New myComboBoxItem
-                meta.myindex = "Ort"
-                meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD24")).Trim
-                metaliste.Add(meta)
-                meta = New myComboBoxItem
-                meta.myindex = "Strasse"
-                meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD25")).Trim
-                metaliste.Add(meta)
-                meta = New myComboBoxItem
-                meta.myindex = "hausnr"
-                meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD26")).Trim
-                metaliste.Add(meta)
+                'meta = New myComboBoxItem
+                'meta.myindex = "hausnr"
+                'meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD26")).Trim
+                'metaliste.Add(meta)
                 meta = New myComboBoxItem
                 meta.myindex = "BJVG.HSchl"
                 meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD27")).Trim
                 metaliste.Add(meta)
+
                 meta = New myComboBoxItem
-                meta.myindex = "Gemarkungsbezeichnung"
-                meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD28")).Trim
+                meta.myindex = "Gemarkungsbezeichnung" '28
+                meta.myindex = "Flurst (Bauort)"
+                meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD28")).Trim &
+                    ", Flur: " & clsDBtools.fieldvalue(dt.Rows(i).Item("FELD13")).Trim &
+                    ", Fst: " & clsDBtools.fieldvalue(dt.Rows(i).Item("FELD14")).Trim
+
                 metaliste.Add(meta)
-                meta = New myComboBoxItem
-                meta.myindex = "Hochwert"
-                meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD29")).Trim
-                metaliste.Add(meta)
-                meta = New myComboBoxItem
-                meta.myindex = "Rechtswert"
-                meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD30")).Trim
-                metaliste.Add(meta)
+
+
+                If IsNumeric(clsDBtools.fieldvalue(dt.Rows(i).Item("FELD29")).Trim) And
+                    clsDBtools.fieldvalue(dt.Rows(i).Item("FELD29")).Trim <> "0" Then
+                    meta = New myComboBoxItem
+                    meta.myindex = "Rechts-Hochwert"
+                    meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD30")).Trim & "," & clsDBtools.fieldvalue(dt.Rows(i).Item("FELD29")).Trim
+                    metaliste.Add(meta)
+                    'meta = New myComboBoxItem
+                    'meta.myindex = "Rechtswert"
+                    'meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD30")).Trim
+                    'metaliste.Add(meta)
+                End If
+
                 meta = New myComboBoxItem
                 meta.myindex = "zust. SB"
                 meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD31")).Trim
                 metaliste.Add(meta)
-                meta = New myComboBoxItem
-                meta.myindex = "Ortsteil (KLAR)"
-                meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD32")).Trim
-                metaliste.Add(meta)
-                meta = New myComboBoxItem
-                meta.myindex = "Ort (Katasterangaben KLAR)"
-                meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD33")).Trim
-                metaliste.Add(meta)
+                'meta = New myComboBoxItem
+                'meta.myindex = "Ortsteil (KLAR)"
+                'meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD32")).Trim
+                'metaliste.Add(meta)
+                'meta = New myComboBoxItem
+                'meta.myindex = "Ort (Katasterangaben KLAR)"
+                'meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD33")).Trim
+                'metaliste.Add(meta)
                 meta = New myComboBoxItem
                 meta.myindex = "Ortsteil Antragsteller"
                 meta.mySttring = clsDBtools.fieldvalue(dt.Rows(i).Item("FELD34")).Trim

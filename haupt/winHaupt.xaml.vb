@@ -31,9 +31,20 @@ Public Class winHaupt
 
         LoadHistory() : ComboHistory.ItemsSource = Nothing : ComboHistory.ItemsSource = historyList
         ComboHistory.DisplayMemberPath = "Anzeige"
-
-
-        tools.readFSTCookie(gemarkung, flur, zaehler, nenner, "bgm_FST_cookie.txt")
+        If clsActiveDir.getall(Environment.UserName) Then
+            'If NSfstmysql.ADtools.istUserAlbBerechtigt(gisuser.nick) Then
+            '    gisuser.istalbberechtigt = True
+            '    gisuser.EmailAdress = clsActiveDir.emailadress
+            'End If
+            Dim result = clsActiveDir.fdkurz
+            Title = "BGM 2026, " & clsActiveDir.fdkurz
+            If result.ToLower.Contains("umwelt") Or result.ToLower.Contains("bauaufsicht") Then
+                tools.eigentuemerAbfrageErlaubt = True
+            Else
+                tools.eigentuemerAbfrageErlaubt = False
+            End If
+        End If
+            tools.readFSTCookie(gemarkung, flur, zaehler, nenner, "bgm_FST_cookie.txt")
         gemarkungsindex = gemarkung
         tbFlur.Text = flur
         tbZaehler.Text = zaehler
@@ -890,19 +901,16 @@ Public Class winHaupt
             probaugVorgange = probaug.getVorgaengeZuFlurstueck(fkzlist(0))
             If probaugVorgange.Count < 1 Then
                 MsgBox("Keine vorgänge gefunden")
+            Else
+                neuertext = bildePGvorgangCookieString(probaugVorgange)
+                MsgBox("Es wurden " & probaugVorgange.Count & " Vorgänge gefunden:" & Environment.NewLine & Environment.NewLine &
+                       neuertext & Environment.NewLine & Environment.NewLine &
+                        Environment.NewLine & Environment.NewLine &
+                       "Diese Vorgänge werden unter dem Reiter 'ProBauG' der Combobox zuaddiert!")
+                mergeToPGCookie(neuertext)
+                aktualisierePGvorgaengeHistory()
             End If
 
-            neuertext = bildePGvorgangCookieString(probaugVorgange)
-            MsgBox("Es wurde(n) " & probaugVorgange.Count & " Vorgänge gefunden:" & Environment.NewLine & Environment.NewLine &
-                   neuertext & Environment.NewLine & Environment.NewLine &
-                    Environment.NewLine & Environment.NewLine &
-                   "Diese vorgänge werden unter dem Reiter 'ProBauG' der Combobox zuaddiert!")
-            mergeToPGCookie(neuertext)
-
-            'IO.File.WriteAllText(path, neuertext)
-            'tools.writeFlurstCookie(index.ToString, (tbFlur.Text.Trim), tbZaehler.Text.Trim, tbnenner.Text.Trim, "bgm_FST_cookie.txt")
-            'MitFlurstueckInsGIS(fkzlist, tbFSTbemerkung.Text, False)
-            aktualisierePGvorgaengeHistory()
         Catch ex As Exception
             l("fehler btnsucheeigentumer_Click " & ex.ToString)
         End Try

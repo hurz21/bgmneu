@@ -43,6 +43,7 @@ Module tools
     Public Property baulastenoutDir As String = "c:\baulastenout"
     Public Property wkt As String = ""
     Public Property FSTausGISListeFehlt As List(Of clsFlurstueck)
+    Public Property eigentuemerAbfrageErlaubt As Boolean = False
     Public logfile As String = "C:\kreisoffenbach\bgm\" ' & Environment.UserName & "_"
     'Public logfile As String = srv_unc_path & "\apps\test\bgm\" & "logs\" ' & Environment.UserName & "_"
     Public pfad As String = srv_unc_path & "\fkat\baulasten\"
