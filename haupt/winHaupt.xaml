@@ -78,60 +78,59 @@
                     <!--<TabItem.Header>
                         <Label Content="Adresse" FontSize="9"     VerticalAlignment="Top"  />
                     </TabItem.Header>-->
-                    <StackPanel Height="277">
+                    <StackPanel  >
                         <StackPanel Orientation="Horizontal" >
                             <Label Width="75" FontSize="10">Gemeinde:</Label>
                             <ComboBox x:Name="cmbGemeinden" HorizontalAlignment="Left" 
                                             Height="25" Width="180"  FontSize="10"/>
                         </StackPanel>
-                        <!--<StackPanel Orientation="Horizontal">
-                                <Label Width="75" FontSize="10">Filter:</Label>
-                                <TextBox Name="tbStrasseFilter" Width="80" TextChanged="tbStrasseFilter_TextChanged"></TextBox>
-                            </StackPanel>-->
-                        <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Width="75" FontSize="10"  >Strassenfilter:</Label>
+                            <TextBox Name="tbStrasse" Width="180" Height="25" Padding="2" 
+                                     FontSize="11" TextChanged="tbStrasse_TextChanged"></TextBox>
+                        </StackPanel>
 
-                            <StackPanel Orientation="Horizontal">
-                                <Label Width="75" FontSize="10" Padding="0,12,0,0">Strassenfilter:</Label>
-                                <TextBox Name="tbStrasse" Width="180" Height="25" Padding="2" FontSize="11" TextChanged="tbStrasse_TextChanged"></TextBox>
 
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <Button Name="btnSucheadresse" Click="btnSucheadresse_Click"
+                        <StackPanel Orientation="Horizontal">
+                            <Label Width="75" FontSize="10"  >Suchen:</Label>
+                            <Button Name="btnSucheadresse" Click="btnSucheadresse_Click"
                                         Width="180"
-                                        Margin="75,0,0,0">Suchen</Button>
-
-                            </StackPanel>
-
-
+                                        >Start</Button>
                         </StackPanel>
-
                         <StackPanel Orientation="Horizontal"  >
-
+                            <Label Width="75" FontSize="10"  >Trefferliste:</Label>
                             <ComboBox x:Name="cmbstrassen" SelectionChanged="cmbstrassen_SelectionChanged" 
-                                          HorizontalAlignment="Left" Height="25"  Width="180"
-                                       Margin="75,0,0,0" FontSize="10"/>
+                                           HorizontalAlignment="Left" Height="25"  Width="180"
+                                         FontSize="10"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,0">
+                            <Label Width="75" FontSize="10" ToolTip="Geben sie hier das Az. oder anderen signifikanten Text ein.">Az./Info:</Label>
+                            <TextBox Name="tbADRbemerkung" Width="180"></TextBox>
                         </StackPanel>
 
-                        <StackPanel>
-
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,0">
-                                <Label Width="75" FontSize="10" ToolTip="Geben sie hier das Az. oder anderen signifikanten Text ein.">Az./Info:</Label>
-                                <TextBox Name="tbADRbemerkung" Width="180"></TextBox>
-                            </StackPanel>
-                            <Button x:Name="btngis4adr" Click="btngis4adr_Click"  Margin="75,0,0,0" 
+                        <StackPanel Orientation="Horizontal" >
+                            <Label Width="75" FontSize="10"  >GIS starten:</Label>
+                            <Button x:Name="btngis4adr" Click="btngis4adr_Click"   
                                     IsEnabled="False" Width="180">Adresse im GIS</Button>
-                            <ComboBox x:Name="cmb20adr"  Margin="75,0,0,0" MouseEnter="cmb20adr_MouseEnter"
-           SelectionChanged="cmb20adr_SelectionChanged" 
-            DisplayMemberPath="Anzeige"
-             SelectedItem="{Binding SelectedAdresse}" 
-             Height="30" Width="180"  FontSize="10"/>
+                            <ComboBox x:Name="cmb20adr"  
+                                   SelectionChanged="cmb20adr_SelectionChanged" 
+                                    DisplayMemberPath="Anzeige"
+                                     SelectedItem="{Binding SelectedAdresse}" 
+                                     Height="30" Width="180"  FontSize="10"/>
                         </StackPanel>
-
-
-                        <Button x:Name="btnwordADR" Click="btnwordADR_Click" 
-                                 HorizontalAlignment="Center"
+                        <StackPanel Orientation="Horizontal">
+                            <Label Width="75" FontSize="10"  >In Prosoz ?</Label>
+                            <Button x:Name="btnadr2PG" Click="btnadr2PG_Click"   
+                                    IsEnabled="True"   Width="180" HorizontalAlignment="Center" 
+                                  Style="{StaticResource lessButton}">Vorgänge mit dieser Adresse</Button>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Width="75" FontSize="10"  >Eigentümer</Label>
+                            <Button x:Name="btnwordADR" Click="btnwordADR_Click" 
+                                 HorizontalAlignment="Center"  Width="180"
                                 Style="{StaticResource lessButton}"  Margin="0"
-                    IsEnabled="False">Eigentümer-Word-Datei</Button>
+                                  IsEnabled="False">Word-Datei</Button>
+                        </StackPanel>
                     </StackPanel>
                 </TabItem>
                 <TabItem Name="tabfst"   FontSize="9" Header="Flurstück"   VerticalAlignment="Top">
@@ -162,24 +161,32 @@
                             <TextBox Name="tbFSTbemerkung" Width="180"></TextBox>
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal" Margin="15" HorizontalAlignment="Center">
-
+                        <StackPanel Orientation="Horizontal"  HorizontalAlignment="Left">
+                            <Label Width="75" FontSize="10">GIS starten:</Label>
                             <Button x:Name="btngis4fst" Click="btngis4fst_click"  Margin="0,0,0,0"
-                                Width="177" HorizontalAlignment="Left">Flurstück im GIS</Button>
-                         
+                                Width="180" HorizontalAlignment="Left">Flurstück im GIS</Button>
+
                             <ComboBox x:Name="cmb20fst" HorizontalAlignment="Left" Margin="0,0,0,0"
                                   SelectionChanged="cmb20fst_SelectionChanged" 
                                    DisplayMemberPath="Anzeige"  Width="25"
                                     SelectedItem="{Binding SelectedFlurstueck}" 
                                     Height="30"   FontSize="10"/>
                         </StackPanel>
-                        <Button x:Name="btnfst2PG" Click="btnfst2PG_Click"  Margin="35,0,0,0"
-                                  IsEnabled="True"   Width="177" HorizontalAlignment="Left" Style="{StaticResource lessButton}">Flurstück im ProBauG</Button>
-                        <Button x:Name="btnsucheeigentumer" Click="btnsucheeigentumer_Click"
-                               
-                                HorizontalAlignment="left" Margin="35,0,0,0"
-                 Style="{StaticResource lessButton}" Width="177" 
->Eigentümer-Word-Datei</Button>
+                        <StackPanel Orientation="Horizontal"  HorizontalAlignment="Left">
+                            <Label Width="75" FontSize="10">GIS starten:</Label>
+                            <Button x:Name="btnfst2PG" Click="btnfst2PG_Click"  
+                                      IsEnabled="True"   Width="180" HorizontalAlignment="Left" 
+                                    Style="{StaticResource lessButton}">Vorgänge zum Flurstück</Button>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal"  HorizontalAlignment="Left">
+                            <Label Width="75" FontSize="10">Eigentümer:</Label>
+                            <Button x:Name="btnsucheeigentumer" Click="btnsucheeigentumer_Click" 
+                                HorizontalAlignment="left"  
+                                             Style="{StaticResource lessButton}" Width="180" 
+                            >Word-Datei</Button>
+                        </StackPanel>
+                    
+                    
                     </StackPanel>
                 </TabItem>
                 <TabItem FontSize="9" Name="tabbBplan"  Header="B-Plan"  VerticalAlignment="Top">
@@ -229,7 +236,7 @@
                     </StackPanel>
                 </TabItem>
                 <TabItem Name="tabProbaug" FontSize="9" Header="ProBauG Az." VerticalAlignment="Top" HorizontalContentAlignment="Left">
-                <!--<TabItem.Header     >
+                    <!--<TabItem.Header     >
                         <Label Content="ProBauG Az." FontSize="9"  VerticalAlignment="Top"   />
                     </TabItem.Header>-->
                     <StackPanel Background="LightGray" HorizontalAlignment="Stretch" >

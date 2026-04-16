@@ -119,7 +119,7 @@ Public Class winHaupt
         cmbGemeinden.SelectedIndex = 13
         'cmbGemeinden.SelectedIndex = CInt(gemeindeindex)
 
-        Title = "BGM " & " V.: " & bgmVersion
+        'Title = "BGM " & " V.: " & bgmVersion
 
 
         dummyaufrufStarten()
@@ -127,7 +127,6 @@ Public Class winHaupt
         cmb20fst.ItemsSource = liste
         Dim aliste As List(Of clsAdress) = cls20Cookies.LadeAdressen()
         cmb20adr.ItemsSource = aliste
-        'cmb20fst.SelectedIndex = liste(0).index
         Dim vorhabenliste As List(Of clsPGvorhaben) = cls20Cookies.LadePGcookies()
         cmbPGNR.ItemsSource = vorhabenliste
         istgeladen = True
@@ -473,22 +472,16 @@ Public Class winHaupt
 
     Private Sub cmbstrassen_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
         e.Handled = True
-
         l("cmbstrassen_SelectionChanged ")
         Dim item As myComboBoxItem = CType(cmbstrassen.SelectedItem, myComboBoxItem)
         Dim gemeindeitem As myComboBoxItem = CType(cmbGemeinden.SelectedItem, myComboBoxItem)
         If item Is Nothing Then
-            'MsgBox("Die Eingabe war ungültig. Bitte korrigieren!")
             Exit Sub
         End If
         l(item.myindex)
         aktadr.gemeindebigNRstring = cmbGemeinden.SelectedValue.ToString
-        'Dim gemeindeschluessel As String = cmbGemeinden.SelectedValue.ToString
         aktadr.strasseName = item.mySttring
-        'Dim lage As String = item.mySttring
         aktadr.gemeindeName = gemeindeitem.mySttring
-        'Dim gemeindetext As String = gemeindeitem.mySttring
-        'Dim oldstring As String = ""
         Dim cb As New myComboBoxItem
         Dim fst As New clsFlurstueck
         Dim strassennamen As New List(Of myComboBoxItem)
@@ -496,14 +489,10 @@ Public Class winHaupt
         lageliste = clsGIStools.getLage(aktadr.strasseName, aktadr.gemeindebigNRstring, mitfkz:=True)
         'lageliste = clsGIStools.getLage(lage, gemeindeschluessel, mitfkz:=True)
         If lageliste.Count > 0 Then
-
-            'fkz zerlegen 
-
+            'fkz zerlegen  
             fst.Flurstuecksskennzeichen = lageliste.Item(0).myindex.ToString
             '   flurstueckskennzeichen
             fst.fkzzerlegen()
-            'gemarkungsindex = gemarkung
-            'cmbGemarkungen.SelectedIndex = CInt(adr.gemcode)
             tbFlur.Text = fst.flur.ToString
             tbZaehler.Text = fst.zaehler.ToString
             tbnenner.Text = fst.nenner.ToString
@@ -532,7 +521,6 @@ Public Class winHaupt
     End Sub
 
     Private Sub btngis4adr_Click(sender As Object, e As RoutedEventArgs)
-
         Dim loklist = New List(Of clsFlurstueck)
         loklist = readFlurst_Form()
         Dim index As Integer = CInt(cmbGemarkungen.SelectedIndex)
@@ -828,9 +816,9 @@ Public Class winHaupt
         End If
     End Sub
 
-    Private Sub cmb20adr_MouseEnter(sender As Object, e As MouseEventArgs)
-        cmb20adr.IsDropDownOpen = True
-    End Sub
+    'Private Sub cmb20adr_MouseEnter(sender As Object, e As MouseEventArgs)
+    '    cmb20adr.IsDropDownOpen = True
+    'End Sub
 
     Private Sub aktualisiereFSTHistory()
         Try
@@ -891,12 +879,8 @@ Public Class winHaupt
         fkzlist = readFlurst_Form()
         Dim neuertext As String
         Dim index As Integer
-
-
-
         index = CInt(cmbGemarkungen.SelectedIndex)
         berechneFstueckkombiOhneNull(fkzlist(0))
-
         Try
             probaugVorgange = probaug.getVorgaengeZuFlurstueck(fkzlist(0))
             If probaugVorgange.Count < 1 Then
@@ -909,6 +893,7 @@ Public Class winHaupt
                        "Diese Vorgänge werden unter dem Reiter 'ProBauG' der Combobox zuaddiert!")
                 mergeToPGCookie(neuertext)
                 aktualisierePGvorgaengeHistory()
+                tabEig.SelectedIndex = 4
             End If
 
         Catch ex As Exception
@@ -946,5 +931,44 @@ Public Class winHaupt
         Else
             fst.fstueckKombi = fst.zaehler & "/" & fst.nenner
         End If
+    End Sub
+
+    Private Sub btnadr2PG_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+        Dim lokadr As New clsAdress
+        lokadr.gemeindebigNRstring = aktadr.gemeindebigNRstring
+        lokadr.gemeindeName = aktadr.gemeindeName
+        lokadr.strasseName = aktadr.strasseName
+        lokadr.gemeindebigNRstring = aktadr.gemeindebigNRstring
+        lokadr.gemeindebigNRstring = aktadr.gemeindebigNRstring
+        lokadr.gemeindebigNRstring = aktadr.gemeindebigNRstring
+        Dim probaugVorgange As New List(Of myComboBoxItem)
+        Dim aa = aktadr.gemeindeName
+        lokadr.ingradaLageZerlegen(lokadr.strasseName)
+        'fkzlist = New List(Of clsFlurstueck)
+        'fkzlist = readFlurst_Form()
+        Dim neuertext As String
+        'Dim index As Integer
+        'index = CInt(cmbGemarkungen.SelectedIndex)
+        'berechneFstueckkombiOhneNull(fkzlist(0))
+        Try
+            probaugVorgange = probaug.getVorgaengeZuAdresse(lokadr)
+            If probaugVorgange.Count < 1 Then
+                MsgBox("Keine vorgänge gefunden")
+            Else
+                neuertext = bildePGvorgangCookieString(probaugVorgange)
+                MsgBox("Es wurden " & probaugVorgange.Count & " Vorgänge gefunden:" & Environment.NewLine & Environment.NewLine &
+                       neuertext & Environment.NewLine & Environment.NewLine &
+                        Environment.NewLine & Environment.NewLine &
+                       "Diese Vorgänge werden unter dem Reiter 'ProBauG' der Combobox zuaddiert!")
+                mergeToPGCookie(neuertext)
+                aktualisierePGvorgaengeHistory()
+                tabEig.SelectedIndex = 4
+            End If
+
+        Catch ex As Exception
+            l("fehler btnsucheeigentumer_Click " & ex.ToString)
+        End Try
+
     End Sub
 End Class

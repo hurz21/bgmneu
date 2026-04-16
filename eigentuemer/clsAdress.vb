@@ -347,6 +347,26 @@ Public Class clsAdress
 
     '        End Try
     '    End Function
+    Public Sub ingradaLageZerlegen(lage As String)
+        Dim a(), t As String
+        Try
+            For i = 0 To lage.Length - 1
+                Debug.Print(" ")
+                t = lage.Substring(i, 1)
+                If IsNumeric(t) Then
+                    strasseName = lage.Substring(0, i - 1)
+                    strasseName = strasseName.Trim
+                    HausKombi = lage.Substring(i, lage.Length - i)
+                    Exit Sub
+                End If
+            Next
+            strasseName = lage
+            HausKombi = ""
+        Catch ex As Exception
+            strasseName = lage
+            HausKombi = ""
+        End Try
+    End Sub
     Public Sub hauskombiZerlegen()
         Dim HK$ = _HausKombi.Trim
         Dim a$()

@@ -105,7 +105,7 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>resouirces\bgm.ico</ApplicationIcon>
+    <ApplicationIcon>resouirces\schwei1.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <TargetZone>LocalIntranet</TargetZone>
@@ -337,6 +337,7 @@
   <ItemGroup>
     <Content Include="DocumentFormat.OpenXml.dll" />
     <Content Include="DocumentFormat.OpenXml.Framework.dll" />
+    <Resource Include="resouirces\schwei1.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>

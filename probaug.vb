@@ -628,4 +628,31 @@ Public Class probaug
             Return vlist
         End Try
     End Function
+
+    Friend Shared Function getVorgaengeZuAdresse(lokadr As clsAdress) As List(Of myComboBoxItem)
+        Dim sql, hinweis As String
+        Dim dt As DataTable
+        Dim cb As myComboBoxItem
+        Dim vlist As New List(Of myComboBoxItem)
+        sql = "select * from GISVIEW1 where feld24='" & lokadr.gemeindeName.Trim &
+                "' and feld25='" & lokadr.strasseName.Trim & "'" &
+                " and feld22='" & lokadr.HausKombi & "' order by feld1 desc"
+        'select * from GISVIEW6 where feld7='2026' and feld9='80006'
+        l(sql)
+        'Dim metad As New List(Of myComboBoxItem) 
+        Try
+            dt = probaug.getbalist2MSSQL(sql)
+            For i = 0 To dt.Rows.Count - 1
+                cb = New myComboBoxItem
+                cb.myindex = clsString.cleanLayerString(clsDBtools.fieldvalue(dt.Rows(i).Item("FELD1"))).Trim & "|" &
+                               clsString.cleanLayerString(clsDBtools.fieldvalue(dt.Rows(i).Item("FELD3"))).Trim
+                cb.mySttring = clsString.cleanLayerString(clsDBtools.fieldvalue(dt.Rows(i).Item("FELD4"))).Trim
+                vlist.Add(cb)
+            Next
+            Return vlist
+        Catch ex As Exception
+            l("fehler in getVorgaengeZuAdresse " & ex.ToString)
+            Return vlist
+        End Try
+    End Function
 End Class
