@@ -44,7 +44,7 @@ Public Class winHaupt
                 tools.eigentuemerAbfrageErlaubt = False
             End If
         End If
-            tools.readFSTCookie(gemarkung, flur, zaehler, nenner, "bgm_FST_cookie.txt")
+        tools.readFSTCookie(gemarkung, flur, zaehler, nenner, "bgm_FST_cookie.txt")
         gemarkungsindex = gemarkung
         tbFlur.Text = flur
         tbZaehler.Text = zaehler
@@ -334,6 +334,12 @@ Public Class winHaupt
 
     Private Sub btnsucheeigentumer_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
+        If tools.eigentuemerAbfrageErlaubt Then
+            eigentuemerWord(False, fkzlist_lage, lage_lage)
+        Else
+            MsgBox("Keine Rechte vorhanden")
+            Exit Sub
+        End If
         fkzlist = New List(Of clsFlurstueck)
         fkzlist = readFlurst_Form()
         fst_lage = fkzlist(0).gemarkungstext
@@ -434,8 +440,8 @@ Public Class winHaupt
                 loklist(0).AZ = azinfo 'tbFSTbemerkung.Text
                 loklist(0).index = cmbGemarkungen.SelectedIndex
                 If imAdressModus Then
-                Else
 
+                Else
                     cls20Cookies.SpeichereFlurstueck(loklist(0))
                 End If
             Else
@@ -452,14 +458,14 @@ Public Class winHaupt
 
 
     Private Sub tbStrasse_TextChanged(sender As Object, e As TextChangedEventArgs)
-        If tbStrasse Is Nothing Then Exit Sub
+        If tbStrasseFilter Is Nothing Then Exit Sub
         e.Handled = True
         Exit Sub
 
         Dim oldstring As String = ""
         Dim cb As New myComboBoxItem
         Dim strassennamen As New List(Of myComboBoxItem)
-        lageliste = clsGIStools.getLage(tbStrasse.Text, cmbGemeinden.SelectedValue.ToString, mitfkz:=False)
+        lageliste = clsGIStools.getLage(tbStrasseFilter.Text, cmbGemeinden.SelectedValue.ToString, mitfkz:=False)
         Dim a() As String
         Dim newstring As String = ""
 
@@ -479,9 +485,12 @@ Public Class winHaupt
             Exit Sub
         End If
         l(item.myindex)
+        aktadr.lageindex = CInt(cmbstrassen.SelectedIndex)
+        aktadr.gemeindeindex = CInt(cmbGemeinden.SelectedIndex)
         aktadr.gemeindebigNRstring = cmbGemeinden.SelectedValue.ToString
         aktadr.strasseName = item.mySttring
         aktadr.gemeindeName = gemeindeitem.mySttring
+        tblage.Text = aktadr.strasseName
         Dim cb As New myComboBoxItem
         Dim fst As New clsFlurstueck
         Dim strassennamen As New List(Of myComboBoxItem)
@@ -505,7 +514,7 @@ Public Class winHaupt
                 'aktadr.gemeindeName = gemeindetext.ToString
                 'aktadr.strasseName = lage.ToString
                 aktadr.fkz = fst.Flurstuecksskennzeichen
-                aktadr.index = cmbGemeinden.SelectedIndex
+                'aktadr.gemeindeindex = cmbGemeinden.SelectedIndex
                 aktadr.AZ = tbADRbemerkung.Text
 
             End If
@@ -517,20 +526,29 @@ Public Class winHaupt
     Private Sub btnwordADR_Click(sender As Object, e As RoutedEventArgs)
         'Dim loklist = New List(Of clsFlurstueck)
         'loklist = readFlurst_Form()
-        eigentuemerWord(False, fkzlist_lage, lage_lage)
+        If tools.eigentuemerAbfrageErlaubt Then
+            eigentuemerWord(False, fkzlist_lage, lage_lage)
+        Else
+            MsgBox("Keine Rechte vorhanden")
+            Exit Sub
+        End If
     End Sub
 
     Private Sub btngis4adr_Click(sender As Object, e As RoutedEventArgs)
-        Dim loklist = New List(Of clsFlurstueck)
-        loklist = readFlurst_Form()
-        Dim index As Integer = CInt(cmbGemarkungen.SelectedIndex)
+        e.Handled = True
+        Dim a = aktadr.gemeindeName
+        'Dim loklist = New List(Of clsFlurstueck)
+        'loklist = readFlurst_Form()
+        'Dim gemeindeindex As Integer = CInt(cmbGemarkungen.SelectedIndex)
         'Dim adr As New clsAdress
         Try
             ' tools.writeFlurstCookie(gemaIndex.ToString, (fkzlist_lage.Item(0).flur.ToString), (fkzlist_lage.Item(0).zaehler.ToString), (fkzlist_lage.Item(0).nenner.ToString), "bgm_FST_cookie.txt")
-            MitFlurstueckInsGIS(fkzlist_lage, tbADRbemerkung.Text, True)
+            Dim Url = gisLogoutUndStartFKZ(aktadr.fkz, gisLogouten)
+
+            'MitFlurstueckInsGIS(fkzlist_lage, tbADRbemerkung.Text, True)
 
             aktadr.AZ = tbADRbemerkung.Text 'tbFSTbemerkung.Text
-            aktadr.index = cmbGemarkungen.SelectedIndex
+            'aktadr.gemeindeindex = cmbGemarkungen.SelectedIndex
             cls20Cookies.SpeichereAdresse(aktadr)
 
             l("adresse wird angezeigt")
@@ -748,7 +766,7 @@ Public Class winHaupt
 
     Private Sub cmbGemeinden_SelectionChanged(sender As Object, e As SelectionChangedEventArgs) Handles cmbGemeinden.SelectionChanged
         e.Handled = True
-        tbStrasse.Text = ""
+        tbStrasseFilter.Text = ""
         cmbstrassen.ItemsSource = Nothing
     End Sub
 
@@ -759,15 +777,20 @@ Public Class winHaupt
         Dim cb As New myComboBoxItem
         Dim strassennamen As New List(Of myComboBoxItem)
         Dim adr As New clsAdress
-        lageliste = clsGIStools.getLage(tbStrasse.Text, cmbGemeinden.SelectedValue.ToString, mitfkz:=False)
+        lageliste = clsGIStools.getLage(tbStrasseFilter.Text, cmbGemeinden.SelectedValue.ToString, mitfkz:=False)
 
         Dim a() As String
         Dim newstring As String = ""
+        If lageliste IsNot Nothing Then
+            cmbstrassen.ItemsSource = lageliste
 
-        cmbstrassen.ItemsSource = lageliste
-        cmbstrassen.DisplayMemberPath = "mySttring"
-        cmbstrassen.SelectedValuePath = "myindex"
-        cmbstrassen.IsDropDownOpen = True
+            cmbstrassen.DisplayMemberPath = "mySttring"
+            cmbstrassen.SelectedValuePath = "myindex"
+            cmbstrassen.IsDropDownOpen = True
+        Else
+            MsgBox("Keine Strassennamen mit diesem Anfang gefunden.")
+        End If
+
     End Sub
 
     Private Sub cmb20fst_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
@@ -798,11 +821,17 @@ Public Class winHaupt
         Dim adr = TryCast(cmb20adr.SelectedItem, clsAdress)
         If adr IsNot Nothing Then
             Dim neu As New myComboBoxItem
-            neu.myindex = adr.index.ToString
+            neu.myindex = adr.gemeindeindex.ToString
             neu.mySttring = adr.gemeindeName
             'txtGemarkung.Text = adr.gemarkungstext 
             cmbGemeinden.SelectedIndex = CInt(neu.myindex)
-            tbStrasse.Text = adr.strasseName.ToString.Substring(0, 3)
+            'cmbstrassen.SelectedIndex = CInt(adr.lageindex)
+            'cmbstrassen.SelectedValue = CInt(adr.strasseName)
+            tblage.Text = adr.strasseName
+            adr.lageindex = cmbstrassen.SelectedIndex
+
+
+            tbStrasseFilter.Text = adr.strasseName.ToString.Substring(0, 3)
             'tb.Text = adr.zaehler.ToString
             'tbnenner.Text = adr.nenner.ToString
             tbFSTbemerkung.Text = adr.AZ
@@ -811,8 +840,16 @@ Public Class winHaupt
             lokfst.Flurstuecksskennzeichen = adr.fkz
             lokfst.fkzzerlegen()
             loklist.Add(lokfst)
+            btngis4adr.IsEnabled = True
 
-            gisFuerProbaugFlurst(tbblnr.Text.Trim, loklist)
+            'aktadr muss aktualisiert werden
+            aktadr.gemeindeName = adr.gemeindeName
+            aktadr.strasseName = adr.strasseName
+            aktadr.gemeindebigNRstring = adr.gemeindebigNRstring
+            aktadr.fkz = adr.fkz
+
+
+            'gisFuerProbaugFlurst(tbblnr.Text.Trim, loklist)
         End If
     End Sub
 
@@ -838,6 +875,22 @@ Public Class winHaupt
         Dim vorhaben1 As String
         Dim fstliste As List(Of clsFlurstueck)
         Dim metadata As List(Of myComboBoxItem)
+        If clsActiveDir.fdkurz.Contains("mwelt") Then
+            If CInt(tbPGnr.Text) < 80000 Then
+                MsgBox("Dem FD Umwelt sind nur Nr > 80000 erlaubt!")
+                If Environment.UserName <> "Feinen_J" Then Exit Sub
+            End If
+        End If
+        If clsActiveDir.fdkurz.Contains("auaufsicht") Then
+            If CInt(tbPGnr.Text) > 80000 Then
+                MsgBox("Dem FD Bauaufsicht sind nur Nr < 80000 erlaubt!")
+                If Environment.UserName <> "Feinen_J" Then Exit Sub
+            End If
+        End If
+        If Not (clsActiveDir.fdkurz.Contains("mwelt") Or clsActiveDir.fdkurz.Contains("auaufsicht")) Then
+            MsgBox("Dem FD Umwelt sind nur Nr > 80000 erlaubt!")
+            If Environment.UserName <> "Feinen_J" Then Exit Sub
+        End If
         fstliste = probaug.klaereanzahlFST(tbPGJahr.Text, tbPGnr.Text, metadata, vorhaben1)
         If fstliste Is Nothing Then
             MsgBox("Das Aktenzeichen ist ungültig!")
@@ -935,26 +988,45 @@ Public Class winHaupt
 
     Private Sub btnadr2PG_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
+        If tools.eigentuemerAbfrageErlaubt Then
+            ' eigentuemerWord(False, fkzlist_lage, lage_lage)
+        Else
+            MsgBox("Keine Rechte vorhanden")
+            Exit Sub
+        End If
         Dim lokadr As New clsAdress
         lokadr.gemeindebigNRstring = aktadr.gemeindebigNRstring
         lokadr.gemeindeName = aktadr.gemeindeName
-        lokadr.strasseName = aktadr.strasseName
+        lokadr.strasseName = tblage.Text
         lokadr.gemeindebigNRstring = aktadr.gemeindebigNRstring
         lokadr.gemeindebigNRstring = aktadr.gemeindebigNRstring
         lokadr.gemeindebigNRstring = aktadr.gemeindebigNRstring
+        lokadr.fkz = aktadr.fkz
         Dim probaugVorgange As New List(Of myComboBoxItem)
         Dim aa = aktadr.gemeindeName
         lokadr.ingradaLageZerlegen(lokadr.strasseName)
-        'fkzlist = New List(Of clsFlurstueck)
-        'fkzlist = readFlurst_Form()
         Dim neuertext As String
-        'Dim index As Integer
-        'index = CInt(cmbGemarkungen.SelectedIndex)
-        'berechneFstueckkombiOhneNull(fkzlist(0))
+
+        'jetzt das flurstücksformular ausfüllen
+        'damit sofort nach vorgängen gesucht werden kann
+        Dim lokfst As New clsFlurstueck
+        lokfst.Flurstuecksskennzeichen = aktadr.fkz
+        lokfst.fkzzerlegen()
+        tbFlur.Text = lokfst.flur.ToString
+        tbZaehler.Text = lokfst.zaehler.ToString
+        tbnenner.Text = lokfst.nenner.ToString
+        tbFSTbemerkung.Text = aktadr.AZ 'lokfst.AZ
+        Dim gemindex = tools.getgemarkungsindex(lokfst.gemarkungstext)
+        cmbGemarkungen.SelectedIndex = gemindex
         Try
             probaugVorgange = probaug.getVorgaengeZuAdresse(lokadr)
             If probaugVorgange.Count < 1 Then
-                MsgBox("Keine vorgänge gefunden")
+                MsgBox("Keine Vorgänge zu dieser Adresse gefunden gefunden. " & Environment.NewLine &
+                    " " & Environment.NewLine &
+                    "Sie sollten auch das Flurstück prüfen. " & Environment.NewLine &
+                    "Es ist bereits im Formular eingetragen. " & Environment.NewLine &
+                    "  " & Environment.NewLine
+                       )
             Else
                 neuertext = bildePGvorgangCookieString(probaugVorgange)
                 MsgBox("Es wurden " & probaugVorgange.Count & " Vorgänge gefunden:" & Environment.NewLine & Environment.NewLine &

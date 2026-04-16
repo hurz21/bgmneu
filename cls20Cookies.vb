@@ -64,7 +64,7 @@
                 liste = IO.File.ReadAllLines(path).ToList()
             End If
 
-            Dim neuerEintrag = $"{adr.gemeindeName}|{adr.strasseName}  |{adr.fkz}|{adr.index}|{adr.AZ}"
+            Dim neuerEintrag = $"{adr.gemeindeName}|{adr.strasseName.Trim}|{adr.fkz}|{adr.gemeindeindex}|{adr.AZ}|{adr.lageindex}"
 
             ' Entferne vorhandenen gleichen Eintrag (Duplikate vermeiden)
             liste = liste.Where(Function(x) x <> neuerEintrag).ToList()
@@ -87,13 +87,14 @@
         If IO.File.Exists(path) Then
             For Each line In IO.File.ReadAllLines(path)
                 Dim parts = line.Split("|"c)
-                If parts.Length = 5 Then
+                If parts.Length = 6 Then
                     result.Add(New clsAdress With {
                     .gemeindeName = parts(0),
                     .strasseName = (parts(1)),
                     .fkz = (parts(2)),
-                    .index = CInt(parts(3)),
-                    .AZ = parts(4)
+                    .gemeindeindex = CInt(parts(3)),
+                    .AZ = parts(4),
+                    .lageindex = CInt(parts(5))
                 })
                 End If
             Next

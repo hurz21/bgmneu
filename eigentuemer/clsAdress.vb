@@ -28,7 +28,7 @@ Public Class clsAdress
             Return $"{gemeindeName} -  {strasseName}, ({AZ})"
         End Get
     End Property
-    Property index As Integer
+    Property gemeindeindex As Integer
     Property AZ As String
     Property Quelle As String 'halo oder lage oder fehlt
     Public Property strassennameNORM() As String
@@ -267,6 +267,7 @@ Public Class clsAdress
     End Function
     Public Property gemeindebigNRstring As String
     Public Property fkz As String
+    Public Property lageindex As Integer = 0
 
     Public Function gemeindeNrBig() As String
         Dim tbignr = "4380"

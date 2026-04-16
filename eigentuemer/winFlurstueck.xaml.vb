@@ -53,7 +53,7 @@ Public Class winFlurstueck
         cmbZaehler.IsEnabled = True
         Dim item3$ = item2.Row.ItemArray(0).ToString
         tbflur.Text = item2.Row.ItemArray(0).ToString
-        'Me.tbStrasse.Text=item4
+        'Me.tbStrasseFilter.Text=item4
         normflst.flur = CInt(item3$)
         normflst.gemarkungstext = Me.tbGemarkung.Text
         initZaehlerCombo()

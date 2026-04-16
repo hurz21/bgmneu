@@ -1366,34 +1366,14 @@ Module tools
         End Try
     End Function
     Public Sub gisFuerProbaugFlurst(baulast As String, flstliste As List(Of clsFlurstueck))
-        Dim fkztemp As String = ""
         Dim url As String
-        Dim treffer As Integer = 0
         l("gisFuerProbaugFlurst ")
         ' C:\kreisoffenbach\mgis\ingradaadapter.exe    suchmodus=flurstueck gemarkung="Hainhausen" flur="4" fstueck="387/1" 
         '91197
-        Dim zwischen, lokfkzliste As String
+        Dim lokfkzliste As String
         Try
-            For i = 0 To flstliste.Count - 1
-                fkztemp = flstliste(i).flurstueckZuFKZ
-                If tools.flurstueckExistiertImGis(fkztemp) Then
-                    treffer += 1
-                    If treffer = 1 Then
-                        lokfkzliste = fkztemp
-                    Else
-                        lokfkzliste = lokfkzliste & "," & fkztemp
-                    End If
-                Else
-                    'MessageBox.Show("Flurstück existiert so nicht im GIS! " & Environment.NewLine &
-                    '            flurstueckskennzeichen)
-
-                End If
-            Next
-            l("treffer " & treffer)
-            zwischen = baulast
-            My.Computer.Clipboard.SetText(zwischen)
+            lokfkzliste = machMultipleFstString(flstliste)
             If lokfkzliste.Length > 1 Then
-
                 url = gisLogoutUndStartFKZ(lokfkzliste, gisLogouten)
             Else
                 MsgBox("Keine Flurstücke zugeordnet!!!  GIS wird ohne Flurstück gestartet!")
@@ -1405,6 +1385,32 @@ Module tools
             l("gisFuerProbaugFlurst " & ex.ToString)
         End Try
     End Sub
+
+    Private Function machMultipleFstString(flstliste As List(Of clsFlurstueck)) As String
+        Dim treffer As Integer = 0
+        Dim fkztemp As String = ""
+        Dim lokfkzliste As String = ""
+        Try
+            For i = 0 To flstliste.Count - 1
+                fkztemp = flstliste(i).flurstueckZuFKZ
+                If tools.flurstueckExistiertImGis(fkztemp) Then
+                    treffer += 1
+                    If treffer = 1 Then
+                        lokfkzliste = fkztemp
+                    Else
+                        lokfkzliste = lokfkzliste & "," & fkztemp
+                    End If
+                Else
+
+                End If
+            Next
+            l("treffer " & treffer)
+            Return lokfkzliste
+        Catch ex As Exception
+            l("machMultipleFstString " & ex.ToString)
+            Return lokfkzliste
+        End Try
+    End Function
 
     Public Function gisLogoutUndStartFKZ(lokfkzliste As String, mitlogout As Boolean) As String
         Dim url As String
@@ -1761,4 +1767,22 @@ Module tools
         End Try
     End Function
 
+    Friend Function getgemarkungsindex(gemarkungstext As String) As Integer
+        Try
+            'For Each gema As myComboBoxItem In katasterGemarkungslist
+            '    gamarkungsitems.Add(New myComboBoxItem With {.mySttring = gema.mySttring, .myindex = gema.myindex})
+            'Next
+
+            For i = 0 To katasterGemarkungslist.Count - 1
+                If gemarkungstext.Trim.ToLower = katasterGemarkungslist(i).mySttring.ToLower Then
+                    Return i
+                End If
+                'gamarkungsitems.Add(New myComboBoxItem With {.mySttring = gema.mySttring, .myindex = gema.myindex}) Then
+            Next
+            Return -2
+        Catch ex As Exception
+            l("fehler in getgemarkungsindex-- " & ex.ToString)
+            Return -1
+        End Try
+    End Function
 End Module

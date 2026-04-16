@@ -82,11 +82,11 @@
                         <StackPanel Orientation="Horizontal" >
                             <Label Width="75" FontSize="10">Gemeinde:</Label>
                             <ComboBox x:Name="cmbGemeinden" HorizontalAlignment="Left" 
-                                            Height="25" Width="180"  FontSize="10"/>
+                                            Height="25" Width="160"  FontSize="10"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Label Width="75" FontSize="10"  >Strassenfilter:</Label>
-                            <TextBox Name="tbStrasse" Width="180" Height="25" Padding="2" 
+                            <TextBox Name="tbStrasseFilter" Width="160" Height="25" Padding="2" 
                                      FontSize="11" TextChanged="tbStrasse_TextChanged"></TextBox>
                         </StackPanel>
 
@@ -94,40 +94,41 @@
                         <StackPanel Orientation="Horizontal">
                             <Label Width="75" FontSize="10"  >Suchen:</Label>
                             <Button Name="btnSucheadresse" Click="btnSucheadresse_Click"
-                                        Width="180"
+                                        Width="160"
                                         >Start</Button>
+                            <ComboBox x:Name="cmbstrassen" SelectionChanged="cmbstrassen_SelectionChanged" 
+                 HorizontalAlignment="Left" Height="30"  Width="20"
+               FontSize="10"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal"  >
-                            <Label Width="75" FontSize="10"  >Trefferliste:</Label>
-                            <ComboBox x:Name="cmbstrassen" SelectionChanged="cmbstrassen_SelectionChanged" 
-                                           HorizontalAlignment="Left" Height="25"  Width="180"
-                                         FontSize="10"/>
+                            <Label Width="75" FontSize="10"  >Strasse Hr:</Label>
+                            <TextBlock x:Name="tblage" Width="160" ></TextBlock>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,0">
                             <Label Width="75" FontSize="10" ToolTip="Geben sie hier das Az. oder anderen signifikanten Text ein.">Az./Info:</Label>
-                            <TextBox Name="tbADRbemerkung" Width="180"></TextBox>
+                            <TextBox Name="tbADRbemerkung" Width="160"></TextBox>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal" >
                             <Label Width="75" FontSize="10"  >GIS starten:</Label>
                             <Button x:Name="btngis4adr" Click="btngis4adr_Click"   
-                                    IsEnabled="False" Width="180">Adresse im GIS</Button>
+                                    IsEnabled="False" Width="160">Adresse im GIS</Button>
                             <ComboBox x:Name="cmb20adr"  
                                    SelectionChanged="cmb20adr_SelectionChanged" 
                                     DisplayMemberPath="Anzeige"
                                      SelectedItem="{Binding SelectedAdresse}" 
-                                     Height="30" Width="180"  FontSize="10"/>
+                                     Height="30" Width="20"  FontSize="10"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Label Width="75" FontSize="10"  >In Prosoz ?</Label>
                             <Button x:Name="btnadr2PG" Click="btnadr2PG_Click"   
-                                    IsEnabled="True"   Width="180" HorizontalAlignment="Center" 
+                                    IsEnabled="True"   Width="160" HorizontalAlignment="Center" 
                                   Style="{StaticResource lessButton}">Vorgänge mit dieser Adresse</Button>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Label Width="75" FontSize="10"  >Eigentümer</Label>
                             <Button x:Name="btnwordADR" Click="btnwordADR_Click" 
-                                 HorizontalAlignment="Center"  Width="180"
+                                 HorizontalAlignment="Center"  Width="160"
                                 Style="{StaticResource lessButton}"  Margin="0"
                                   IsEnabled="False">Word-Datei</Button>
                         </StackPanel>

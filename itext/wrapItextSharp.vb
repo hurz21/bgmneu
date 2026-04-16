@@ -235,7 +235,7 @@
 '                    Debug.Print("")
 '                End If
 '#End If
-'                ' Get next index.
+'                ' Get next gemeindeindex.
 '                i = s.IndexOf(nach, i + 1)
 '            Loop
 '            teillenge = s.Length - iold
