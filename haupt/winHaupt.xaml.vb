@@ -1,4 +1,5 @@
 ﻿Imports System.ComponentModel
+Imports System.Net
 Imports System.Security.Policy
 Imports System.Text
 Imports DocumentFormat.OpenXml.Drawing
@@ -22,30 +23,29 @@ Public Class winHaupt
 
         setLogfile(logfile) : l("Start " & Now) : l("mgisversion:" & bgmVersion)
         initdb()
-        tbblnr.Text = "6428"
-        tbblnr.Text = "21507"
-        tbblnr.Text = "131045"
-        tbblnr.Text = tools.readBLBlattCookie("bgm_blattnr_cookie.txt")
+        'tbblnr.Text = "6428"
+        'tbblnr.Text = "21507"
+        'tbblnr.Text = "131045"
+        Dim cookieBl As String = tools.readBLBlattCookie("bgm_blattnr_cookie.txt")
+        If String.IsNullOrWhiteSpace(cookieBl) Then
+            tbblnr.Text = "131045"
+            MessageBox.Show("Bitte die Nummer eingeben.", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+        Else
+            tbblnr.Text = cookieBl
+        End If
         Dim gemarkung, flur, zaehler, nenner, gemarkungsindex As String
         Dim gemeinde, strasse, hausnr, lage, gemeindeindex As String
 
         LoadHistory() : ComboHistory.ItemsSource = Nothing : ComboHistory.ItemsSource = historyList
         ComboHistory.DisplayMemberPath = "Anzeige"
         If clsActiveDir.getall(Environment.UserName) Then
-            'If NSfstmysql.ADtools.istUserAlbBerechtigt(gisuser.nick) Then
-            '    gisuser.istalbberechtigt = True
-            '    gisuser.EmailAdress = clsActiveDir.emailadress
-            'End If
             Dim result = clsActiveDir.fdkurz
             Title = "BGM 2026, " & clsActiveDir.fdkurz
-            If result.ToLower.Contains("umwelt") Or result.ToLower.Contains("bauaufsicht") Then
-                tools.eigentuemerAbfrageErlaubt = True
-            Else
-                tools.eigentuemerAbfrageErlaubt = False
-            End If
+            tools.eigentuemerAbfrageErlaubt = (result.ToLower.Contains("umwelt") Or result.ToLower.Contains("bauaufsicht"))
         End If
+
         tools.readFSTCookie(gemarkung, flur, zaehler, nenner, "bgm_FST_cookie.txt")
-        gemarkungsindex = gemarkung
+        'gemarkungsindex = gemarkung
         tbFlur.Text = flur
         tbZaehler.Text = zaehler
         tbnenner.Text = nenner
@@ -54,21 +54,19 @@ Public Class winHaupt
         chkbImmerLogouten.IsChecked = stored
         gisLogouten = stored
         tools.themendefinitionsdatei = My.Settings.Themendatei
+
         If isAutho() Then
-            'its ok  21478  21504
-            '"POLYGON ((479015 5538655,479033 5538660,479035 5538656,479017 5538650,479015 5538655))" 
             ComboHistory.IsDropDownOpen = True
         Else
-            'MessageBox.Show("Sie haben keine Berechtigung für diese Anwendung. Abbruch!")
-            'Close() 
-            'stpAdminOnly.Visibility = Visibility.Visible
             tabEig.SelectedIndex = 1
             btnEdit.IsEnabled = False
         End If
+
         initKatasterGemarkungtext()
         Dim gemeinden() = mapTools.init_katastergemeindeliste()
         katasterGemeindelist = mapTools.splitgemeindeliste(gemeinden)
         katasterGemarkungslist = splitKatasterGemarkung()
+
         Dim gameindeitems As New List(Of myComboBoxItem)
         Dim gamarkungsitems As New List(Of myComboBoxItem)
         Dim themendateien As New List(Of myComboBoxItem)
@@ -86,8 +84,14 @@ Public Class winHaupt
         cmbThemendatei.DisplayMemberPath = "mySttring"
         cmbThemendatei.SelectedValuePath = "myindex"
         cmbThemendatei.IsDropDownOpen = False
-        cmbThemendatei.SelectedValue = My.Settings.Themendatei
+        'cmbThemendatei.SelectedValue = My.Settings.Themendatei
 
+        ' Sicherstellen, dass die gespeicherte Themendatei im ItemsSource vorhanden ist
+        If themendateien.Any(Function(t) t.myindex = My.Settings.Themendatei) Then
+            cmbThemendatei.SelectedValue = My.Settings.Themendatei
+        ElseIf themendateien.Count > 0 Then
+            cmbThemendatei.SelectedIndex = 0
+        End If
 
 
         For Each gema As myComboBoxItem In katasterGemarkungslist
@@ -96,30 +100,41 @@ Public Class winHaupt
         For Each gema As myComboBoxItem In katasterGemeindelist
             gameindeitems.Add(New myComboBoxItem With {.mySttring = gema.mySttring, .myindex = gema.myindex})
         Next
-        'gamarkungsitems.Add(New clsCombo With {.Text = "Deutschland", .Code = 1})
-        'gamarkungsitems.Add(New clsCombo With {.Text = "Österreich", .Code = 2})
-        'gamarkungsitems.Add(New clsCombo With {.Text = "Schweiz", .Code = 3})
+
 
         cmbGemarkungen.ItemsSource = gamarkungsitems
         cmbGemarkungen.DisplayMemberPath = "mySttring"
         cmbGemarkungen.SelectedValuePath = "myindex"
         cmbGemarkungen.IsDropDownOpen = False
-        cmbGemarkungen.SelectedIndex = CInt(gemarkungsindex)
+        'cmbGemarkungen.SelectedIndex = CInt(gemarkungsindex)
+
+        ' sichere Konvertierung des gemarkungsindex (war String -> SelectedIndex benötigt Integer)
+        Dim gemIndexInt As Integer = 0
+        If Not Integer.TryParse(gemarkung, gemIndexInt) Then
+            gemIndexInt = 0
+        End If
+        If gamarkungsitems.Count > 0 Then
+            gemIndexInt = Math.Max(0, Math.Min(gemIndexInt, gamarkungsitems.Count - 1))
+            cmbGemarkungen.SelectedIndex = gemIndexInt
+        End If
 
         cmbGemarkungen2.ItemsSource = gamarkungsitems
         cmbGemarkungen2.DisplayMemberPath = "mySttring"
         cmbGemarkungen2.SelectedValuePath = "myindex"
         cmbGemarkungen2.IsDropDownOpen = False
-        cmbGemarkungen2.SelectedIndex = CInt(0)
+        'cmbGemarkungen2.SelectedIndex = CInt(0)
+        If gamarkungsitems.Count > 0 Then cmbGemarkungen2.SelectedIndex = 0
 
         cmbGemeinden.ItemsSource = gameindeitems
         cmbGemeinden.DisplayMemberPath = "mySttring"
         cmbGemeinden.SelectedValuePath = "myindex"
         cmbGemeinden.IsDropDownOpen = False
-        cmbGemeinden.SelectedIndex = 13
-        'cmbGemeinden.SelectedIndex = CInt(gemeindeindex)
-
-        'Title = "BGM " & " V.: " & bgmVersion
+        'cmbGemeinden.SelectedIndex = 13
+        If gameindeitems.Count > 13 Then
+            cmbGemeinden.SelectedIndex = 13
+        ElseIf gameindeitems.Count > 0 Then
+            cmbGemeinden.SelectedIndex = 0
+        End If
 
 
         dummyaufrufStarten()
@@ -257,13 +272,15 @@ Public Class winHaupt
             lastPDF = clsGIStools.copyOnlyPDF(tbblnr.Text.Trim)
             If lastPDF.ToLower.StartsWith("fehler") Or
                lastPDF.ToLower.StartsWith("keine") Then
-                MsgBox(lastPDF)
+                'MsgBox(lastPDF)
+                MessageBox.Show(lastPDF, "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
             Else
                 tools.writeBLBlattCookie(tbblnr.Text.Trim, "bgm_blattnr_cookie.txt")
                 Process.Start(lastPDF)
             End If
         Else
-            MsgBox("Diese Baulast gibt es im GIS nicht!")
+            'MsgBox("Diese Baulast gibt es im GIS nicht!")
+            MessageBox.Show("Diese Baulast gibt es im GIS nicht!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
         End If 'füllt fstREC
 
 
@@ -283,7 +300,8 @@ Public Class winHaupt
         If tools.eigentuemerAbfrageErlaubt Then
             eigentuemerWord(False, fkzlist_lage, lage_lage)
         Else
-            MsgBox("Keine Rechte vorhanden")
+            'MsgBox("Keine Rechte vorhanden")
+            MessageBox.Show("Keine Rechte vorhanden", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
             Exit Sub
         End If
         fkzlist = New List(Of clsFlurstueck)
@@ -293,7 +311,8 @@ Public Class winHaupt
         If tools.flurstueckExistiertImGis(fkzlist(0).flurstueckZuFKZ, gemeindeschluessel, lagebezeichnung) Then
             eigentuemerWord(False, fkzlist, fst_lage)
         Else
-            MsgBox("Dieses Flurstück existiert nicht im GIS!")
+
+            MessageBox.Show("Dieses Flurstück existiert nicht im GIS!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
         End If
     End Sub
 
@@ -301,7 +320,8 @@ Public Class winHaupt
         l("readFlurst_Form")
         Dim item As myComboBoxItem = CType(cmbGemarkungen.SelectedItem, myComboBoxItem)
         If item Is Nothing Then
-            MsgBox("Die Eingabe war ungültig. Bitte korrigieren!")
+            'MsgBox("Die Eingabe war ungültig. Bitte korrigieren!")
+            MessageBox.Show("Die Eingabe war ungültig. Bitte korrigieren!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
             Exit Function
         End If
         Dim code As Integer = CInt(cmbGemarkungen.SelectedValue)
@@ -353,7 +373,8 @@ Public Class winHaupt
                 Threading.Thread.Sleep(1000)
                 Process.Start(datei)
             Else
-                MsgBox(result)
+                'MsgBox(result)
+                MessageBox.Show(result, "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
             End If
         Catch ex As Exception
             l("fehler in eigentuemerWord " & ex.ToString)
@@ -398,7 +419,8 @@ Public Class winHaupt
                     cls20Cookies.SpeichereFlurstueck(loklist(0))
                 End If
             Else
-                MsgBox("Das Flurstück exisitert nicht im GIS!")
+                'MsgBox("Das Flurstück exisitert nicht im GIS!")
+                MessageBox.Show("Das Flurstück exisitert nicht im GIS!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
             End If
         Catch ex As Exception
             l("fehler in MitFlurstueckInsGIS " & ex.ToString)
@@ -465,7 +487,8 @@ Public Class winHaupt
 
             End If
         Else
-            MsgBox("Kein entsprechendes Flurstück gefunden")
+            'MsgBox("Kein entsprechendes Flurstück gefunden")
+            MessageBox.Show("Kein entsprechendes Flurstück gefunden", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
         End If
     End Sub
 
@@ -475,7 +498,8 @@ Public Class winHaupt
         If tools.eigentuemerAbfrageErlaubt Then
             eigentuemerWord(False, fkzlist_lage, lage_lage)
         Else
-            MsgBox("Keine Rechte vorhanden")
+            'MsgBox("Keine Rechte vorhanden")
+            MessageBox.Show("Keine Rechte vorhanden", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
             Exit Sub
         End If
     End Sub
@@ -599,7 +623,8 @@ Public Class winHaupt
             gemitem = CType(cmbGemarkungen2.SelectedItem, myComboBoxItem)
 
             If gemitem Is Nothing Then
-                MsgBox("Die Eingabe war ungültig. Bitte korrigieren!")
+                'MsgBox("Die Eingabe war ungültig. Bitte korrigieren!")
+                MessageBox.Show("Die Eingabe war ungültig. Bitte korrigieren!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
                 Exit Sub
             End If
             Dim gemcode As Integer = CInt(cmbGemarkungen2.SelectedValue)
@@ -716,28 +741,28 @@ Public Class winHaupt
         cmbstrassen.ItemsSource = Nothing
     End Sub
 
-    Private Sub btnSucheadresse_Click(sender As Object, e As RoutedEventArgs)
-        e.Handled = True
+    'Private Sub btnSucheadresse_Click(sender As Object, e As RoutedEventArgs)
+    '    e.Handled = True
 
-        Dim oldstring As String = ""
-        Dim cb As New myComboBoxItem
-        Dim strassennamen As New List(Of myComboBoxItem)
-        Dim adr As New clsAdress
-        lageliste = clsGIStools.getLage(tbStrasseFilter.Text, cmbGemeinden.SelectedValue.ToString, mitfkz:=False)
+    '    Dim oldstring As String = ""
+    '    Dim cb As New myComboBoxItem
+    '    Dim strassennamen As New List(Of myComboBoxItem)
+    '    Dim adr As New clsAdress
+    '    lageliste = clsGIStools.getLage(tbStrasseFilter.Text, cmbGemeinden.SelectedValue.ToString, mitfkz:=False)
 
-        Dim a() As String
-        Dim newstring As String = ""
-        If lageliste IsNot Nothing Then
-            cmbstrassen.ItemsSource = lageliste
+    '    Dim a() As String
+    '    Dim newstring As String = ""
+    '    If lageliste IsNot Nothing Then
+    '        cmbstrassen.ItemsSource = lageliste
 
-            cmbstrassen.DisplayMemberPath = "mySttring"
-            cmbstrassen.SelectedValuePath = "myindex"
-            cmbstrassen.IsDropDownOpen = True
-        Else
-            MsgBox("Keine Strassennamen mit diesem Anfang gefunden.")
-        End If
+    '        cmbstrassen.DisplayMemberPath = "mySttring"
+    '        cmbstrassen.SelectedValuePath = "myindex"
+    '        cmbstrassen.IsDropDownOpen = True
+    '    Else
+    '        MsgBox("Keine Strassennamen mit diesem Anfang gefunden.")
+    '    End If
 
-    End Sub
+    'End Sub
 
     Private Sub cmb20fst_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
         e.Handled = True
@@ -819,23 +844,28 @@ Public Class winHaupt
         Dim metadata As List(Of myComboBoxItem)
         If clsActiveDir.fdkurz.Contains("mwelt") Then
             If CInt(tbPGnr.Text) < 80000 Then
-                MsgBox("Dem FD Umwelt sind nur Nr > 80000 erlaubt!")
+
+                MessageBox.Show("Dem FD Umwelt sind nur Nr > 80000 erlaubt!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
                 If Environment.UserName <> "Feinen_J" Then Exit Sub
             End If
         End If
         If clsActiveDir.fdkurz.Contains("auaufsicht") Then
             If CInt(tbPGnr.Text) > 80000 Then
-                MsgBox("Dem FD Bauaufsicht sind nur Nr < 80000 erlaubt!")
+                MessageBox.Show("Dem FD Bauaufsicht sind nur Nr < 80000 erlaubt!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+
                 If Environment.UserName <> "Feinen_J" Then Exit Sub
             End If
         End If
         If Not (clsActiveDir.fdkurz.Contains("mwelt") Or clsActiveDir.fdkurz.Contains("auaufsicht")) Then
-            MsgBox("Dem FD Umwelt sind nur Nr > 80000 erlaubt!")
+            MessageBox.Show("Dem FD Umwelt sind nur Nr > 80000 erlaubt!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+
+
             If Environment.UserName <> "Feinen_J" Then Exit Sub
         End If
         fstliste = probaug.klaereanzahlFST(tbPGJahr.Text, tbPGnr.Text, metadata, vorhaben1)
         If fstliste Is Nothing Then
-            MsgBox("Das Aktenzeichen ist ungültig!")
+            'MsgBox("Das Aktenzeichen ist ungültig!")
+            MessageBox.Show("Das Aktenzeichen ist ungültig!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
             Exit Sub
         End If
         Dim fkzstring = probaug.bildeFKZstring(fstliste)
@@ -880,13 +910,18 @@ Public Class winHaupt
         Try
             probaugVorgange = probaug.getVorgaengeZuFlurstueck(fkzlist(0))
             If probaugVorgange.Count < 1 Then
-                MsgBox("Keine vorgänge gefunden")
+
+                MessageBox.Show("Keine vorgänge gefunden", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
             Else
                 neuertext = bildePGvorgangCookieString(probaugVorgange)
-                MsgBox("Es wurden " & probaugVorgange.Count & " Vorgänge gefunden:" & Environment.NewLine & Environment.NewLine &
+                MessageBox.Show("Es wurden " & probaugVorgange.Count & " Vorgänge gefunden:" & Environment.NewLine & Environment.NewLine &
                        neuertext & Environment.NewLine & Environment.NewLine &
                         Environment.NewLine & Environment.NewLine &
-                       "Diese Vorgänge werden unter dem Reiter 'ProBauG' der Combobox zuaddiert!")
+                       "Diese Vorgänge werden unter dem Reiter 'ProBauG' der Combobox zuaddiert!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+                'MsgBox("Es wurden " & probaugVorgange.Count & " Vorgänge gefunden:" & Environment.NewLine & Environment.NewLine &
+                '       neuertext & Environment.NewLine & Environment.NewLine &
+                '        Environment.NewLine & Environment.NewLine &
+                '       "Diese Vorgänge werden unter dem Reiter 'ProBauG' der Combobox zuaddiert!")
                 mergeToPGCookie(neuertext)
                 aktualisierePGvorgaengeHistory()
                 tabEig.SelectedIndex = 4
@@ -934,7 +969,8 @@ Public Class winHaupt
         If tools.eigentuemerAbfrageErlaubt Then
             ' eigentuemerWord(False, fkzlist_lage, lage_lage)
         Else
-            MsgBox("Keine Rechte vorhanden")
+            'MsgBox("Keine Rechte vorhanden")
+            MessageBox.Show("Keine Rechte vorhanden", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
             Exit Sub
         End If
         Dim lokadr As New clsAdress
@@ -964,16 +1000,23 @@ Public Class winHaupt
         Try
             probaugVorgange = probaug.getVorgaengeZuAdresseUndFlurstueck(lokadr, lokfst)
             If probaugVorgange.Count < 1 Then
-                MsgBox("Keine Vorgänge zu dieser Adresse und dem entsp. Flurstück gefunden. " & Environment.NewLine &
+                'MsgBox("Keine Vorgänge zu dieser Adresse und dem entsp. Flurstück gefunden. " & Environment.NewLine &
+                '    " " & Environment.NewLine &
+                '    "  " & Environment.NewLine
+                '       )
+                MessageBox.Show("Keine Vorgänge zu dieser Adresse und dem entsp. Flurstück gefunden. " & Environment.NewLine &
                     " " & Environment.NewLine &
-                    "  " & Environment.NewLine
-                       )
+                    "  " & Environment.NewLine, "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
             Else
                 neuertext = bildePGvorgangCookieString(probaugVorgange)
-                MsgBox("Es wurden " & probaugVorgange.Count & " Vorgänge gefunden:" & Environment.NewLine & Environment.NewLine &
+                MessageBox.Show("Es wurden " & probaugVorgange.Count & " Vorgänge gefunden: " & Environment.NewLine & Environment.NewLine &
                        neuertext & Environment.NewLine & Environment.NewLine &
                         Environment.NewLine & Environment.NewLine &
-                       "Diese Vorgänge werden unter dem Reiter 'ProBauG' der Combobox zuaddiert!")
+                       "Diese Vorgänge werden unter dem Reiter 'ProBauG' der Combobox zuaddiert!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+                'MsgBox("Es wurden " & probaugVorgange.Count & " Vorgänge gefunden: " & Environment.NewLine & Environment.NewLine &
+                '       neuertext & Environment.NewLine & Environment.NewLine &
+                '        Environment.NewLine & Environment.NewLine &
+                '       "Diese Vorgänge werden unter dem Reiter 'ProBauG' der Combobox zuaddiert!")
                 mergeToPGCookie(neuertext)
                 aktualisierePGvorgaengeHistory()
                 tabEig.SelectedIndex = 4
@@ -983,6 +1026,32 @@ Public Class winHaupt
             l("fehler btnsucheeigentumer_Click " & ex.ToString)
         End Try
 
+    End Sub
+
+    Private Async Sub tbStrasseFilter_TextChanged(sender As Object, e As TextChangedEventArgs) Handles tbStrasseFilter.TextChanged
+        If Not istgeladen Then Return
+        Dim filter = tbStrasseFilter.Text.Trim()
+        If filter.Length < 2 Then
+            cmbstrassen.ItemsSource = Nothing
+            Return
+        End If
+
+        Dim gemeindeKey = If(cmbGemeinden.SelectedValue, "").ToString()
+        Try
+            Dim result As List(Of myComboBoxItem) =
+                Await Task.Run(Function()
+                                   Return clsGIStools.getLage(filter, gemeindeKey, mitfkz:=False)
+                               End Function)
+            If result Is Nothing Then
+                Debug.Print("ss")
+            End If
+            cmbstrassen.ItemsSource = result
+            cmbstrassen.DisplayMemberPath = "mySttring"
+            cmbstrassen.SelectedValuePath = "myindex"
+            cmbstrassen.IsDropDownOpen = (result IsNot Nothing AndAlso result.Count > 0)
+        Catch ex As Exception
+            l("tbStrasseFilter_TextChanged: " & ex.ToString())
+        End Try
     End Sub
 
     'Private Sub tbStrasse_TextChanged(sender As Object, e As TextChangedEventArgs)

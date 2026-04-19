@@ -417,7 +417,8 @@ Public Class winDetail
             Next
 
             If tools.FSTausGISListe.Count < 1 Then
-                MsgBox("Keine Flurstücke zugeordnet!!!  GIS wird ohne Flurstück gestartet!")
+                MessageBox.Show("Keine Flurstücke zugeordnet!!!  GIS wird ohne Flurstück gestartet!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+                'MsgBox("Keine Flurstücke zugeordnet!!!  GIS wird ohne Flurstück gestartet!")
                 url = "https://gis.kreis-of.de/LKOF/asp/main.asp?"
                 l("url " & url)
                 Process.Start(url)
@@ -495,14 +496,16 @@ Public Class winDetail
                             End If
                         Next
                     End If
-                    MsgBox("Datei wurde aktualisiert!" & Environment.NewLine & tbBaulastNr.Text.Trim & endung.Trim)
+                    'MsgBox("Datei wurde aktualisiert!" & Environment.NewLine & tbBaulastNr.Text.Trim & endung.Trim)
+                    MessageBox.Show("Datei wurde aktualisiert!" & Environment.NewLine & tbBaulastNr.Text.Trim & endung.Trim, "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
                     'Else
                     '    Exit Sub
                     'End If
                 Else
                     l(" MOD dropped 4 " & filenames(0).ToLower & " nach " & zielname)
                     IO.File.Copy(filenames(0).ToLower, zielname, True)
-                    MsgBox("Datei wurde aktualisiert!" & Environment.NewLine & tbBaulastNr.Text.Trim & endung.Trim)
+                    MessageBox.Show("Datei wurde aktualisiert!" & Environment.NewLine & tbBaulastNr.Text.Trim & endung.Trim, "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+                    'MsgBox("Datei wurde aktualisiert!" & Environment.NewLine & tbBaulastNr.Text.Trim & endung.Trim)
                     'hier muss der db-eintrag gemacht werden                    'insert
                     Dim erfolg As Boolean
                     For i = 0 To tools.FSTausGISListe.Count - 1
@@ -823,10 +826,12 @@ Public Class winDetail
     Private Sub btnEigentümerclip_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
         If IsNothingOrEmpty(tbEigentuemer.Text) Then
-            MsgBox("Feld ist noch leer")
+            'MsgBox("Feld ist noch leer")
+            MessageBox.Show("Feld ist noch leer", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
         Else
             My.Computer.Clipboard.SetText(tbEigentuemer.Text)
-            MsgBox("Inhalt wurde in die Zwischenablage kopiert. Mit Strg-v können sie die Daten z.B. in Word einfügen.")
+            'MsgBox()
+            MessageBox.Show("Inhalt wurde in die Zwischenablage kopiert. Mit Strg-v können sie die Daten z.B. in Word einfügen.", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
         End If
 
     End Sub
@@ -861,7 +866,8 @@ Public Class winDetail
                 summe = summe & Environment.NewLine & result
                 tbEigentuemer.Text = summe
             Else
-                MsgBox(result)
+                'MsgBox(result)
+                MessageBox.Show(result, "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
             End If
         Catch ex As Exception
             l("btnEigentuemerProbaug_Click " & ex.ToString)
@@ -995,7 +1001,8 @@ Public Class winDetail
         If tools.erzeugeCSVDateiBestand(zieldatei) Then
             Process.Start(zieldatei)
         Else
-            MsgBox("Fehler bei der erzeugung der CSV-Datei: " & zieldatei)
+            'MsgBox("Fehler bei der erzeugung der CSV-Datei: " & zieldatei)
+            MessageBox.Show("Fehler bei der erzeugung der CSV-Datei: " & zieldatei, "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
         End If
 
 
@@ -1011,7 +1018,8 @@ Public Class winDetail
         If pruefeExistenzDerPDFdateien(zieldatei) Then
             Process.Start(zieldatei)
         Else
-            MsgBox("Fehler bei der erzeugung der CSV-Datei: " & zieldatei)
+            'MsgBox("Fehler bei der erzeugung der CSV-Datei: " & zieldatei)
+            MessageBox.Show("Fehler bei der erzeugung der CSV-Datei: " & zieldatei, "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
         End If
     End Sub
 

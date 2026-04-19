@@ -51,7 +51,8 @@ Public Class clsGIStools
                 'tfst.gemcode = CInt(fstREC.dt.Rows(i).Item("int4"))
                 If fstREC.dt.Rows(i).Item("int1").ToString = String.Empty Then
                     l("kein eintrag für flur")
-                    MsgBox("Sie haben keine Flurstücksdaten eingeben. (Gemeinde,Gemarkung,Flur,Zaehler,Nenner).")
+                    'MsgBox("Sie haben keine Flurstücksdaten eingeben. (Gemeinde,Gemarkung,Flur,Zaehler,Nenner).")
+                    MessageBox.Show("Sie haben keine Flurstücksdaten eingeben. (Gemeinde,Gemarkung,Flur,Zaehler,Nenner).", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
                     Return liste
                 End If
                 tfst.flur = CInt(fstREC.dt.Rows(i).Item("int1"))

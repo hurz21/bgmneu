@@ -1110,7 +1110,8 @@ Module tools
 
         Catch ex As Exception
             l("Fehler in createDir: " & ex.ToString())
-            MsgBox(ex.Message & " fehler in createdir  " & targetroot)
+            'MsgBox(ex.Message & " fehler in createdir  " & targetroot)
+            MessageBox.Show(ex.Message & " fehler in createdir  " & targetroot, "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
         End Try
     End Sub
     Public Function ReadSemicolonFileAllText(path As String) As List(Of String())
@@ -1183,7 +1184,8 @@ Module tools
             url = "https://gis.kreis-of.de/LKOF/asp/main.asp?" & themen & "&app=sp_mdat&lay=sp_mdat_0010_F&fld=text3&typ=string&val=" & baulastblatt & "&skipwelcome=true"
             Process.Start(url)
         Else
-            MsgBox("Die BaulastNr. '" & baulastblatt & "' ist ungültig!")
+            'MsgBox("Die BaulastNr. '" & baulastblatt & "' ist ungültig!")
+            MessageBox.Show("Die BaulastNr. '" & baulastblatt & "' ist ungültig!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
         End If
     End Sub
     Friend Function getthemen(url As String, themendefinitionsdatei As String) As String
@@ -1356,7 +1358,8 @@ Module tools
             If erfolg Then
                 'MsgBox("Die Worddatei wurde unter " & Environment.NewLine & filepath & Environment.NewLine & " abgelegt!")
             Else
-                MsgBox("Die Worddatei konnte nicht erzeugt werden. Vermutlich haben Sie sie noch geöffnet.")
+                MessageBox.Show("Die Worddatei konnte nicht erzeugt werden. Vermutlich haben Sie sie noch geöffnet.", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+                'MsgBox("Die Worddatei konnte nicht erzeugt werden. Vermutlich haben Sie sie noch geöffnet.")
             End If
             Return filepath
         Catch ex As Exception
@@ -1376,7 +1379,8 @@ Module tools
             If lokfkzliste.Length > 1 Then
                 url = gisLogoutUndStartFKZ(lokfkzliste, gisLogouten)
             Else
-                MsgBox("Keine Flurstücke zugeordnet!!!  GIS wird ohne Flurstück gestartet!")
+                'MsgBox("Keine Flurstücke zugeordnet!!!  GIS wird ohne Flurstück gestartet!")
+                MessageBox.Show("Keine Flurstücke zugeordnet!!!  GIS wird ohne Flurstück gestartet!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
                 url = "https://gis.kreis-of.de/LKOF/asp/main.asp?"
                 l("url " & url)
                 Process.Start(url)

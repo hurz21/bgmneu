@@ -160,10 +160,10 @@ Public Class clsDBspecMSSQL
         My.Log.WriteEntry("IN mssql: " & text)
     End Sub
 
-    Shared Sub nachricht_Mbox(ByVal text$)
-        MsgBox(text$)
-        My.Log.WriteEntry("IN mssql: " & text)
-    End Sub
+    'Shared Sub nachricht_Mbox(ByVal text$)
+    '    MsgBox(text$)
+    '    My.Log.WriteEntry("IN mssql: " & text)
+    'End Sub
 
     Public Function dboeffnen(ByRef resultstring As String) As Integer Implements IDB_grundfunktionen.dboeffnen
         Try
