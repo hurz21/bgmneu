@@ -10,28 +10,8 @@
     <DockPanel Margin="5">
         <StackPanel Orientation="Vertical"  >
 
-            <StackPanel Margin="1" Width="185" Name="stpAdminOnly" Background="LightGray">
-                <!--<Button Name="btnNeu" Click="btnNeu_Click" Content="Neu" Margin="5" 
-                    IsEnabled="False" Visibility="Collapsed"/>-->
-
-            </StackPanel>
-            <StackPanel IsEnabled="True" Visibility="Collapsed">
-                <Button Name="btngetFlurstück" Margin="5" Click="btngetFlurstueck_Click"  >Flurstück wählen
-
-                </Button>
-                <TextBlock Name="tbFlurstueckDisplay" Margin="5" Foreground="Gray" 
-                           Background="White" Height="40" TextWrapping="Wrap">
-                bitte Flurstück wählen
-                </TextBlock>
-                <Button Name="btnEigentuemer"  Margin="5" Click="btnEigentuemer_Click" IsEnabled="False" >Eigentümer für Flurstück
-
-                </Button>
-                <Button Name="btnRevers" Margin="5" IsEnabled="False" Visibility="Collapsed">Flurstücke zu Eigentümer
-
-                </Button>
-
-
-            </StackPanel>
+          
+      
 
             <Button Name="btnGIS" Click="btnGIS_Click" Content="GIS" Margin="5,9,5,5" Visibility="Collapsed"
                     ToolTip="zeigt unmittelbar die PDF-Datei der Baulast an"/>
@@ -87,7 +67,7 @@
                         <StackPanel Orientation="Horizontal">
                             <Label Width="75" FontSize="10"  >Strassenfilter:</Label>
                             <TextBox Name="tbStrasseFilter" Width="160" Height="25" Padding="2" 
-                                     FontSize="11" TextChanged="tbStrasse_TextChanged"></TextBox>
+                                     FontSize="11"  ></TextBox>
                         </StackPanel>
 
 
@@ -143,47 +123,47 @@
                         <StackPanel Orientation="Horizontal">
                             <Label Width="75" FontSize="10">Gemarkung:</Label>
                             <ComboBox x:Name="cmbGemarkungen" HorizontalAlignment="Left" SelectionChanged="cmbGemarkungen_SelectionChanged"
-                      Height="25" Width="180"  FontSize="10"/>
+                      Height="25" Width="160"  FontSize="10"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Label Width="75" FontSize="10">Flur:</Label>
-                            <TextBox Name="tbFlur" Width="180"></TextBox>
+                            <TextBox Name="tbFlur" Width="160"></TextBox>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Label Width="75" FontSize="10">Zähler:</Label>
-                            <TextBox Name="tbZaehler" Width="180"></TextBox>
+                            <TextBox Name="tbZaehler" Width="160"></TextBox>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Label Width="75" FontSize="10">Nenner:</Label>
-                            <TextBox Name="tbnenner" Width="180"></TextBox>
+                            <TextBox Name="tbnenner" Width="160"></TextBox>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Label Width="75" FontSize="10" ToolTip="Geben sie hier das Az. oder anderen signifikanten Text ein.">Az./Info:</Label>
-                            <TextBox Name="tbFSTbemerkung" Width="180"></TextBox>
+                            <TextBox Name="tbFSTbemerkung" Width="160"></TextBox>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal"  HorizontalAlignment="Left">
                             <Label Width="75" FontSize="10">GIS starten:</Label>
                             <Button x:Name="btngis4fst" Click="btngis4fst_click"  Margin="0,0,0,0"
-                                Width="180" HorizontalAlignment="Left">Flurstück im GIS</Button>
+                                Width="160" HorizontalAlignment="Left">Flurstück im GIS</Button>
 
                             <ComboBox x:Name="cmb20fst" HorizontalAlignment="Left" Margin="0,0,0,0"
                                   SelectionChanged="cmb20fst_SelectionChanged" 
-                                   DisplayMemberPath="Anzeige"  Width="25"
+                                   DisplayMemberPath="Anzeige"  Width="20"
                                     SelectedItem="{Binding SelectedFlurstueck}" 
                                     Height="30"   FontSize="10"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal"  HorizontalAlignment="Left">
                             <Label Width="75" FontSize="10">GIS starten:</Label>
                             <Button x:Name="btnfst2PG" Click="btnfst2PG_Click"  
-                                      IsEnabled="True"   Width="180" HorizontalAlignment="Left" 
+                                      IsEnabled="True"   Width="160" HorizontalAlignment="Left" 
                                     Style="{StaticResource lessButton}">Vorgänge zum Flurstück</Button>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal"  HorizontalAlignment="Left">
                             <Label Width="75" FontSize="10">Eigentümer:</Label>
                             <Button x:Name="btnsucheeigentumer" Click="btnsucheeigentumer_Click" 
                                 HorizontalAlignment="left"  
-                                             Style="{StaticResource lessButton}" Width="180" 
+                                             Style="{StaticResource lessButton}" Width="160" 
                             >Word-Datei</Button>
                         </StackPanel>
                     

@@ -385,10 +385,11 @@ Public Class winDetail
         Dim lokfkzliste As String = ""
         Dim treffer As Integer = 0
         Dim fkztemp As String
+        Dim gemeindeschluessel, lagebezeichnung As String 'aktadr.gemeindebigNRstring aktadr.lage
         Try
             'hier besser eine schleife über alle flurstücke
             For i = 0 To tools.FSTausGISListe.Count - 1
-                If tools.flurstueckExistiertImGis(tools.FSTausGISListe(i).flurstueckZuFKZ) Then
+                If tools.flurstueckExistiertImGis(tools.FSTausGISListe(i).flurstueckZuFKZ, gemeindeschluessel, lagebezeichnung) Then
                     treffer += 1
                     fkztemp = tools.FSTausGISListe(i).flurstueckZuFKZ
 

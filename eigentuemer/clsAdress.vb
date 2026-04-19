@@ -361,7 +361,7 @@ Public Class clsAdress
                     Exit Sub
                 End If
             Next
-            strasseName = lage
+            strasseName = lage.Trim
             HausKombi = ""
         Catch ex As Exception
             strasseName = lage

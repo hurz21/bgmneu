@@ -629,15 +629,20 @@ Public Class probaug
         End Try
     End Function
 
-    Friend Shared Function getVorgaengeZuAdresse(lokadr As clsAdress) As List(Of myComboBoxItem)
+    Friend Shared Function getVorgaengeZuAdresseUndFlurstueck(lokadr As clsAdress, lokfst As clsFlurstueck) As List(Of myComboBoxItem)
         Dim sql, hinweis As String
         Dim dt As DataTable
         Dim cb As myComboBoxItem
         Dim vlist As New List(Of myComboBoxItem)
-        sql = "select * from GISVIEW1 where feld24='" & lokadr.gemeindeName.Trim &
-                "' and feld25='" & lokadr.strasseName.Trim & "'" &
-                " and feld22='" & lokadr.HausKombi & "' order by feld1 desc"
-        'select * from GISVIEW6 where feld7='2026' and feld9='80006'
+        sql = "(select * from GISVIEW1 where (feld24='" & lokadr.gemeindeName.Trim & "' or feld33='" & lokadr.gemeindeName.Trim & "') " &
+              " and feld25='" & lokadr.strasseName.Trim & "'" &
+                " and feld26='" & lokadr.HausKombi & "'  " &
+                " union " &
+             "select * from GISVIEW1 where feld28='" & lokfst.gemarkungstext &
+                "' and feld13='" & lokfst.flur & "'" &
+                " and feld14='" & lokfst.fstueckKombi & "') order by feld1 desc"
+
+
         l(sql)
         'Dim metad As New List(Of myComboBoxItem) 
         Try
@@ -651,7 +656,7 @@ Public Class probaug
             Next
             Return vlist
         Catch ex As Exception
-            l("fehler in getVorgaengeZuAdresse " & ex.ToString)
+            l("fehler in getVorgaengeZuAdresseUndFlurstueck " & ex.ToString)
             Return vlist
         End Try
     End Function

@@ -61,7 +61,7 @@ Public Class winHaupt
         Else
             'MessageBox.Show("Sie haben keine Berechtigung für diese Anwendung. Abbruch!")
             'Close() 
-            stpAdminOnly.Visibility = Visibility.Visible
+            'stpAdminOnly.Visibility = Visibility.Visible
             tabEig.SelectedIndex = 1
             btnEdit.IsEnabled = False
         End If
@@ -139,26 +139,47 @@ Public Class winHaupt
             'Process.Start(logout)
         End If
     End Sub
-    ' Auswahl -> in TextBox schreiben
-
-
     Private Shared Function isAutho() As Boolean
-        'Return False
-        Return Environment.UserName.ToLower = "benes_c" Or
-                Environment.UserName.ToLower = "hartmann_s" Or
-                Environment.UserName.ToLower = "briese_j" Or
-                Environment.UserName.ToLower = "feinen_j" Or
-                Environment.UserName.ToLower = "thieme_m" Or
-                Environment.UserName.ToLower = "zahnlückenpimpf" Or
-                Environment.UserName.ToLower = "neis_h"
+        Try
+            Dim appDir = IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
+            Dim userFile = IO.Path.Combine(appDir, "bgmusers.txt")
+            Dim allowed As HashSet(Of String)
+
+            If IO.File.Exists(userFile) Then
+                Dim lines = IO.File.ReadAllLines(userFile).
+                            Where(Function(s) Not String.IsNullOrWhiteSpace(s)).
+                            Select(Function(s) s.Trim())
+                allowed = New HashSet(Of String)(lines, StringComparer.OrdinalIgnoreCase)
+            Else
+                ' Fallback: eingebaute Liste (nur als Notfall). Bevorzugt: Datei pflegen.
+                allowed = New HashSet(Of String)(New String() {
+                                                    "benes_c",
+                                                    "hartmann_s",
+                                                    "briese_j",
+                                                    "feinen_j",
+                                                    "thieme_m",
+                                                    "zahnlückenpimpf",
+                                                    "neis_h"
+                                                   }, StringComparer.OrdinalIgnoreCase)
+            End If
+
+            Dim currentUser = Environment.UserName
+            Return allowed.Contains(currentUser)
+        Catch ex As Exception
+            l("Fehler in isAutho: " & ex.ToString())
+            Return False
+        End Try
     End Function
-
-    'Private Sub btnNeu_Click(sender As Object, e As RoutedEventArgs)
-    '    e.Handled = True
-    '    Dim neu As New winDetail("0", False) ' 0=modus neu
-    '    neu.ShowDialog()
-    'End Sub
-
+    'Private Shared Function isAutho() As Boolean
+    '    'Return False
+    '    Return Environment.UserName.ToLower = "benes_c" Or
+    '            Environment.UserName.ToLower = "hartmann_s" Or
+    '            Environment.UserName.ToLower = "briese_j" Or
+    '            Environment.UserName.ToLower = "feinen_j" Or
+    '            Environment.UserName.ToLower = "thieme_m" Or
+    '            Environment.UserName.ToLower = "zahnlückenpimpf" Or
+    '            Environment.UserName.ToLower = "neis_h"
+    'End Function
 
 
     Private Sub btnGIS_Click(sender As Object, e As RoutedEventArgs)
@@ -172,13 +193,6 @@ Public Class winHaupt
 
     Private Sub btnEdit_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
-        'If tbblnr.Text.IsNothingOrEmpty Then
-        '    MsgBox("bitte geben sie eine blnr ein!")
-        '    Exit Sub
-        'End If
-
-
-
         tools.writeBLBlattCookie(tbblnr.Text, "bgm_blattnr_cookie.txt")
         Dim neu As New winDetail((tbblnr.Text), False) ' 0=modus neu
         neu.ShowDialog()
@@ -194,7 +208,6 @@ Public Class winHaupt
         Dim titelVorschlag As String = ""
         Try
             l(" MOD ---------------------- anfang")
-
             l(" MOD dropped anfang")
             If e.Data.GetDataPresent(DataFormats.FileDrop) Then
                 filenames = CType(e.Data.GetData(DataFormats.FileDrop), String())
@@ -206,8 +219,6 @@ Public Class winHaupt
                 a = fi.Name.Split("."c)
                 tbblnr.Text = a(0)
                 fi = Nothing
-                'Dim neu As New winDetail((tbblnr.Text)) ' 0=modus neu
-                'neu.ShowDialog()
             End If
 
             l(" MOD ---------------------- ende")
@@ -216,12 +227,6 @@ Public Class winHaupt
         End Try
     End Sub
 
-    'Private Sub btnPDFTool_Click(sender As Object, e As RoutedEventArgs)
-    '    e.Handled = True
-    '    Dim ewrk As New winWerkzeuge
-    '    ewrk.ShowDialog()
-
-    'End Sub
 
     Private Sub btnbplan_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
@@ -229,48 +234,7 @@ Public Class winHaupt
         p.Start("\\gis\gdvell\apps\bplankat\bplanstart.bat")
     End Sub
 
-    Private Sub btngetFlurstueck_Click(sender As Object, e As RoutedEventArgs)
-        e.Handled = True
-        Dim f As New winFlurstueck
-        f.ShowDialog()
-        Dim kurz As String
-        kurz = f.normflst.gemarkungstext &
-            ", Flur: " & f.normflst.flur &
-            ": : " & f.normflst.zaehler &
-            "/" & f.normflst.nenner & Environment.NewLine & Environment.NewLine
-        tbFlurstueckDisplay.Text = kurz
 
-        'tbFlurstueckDisplay.Background=
-        tools.FSTausGISListe.Clear()
-        tools.FSTausGISListe.Add(f.normflst)
-        Dim result As String
-        If toolsEigentuemer.geteigentuemerText(tools.FSTausGISListe, result) Then
-            eigentuemerText = kurz & result
-            If eigentuemerText.Length > 1 Then
-                btnEigentuemer.IsEnabled = True
-                'btnBaulast4FST.IsEnabled = True
-
-                '''''  baulastnr = getBaulastNr(tools.FSTausGISListe(0)) '????
-                If Not IsNumeric(baulastnr) Then
-
-                    lastPDF = ""
-
-                    tbFlurstueckDisplay.Text = tbFlurstueckDisplay.Text & Environment.NewLine &
-                         "Keine Baulast gefunden."
-                Else
-
-
-
-                    tbFlurstueckDisplay.Text = tbFlurstueckDisplay.Text & Environment.NewLine &
-                       "BaulastNr: " & baulastnr
-                End If
-            End If
-        Else
-            eigentuemerText = kurz & result
-        End If
-
-
-    End Sub
     Private Sub btnEigentuemer_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
         Dim fst As New wineigentuemerText(eigentuemerText)
@@ -278,24 +242,6 @@ Public Class winHaupt
     End Sub
 
 
-    'Private Sub btnBaulastdisplay_Click(sender As Object, e As RoutedEventArgs)
-    '    e.Handled = True
-    '    'If tbBaulast2.Text.Length < 1 Or (Not IsNumeric(tbBaulast2.Text.Trim)) Then
-    '    '    MessageBox.Show("Sie sollten zuerst eine BaulastNummer eingeben!")
-    '    '    Exit Sub
-    '    'End If
-    '    'If lastPDF.Length < 1 Then
-    '    MessageBox.Show("Es werden 2 Fenster angezeigt. Das " & Environment.NewLine &
-    '           " 1. Fenster zeigt allg. Infos zur Baulast und das" & Environment.NewLine &
-    '           " 2. Fenster zeigt die PDF zur Baulast" & Environment.NewLine & Environment.NewLine & Environment.NewLine &
-    '           "Sie können die Baulast-PDF mit 'speichern unter...'  abspeichern.", "Baulast ansehen",
-    '           MessageBoxButton.OK, MessageBoxImage.Information)
-    '    Dim neu As New winDetail((tbBaulast2.Text), True) ' 0=modus neu
-    '    neu.ShowDialog()
-    '    'Else
-    '    '    Process.Start(lastPDF)
-    '    'End If
-    'End Sub
 
 
     Private Sub btnBaulast4FST_Click(sender As Object, e As RoutedEventArgs)
@@ -343,7 +289,8 @@ Public Class winHaupt
         fkzlist = New List(Of clsFlurstueck)
         fkzlist = readFlurst_Form()
         fst_lage = fkzlist(0).gemarkungstext
-        If tools.flurstueckExistiertImGis(fkzlist(0).flurstueckZuFKZ) Then
+        Dim gemeindeschluessel, lagebezeichnung As String 'aktadr.gemeindebigNRstring aktadr.lage
+        If tools.flurstueckExistiertImGis(fkzlist(0).flurstueckZuFKZ, gemeindeschluessel, lagebezeichnung) Then
             eigentuemerWord(False, fkzlist, fst_lage)
         Else
             MsgBox("Dieses Flurstück existiert nicht im GIS!")
@@ -434,7 +381,8 @@ Public Class winHaupt
         Try
             fst_lage = loklist.Item(0).gemarkungstext
             l("fst_lage " & fst_lage)
-            If tools.flurstueckExistiertImGis(loklist(0).flurstueckZuFKZ) Then
+            Dim gemeindeschluessel, lagebezeichnung As String 'aktadr.gemeindebigNRstring aktadr.lage
+            If tools.flurstueckExistiertImGis(loklist(0).flurstueckZuFKZ, gemeindeschluessel, lagebezeichnung) Then
                 l("flurstück zu adresse existiert")
                 gisFuerProbaugFlurst(tbblnr.Text.Trim, loklist)
                 loklist(0).AZ = azinfo 'tbFSTbemerkung.Text
@@ -442,6 +390,11 @@ Public Class winHaupt
                 If imAdressModus Then
 
                 Else
+                    aktadr.gemeindebigNRstring = gemeindeschluessel
+                    aktadr.strasseName = lagebezeichnung
+                    aktadr.fkz = loklist(0).Flurstuecksskennzeichen
+                    aktadr.ingradaLageZerlegen(aktadr.strasseName)
+                    'ihah
                     cls20Cookies.SpeichereFlurstueck(loklist(0))
                 End If
             Else
@@ -451,30 +404,24 @@ Public Class winHaupt
             l("fehler in MitFlurstueckInsGIS " & ex.ToString)
         End Try
     End Sub
+    'Private Sub tbStrasse_TextChanged(sender As Object, e As TextChangedEventArgs)
+    '    If tbStrasseFilter Is Nothing Then Exit Sub
+    '    e.Handled = True
+    '    Exit Sub
 
+    '    Dim oldstring As String = ""
+    '    Dim cb As New myComboBoxItem
+    '    Dim strassennamen As New List(Of myComboBoxItem)
+    '    lageliste = clsGIStools.getLage(tbStrasseFilter.Text, cmbGemeinden.SelectedValue.ToString, mitfkz:=False)
+    '    Dim a() As String
+    '    Dim newstring As String = ""
 
+    '    cmbstrassen.ItemsSource = lageliste
+    '    cmbstrassen.DisplayMemberPath = "mySttring"
+    '    cmbstrassen.SelectedValuePath = "myindex"
+    '    cmbstrassen.IsDropDownOpen = True
 
-
-
-
-    Private Sub tbStrasse_TextChanged(sender As Object, e As TextChangedEventArgs)
-        If tbStrasseFilter Is Nothing Then Exit Sub
-        e.Handled = True
-        Exit Sub
-
-        Dim oldstring As String = ""
-        Dim cb As New myComboBoxItem
-        Dim strassennamen As New List(Of myComboBoxItem)
-        lageliste = clsGIStools.getLage(tbStrasseFilter.Text, cmbGemeinden.SelectedValue.ToString, mitfkz:=False)
-        Dim a() As String
-        Dim newstring As String = ""
-
-        cmbstrassen.ItemsSource = lageliste
-        cmbstrassen.DisplayMemberPath = "mySttring"
-        cmbstrassen.SelectedValuePath = "myindex"
-        cmbstrassen.IsDropDownOpen = True
-
-    End Sub
+    'End Sub
 
     Private Sub cmbstrassen_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
         e.Handled = True
@@ -496,7 +443,6 @@ Public Class winHaupt
         Dim strassennamen As New List(Of myComboBoxItem)
         lage_lage = "== Lage: " & aktadr.gemeindeName & ", " & aktadr.strasseName & " =="
         lageliste = clsGIStools.getLage(aktadr.strasseName, aktadr.gemeindebigNRstring, mitfkz:=True)
-        'lageliste = clsGIStools.getLage(lage, gemeindeschluessel, mitfkz:=True)
         If lageliste.Count > 0 Then
             'fkz zerlegen  
             fst.Flurstuecksskennzeichen = lageliste.Item(0).myindex.ToString
@@ -853,10 +799,6 @@ Public Class winHaupt
         End If
     End Sub
 
-    'Private Sub cmb20adr_MouseEnter(sender As Object, e As MouseEventArgs)
-    '    cmb20adr.IsDropDownOpen = True
-    'End Sub
-
     Private Sub aktualisiereFSTHistory()
         Try
             Dim liste As List(Of clsFlurstueck) = cls20Cookies.LadeFlurstuecke()
@@ -933,7 +875,8 @@ Public Class winHaupt
         Dim neuertext As String
         Dim index As Integer
         index = CInt(cmbGemarkungen.SelectedIndex)
-        berechneFstueckkombiOhneNull(fkzlist(0))
+        fkzlist(0).fstueckKombi = fkzlist(0).buildFstueckkombi() 'in prosoz immer mit nenner_0
+        'berechneFstueckkombiOhneNull(fkzlist(0)) 'in prosoz immer mit nenner_0
         Try
             probaugVorgange = probaug.getVorgaengeZuFlurstueck(fkzlist(0))
             If probaugVorgange.Count < 1 Then
@@ -1019,12 +962,10 @@ Public Class winHaupt
         Dim gemindex = tools.getgemarkungsindex(lokfst.gemarkungstext)
         cmbGemarkungen.SelectedIndex = gemindex
         Try
-            probaugVorgange = probaug.getVorgaengeZuAdresse(lokadr)
+            probaugVorgange = probaug.getVorgaengeZuAdresseUndFlurstueck(lokadr, lokfst)
             If probaugVorgange.Count < 1 Then
-                MsgBox("Keine Vorgänge zu dieser Adresse gefunden gefunden. " & Environment.NewLine &
+                MsgBox("Keine Vorgänge zu dieser Adresse und dem entsp. Flurstück gefunden. " & Environment.NewLine &
                     " " & Environment.NewLine &
-                    "Sie sollten auch das Flurstück prüfen. " & Environment.NewLine &
-                    "Es ist bereits im Formular eingetragen. " & Environment.NewLine &
                     "  " & Environment.NewLine
                        )
             Else
@@ -1043,4 +984,8 @@ Public Class winHaupt
         End Try
 
     End Sub
+
+    'Private Sub tbStrasse_TextChanged(sender As Object, e As TextChangedEventArgs)
+
+    'End Sub
 End Class

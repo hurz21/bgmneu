@@ -1393,7 +1393,8 @@ Module tools
         Try
             For i = 0 To flstliste.Count - 1
                 fkztemp = flstliste(i).flurstueckZuFKZ
-                If tools.flurstueckExistiertImGis(fkztemp) Then
+                Dim gemeindeschluessel, lagebezeichnung As String 'aktadr.gemeindebigNRstring aktadr.lage
+                If tools.flurstueckExistiertImGis(fkztemp, gemeindeschluessel, lagebezeichnung) Then
                     treffer += 1
                     If treffer = 1 Then
                         lokfkzliste = fkztemp
@@ -1450,7 +1451,7 @@ Module tools
         End Try
     End Function
 
-    Friend Function flurstueckExistiertImGis(flurstueckZuFKZ As String) As Boolean
+    Friend Function flurstueckExistiertImGis(flurstueckZuFKZ As String, ByRef gemeindeschluessel As String, ByRef lagebezeichnung As String) As Boolean
         Dim sql, hinweis As String
         Dim newid As Long
         l("flurstueckExistiertImGis")
@@ -1465,6 +1466,8 @@ Module tools
             While reader.Read()
                 hinweis = reader("flurstueckskennzeichen").ToString
                 fst_lage = "== Lage: " & fst_lage & ", " & reader("lagebezeichnung").ToString & " =="
+                gemeindeschluessel = reader("gemeinde_gemeindeschluessel").ToString
+                lagebezeichnung = reader("lagebezeichnung").ToString
             End While
 
             retcode = fstREC.dbschliessen(hinweis)
