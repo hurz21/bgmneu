@@ -1,13 +1,18 @@
-﻿Imports DocumentFormat.OpenXml.Drawing
+''' <summary>Represents a project (Vorhaben) with year, number, and description.</summary>
+Public Class PGVorhaben
+    ''' <summary>The year of the project.</summary>
+    Public Property Jahr As String = ""
+    
+    ''' <summary>The project number.</summary>
+    Public Property Nr As String = ""
+    
+    ''' <summary>The project description.</summary>
+    Public Property Vorhaben As String = ""
 
-Public Class clsPGvorhaben
-    Public Property jahr As String = ""
-    Public Property nr As String = ""
-    Public Property vorhaben1 As String = ""
-
+    ''' <summary>Gets a formatted display string of the project.</summary>
     Public ReadOnly Property Anzeige As String
         Get
-            Return $"{jahr}-{nr}, {vorhaben1} "
+            Return $"{Jahr}-{Nr}, {Vorhaben}"
         End Get
     End Property
 End Class
