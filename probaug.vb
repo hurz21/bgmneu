@@ -634,13 +634,23 @@ Public Class probaug
         Dim dt As DataTable
         Dim cb As myComboBoxItem
         Dim vlist As New List(Of myComboBoxItem)
-        sql = "(select * from GISVIEW1 where (feld24='" & lokadr.gemeindeName.Trim & "' or feld33='" & lokadr.gemeindeName.Trim & "') " &
-              " and feld25='" & lokadr.strasseName.Trim & "'" &
-                " and feld26='" & lokadr.HausKombi & "'  " &
+        'select * from [prosozbau].[dbo].[DMSSTR] where bauort='Hainburg' and Strasse='Leipziger Straße' and hnr='10'  
+        sql = "(select jahr as feld1,az as feld3,fachschale as feld4  from [prosozbau].[dbo].[DMSSTR] where (bauort='" & lokadr.gemeindeName.Trim & "' or bauort='" & lokadr.gemeindeName.Trim & "') " &
+              " and Strasse='" & lokadr.strasseName.Trim & "'" &
+                " and hnr='" & lokadr.HausKombi & "'  " &
                 " union " &
-             "select * from GISVIEW1 where feld28='" & lokfst.gemarkungstext &
+             "select feld1,feld3,feld4 from GISVIEW1 where feld28='" & lokfst.gemarkungstext &
                 "' and feld13='" & lokfst.flur & "'" &
                 " and feld14='" & lokfst.fstueckKombi & "') order by feld1 desc"
+
+
+        'sql = "(select * from GISVIEW1 where (feld24='" & lokadr.gemeindeName.Trim & "' or feld33='" & lokadr.gemeindeName.Trim & "') " &
+        '      " and feld25='" & lokadr.strasseName.Trim & "'" &
+        '        " and feld26='" & lokadr.HausKombi & "'  " &
+        '        " union " &
+        '     "select * from GISVIEW1 where feld28='" & lokfst.gemarkungstext &
+        '        "' and feld13='" & lokfst.flur & "'" &
+        '        " and feld14='" & lokfst.fstueckKombi & "') order by feld1 desc"
 
 
         l(sql)

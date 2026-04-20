@@ -8,15 +8,9 @@
         mc:Ignorable="d" Left="1" WindowStyle="ToolWindow"    Drop="Window_Drop"
         Title="BGM" Height="356" Width="289" Background="Beige" >
     <DockPanel Margin="5">
-        <StackPanel Orientation="Vertical"  >
-
-          
-      
-
+        <StackPanel Orientation="Vertical"  > 
             <Button Name="btnGIS" Click="btnGIS_Click" Content="GIS" Margin="5,9,5,5" Visibility="Collapsed"
-                    ToolTip="zeigt unmittelbar die PDF-Datei der Baulast an"/>
-
-
+                    ToolTip="zeigt unmittelbar die PDF-Datei der Baulast an"/> 
             <Button Name="btnbplan"   Click="btnbplan_Click" Visibility="Collapsed" Margin="5">Bebauungspläne</Button>
 
             <TabControl x:Name="tabEig" FontSize="9" >
@@ -66,7 +60,7 @@
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Label Width="75" FontSize="10"  >Strassenfilter:</Label>
-                            <TextBox Name="tbStrasseFilter" Width="160" Height="25" Padding="2" 
+                            <TextBox Name="tbStrasseFilter" Width="160" Height="30" Padding="2" 
                                      FontSize="11"  ></TextBox>
                             <ComboBox x:Name="cmbstrassen" SelectionChanged="cmbstrassen_SelectionChanged" 
                                       HorizontalAlignment="Left" Height="30"  Width="20"

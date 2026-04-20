@@ -137,10 +137,10 @@
             For Each line In IO.File.ReadAllLines(path)
                 Dim parts = line.Split("|"c)
                 If parts.Length = 3 Then
-                    result.Add(New clsPGvorhaben With {
-                    .jahr = parts(0).Trim,
-                    .nr = (parts(1)).Trim,
-                    .vorhaben1 = (parts(2).Trim)
+                    result.Add(New clsPGVorhaben With {
+                    .Jahr = parts(0).Trim,
+                    .Nr = (parts(1)).Trim,
+                    .Vorhaben = (parts(2).Trim)
                 })
                 End If
             Next
