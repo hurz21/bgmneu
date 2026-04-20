@@ -10,9 +10,11 @@ Public Class PGVorhaben
     Public Property Vorhaben As String = ""
 
     ''' <summary>Gets a formatted display string of the project.</summary>
-    Public ReadOnly Property Anzeige As String
-        Get
-            Return $"{Jahr}-{Nr}, {Vorhaben}"
-        End Get
-    End Property
+Public ReadOnly Property Anzeige As String
+    Get
+        Return If(String.IsNullOrWhiteSpace($"{Jahr}-{Nr}, {Vorhaben}"), 
+                  "Keine Daten", 
+                  $"{Jahr}-{Nr}, {Vorhaben}")
+    End Get
+End Property
 End Class
