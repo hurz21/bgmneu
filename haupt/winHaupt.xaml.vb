@@ -46,6 +46,8 @@ Public Class winHaupt
 
         tools.readFSTCookie(gemarkung, flur, zaehler, nenner, "bgm_FST_cookie.txt")
         'gemarkungsindex = gemarkung
+
+        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory)
         tbFlur.Text = flur
         tbZaehler.Text = zaehler
         tbnenner.Text = nenner
