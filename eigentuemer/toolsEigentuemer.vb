@@ -232,6 +232,7 @@ Public Class toolsEigentuemer
             l(fstREC.mydb.SQL)
             hinweis = fstREC.getDataDT()
             If fstREC.dt.Rows.Count < 1 Then
+
                 result = "Keine Eigentümerinfo gefunden: Kein Flurstück vorhanden? Keines im GIS?"
                 Return False
             Else
