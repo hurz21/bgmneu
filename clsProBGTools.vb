@@ -29,7 +29,7 @@ Public Class clsProBGTools
                      "        (SELECT  distinct id FROM [prosozbau].[dbo].[GISVIEW2Belastet] a,[PBSBaulastblatt] b " &
                      "                 where feld1=" & baulastblattnr & " and b.id=a.feld9 )" &
                      "    ) " &
-                    "	 and feld1=" & baulastblattnr & "  and Nr=feld2 and IsDeleted=0 " &
+                    "	 and feld1=" & baulastblattnr & "  and Nr=feld2 and IsDeleted=0  and feld8<>'N' " &
                     " order by feld2"
 
             'sqlgeschlossen = "SELECT  feld3 from obj01bla "

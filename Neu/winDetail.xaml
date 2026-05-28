@@ -89,7 +89,7 @@
                                     <CheckBox Name="chkQuelle" IsChecked="True" Click="chkQuelle_Click" IsEnabled="False"/>
                                     <TextBlock HorizontalAlignment="Center" Margin="2" Name="tbQuelle">Belastet aus ProbauG</TextBlock>
                                     <Button Name="btnZumGISPROBAUG" Click="btnZumGISPROBAUG_Click" 
-                                            Content="Flurstückeim GIS" Width="100"    
+                                            Content="Flurstücke im GIS" Width="100"    
                                         Height="20"  Margin="5" HorizontalAlignment="Right"
                                             />
                                     <Button Name="btnEigentuemerProbaug" Click="btnEigentuemerProbaug_Click" Margin="5" Height="20"
@@ -188,7 +188,7 @@
               Margin="5"  Height="20" Width="100">
                                                 Übertrag</Button>
                                             <Button Name="btnEigentuemerGIS" Click="btnEigentuemerGIS_Click" Margin="5" Height="20"
-              Width="100" 
+              Width="100" Visibility="Collapsed"
               ToolTip="Zeigt die Eigentümerdaten entsprechend der Flurstücksangaben im GIS">
                                                 Eigentümer</Button>
                                             <TextBlock Name="tbanzahlobjgis" Padding="15" Margin="2" 
@@ -230,22 +230,22 @@
                             <TextBlock Width="100" Margin="5" Padding="5">Eigentümer:</TextBlock>
                             <StackPanel Orientation="Horizontal">
 
-                                <TextBox Name="tbEigentuemer"  HorizontalAlignment="Left"
- Width="1000" Height="200"
+                                <TextBox Name="tbEigentuemer"
+ Width="1131" Height="200" VerticalScrollBarVisibility="Auto"
                                     Margin="0" TextWrapping="Wrap" 
                                     AcceptsReturn="True" AcceptsTab="True" />
                                 <StackPanel>
                                     <Button Name="btnEigentümerclip" Click="btnEigentümerclip_Click" 
-                          Margin="1" Width="100" HorizontalAlignment="Left"
+                          Margin="1" Width="130" HorizontalAlignment="Left"
                 >in Zwischenablage</Button>
-                                    <Button Name="btnMakeworddok" Click="btnMakeworddok_Click" Width="100" HorizontalAlignment="Left"
-                        Margin="1">
+                                    <Button Name="btnMakeworddok" Click="btnMakeworddok_Click"   HorizontalAlignment="Left"
+                        Margin="1" Width="130">
                                         Word
                                     </Button>
                                     <Button Name="btnBestand" Click="btnBestand_Click" Content="Bestandsliste" 
-Margin="0"  IsEnabled="True"/>
-                                    <Button Name="btnpdfexist" Click="btnPDFExistenzpruefen_Click" Content="Existieren die PDFs ?" 
-Margin="0"  IsEnabled="True"/>
+Margin="0"  IsEnabled="True" Width="130"/>
+                                    <Button Name="btnpdfexist" Click="btnPDFExistenzpruefen_Click" Content="Existieren die PDFs ?" Foreground="Red" ToolTip="Prüft ob die PDFs entsprechend der Flurstücksangaben im PROBAUG vorhanden sind. Achtung! dauert ewig und 3 tage "
+Margin="0"  IsEnabled="True" Width="130"/>
                                 </StackPanel>
                             </StackPanel>
 

@@ -55,25 +55,25 @@ Public Class winDetail
             End If
 
             schonObjekteInMDATvorhanden = refreshGIS(CInt(tbBaulastNr.Text))
-            tbanzahlobjgis.Text = tools.FSTausGISListe.Count & " Objekte"
+            tbanzahlobjgis.Text = tools.FSTausGISListe.Count & " Objekt"
             Dim summe = ""
-            summe = makeFlurstuecksAbstrakt(tools.FSTausGISListe)
+            summe = makeFlurstuecksAbstrakt(tools.FSTausPROBAUGListe)
             summe = summe & Environment.NewLine
-            Dim result As String
+            tbEigentuemer.Text = summe
 
-            If toolsEigentuemer.geteigentuemerText(tools.FSTausGISListe(0).flurstueckZuFKZ, result) Then
-                tbEigentuemer.Text = summe & Environment.NewLine & result
-                cookietext = tools.FSTausGISListe(0).gemarkungstext & ",Flur: " & tools.FSTausGISListe(0).flur
-            Else
-                If toolsEigentuemer.geteigentuemerText(tools.FSTausPROBAUGListe(0).flurstueckZuFKZ, result) Then
+            'If toolsEigentuemer.geteigentuemerText(tools.FSTausGISListe(0).flurstueckZuFKZ, result) Then
+            '    tbEigentuemer.Text = summe & Environment.NewLine & result
+            '    cookietext = tools.FSTausGISListe(0).gemarkungstext & ",Flur: " & tools.FSTausGISListe(0).flur
+            'Else
+            '    If toolsEigentuemer.geteigentuemerText(tools.FSTausPROBAUGListe(0).flurstueckZuFKZ, result) Then
 
-                    summe = makeFlurstuecksAbstrakt(tools.FSTausPROBAUGListe)
-                    summe = summe & Environment.NewLine
-                    tbEigentuemer.Text = summe & Environment.NewLine & result ' toolsEigentuemer.geteigentuemerText(tools.FSTausPROBAUGListe)
-                    cookietext = tools.FSTausPROBAUGListe(0).gemarkungstext & ",Flur: " & tools.FSTausPROBAUGListe(0).flur
-                End If
-                'MsgBox(result)
-            End If
+            '        summe = makeFlurstuecksAbstrakt(tools.FSTausPROBAUGListe)
+            '        summe = summe & Environment.NewLine
+            '        tbEigentuemer.Text = summe & Environment.NewLine & result ' toolsEigentuemer.geteigentuemerText(tools.FSTausPROBAUGListe)
+            '        cookietext = tools.FSTausPROBAUGListe(0).gemarkungstext & ",Flur: " & tools.FSTausPROBAUGListe(0).flur
+            '    End If
+            '    'MsgBox(result)
+            'End If
 
         End If
         Dim nummer = tbBaulastNr.Text
@@ -152,7 +152,7 @@ Public Class winDetail
             tbGISinfo2.Text = ""
             btnZumGIS.IsEnabled = True
             btnZumGISOBJ.IsEnabled = True
-            btnZumGISPROBAUG.Content = "im GIS anzeigen"
+            btnZumGISPROBAUG.Content = "Flurstücke im GIS"
             btnZumGISPROBAUG.Width = 100
             btnZumGISPROBAUG.Height = 20
             'tools.FSTausGISListe(0).Flurstuecksskennzeichen = tools.FSTausGISListe(0).flurstueckZuFKZ
@@ -858,19 +858,20 @@ Public Class winDetail
 
     Private Sub btnEigentuemerProbaug_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
-        Dim summe As String
+        Dim summe As String = ""
         Try
             summe = "Aus ProbauG:" & Environment.NewLine
             summe = summe & makeFlurstuecksAbstrakt(tools.FSTausPROBAUGListe)
             summe = summe & Environment.NewLine
             Dim result As String
-            If toolsEigentuemer.geteigentuemerText(tools.FSTausPROBAUGListe(0).flurstueckZuFKZ, result) Then
-                summe = summe & Environment.NewLine & result
-                tbEigentuemer.Text = summe
-            Else
-                'MsgBox(result)
-                MessageBox.Show(result, "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
-            End If
+            'If toolsEigentuemer.geteigentuemerText(tools.FSTausPROBAUGListe(0).flurstueckZuFKZ, result) Then
+            '    summe = summe & Environment.NewLine & result
+            '    tbEigentuemer.Text = summe
+            'Else
+            '    'MsgBox(result)
+            '    MessageBox.Show(result, "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+            'End If
+            tbEigentuemer.Text = summe
         Catch ex As Exception
             l("btnEigentuemerProbaug_Click " & ex.ToString)
         End Try

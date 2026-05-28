@@ -1331,7 +1331,8 @@ Module tools
     '    End Try
     'End Function
     Public Function makeFlurstuecksAbstrakt(dieliste As List(Of clsFlurstueck)) As String
-        Dim summe As String
+        Dim summe As String = ""
+        Dim result As String = ""
         Try
             For Each fst As clsFlurstueck In dieliste
                 summe = summe & "== Grundstück: " & fst.gemeindename & ", Gemarkung: " &
@@ -1339,8 +1340,14 @@ Module tools
                 fst.flur & ", Fst: " &
                 fst.zaehler & "/" & fst.nenner & " =="
 
-                'summe = summe & "== Lage: " & fst.gemeindename & ", " & lage &
-                '   " =="
+
+                If toolsEigentuemer.geteigentuemerText(fst.flurstueckZuFKZ, result) Then
+                    summe = summe & Environment.NewLine & result & Environment.NewLine & Environment.NewLine
+                    'tbEigentuemer.Text = summe
+                Else
+                    'MsgBox(result)
+                    MessageBox.Show(Result, "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+                End If
             Next
             Return summe
         Catch ex As Exception
