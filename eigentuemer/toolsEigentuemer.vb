@@ -214,4 +214,40 @@ Public Class toolsEigentuemer
             Return "Fehler in makeInsertStatement:"
         End Try
     End Function
+
+    Friend Shared Function getGrundbuchblatt(flurstueckZuFKZ As String, ByRef result As String) As Boolean
+        l("geteigentuemerText " & flurstueckZuFKZ)
+        Dim hinweis As String
+        Dim sb As New Text.StringBuilder
+        Try
+            If flurstueckZuFKZ = String.Empty Then
+                result = "Fehler in Eigentümer: Kein Flurstück vorhanden? Keines im GIS? "
+                Return False
+            End If
+            fstREC.mydb.SQL = " SELECT [bb_buchungsbezirksschluessel],[grundbuchblattnummer] " &
+                                "  FROM [LKOF].[dbo].[VW_lieg_grundbuchblattA]  " &
+                                "  where bestandskennzeichen=(select [gbl_bestandskennzeichen]        " &
+                                "  FROM [LKOF].[dbo].[VW_lieg_grundbuch2Flst_web] " &
+                                "  where  [flurstueckskennzeichen]='" & flurstueckZuFKZ & "')  "
+            l(fstREC.mydb.SQL)
+            hinweis = fstREC.getDataDT()
+            If fstREC.dt.Rows.Count < 1 Then
+                result = "Keine Eigentümerinfo gefunden: Kein Flurstück vorhanden? Keines im GIS?"
+                Return False
+            Else
+                For i = 0 To fstREC.dt.Rows.Count - 1
+                    sb.Append(clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item(0)).ToString & " ")
+                    sb.AppendLine(clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item(1)).ToString & " ")
+                Next
+                'Debug.Print(clsDBtools.fieldvalue(fstREC.dt.Rows(0).Item(0)))
+            End If
+            result = sb.ToString
+            clsString.leerzeichenRaus(result)
+            Return True
+        Catch ex As Exception
+            l("Fehler in initMssql: " & ex.ToString())
+            result = "fehler in eigentümer " & ex.ToString
+            Return False
+        End Try
+    End Function
 End Class

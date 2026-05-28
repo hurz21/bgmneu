@@ -1333,12 +1333,19 @@ Module tools
     Public Function makeFlurstuecksAbstrakt(dieliste As List(Of clsFlurstueck)) As String
         Dim summe As String = ""
         Dim result As String = ""
+        Dim grundbuchblatt As String = ""
         Try
             For Each fst As clsFlurstueck In dieliste
                 summe = summe & "== Grundstück: " & fst.gemeindename & ", Gemarkung: " &
                 fst.gemarkungstext & ", Flur: " &
                 fst.flur & ", Fst: " &
                 fst.zaehler & "/" & fst.nenner & " =="
+                If toolsEigentuemer.getGrundbuchblatt(fst.flurstueckZuFKZ, result) Then
+                    grundbuchblatt = result
+                    summe = summe & Environment.NewLine & "Grundbuchblatt: " & grundbuchblatt
+                Else
+
+                End If
 
 
                 If toolsEigentuemer.geteigentuemerText(fst.flurstueckZuFKZ, result) Then

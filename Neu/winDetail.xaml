@@ -36,38 +36,7 @@
                         <TextBox Name="tbBaulastNr" Width="100" Margin="5" Padding="5" Height="30"></TextBox>
                         <Button Name="btnAusProbaug" Click="btnAusProbaug_Click" Width="100"
                                 Content="start" Margin="5" IsDefault="True" Height="35"/>
-                        <GroupBox Header="-">
-                            <WrapPanel>
-                                <StackPanel>
-                                    <TextBlock Width="60">Bauort:</TextBlock>
-                                    <TextBlock Name="tbBauort"></TextBlock>
-                                </StackPanel>
-                                <StackPanel>
-                                    <TextBlock Width="80">Datum:</TextBlock>
-                                    <TextBlock Name="tbDatum1"></TextBlock>
-                                </StackPanel>
-                                <StackPanel>
-                                    <TextBlock Width="100">Gemeinde:</TextBlock>
-                                    <TextBlock Name="tbGemeinde"></TextBlock>
-                                </StackPanel>
-                                <StackPanel>
-                                    <TextBlock Width="40">gültig:</TextBlock>
-                                    <TextBlock Name="tbgueltig"></TextBlock>
-                                </StackPanel>
-                                <StackPanel>
-                                    <TextBlock Width="60">laufNR:</TextBlock>
-                                    <TextBlock Name="tblaufNR"></TextBlock>
-                                </StackPanel>
-                                <StackPanel>
-                                    <TextBlock Width="60">BlattNr:</TextBlock>
-                                    <TextBlock Name="tbBlattnr"></TextBlock>
-                                </StackPanel>
-                                <StackPanel>
-                                    <TextBlock Width="60">BaulastNR:</TextBlock>
-                                    <TextBlock Name="tbBaulastNr2"></TextBlock>
-                                </StackPanel>
-                            </WrapPanel>
-                        </GroupBox>
+                      
                         <StackPanel Orientation="Vertical" Width="450" Margin="5">
 
                             <TextBlock x:Name="tbGISinfo" Margin="0" Foreground="Red"></TextBlock>

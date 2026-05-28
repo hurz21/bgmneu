@@ -77,7 +77,7 @@ Public Class winDetail
 
         End If
         Dim nummer = tbBaulastNr.Text
-
+        eigentuemerAusProbaugDarstellen()
         WriteCookie(nummer, cookietext)
 
         setTitle()
@@ -252,13 +252,13 @@ Public Class winDetail
             'clsProBGTools.holeProBaugDatenZusatz(baulastblattnr, sqlquelle
             tbanzahlobjpg.Text = rawListOfclsBaulast.Count & " Objekte"
             dgAusProbaug.DataContext = FSTausPROBAUGListe
-            tbBauort.Text = rawListOfclsBaulast(0).bauortNr
-            tbDatum1.Text = rawListOfclsBaulast(0).datum1
-            tbgueltig.Text = rawListOfclsBaulast(0).gueltig
-            tbGemeinde.Text = rawListOfclsBaulast(0).gemeindeText
-            tbBaulastNr2.Text = rawListOfclsBaulast(0).baulastnr
-            tbBlattnr.Text = rawListOfclsBaulast(0).blattnr
-            tblaufNR.Text = CType(rawListOfclsBaulast(0).laufnr, String)
+            'tbBauort.Text = rawListOfclsBaulast(0).bauortNr
+            'tbDatum1.Text = rawListOfclsBaulast(0).datum1
+            'tbgueltig.Text = rawListOfclsBaulast(0).gueltig
+            'tbGemeinde.Text = rawListOfclsBaulast(0).gemeindeText
+            'tbBaulastNr2.Text = rawListOfclsBaulast(0).baulastnr
+            'tbBlattnr.Text = rawListOfclsBaulast(0).blattnr
+            'tblaufNR.Text = CType(rawListOfclsBaulast(0).laufnr, String)
 
             l(" MOD refreshProbaug ende")
         Catch ex As Exception
@@ -858,6 +858,10 @@ Public Class winDetail
 
     Private Sub btnEigentuemerProbaug_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
+        eigentuemerAusProbaugDarstellen()
+    End Sub
+
+    Private Sub eigentuemerAusProbaugDarstellen()
         Dim summe As String = ""
         Try
             summe = "Aus ProbauG:" & Environment.NewLine
