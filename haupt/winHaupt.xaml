@@ -8,9 +8,9 @@
         mc:Ignorable="d" Left="1" WindowStyle="ToolWindow"    Drop="Window_Drop"
         Title="BGM" Height="356" Width="289" Background="Beige" >
     <DockPanel Margin="5">
-        <StackPanel Orientation="Vertical"  > 
+        <StackPanel Orientation="Vertical"  >
             <Button Name="btnGIS" Click="btnGIS_Click" Content="GIS" Margin="5,9,5,5" Visibility="Collapsed"
-                    ToolTip="zeigt unmittelbar die PDF-Datei der Baulast an"/> 
+                    ToolTip="zeigt unmittelbar die PDF-Datei der Baulast an"/>
             <Button Name="btnbplan"   Click="btnbplan_Click" Visibility="Collapsed" Margin="5">Bebauungspläne</Button>
 
             <TabControl x:Name="tabEig" FontSize="9" >
@@ -19,10 +19,14 @@
                         <Label Content="Baulast" FontSize="9"      />
                     </TabItem.Header>-->
                     <StackPanel Height="287">
+                        <StackPanel x:Name="stpBaulastenmedels" >
 
-                        <Button Name="btnEdit" Click="btnEdit_Click" Content="Baulast bearbeiten" 
-          IsDefault="True" Margin="15"
-           Drop="Window_Drop" AllowDrop="True"/>
+                            <Button Name="btnEdit" Click="btnEdit_Click" Content="Baulast bearbeiten" 
+                                      IsDefault="True" Margin="15"
+                                       Drop="Window_Drop" AllowDrop="True"/>
+                            <Button Name="btnBLloeschen" Click="btnBLloeschen_Click"
+                                    Content="Baulast löschen" Margin="15,0,15,0"/>    
+                        </StackPanel>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Width="150" Margin="1">
 
                             <TextBox x:Name="tbblnr" HorizontalAlignment="Center"
@@ -161,8 +165,8 @@
                                              Style="{StaticResource lessButton}" Width="160" 
                             >Word-Datei</Button>
                         </StackPanel>
-                    
-                    
+
+
                     </StackPanel>
                 </TabItem>
                 <TabItem FontSize="9" Name="tabbBplan"  Header="B-Plan"  VerticalAlignment="Top">

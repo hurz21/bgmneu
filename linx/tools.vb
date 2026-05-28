@@ -1394,6 +1394,7 @@ Module tools
         Dim treffer As Integer = 0
         Dim fkztemp As String = ""
         Dim lokfkzliste As String = ""
+        Dim oldfkz As String = ""
         Try
             For i = 0 To flstliste.Count - 1
                 fkztemp = flstliste(i).flurstueckZuFKZ
@@ -1403,7 +1404,12 @@ Module tools
                     If treffer = 1 Then
                         lokfkzliste = fkztemp
                     Else
+                        'If fkztemp = oldfkz Then
+                        '    '    'nicht dranhängen
+                        'Else
                         lokfkzliste = lokfkzliste & "," & fkztemp
+                        '    oldfkz = fkztemp
+                        'End If
                     End If
                 Else
 

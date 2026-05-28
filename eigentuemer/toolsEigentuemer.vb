@@ -18,12 +18,12 @@ Public Class toolsEigentuemer
             l("Fehler in initMssql: " & ex.ToString())
         End Try
     End Sub
-    Friend Shared Function geteigentuemerText(fstcoll As List(Of clsFlurstueck), ByRef result As String) As Boolean
-        l("geteigentuemerText " & fstcoll.Count)
+    Friend Shared Function geteigentuemerText(flurstueckZuFKZ As String, ByRef result As String) As Boolean
+        l("geteigentuemerText " & flurstueckZuFKZ)
         Dim hinweis As String
         Dim sb As New Text.StringBuilder
         Try
-            If fstcoll.Count < 1 Then
+            If flurstueckZuFKZ = String.Empty Then
                 result = "Fehler in Eigentümer: Kein Flurstück vorhanden? Keines im GIS? "
                 Return False
             End If
@@ -32,7 +32,7 @@ Public Class toolsEigentuemer
                     " [nationalitaet],[adressherkunft],[wohnortortsteil],[postfachplz]  " &
                     "   FROM [LKOF].[dbo].[VW_lieg_eigentuemerGST_web] g, [LKOF].[dbo].[VW_lieg_eigentuemer_web] p" &
                     "   where p.guid= g.person_guid " &
-                    "   and g.flurstueckskennzeichen='" & fstcoll(0).flurstueckZuFKZ & "'  "
+                    "   and g.flurstueckskennzeichen='" & flurstueckZuFKZ & "'  "
 
             l(fstREC.mydb.SQL)
             hinweis = fstREC.getDataDT()

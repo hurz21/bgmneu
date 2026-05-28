@@ -55,16 +55,17 @@ Public Class winDetail
             End If
 
             schonObjekteInMDATvorhanden = refreshGIS(CInt(tbBaulastNr.Text))
+            tbanzahlobjgis.Text = tools.FSTausGISListe.Count & " Objekte"
             Dim summe = ""
             summe = makeFlurstuecksAbstrakt(tools.FSTausGISListe)
             summe = summe & Environment.NewLine
             Dim result As String
 
-            If toolsEigentuemer.geteigentuemerText(tools.FSTausGISListe, result) Then
+            If toolsEigentuemer.geteigentuemerText(tools.FSTausGISListe(0).flurstueckZuFKZ, result) Then
                 tbEigentuemer.Text = summe & Environment.NewLine & result
                 cookietext = tools.FSTausGISListe(0).gemarkungstext & ",Flur: " & tools.FSTausGISListe(0).flur
             Else
-                If toolsEigentuemer.geteigentuemerText(tools.FSTausPROBAUGListe, result) Then
+                If toolsEigentuemer.geteigentuemerText(tools.FSTausPROBAUGListe(0).flurstueckZuFKZ, result) Then
 
                     summe = makeFlurstuecksAbstrakt(tools.FSTausPROBAUGListe)
                     summe = summe & Environment.NewLine
@@ -248,7 +249,8 @@ Public Class winDetail
                 abbruch = True
                 Exit Sub
             End If
-            'clsProBGTools.holeProBaugDatenZusatz(baulastblattnr, sqlquelle)
+            'clsProBGTools.holeProBaugDatenZusatz(baulastblattnr, sqlquelle
+            tbanzahlobjpg.Text = rawListOfclsBaulast.Count & " Objekte"
             dgAusProbaug.DataContext = FSTausPROBAUGListe
             tbBauort.Text = rawListOfclsBaulast(0).bauortNr
             tbDatum1.Text = rawListOfclsBaulast(0).datum1
@@ -782,11 +784,11 @@ Public Class winDetail
 
     Private Sub btnZumGISPROBAUG_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
-        'If schonObjekteInMDATvorhanden Then
-
-        'Else
-        '    gisFuerProbaugFlurst(tbBaulastNr.Text.Trim, tools.FSTausPROBAUGListe)
-        'End If
+        If schonObjekteInMDATvorhanden Then
+            gisFuerProbaugFlurst(tbBaulastNr.Text.Trim, tools.FSTausPROBAUGListe)
+        Else
+            gisFuerProbaugFlurst(tbBaulastNr.Text.Trim, tools.FSTausPROBAUGListe)
+        End If
     End Sub
 
 
@@ -862,7 +864,7 @@ Public Class winDetail
             summe = summe & makeFlurstuecksAbstrakt(tools.FSTausPROBAUGListe)
             summe = summe & Environment.NewLine
             Dim result As String
-            If toolsEigentuemer.geteigentuemerText(tools.FSTausPROBAUGListe, result) Then
+            If toolsEigentuemer.geteigentuemerText(tools.FSTausPROBAUGListe(0).flurstueckZuFKZ, result) Then
                 summe = summe & Environment.NewLine & result
                 tbEigentuemer.Text = summe
             Else
@@ -880,7 +882,7 @@ Public Class winDetail
         summe = summe & makeFlurstuecksAbstrakt(tools.FSTausGISListe)
         summe = summe & Environment.NewLine
         Dim result As String
-        If toolsEigentuemer.geteigentuemerText(tools.FSTausGISListe, result) Then
+        If toolsEigentuemer.geteigentuemerText(tools.FSTausGISListe(0).flurstueckZuFKZ, result) Then
             tbEigentuemer.Text = summe & Environment.NewLine & result
         Else
             tbEigentuemer.Text = summe & Environment.NewLine & result
@@ -894,12 +896,22 @@ Public Class winDetail
 
     Private Sub uebertrageAlleMetadatenNachGIS()
         l("uebertrageAlleMetadatenNachGIS")
+        Dim mehrereFlurstuecke As String = ""
+        Dim sb As New System.Text.StringBuilder
         Try
             For Each bl As clsBaulast In rawListOfclsBaulast
-                If transferItem2gis(bl) Then
-                    l("uebertrageAlleMetadatenNachGIS item ok ")
-                Else
-                    l("uebertrageAlleMetadatenNachGIS item fail ")
+                If bl.gueltig.ToLower <> "n" Then
+                    sb.Append("(" & bl.katFST.gemcode & "), " & bl.katFST.gemarkungstext.Trim & ", Flur: " & bl.katFST.flur & ", " & bl.katFST.zaehler & "/" & bl.katFST.nenner & "; Laufnr:  " & bl.baulastnr.Trim & Environment.NewLine)
+                End If
+            Next
+            mehrereFlurstuecke = sb.ToString
+            For Each bl As clsBaulast In rawListOfclsBaulast
+                If bl.gueltig.ToLower <> "n" Then
+                    If transferItem2gis(bl, mehrereFlurstuecke) Then
+                        l("uebertrageAlleMetadatenNachGIS item ok ")
+                    Else
+                        l("uebertrageAlleMetadatenNachGIS item fail ")
+                    End If
                 End If
             Next
             refreshGIS(CInt(tbBaulastNr.Text))
@@ -908,7 +920,7 @@ Public Class winDetail
         End Try
     End Sub
 
-    Private Function transferItem2gis(bl As clsBaulast) As Boolean
+    Private Function transferItem2gis(bl As clsBaulast, mehrereflurstuecke As String) As Boolean
         'update  " set tiff2='fkat/baulasten/' || trim(gemarkung) || '/' || trim(jahr_blattnr) || '.tiff'
         '        sql = "update " & tools.srv_schema & "." & tools.srv_tablename & " Set tiff='" & neuerTIFFname & "' where jahr_blattnr='" & baulastblatnr & "'"
         l("transferItem2gis ")
@@ -917,7 +929,9 @@ Public Class winDetail
         Dim newid As Long
         Dim startInsertfile = "USE [LKOF_Bearb] GO"
         Dim result As String = ""
-        mmemo = bl.Kennziffer_1.Trim & ", " & bl.Kennziffer_2.Trim & ", " & bl.Kennziffer_3.Trim & ", " & bl.Kennziffer_4.Trim
+        'mmemo = bl.Kennziffer_1.Trim & ", " & bl.Kennziffer_2.Trim & ", " & bl.Kennziffer_3.Trim & ", " & bl.Kennziffer_4.Trim & Environment.NewLine &
+        '    mehrereflurstuecke
+        mmemo = mehrereflurstuecke
         tooltip = "BLNr: " & bl.blattnr & ", " & bl.baulastnr & ": Jahr,Az " & bl.AzJahr & ", " & bl.AzNr
         'tooltip = ""
 
@@ -928,8 +942,8 @@ Public Class winDetail
             " int3=" & bl.probaugNotationFST.nenner & ", int4=" & bl.probaugNotationFST.gemcode & ", " &
             " memo='" & mmemo & "', tooltip='" & tooltip & "' " &
             " where kategorie_guid='" & kategorie_guid_Baulasten & "' " &
-            " and text3='" & bl.blattnr & "' " &
-            " and text2='" & bl.baulastnr & "' "
+            " and text3='" & bl.blattnr & "' " ' &
+        '" and text2='" & bl.baulastnr & "' "
 
         Try
             fstREC.mydb.SQL = update

@@ -59,9 +59,10 @@ Public Class winHaupt
 
         If isAutho() Then
             ComboHistory.IsDropDownOpen = True
+            stpBaulastenmedels.Visibility = Visibility.Visible
         Else
             tabEig.SelectedIndex = 1
-            btnEdit.IsEnabled = False
+            stpBaulastenmedels.Visibility = Visibility.Collapsed
         End If
 
         initKatasterGemarkungtext()
@@ -365,7 +366,7 @@ Public Class winHaupt
             summe = summe & Environment.NewLine
 
             Dim result, datei As String
-            If toolsEigentuemer.geteigentuemerText(fkzlist, result) Then
+            If toolsEigentuemer.geteigentuemerText(fkzlist(0).flurstueckZuFKZ, result) Then
                 summe = summe & Environment.NewLine & result
                 If isbaulast Then
                     datei = tools.erzeugeWordDateiEigentuemer(summe, "")
@@ -1054,6 +1055,13 @@ Public Class winHaupt
         Catch ex As Exception
             l("tbStrasseFilter_TextChanged: " & ex.ToString())
         End Try
+    End Sub
+
+    Private Sub btnBLloeschen_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+        tools.writeBLBlattCookie(tbblnr.Text.Trim, "bgm_blattnr_cookie.txt")
+        baulastAlsObjImGisZeigen(tbblnr.Text.Trim, tools.themendefinitionsdatei)
+        Process.Start("\\kh-w-ingrada\GIS-Daten\diverses\bgmingrada\objektImGisLoeschen.rtf")
     End Sub
 
     'Private Sub tbStrasse_TextChanged(sender As Object, e As TextChangedEventArgs)
