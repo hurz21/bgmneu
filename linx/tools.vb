@@ -405,8 +405,6 @@ Module tools
         Dim iz As Integer = 0
         Try
             l("dtnachobj ---------------------- anfang")
-
-            'For i = 0 To 100
             For i = 0 To balistDT.Rows.Count - 1
 
                 lok = New clsBaulast
@@ -418,6 +416,8 @@ Module tools
                 End If
 #End If
                 lok.bauortNr = clsDBtools.fieldvalue(balistDT.Rows(i).Item("FELD4")).Trim '2
+                lok.AzJahr = clsDBtools.fieldvalue(balistDT.Rows(i).Item("FELD10")).Trim '2
+                lok.AzNr = clsDBtools.fieldvalue(balistDT.Rows(i).Item("FELD12")).Trim '2
                 lok.probaugNotationFST.gemcode = CInt(clsDBtools.fieldvalue(balistDT.Rows(i).Item("FELD5")).Trim) '5
                 evtlFlur = clsDBtools.fieldvalue(balistDT.Rows(i).Item("FELD6")).Trim '10
                 Console.WriteLine("iz1 " & iz)

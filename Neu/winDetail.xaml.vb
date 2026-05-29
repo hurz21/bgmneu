@@ -864,7 +864,7 @@ Public Class winDetail
     Private Sub eigentuemerAusProbaugDarstellen()
         Dim summe As String = ""
         Try
-            summe = "Aus ProbauG:" & Environment.NewLine
+            'summe = "Aus ProbauG:" & Environment.NewLine
             summe = summe & makeFlurstuecksAbstrakt(tools.FSTausPROBAUGListe)
             summe = summe & Environment.NewLine
             Dim result As String
