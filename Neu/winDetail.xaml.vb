@@ -81,7 +81,7 @@ Public Class winDetail
         WriteCookie(nummer, cookietext)
 
         setTitle()
-        showPDF()
+        showBaulastPDF()
         istgeladen = True
         If schonObjekteInMDATvorhanden Then
         Else
@@ -208,7 +208,7 @@ Public Class winDetail
         refreshGIS(CInt(tbBaulastNr.Text))
         'refreshTIFFbox()
         'refreshMap()
-        showPDF()
+        showBaulastPDF()
     End Sub
 
     Private Sub leeresbild(canvasImage As Image)
@@ -473,8 +473,8 @@ Public Class winDetail
                 l(" MOD dropped 3")
                 zielname = IO.Path.Combine(srv_unc_path & "BAUL4ST_" & tbBaulastNr.Text.Trim & endung).Trim
 
-                Dim fi As New IO.FileInfo(zielname)
-                If fi.Exists Then
+                Dim fziel As New IO.FileInfo(zielname)
+                If fziel.Exists Then
                     'Dim mesres = MessageBox.Show("Möchten Sie die Datei überschreiben ?" & Environment.NewLine &
                     '                                "  Ja    - Überschreiben " & Environment.NewLine &
                     '                                "  Nein - Abbruch",
@@ -484,7 +484,7 @@ Public Class winDetail
                     IO.File.Copy(filenames(0).ToLower, zielname, True)
                     'der DB-eintrag existiert bereits also nichts weiter erforderlich
                     If toolsEigentuemer.existiertPDFinMDAT_FILES(tbBaulastNr.Text.Trim) Then
-                        '
+                        'alles ok  - no action
                     Else
                         Dim erfolg As Boolean
                         For i = 0 To tools.FSTausGISListe.Count - 1
@@ -640,6 +640,8 @@ Public Class winDetail
         e.Handled = True
         '\\kh-w-ingrada\lkof\data\upload\FILES\LKOF\sp_mdat\dat\BAUL4ST_100005.pdf
         'Dim quelle = "\\kh-w-ingrada\lkof\data\upload\FILES\LKOF\sp_mdat\dat\BAUL4ST_" & tbBaulastNr.Text & ".pdf"
+
+        showBaulastPDF()
         Dim ziel = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
         ziel = IO.Path.Combine(ziel, tbBaulastNr.Text & ".pdf")
         '"\\kh-w-ingrada\lkof\data\upload\FILES\LKOF\sp_mdat\dat\BAUL4ST_" & tbBaulastNr.Text & ".pdf"
@@ -647,7 +649,7 @@ Public Class winDetail
         Process.Start(ziel)
     End Sub
 
-    Sub showPDF()
+    Sub showBaulastPDF()
         Dim hinweis As String
         Dim quelle = srv_unc_path & "BAUL4ST_" & tbBaulastNr.Text & ".pdf"
         Dim ziel = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
@@ -657,7 +659,17 @@ Public Class winDetail
             If toolsEigentuemer.existiertPDFinMDAT_FILES(tbBaulastNr.Text.Trim) Then
 
                 '"\\kh-w-ingrada\lkof\data\upload\FILES\LKOF\sp_mdat\dat\BAUL4ST_" & tbBaulastNr.Text & ".pdf"
-                IO.File.Copy(quelle, ziel, True)
+                Try
+
+                    IO.File.Copy(quelle, ziel, True)
+                Catch ex As Exception
+                    MsgBox("Fehler beim Kopieren der Datei: " & Environment.NewLine &
+                        "Haben sie die Datei noch im Zugriff ???" & Environment.NewLine &
+                        ziel & Environment.NewLine &
+                        "Bitte schließen Sie die Datei und versuchen Sie es erneut. " & Environment.NewLine &
+                        "Abbruch !!!" & Environment.NewLine &
+                        ex.Message)
+                End Try
                 btnPDFaufrufen.IsEnabled = True
                 tbPDFvorhanden.Text = "PDF ist verfügbar"
             Else

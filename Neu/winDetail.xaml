@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:bgm"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen"
-        Title="BGM - BaulastenGISManager 0.11" Height="966" Width="1319">
+        Title="BGM - BaulastenGISManager 0.11" Height="866" Width="1219">
     <Window.Resources>
         <Style x:Key="dgRowStyleRB" TargetType="{x:Type DataGridRow}" BasedOn="{StaticResource dgRowStyle}">
             <Style.Triggers>
@@ -26,7 +26,7 @@
     <DockPanel Background="Gray" Name="dpMain"  >
         <TabControl Margin="1">
             <TabItem   >
-                <StackPanel Margin="5,5,15,5" Background="LightGray" Height="910">
+                <StackPanel Margin="5,5,15,5" Background="LightGray" Height="810">
 
 
                     <StackPanel Orientation="Horizontal" Margin="5"  AllowDrop="True" 
@@ -50,7 +50,7 @@
                     <StackPanel Name="spFST" Orientation="Vertical" Width="1300" 
                                 HorizontalAlignment="Left">
                         <Border BorderBrush="Green" BorderThickness="1" Margin="5" 
-                                HorizontalAlignment="Left" Width="1293">
+                                HorizontalAlignment="Left" Width="1073">
 
                             <StackPanel HorizontalAlignment="Left"  Width="1293">
                                 <StackPanel Orientation="Horizontal" Width="700" HorizontalAlignment="Left">
@@ -74,7 +74,7 @@
                                     <DataGrid  x:Name="dgAusProbaug"   ItemsSource="{Binding ''}"      Margin="0"                                           
                                               RowStyle="{StaticResource dgRowStyleRB}"                                        
                                               ColumnHeaderStyle="{StaticResource dgHeaderStyle}"    
-                                     Width="1130"   MaxHeight="160" Height="160"
+                                     Width="930"   MaxHeight="160" Height="160"
                                            HorizontalAlignment="Left"
                                    >
                                         <DataGrid.Columns>
@@ -133,7 +133,7 @@
                             </StackPanel>
                         </Border>
                         <Border BorderBrush="Black" BorderThickness="1" Margin="5"
-                                Width="1293"
+                                Width="1075"
                                 HorizontalAlignment="Left">
 
                             <StackPanel Name="spBL"  Width="1340">
@@ -172,7 +172,7 @@
                                         <DataGrid  x:Name="dgAusGIS"   ItemsSource="{Binding ''}"    Margin="0"                                             
                                                 RowStyle="{StaticResource dgRowStyleRB}"                                              
                                                 ColumnHeaderStyle="{StaticResource dgHeaderStyle}"    
-                                            Width="1130"    Height="160"
+                                            Width="930"    Height="160"
                                              HorizontalAlignment="Left"
      >
                                             <DataGrid.Columns>
@@ -193,14 +193,16 @@
                                 </StackPanel>
                             </StackPanel>
                         </Border>
-                        <StackPanel  Height="300"   Background="AliceBlue">
+                        <StackPanel  Height="250"  HorizontalAlignment="Left"
+                                     Background="AliceBlue"
+                                     Width="1077">
 
 
                             <TextBlock Width="100" Margin="5" Padding="5">Eigentümer:</TextBlock>
                             <StackPanel Orientation="Horizontal">
 
                                 <TextBox Name="tbEigentuemer"
- Width="1131" Height="200" VerticalScrollBarVisibility="Auto"
+ Width="930" Height="200" VerticalScrollBarVisibility="Auto"
                                     Margin="0" TextWrapping="Wrap" 
                                     AcceptsReturn="True" AcceptsTab="True" />
                                 <StackPanel>
@@ -221,23 +223,8 @@ Margin="0"  IsEnabled="True" Width="130"/>
                         </StackPanel>
                     </StackPanel>
 
-                    <StackPanel Orientation="Horizontal" Panel.ZIndex="1">
-                        <StackPanel   Margin="5" Width="1290"  Height="390" >
-                            <StackPanel Orientation="Horizontal">
-
-
-                                <StackPanel Width="1200" Name="spGIS" HorizontalAlignment="Left">
-
-
-                                </StackPanel>
-
-                            </StackPanel>
-                        </StackPanel>
-
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-
-                    </StackPanel>
+                 
+                  
                 </StackPanel>
             </TabItem>
             <TabItem Header="BaulastDokument (.TIFF)" IsEnabled="False" Visibility="Collapsed">
