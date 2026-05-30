@@ -670,6 +670,8 @@ Public Class winDetail
                         "Abbruch !!!" & Environment.NewLine &
                         ex.Message)
                 End Try
+                Dim fi As New IO.FileInfo(ziel)
+                tbFiledate.Text = "von: " & fi.LastWriteTime.ToShortDateString
                 btnPDFaufrufen.IsEnabled = True
                 tbPDFvorhanden.Text = "PDF ist verfügbar"
             Else

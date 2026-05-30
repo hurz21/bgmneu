@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:bgm"
         mc:Ignorable="d" WindowStartupLocation="CenterScreen"
-        Title="BGM - BaulastenGISManager 0.11" Height="866" Width="1219">
+        Title="BGM - BaulastenGISManager 0.11" Height="866" Width="1119">
     <Window.Resources>
         <Style x:Key="dgRowStyleRB" TargetType="{x:Type DataGridRow}" BasedOn="{StaticResource dgRowStyle}">
             <Style.Triggers>
@@ -101,7 +101,7 @@
                                     <Border BorderBrush="Gray"  Margin="5" BorderThickness="2" Width="120"
                  Drop="dropTheBomb" AllowDrop="True" VerticalAlignment="Top" Height="161"
                    >
-                                        <StackPanel Height="237" VerticalAlignment="Top"   >
+                                        <StackPanel   VerticalAlignment="Top"   >
 
 
                                             <StackPanel Name="stpPDF" Orientation="Vertical"    Drop="dropTheBomb" AllowDrop="True" 
@@ -109,13 +109,13 @@
 
 
                                                 <Border BorderBrush="Black"  Margin="5" BorderThickness="1"
-                       Drop="dropTheBomb" AllowDrop="True"
-                       Width="100" Height="100" Panel.ZIndex="2"
+                                                           Drop="dropTheBomb" AllowDrop="True"
+                                                           Width="100" Height="90" Panel.ZIndex="2"
                    >
                                                     <TextBlock Padding="5" Margin="0,9,0,-1">Drop PDF here</TextBlock>
                                                     <!--<Image Name="imgTiff" VerticalAlignment="Top"    Drop="dropTheBomb" AllowDrop="True"></Image>-->
                                                 </Border>
-                                                <TextBlock Name="tbFiledate" Padding="0" />
+                                                <TextBlock Name="tbFiledate" Padding="0" Width="98" />
 
 
                                                 <Button x:Name="btnPDFaufrufen" Click="btnPDFaufrufen_Click"  Margin="5"
