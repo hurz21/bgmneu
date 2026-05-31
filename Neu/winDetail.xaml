@@ -213,10 +213,18 @@
                         Margin="1" Width="130">
                                         Word
                                     </Button>
-                                    <Button Name="btnBestand" Click="btnBestand_Click" Content="Bestandsliste" 
-Margin="0"  IsEnabled="True" Width="130"/>
+                                    <Button Name="btnBestand" Click="btnBestand_Click" Content="Bestandsliste (laufnr)" 
+                                            Margin="0"  IsEnabled="True" Width="130"
+                                            />
+                                    <Button Name="btnBestandPur" Click="btnBestandPur_Click" Content="Bestandsliste (pur)" 
+                                            Margin="0"  IsEnabled="True" Width="130"
+                                            />
+                                    <!--<Button Name="btnBestand" Click="btnBestandPur_Click" Content="Bestandsliste (pur)" 
+                                               Margin="0"  IsEnabled="True" Width="130"
+                                               />-->
                                     <Button Name="btnpdfexist" Click="btnPDFExistenzpruefen_Click" Content="Existieren die PDFs ?" Foreground="Red" ToolTip="Prüft ob die PDFs entsprechend der Flurstücksangaben im PROBAUG vorhanden sind. Achtung! dauert ewig und 3 tage "
-Margin="0"  IsEnabled="True" Width="130"/>
+                                            Margin="0"  IsEnabled="True" Width="130"
+                                            />
                                 </StackPanel>
                             </StackPanel>
 

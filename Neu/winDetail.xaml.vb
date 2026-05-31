@@ -1026,7 +1026,6 @@ Public Class winDetail
 
     Private Sub btnBestand_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
-
         Dim zieldatei As String
         zieldatei = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
         zieldatei = IO.Path.Combine(zieldatei, "bgm\cache")
@@ -1037,8 +1036,6 @@ Public Class winDetail
             'MsgBox("Fehler bei der erzeugung der CSV-Datei: " & zieldatei)
             MessageBox.Show("Fehler bei der erzeugung der CSV-Datei: " & zieldatei, "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
         End If
-
-
     End Sub
 
     Private Sub btnPDFExistenzpruefen_Click(sender As Object, e As RoutedEventArgs)
@@ -1106,4 +1103,18 @@ Public Class winDetail
             Return False
         End Try
     End Function
+
+    Private Sub btnBestandPur_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+        Dim zieldatei As String
+        zieldatei = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
+        zieldatei = IO.Path.Combine(zieldatei, "bgm\cache")
+        zieldatei = IO.Path.Combine(zieldatei, "ausgabe.csv")
+        If tools.erzeugeCSVDateiBestandPUR(zieldatei) Then
+            Process.Start(zieldatei)
+        Else
+            'MsgBox("Fehler bei der erzeugung der CSV-Datei: " & zieldatei)
+            MessageBox.Show("Fehler bei der erzeugung der CSV-Datei: " & zieldatei, "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+        End If
+    End Sub
 End Class

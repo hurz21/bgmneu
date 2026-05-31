@@ -1735,7 +1735,10 @@ Module tools
             sb.Append("Kennz" & t)
             sb.Append("flur" & t)
             sb.Append("zaehler" & t)
-            sb.Append("nenner")
+            sb.Append("nenner" & t)
+            sb.Append("JahrAz" & t)
+            sb.Append("tooltip" & t)
+            sb.Append("memo" & t)
 
             sw.WriteLine(sb.ToString)
 
@@ -1759,7 +1762,10 @@ Module tools
                     sb.Append((clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("text1")).ToString) & t)
                     sb.Append((clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("int1")).ToString) & t)
                     sb.Append((clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("int2")).ToString) & t)
-                    sb.Append((clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("int3")).ToString))
+                    sb.Append((clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("int3")).ToString) & t)
+                    sb.Append((clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("text4")).ToString) & t)
+                    sb.Append((clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("tooltip")).ToString) & t)
+                    sb.Append((clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("memo")).ToString))
                     sw.WriteLine(sb.ToString)
                     sb.Clear()
                 Next
@@ -1810,6 +1816,63 @@ Module tools
         Catch ex As Exception
             l("fehler in getgemarkungsindex-- " & ex.ToString)
             Return -1
+        End Try
+    End Function
+    Friend Function erzeugeCSVDateiBestandPUR(csvdatei As String) As Boolean
+        Dim dt As DataTable
+        Dim hinweis As String = ""
+        Dim sw As IO.StreamWriter
+
+        Dim sb As New Text.StringBuilder
+        Dim t As String = ";"
+        Dim fi As IO.FileInfo
+        Dim fo As IO.FileInfo
+        Try
+            sw = New IO.StreamWriter(csvdatei)
+            sw.AutoFlush = True
+            sb.Append("Gemeinde" & t)
+            sb.Append("Gemarkung" & t)
+            sb.Append("BlattNr" & t)
+            'sb.Append("laufnr" & t)
+            'sb.Append("Kennz" & t)
+            sb.Append("flur" & t)
+            sb.Append("zaehler" & t)
+            sb.Append("nenner")
+
+            sw.WriteLine(sb.ToString)
+
+
+            fstREC.mydb.SQL = "SELECT distinct text7, text8, text3, int1, int2,int3  FROM [LKOF_Bearb].[dbo].[tbl_mdat_datensatz]" &
+                        " where kategorie_guid='" & kategorie_guid_Baulasten & "' " &
+                        "  order by text7, text8, text3, int1,int2,int3"
+            l(fstREC.mydb.SQL)
+            hinweis = fstREC.getDataDT()
+            If fstREC.dt.Rows.Count < 1 Then
+                Return False 'darf nicht vorkommen
+            Else
+
+                For i = 0 To fstREC.dt.Rows.Count - 1
+                    sb = New Text.StringBuilder
+
+                    sb.Append((clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("text7")).ToString) & t)
+                    sb.Append((clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("text8")).ToString) & t)
+                    sb.Append((clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("text3")).ToString) & t)
+                    'sb.Append((clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("text2")).ToString) & t)
+                    'sb.Append((clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("text1")).ToString) & t)
+                    sb.Append((clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("int1")).ToString) & t)
+                    sb.Append((clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("int2")).ToString) & t)
+                    sb.Append((clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("int3")).ToString))
+                    sw.WriteLine(sb.ToString)
+                    sb.Clear()
+                Next
+
+            End If
+            sw.Close()
+            sw.Dispose()
+            Return True
+        Catch ex As Exception
+            l("fehler in getAllPDFFiles4GUID-- " & ex.ToString)
+            Return False
         End Try
     End Function
 End Module
