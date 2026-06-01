@@ -207,23 +207,25 @@
                                     AcceptsReturn="True" AcceptsTab="True" />
                                 <StackPanel>
                                     <Button Name="btnEigentümerclip" Click="btnEigentümerclip_Click" 
-                          Margin="1" Width="130" HorizontalAlignment="Left"
+                          Margin="1" Width="140" HorizontalAlignment="Left"
                 >in Zwischenablage</Button>
                                     <Button Name="btnMakeworddok" Click="btnMakeworddok_Click"   HorizontalAlignment="Left"
-                        Margin="1" Width="130">
+                        Margin="1" Width="140">
                                         Word
                                     </Button>
-                                    <Button Name="btnBestand" Click="btnBestand_Click" Content="Bestandsliste (laufnr)" 
-                                            Margin="0"  IsEnabled="True" Width="130"
+                                    <Button Name="btnBestand" Click="btnBestand_Click" Content="Bestandsliste (mehrfach)" 
+                                            Margin="0"  IsEnabled="True" Width="140"
+                                            ToolTip="Mit laufender Nummer. Vollständig."
                                             />
-                                    <Button Name="btnBestandPur" Click="btnBestandPur_Click" Content="Bestandsliste (pur)" 
-                                            Margin="0"  IsEnabled="True" Width="130"
+                                    <Button Name="btnBestandPur" Click="btnBestandPur_Click" Content="Bestandsliste (einfach)" 
+                                            Margin="0"  IsEnabled="True" Width="140"
+                                            ToolTip="Jede Baulast eine Zeile!"
                                             />
                                     <!--<Button Name="btnBestand" Click="btnBestandPur_Click" Content="Bestandsliste (pur)" 
                                                Margin="0"  IsEnabled="True" Width="130"
                                                />-->
                                     <Button Name="btnpdfexist" Click="btnPDFExistenzpruefen_Click" Content="Existieren die PDFs ?" Foreground="Red" ToolTip="Prüft ob die PDFs entsprechend der Flurstücksangaben im PROBAUG vorhanden sind. Achtung! dauert ewig und 3 tage "
-                                            Margin="0"  IsEnabled="True" Width="130"
+                                            Margin="0"  IsEnabled="True" Width="140"
                                             />
                                 </StackPanel>
                             </StackPanel>

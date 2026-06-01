@@ -295,7 +295,11 @@ Public Class winHaupt
         'https://gis.kreis-of.de/LKOF/asp/main.asp?app=sp_mdat&lay=sp_mdat_0010_F&fld=text3&typ=string&val=10001&skipwelcome=true
         e.Handled = True
         tools.writeBLBlattCookie(tbblnr.Text.Trim, "bgm_blattnr_cookie.txt")
-        baulastAlsObjImGisZeigen(tbblnr.Text.Trim, tools.themendefinitionsdatei)
+        If clsGIStools.getBaulastFromBaulastMDAT(CInt(tbblnr.Text.Trim), kategorie_guid_Baulasten) Then
+            baulastAlsObjImGisZeigen(tbblnr.Text.Trim, tools.themendefinitionsdatei)
+        Else
+            MessageBox.Show("Diese Baulast gibt es im GIS nicht!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+        End If
     End Sub
 
     Private Sub btnsucheeigentumer_Click(sender As Object, e As RoutedEventArgs)

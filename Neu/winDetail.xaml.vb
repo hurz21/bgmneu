@@ -459,6 +459,7 @@ Public Class winDetail
         Dim endung As String = ".pdf"
         Dim listeZippedFiles, listeNOnZipFiles, allFeiles As New List(Of String)
         Dim titelVorschlag As String = ""
+        Dim erfolg As Boolean
         Try
             l(" MOD dropped anfang")
             If e.Data.GetDataPresent(DataFormats.FileDrop) Then
@@ -485,12 +486,17 @@ Public Class winDetail
                     'der DB-eintrag existiert bereits also nichts weiter erforderlich
                     If toolsEigentuemer.existiertPDFinMDAT_FILES(tbBaulastNr.Text.Trim) Then
                         'alles ok  - no action
-                    Else
-                        Dim erfolg As Boolean
                         For i = 0 To tools.FSTausGISListe.Count - 1
-
                             erfolg = toolsEigentuemer.insertBaulastPdfInMDAT_Dateien(tbBaulastNr.Text & ".pdf", tools.FSTausGISListe(i).GUID)
-
+                            If erfolg Then
+                                l("DB für die Datei wurde gesetzt!" & Environment.NewLine & tbBaulastNr.Text.Trim & endung.Trim & " " & tools.FSTausGISListe(i).GUID)
+                            Else
+                                l("DB für die Datei wurde NICHT gesetzt! Fehler (\dokumente\bgm)" & " " & tools.FSTausGISListe(i).GUID)
+                            End If
+                        Next
+                    Else
+                        For i = 0 To tools.FSTausGISListe.Count - 1
+                            erfolg = toolsEigentuemer.insertBaulastPdfInMDAT_Dateien(tbBaulastNr.Text & ".pdf", tools.FSTausGISListe(i).GUID)
                             If erfolg Then
                                 l("DB für die Datei wurde gesetzt!" & Environment.NewLine & tbBaulastNr.Text.Trim & endung.Trim & " " & tools.FSTausGISListe(i).GUID)
                             Else
@@ -509,7 +515,7 @@ Public Class winDetail
                     MessageBox.Show("Datei wurde aktualisiert!" & Environment.NewLine & tbBaulastNr.Text.Trim & endung.Trim, "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
                     'MsgBox("Datei wurde aktualisiert!" & Environment.NewLine & tbBaulastNr.Text.Trim & endung.Trim)
                     'hier muss der db-eintrag gemacht werden                    'insert
-                    Dim erfolg As Boolean
+
                     For i = 0 To tools.FSTausGISListe.Count - 1
 
                         erfolg = toolsEigentuemer.insertBaulastPdfInMDAT_Dateien(tbBaulastNr.Text & ".pdf", tools.FSTausGISListe(i).GUID)
