@@ -968,7 +968,15 @@ Public Class winDetail
             " memo='" & mmemo & "', tooltip='" & tooltip & "' " &
             " where kategorie_guid='" & kategorie_guid_Baulasten & "' " &
             " and text3='" & bl.blattnr & "' " ' &
-        '" and text2='" & bl.baulastnr & "' "
+
+        update = " update  [LKOF_Bearb].[dbo].[tbl_mdat_datensatz]  " &
+            "set text5='Jahr,Az: " & bl.AzJahr & ", " & bl.AzNr & "', " &
+            " text7='" & bl.gemeindeText.Trim & "', text8='" & bl.katFST.gemarkungstext.Trim & "', " &
+            " int1=" & bl.katFST.flur & ", int2=" & bl.katFST.zaehler & ", " &
+            " int3=" & bl.katFST.nenner & ", int4=" & bl.katFST.gemcode & ", " &
+            " memo='" & mmemo & "', tooltip='" & tooltip & "' " &
+            " where kategorie_guid='" & kategorie_guid_Baulasten & "' " &
+            " and text3='" & bl.blattnr & "' " ' &
 
         Try
             fstREC.mydb.SQL = update
