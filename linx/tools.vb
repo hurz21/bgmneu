@@ -74,6 +74,10 @@ Module tools
     Public anzahltiff, anzahl_dateiexitiert, anzahl_blattNrIst0, anzahlKatasterFormellOK, anzahlGeloschte, vierergeloescht, anzahl_mitSerial As Integer
     Public enc As System.Text.Encoding = System.Text.Encoding.GetEncoding(1252)
 
+    Public aktfst As New clsFlurstueck
+    Public flurliste As New List(Of myComboBoxItem)
+    Public fstkombiliste As New List(Of myComboBoxItem)
+
     ' 🔑 WriteHistoryCookie Funktion
     'Public Sub WriteHistoryCookie(value As String)
     '    If String.IsNullOrWhiteSpace(value) Then Exit Sub
@@ -669,18 +673,17 @@ Module tools
         katasterGem(22) = "Nieder-Roden                       ;747"
         katasterGem(23) = "Neu-Isenburg                       ;748"
         katasterGem(24) = "Ober-Roden                         ;749"
-        katasterGem(25) = "Offenbach                          ;751"
-        katasterGem(26) = "Offenthal                          ;752"
-        katasterGem(27) = "Rembrücken                         ;753"
-        katasterGem(28) = "Rumpenheim                         ;754"
-        katasterGem(29) = "Seligenstadt                       ;755"
-        katasterGem(30) = "Sprendlingen                       ;756"
-        katasterGem(31) = "Urberach                           ;757"
-        katasterGem(32) = "Weiskirchen                        ;758"
-        katasterGem(33) = "Zellhausen                         ;759"
-        katasterGem(34) = "Zeppelinheim                       ;760"
-        katasterGem(35) = "Obertshausen                       ;750"
-
+        katasterGem(25) = "Obertshausen                       ;750"
+        katasterGem(26) = "Offenbach                          ;751"
+        katasterGem(27) = "Offenthal                          ;752"
+        katasterGem(28) = "Rembrücken                         ;753"
+        katasterGem(29) = "Rumpenheim                         ;754"
+        katasterGem(30) = "Seligenstadt                       ;755"
+        katasterGem(31) = "Sprendlingen                       ;756"
+        katasterGem(32) = "Urberach                           ;757"
+        katasterGem(33) = "Weiskirchen                        ;758"
+        katasterGem(34) = "Zellhausen                         ;759"
+        katasterGem(35) = "Zeppelinheim                       ;760"
     End Sub
     Sub initProbaugNrProbaugGemarkungtext()
         gem(0) = "4	Dreieichenhain"
@@ -1353,7 +1356,7 @@ Module tools
                     'tbEigentuemer.Text = summe
                 Else
                     'MsgBox(result)
-                    MessageBox.Show(Result, "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+                    MessageBox.Show(result, "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
                 End If
             Next
             Return summe
@@ -1873,6 +1876,64 @@ Module tools
         Catch ex As Exception
             l("fehler in getAllPDFFiles4GUID-- " & ex.ToString)
             Return False
+        End Try
+    End Function
+
+    Friend Function erzeugeFlurliste(gemcode As Integer) As List(Of myComboBoxItem)
+        Dim liste As New List(Of myComboBoxItem)
+        Dim bpl As myComboBoxItem
+        Dim hinweis As String = ""
+        Try
+            l(" MOD erzeugeFlurliste anfang")
+            fstREC.mydb.SQL =
+                "SELECT distinct flur FROM [LKOF].[dbo].[VW_lieg_eigentuemerGST_web] " &
+                        "where gemarkungsnummer= " & gemcode &
+                        "order by flur"
+            l(fstREC.mydb.SQL)
+            hinweis = fstREC.getDataDT()
+            If fstREC.dt.Rows.Count < 1 Then
+                Return liste
+            Else
+                For i = 0 To fstREC.dt.Rows.Count - 1
+                    bpl = New myComboBoxItem
+                    bpl.myindex = fstREC.dt.Rows(i).Item("flur").ToString
+                    bpl.mySttring = fstREC.dt.Rows(i).Item("flur").ToString
+                    liste.Add(bpl)
+                Next
+                Return liste
+            End If
+        Catch ex As Exception
+            l("fehler in erzeugeFlurliste-- " & ex.ToString)
+            Return liste
+        End Try
+    End Function
+
+    Friend Function erzeugeFSTkombiliste(gemcode As Integer, flur As Integer) As List(Of myComboBoxItem)
+        Dim liste As New List(Of myComboBoxItem)
+        Dim bpl As myComboBoxItem
+        Dim hinweis As String = ""
+        Try
+            l(" MOD erzeugeFlurliste anfang")
+            fstREC.mydb.SQL = " SELECT distinct concat(zaehler,'/',nenner)  as kombi ,zaehler,nenner,Flurstueckskennzeichen " &
+                            "   FROM [LKOF].[dbo].[VW_lieg_eigentuemerGST_web] " &
+                            "   where gemarkungsnummer=" & gemcode & " and flur=" & flur &
+                            "   order by zaehler,nenner "
+            l(fstREC.mydb.SQL)
+            hinweis = fstREC.getDataDT()
+            If fstREC.dt.Rows.Count < 1 Then
+                Return liste
+            Else
+                For i = 0 To fstREC.dt.Rows.Count - 1
+                    bpl = New myComboBoxItem
+                    bpl.myindex = fstREC.dt.Rows(i).Item("Flurstueckskennzeichen").ToString
+                    bpl.mySttring = fstREC.dt.Rows(i).Item("kombi").ToString
+                    liste.Add(bpl)
+                Next
+                Return liste
+            End If
+        Catch ex As Exception
+            l("fehler in erzeugeFlurliste-- " & ex.ToString)
+            Return liste
         End Try
     End Function
 End Module

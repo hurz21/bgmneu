@@ -127,10 +127,18 @@
                         <StackPanel Orientation="Horizontal">
                             <Label Width="75" FontSize="10">Flur:</Label>
                             <TextBox Name="tbFlur" Width="160"></TextBox>
+                            <ComboBox x:Name="cmbFlur" HorizontalAlignment="Left" Margin="0,0,0,0"
+                                       SelectionChanged="cmbFlur_SelectionChanged" 
+                                        DisplayMemberPath="flur"  Width="20" 
+                                         Height="30"   FontSize="10"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Label Width="75" FontSize="10">Zähler:</Label>
                             <TextBox Name="tbZaehler" Width="160"></TextBox>
+                            <ComboBox x:Name="cmbFstKombi" HorizontalAlignment="Left" Margin="0,0,0,0"
+                                   SelectionChanged="cmbFstKombi_SelectionChanged" 
+                                    DisplayMemberPath="fstkombi"  Width="20" 
+                                     Height="30"   FontSize="10"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Label Width="75" FontSize="10">Nenner:</Label>

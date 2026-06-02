@@ -48,9 +48,10 @@ Public Class winHaupt
         'gemarkungsindex = gemarkung
 
         nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory)
-        tbFlur.Text = flur
-        tbZaehler.Text = zaehler
-        tbnenner.Text = nenner
+        'ausfüllenvermeiden
+        ''tbFlur.Text = flur
+        ''tbZaehler.Text = zaehler
+        ''tbnenner.Text = nenner
 
         Dim stored = My.Settings.ImmerLogouten ' Boolean (Default: True)
         chkbImmerLogouten.IsChecked = stored
@@ -60,6 +61,12 @@ Public Class winHaupt
         If isAutho() Then
             ComboHistory.IsDropDownOpen = True
             stpBaulastenmedels.Visibility = Visibility.Visible
+            If Environment.UserName = "Feinen_J" Then
+                tabEig.SelectedIndex = 2
+                '3=bplan  2=fst 1=adr  0=baulast
+            Else
+                'tabEig.SelectedIndex = 1
+            End If
         Else
             tabEig.SelectedIndex = 1
             stpBaulastenmedels.Visibility = Visibility.Collapsed
@@ -118,7 +125,9 @@ Public Class winHaupt
         End If
         If gamarkungsitems.Count > 0 Then
             gemIndexInt = Math.Max(0, Math.Min(gemIndexInt, gamarkungsitems.Count - 1))
-            cmbGemarkungen.SelectedIndex = gemIndexInt
+            'cmbGemarkungen.SelectedIndex = gemIndexInt
+            cmbGemarkungen.SelectedIndex = 0
+
         End If
 
         cmbGemarkungen2.ItemsSource = gamarkungsitems
@@ -391,15 +400,26 @@ Public Class winHaupt
     Private Sub btngis4fst_click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
         fkzlist = New List(Of clsFlurstueck)
-        fkzlist = readFlurst_Form()
+        fkzlist.Add(aktfst)
         Dim index As Integer = CInt(cmbGemarkungen.SelectedIndex)
         Try
-            tools.writeFlurstCookie(index.ToString, (tbFlur.Text.Trim), tbZaehler.Text.Trim, tbnenner.Text.Trim, "bgm_FST_cookie.txt")
+            tools.writeFlurstCookie(index.ToString, (aktfst.flur.ToString), aktfst.zaehler.ToString.Trim, aktfst.nenner.ToString.Trim, "bgm_FST_cookie.txt")
             MitFlurstueckInsGIS(fkzlist, tbFSTbemerkung.Text, False)
             aktualisiereFSTHistory()
         Catch ex As Exception
             l("btnsucheeigentumer_Click " & ex.ToString)
         End Try
+
+
+        'fkzlist = readFlurst_Form()
+        'Dim index As Integer = CInt(cmbGemarkungen.SelectedIndex)
+        'Try
+        '    tools.writeFlurstCookie(index.ToString, (tbFlur.Text.Trim), tbZaehler.Text.Trim, tbnenner.Text.Trim, "bgm_FST_cookie.txt")
+        '    MitFlurstueckInsGIS(fkzlist, tbFSTbemerkung.Text, False)
+        '    aktualisiereFSTHistory()
+        'Catch ex As Exception
+        '    l("btnsucheeigentumer_Click " & ex.ToString)
+        'End Try
     End Sub
 
 
@@ -676,7 +696,21 @@ Public Class winHaupt
 
     Private Sub cmbGemarkungen_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
         e.Handled = True
-
+        If Not istgeladen Then Exit Sub
+        Dim item As myComboBoxItem = CType(cmbGemarkungen.SelectedItem, myComboBoxItem)
+        If item Is Nothing Then
+            'MsgBox("Die Eingabe war ungültig. Bitte korrigieren!")
+            MessageBox.Show("Die Eingabe war ungültig. Bitte korrigieren!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+            Exit Sub
+        End If
+        aktfst.gemcode = CInt(cmbGemarkungen.SelectedValue)
+        'aktfst.gemindex As Integer = CInt(cmbGemarkungen.SelectedIndex)
+        aktfst.gemarkungstext = item.mySttring.ToString
+        tools.flurliste = tools.erzeugeFlurliste(aktfst.gemcode)
+        cmbFlur.ItemsSource = tools.flurliste
+        cmbFlur.DisplayMemberPath = "mySttring"
+        cmbFlur.SelectedValuePath = "myindex"
+        cmbFlur.IsDropDownOpen = True
     End Sub
 
     Private Sub chkbImmerLogouten_Click(sender As Object, e As RoutedEventArgs)
@@ -780,6 +814,14 @@ Public Class winHaupt
             neu.mySttring = fst.gemarkungstext
             'txtGemarkung.Text = adr.gemarkungstext 
             cmbGemarkungen.SelectedIndex = CInt(neu.myindex)
+            aktfst.gemcode = fst.gemcode
+            aktfst.flur = fst.flur
+            aktfst.zaehler = fst.zaehler
+            aktfst.nenner = fst.nenner
+            aktfst.AZ = fst.AZ
+            aktfst.Flurstuecksskennzeichen = fst.flurstueckZuFKZ
+
+
             tbFlur.Text = fst.flur.ToString
             tbZaehler.Text = fst.zaehler.ToString
             tbnenner.Text = fst.nenner.ToString
@@ -894,14 +936,14 @@ Public Class winHaupt
     End Sub
 
     Private Sub cmbPGNR_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
-        e.Handled = True
-        e.Handled = True
-        Dim adr = TryCast(cmbPGNR.SelectedItem, clsPGvorhaben)
-        If adr IsNot Nothing Then
-            tbPGJahr.Text = adr.jahr
-            tbPGnr.Text = adr.nr
-            suchePG(False)
-        End If
+        'e.Handled = True
+        'e.Handled = True
+        'Dim adr = TryCast(cmbPGNR.SelectedItem, clsPGvorhaben)
+        'If adr IsNot Nothing Then
+        '    tbPGJahr.Text = adr.jahr
+        '    tbPGnr.Text = adr.nr
+        '    suchePG(False)
+        'End If
     End Sub
 
     Private Sub btnfst2PG_Click(sender As Object, e As RoutedEventArgs)
@@ -1066,6 +1108,52 @@ Public Class winHaupt
         tools.writeBLBlattCookie(tbblnr.Text.Trim, "bgm_blattnr_cookie.txt")
         baulastAlsObjImGisZeigen(tbblnr.Text.Trim, tools.themendefinitionsdatei)
         Process.Start("\\kh-w-ingrada\GIS-Daten\diverses\bgmingrada\objektImGisLoeschen.rtf")
+    End Sub
+
+    Private Sub cmbFlur_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
+        e.Handled = True
+        If Not istgeladen Then Exit Sub
+        Dim item As myComboBoxItem = CType(cmbFlur.SelectedItem, myComboBoxItem)
+        If item Is Nothing Then
+            'MessageBox.Show("Die Eingabe war ungültig. Bitte korrigieren!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+            Exit Sub
+        End If
+        aktfst.flur = CInt(item.mySttring)
+        'aktfst.gemindex As Integer = CInt(cmbGemarkungen.SelectedIndex)
+        'aktfst.gemarkungstext = item.mySttring.ToString
+        tools.fstkombiliste = tools.erzeugeFSTkombiliste(aktfst.gemcode, aktfst.flur)
+        cmbFstKombi.ItemsSource = tools.fstkombiliste
+        cmbFstKombi.DisplayMemberPath = "mySttring"
+        cmbFstKombi.SelectedValuePath = "myindex"
+        cmbFstKombi.IsDropDownOpen = True
+        tbFlur.Text = aktfst.flur.ToString
+
+
+    End Sub
+
+    Private Sub cmbFstKombi_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
+        e.Handled = True
+        If Not istgeladen Then Exit Sub
+        Dim item As myComboBoxItem = CType(cmbFstKombi.SelectedItem, myComboBoxItem)
+        If item Is Nothing Then
+            'MsgBox("Die Eingabe war ungültig. Bitte korrigieren!")
+            'MessageBox.Show("Die Eingabe war ungültig. Bitte korrigieren!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+            Exit Sub
+        End If
+        aktfst.Flurstuecksskennzeichen = (item.myindex)
+        Dim a() As String
+        a = item.mySttring.Split("/"c)
+        aktfst.zaehler = CInt(a(0))
+        aktfst.nenner = CInt(a(1))
+        'aktfst.gemindex As Integer = CInt(cmbGemarkungen.SelectedIndex)
+        'aktfst.gemarkungstext = item.mySttring.ToString
+        'tools.fstkombiliste = tools.erzeugeFSTkombiliste(aktfst.gemcode, aktfst.flur)
+        'cmbFstKombi.ItemsSource = tools.fstkombiliste
+        'cmbFstKombi.DisplayMemberPath = "mySttring"
+        'cmbFstKombi.SelectedValuePath = "myindex"
+        'cmbFstKombi.IsDropDownOpen = True
+        tbZaehler.Text = aktfst.zaehler.ToString
+        tbnenner.Text = aktfst.nenner.ToString
     End Sub
 
     'Private Sub tbStrasse_TextChanged(sender As Object, e As TextChangedEventArgs)

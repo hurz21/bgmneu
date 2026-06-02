@@ -349,7 +349,7 @@
     <PostBuildEvent>
 
 if $(ConfigurationName) == Release (
-copy $(targetfilename) \\gis\gdvell\apps\bgm\bgmIngrada.exe 
+rem copy $(targetfilename) \\gis\gdvell\apps\bgm\bgmIngrada.exe 
 copy $(targetfilename) W:\diverses\bgmingrada\bgmIngrada.exe 
  
 )
