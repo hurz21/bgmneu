@@ -4,7 +4,7 @@ Imports Microsoft.VisualBasic.Logging
 
 Public Class probaug
     Public Shared gem(37) As String
-    Public Shared katasterGem(35) As String
+    'Public Shared katasterGem(35) As String
     Public Shared katasterGemarkungslist As New List(Of myComboBoxItem)
     Public Shared probaugGemarkungsdict As New Dictionary(Of Integer, String)
     Public Shared Function bildeFKZstring(fstliste As List(Of clsFlurstueck)) As String
@@ -38,7 +38,8 @@ Public Class probaug
         Dim dt As DataTable
         Dim sql = "" '"select * from GISVIEW6 where feld7='2026' and feld9='80006'"
         probaug.initProbaugNrProbaugGemarkungtext()
-        probaug.initKatasterGemarkungtext()
+        tools.initKatasterGemarkungtext()
+        'probaug.initKatasterGemarkungtext()
         probaug.katasterGemarkungslist = probaug.splitKatasterGemarkung()
         probaug.probaugGemarkungsdict = probaug.splitgem()
         sql = "select * from GISVIEW1 where feld1='" & jahr.Trim & "' and feld3='" & vorgangsnummer.Trim & "'"
@@ -516,46 +517,46 @@ Public Class probaug
         gem(36) = "33	Unbekannt33"
         gem(37) = "0	Unbekannt0"
     End Sub
-    Shared Sub initKatasterGemarkungtext()
-        katasterGem(0) = "Bieber                             ;725"
-        katasterGem(1) = "Buchschlag                         ;726"
-        katasterGem(2) = "Bürgel                             ;727"
-        katasterGem(3) = "Dietesheim                         ;728"
-        katasterGem(4) = "Dietzenbach                        ;729"
-        katasterGem(5) = "Dreieichenhain                     ;730"
-        katasterGem(6) = "Dudenhofen                         ;731"
-        katasterGem(7) = "Egelsbach                          ;732"
-        katasterGem(8) = "Froschhausen                       ;733"
-        katasterGem(9) = "Götzenhain                         ;734"
-        katasterGem(10) = "Hainhausen                         ;735"
-        katasterGem(11) = "Hainstadt                          ;736"
-        katasterGem(12) = "Hausen                             ;737"
-        katasterGem(13) = "Heusenstamm                        ;738"
-        katasterGem(14) = "Jügesheim                          ;739"
-        katasterGem(15) = "Klein-Krotzenburg                  ;740"
-        katasterGem(16) = "Klein-Welzheim                     ;741"
-        katasterGem(17) = "Lämmerspiel                        ;742"
-        katasterGem(18) = "Langen                             ;743"
-        katasterGem(19) = "Mainflingen                        ;744"
-        katasterGem(20) = "Messenhausen                       ;745"
-        katasterGem(21) = "Mühlheim                           ;746"
-        katasterGem(22) = "Nieder-Roden                       ;747"
-        katasterGem(23) = "Neu-Isenburg                       ;748"
-        katasterGem(24) = "Ober-Roden                         ;749"
-        katasterGem(25) = "Obertshausen                       ;750"
-        katasterGem(26) = "Offenbach                          ;751"
-        katasterGem(27) = "Offenthal                          ;752"
-        katasterGem(28) = "Rembrücken                         ;753"
-        katasterGem(29) = "Rumpenheim                         ;754"
-        katasterGem(30) = "Seligenstadt                       ;755"
-        katasterGem(31) = "Sprendlingen                       ;756"
-        katasterGem(32) = "Urberach                           ;757"
-        katasterGem(33) = "Weiskirchen                        ;758"
-        katasterGem(34) = "Zellhausen                         ;759"
-        katasterGem(35) = "Zeppelinheim                       ;760"
+    'Shared Sub initKatasterGemarkungtext()
+    '    katasterGem(0) = "Bieber                             ;725"
+    '    katasterGem(1) = "Buchschlag                         ;726"
+    '    katasterGem(2) = "Bürgel                             ;727"
+    '    katasterGem(3) = "Dietesheim                         ;728"
+    '    katasterGem(4) = "Dietzenbach                        ;729"
+    '    katasterGem(5) = "Dreieichenhain                     ;730"
+    '    katasterGem(6) = "Dudenhofen                         ;731"
+    '    katasterGem(7) = "Egelsbach                          ;732"
+    '    katasterGem(8) = "Froschhausen                       ;733"
+    '    katasterGem(9) = "Götzenhain                         ;734"
+    '    katasterGem(10) = "Hainhausen                         ;735"
+    '    katasterGem(11) = "Hainstadt                          ;736"
+    '    katasterGem(12) = "Hausen                             ;737"
+    '    katasterGem(13) = "Heusenstamm                        ;738"
+    '    katasterGem(14) = "Jügesheim                          ;739"
+    '    katasterGem(15) = "Klein-Krotzenburg                  ;740"
+    '    katasterGem(16) = "Klein-Welzheim                     ;741"
+    '    katasterGem(17) = "Lämmerspiel                        ;742"
+    '    katasterGem(18) = "Langen                             ;743"
+    '    katasterGem(19) = "Mainflingen                        ;744"
+    '    katasterGem(20) = "Messenhausen                       ;745"
+    '    katasterGem(21) = "Mühlheim                           ;746"
+    '    katasterGem(22) = "Nieder-Roden                       ;747"
+    '    katasterGem(23) = "Neu-Isenburg                       ;748"
+    '    katasterGem(24) = "Ober-Roden                         ;749"
+    '    katasterGem(25) = "Obertshausen                       ;750"
+    '    katasterGem(26) = "Offenbach                          ;751"
+    '    katasterGem(27) = "Offenthal                          ;752"
+    '    katasterGem(28) = "Rembrücken                         ;753"
+    '    katasterGem(29) = "Rumpenheim                         ;754"
+    '    katasterGem(30) = "Seligenstadt                       ;755"
+    '    katasterGem(31) = "Sprendlingen                       ;756"
+    '    katasterGem(32) = "Urberach                           ;757"
+    '    katasterGem(33) = "Weiskirchen                        ;758"
+    '    katasterGem(34) = "Zellhausen                         ;759"
+    '    katasterGem(35) = "Zeppelinheim                       ;760"
 
 
-    End Sub
+    'End Sub
     Shared Function splitKatasterGemarkung() As List(Of myComboBoxItem)
         Dim dict As New List(Of myComboBoxItem)
         Dim a() As String
