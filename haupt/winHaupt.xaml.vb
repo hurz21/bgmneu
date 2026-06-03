@@ -47,7 +47,7 @@ Public Class winHaupt
         tools.readFSTCookie(gemarkung, flur, zaehler, nenner, "bgm_FST_cookie.txt")
         'gemarkungsindex = gemarkung
 
-        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory)
+        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "startmeup")
         'ausfüllenvermeiden
         ''tbFlur.Text = flur
         ''tbZaehler.Text = zaehler
@@ -221,6 +221,7 @@ Public Class winHaupt
     Private Sub btnEdit_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
         tools.writeBLBlattCookie(tbblnr.Text, "bgm_blattnr_cookie.txt")
+        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "bl_detail")
         Dim neu As New winDetail((tbblnr.Text), False) ' 0=modus neu
         neu.ShowDialog()
         LoadHistory() : ComboHistory.ItemsSource = Nothing : ComboHistory.ItemsSource = historyList
@@ -280,6 +281,7 @@ Public Class winHaupt
         e.Handled = True
         'feststellen ob es die baulast gibt - sonst 
         'besteht die gefahr, dass eine veraltete PDF gezogen wird
+        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "bl_pdf")
         If clsGIStools.getBaulastFromBaulastMDAT(CInt(tbblnr.Text.Trim), kategorie_guid_Baulasten) Then
             lastPDF = clsGIStools.copyOnlyPDF(tbblnr.Text.Trim)
             If lastPDF.ToLower.StartsWith("fehler") Or
@@ -303,6 +305,7 @@ Public Class winHaupt
     Private Sub btnBaulastImGIS_Click(sender As Object, e As RoutedEventArgs)
         'https://gis.kreis-of.de/LKOF/asp/main.asp?app=sp_mdat&lay=sp_mdat_0010_F&fld=text3&typ=string&val=10001&skipwelcome=true
         e.Handled = True
+        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "bl_gis")
         tools.writeBLBlattCookie(tbblnr.Text.Trim, "bgm_blattnr_cookie.txt")
         If clsGIStools.getBaulastFromBaulastMDAT(CInt(tbblnr.Text.Trim), kategorie_guid_Baulasten) Then
             baulastAlsObjImGisZeigen(tbblnr.Text.Trim, tools.themendefinitionsdatei)
@@ -313,6 +316,7 @@ Public Class winHaupt
 
     Private Sub btnsucheeigentumer_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
+        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "fst_word")
         If tools.eigentuemerAbfrageErlaubt Then
             eigentuemerWord(False, fkzlist_lage, lage_lage)
         Else
@@ -399,6 +403,7 @@ Public Class winHaupt
 
     Private Sub btngis4fst_click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
+        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "fst_gis")
         fkzlist = New List(Of clsFlurstueck)
         fkzlist.Add(aktfst)
         Dim index As Integer = CInt(cmbGemarkungen.SelectedIndex)
@@ -522,6 +527,7 @@ Public Class winHaupt
     Private Sub btnwordADR_Click(sender As Object, e As RoutedEventArgs)
         'Dim loklist = New List(Of clsFlurstueck)
         'loklist = readFlurst_Form()
+        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "adr_word")
         If tools.eigentuemerAbfrageErlaubt Then
             eigentuemerWord(False, fkzlist_lage, lage_lage)
         Else
@@ -533,6 +539,7 @@ Public Class winHaupt
 
     Private Sub btngis4adr_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
+        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "adr_gis")
         Dim a = aktadr.gemeindeName
         'Dim loklist = New List(Of clsFlurstueck)
         'loklist = readFlurst_Form()
@@ -680,6 +687,7 @@ Public Class winHaupt
 
     Private Async Sub btngis4BPlAN_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
+        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "bpl_gis")
         'https://gis.kreis-of.de/LKOF/asp/main.asp?&app=sp_mdat&lay=sp_mdat_0013_F&fld=ident&typ=string&val=1674&skipwelcome=true   
         'https://gis.kreis-of.de/LKOF/asp/main.asp?&app=sp_mdat&lay=sp_mdat_0013_F&fld=ident&typ=string&val=1134&skipwelcome=true 
         Dim url = ""
@@ -729,6 +737,7 @@ Public Class winHaupt
         Dim quelldatei As String
         Dim immer_aus_dem_cache_die_bplanpdfs As Boolean = True
         Try
+            nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "bpl_pdf")
             pdfitem = CType(cmbbplPDF.SelectedItem, myComboBoxItem)
             quelldatei = pdfitem.myindex
             fi = New IO.FileInfo(quelldatei)
@@ -760,6 +769,7 @@ Public Class winHaupt
         Try
             dateiitem = CType(cmbThemendatei.SelectedItem, myComboBoxItem)
             themendatei = dateiitem.myindex
+            nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "themen_" & themendatei)
             tools.themendefinitionsdatei = themendatei.Trim
 
 
@@ -773,6 +783,7 @@ Public Class winHaupt
 
     Private Sub btnTutorial_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
+        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "tuts")
         Process.Start("https://gis.kreis-of.de/LKOF/upload/tutorial/videos.html")
     End Sub
 
@@ -884,6 +895,7 @@ Public Class winHaupt
 
     Private Sub tbPGsuchestarten_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
+        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "pg_gis")
         suchePG(True)
     End Sub
 
@@ -948,6 +960,7 @@ Public Class winHaupt
 
     Private Sub btnfst2PG_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
+        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "fst_vorgang")
         Dim probaugVorgange As New List(Of myComboBoxItem)
         fkzlist = New List(Of clsFlurstueck)
         fkzlist = readFlurst_Form()
@@ -1015,6 +1028,7 @@ Public Class winHaupt
 
     Private Sub btnadr2PG_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
+        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "adr_vorgang")
         If tools.eigentuemerAbfrageErlaubt Then
             ' eigentuemerWord(False, fkzlist_lage, lage_lage)
         Else
@@ -1105,6 +1119,7 @@ Public Class winHaupt
 
     Private Sub btnBLloeschen_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
+        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "bl_loeschen")
         tools.writeBLBlattCookie(tbblnr.Text.Trim, "bgm_blattnr_cookie.txt")
         baulastAlsObjImGisZeigen(tbblnr.Text.Trim, tools.themendefinitionsdatei)
         Process.Start("\\kh-w-ingrada\GIS-Daten\diverses\bgmingrada\objektImGisLoeschen.rtf")

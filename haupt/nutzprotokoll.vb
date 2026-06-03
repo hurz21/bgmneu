@@ -1,7 +1,7 @@
 ﻿Public Class nutzprotokoll
 
 
-    Public Shared Sub NutzungProtokollieren(pfad As String)
+    Public Shared Sub NutzungProtokollieren(pfad As String, app As String)
 #If debug Then
         pfad="W:\diverses\bgmingrada"
 #End If
@@ -13,7 +13,7 @@
             dateiPfad = IO.Path.Combine(dateiPfad, "nutzung_" & DateTime.Now.ToString("yyyy-MM-dd") & ".txt")
 
             ' Inhalt der neuen Zeile
-            Dim eintrag As String = Environment.UserName & ";" & DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+            Dim eintrag As String = Environment.UserName & ";" & DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") & ";" & app
 
             ' Datei anlegen falls nicht vorhanden und neue Zeile anhängen
             IO.File.AppendAllText(dateiPfad, eintrag & Environment.NewLine)
