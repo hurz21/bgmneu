@@ -77,6 +77,18 @@ Namespace My
                 Me("Themendatei") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("1")>  _
+        Public Property ReiterAppNummer() As Integer
+            Get
+                Return CType(Me("ReiterAppNummer"),Integer)
+            End Get
+            Set
+                Me("ReiterAppNummer") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

@@ -235,7 +235,7 @@
                             <TextBox x:Name="tbPGnr">80006</TextBox>
                             <Button x:Name="tbPGsuchestarten" Click="tbPGsuchestarten_Click" 
                                     Margin="15,0,0,0" Width="100"
-                                    Content="Suchen"></Button>
+                                    Content="Vorgang im GIS"></Button>
                             <ComboBox x:Name="cmbPGNR"  Margin="0,0,0,0"  
                                         SelectionChanged="cmbPGNR_SelectionChanged" 
                                          DisplayMemberPath="Anzeige"

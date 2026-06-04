@@ -47,7 +47,7 @@ Public Class winHaupt
         tools.readFSTCookie(gemarkung, flur, zaehler, nenner, "bgm_FST_cookie.txt")
         'gemarkungsindex = gemarkung
 
-        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "startmeup")
+        'nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "startmeup")
         'ausfüllenvermeiden
         ''tbFlur.Text = flur
         ''tbZaehler.Text = zaehler
@@ -58,17 +58,20 @@ Public Class winHaupt
         gisLogouten = stored
         tools.themendefinitionsdatei = My.Settings.Themendatei
 
+
+        tabEig.SelectedIndex = My.Settings.ReiterAppNummer
+
         If isAutho() Then
             ComboHistory.IsDropDownOpen = True
             stpBaulastenmedels.Visibility = Visibility.Visible
-            If Environment.UserName = "Feinen_J" Then
-                tabEig.SelectedIndex = 2
-                '3=bplan  2=fst 1=adr  0=baulast
-            Else
-                'tabEig.SelectedIndex = 1
-            End If
+            'If Environment.UserName = "Feinen_J" Then
+            '    tabEig.SelectedIndex = 2
+            '    '3=bplan  2=fst 1=adr  0=baulast
+            'Else
+            '    'tabEig.SelectedIndex = 1
+            'End If
         Else
-            tabEig.SelectedIndex = 1
+            'tabEig.SelectedIndex = 1
             stpBaulastenmedels.Visibility = Visibility.Collapsed
         End If
 
@@ -220,6 +223,7 @@ Public Class winHaupt
 
     Private Sub btnEdit_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
+        setzeReiterAppNummer(0)   '4=probaug  3=bplan  2=fst 1=adr  0=baulast
         tools.writeBLBlattCookie(tbblnr.Text, "bgm_blattnr_cookie.txt")
         nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "bl_detail")
         Dim neu As New winDetail((tbblnr.Text), False) ' 0=modus neu
@@ -279,6 +283,7 @@ Public Class winHaupt
 
     Private Sub btnShowPDF_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
+        setzeReiterAppNummer(0)   '4=probaug  3=bplan  2=fst 1=adr  0=baulast
         'feststellen ob es die baulast gibt - sonst 
         'besteht die gefahr, dass eine veraltete PDF gezogen wird
         nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "bl_pdf")
@@ -316,6 +321,7 @@ Public Class winHaupt
 
     Private Sub btnsucheeigentumer_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
+        setzeReiterAppNummer(2)   '4=probaug  3=bplan  2=fst 1=adr  0=baulast
         nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "fst_word")
         If tools.eigentuemerAbfrageErlaubt Then
             eigentuemerWord(False, fkzlist_lage, lage_lage)
@@ -403,6 +409,7 @@ Public Class winHaupt
 
     Private Sub btngis4fst_click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
+        setzeReiterAppNummer(2)   '4=probaug  3=bplan  2=fst 1=adr  0=baulast
         nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "fst_gis")
         fkzlist = New List(Of clsFlurstueck)
         fkzlist.Add(aktfst)
@@ -527,6 +534,7 @@ Public Class winHaupt
     Private Sub btnwordADR_Click(sender As Object, e As RoutedEventArgs)
         'Dim loklist = New List(Of clsFlurstueck)
         'loklist = readFlurst_Form()
+        setzeReiterAppNummer(1)   '4=probaug  3=bplan  2=fst 1=adr  0=baulast
         nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "adr_word")
         If tools.eigentuemerAbfrageErlaubt Then
             eigentuemerWord(False, fkzlist_lage, lage_lage)
@@ -541,6 +549,7 @@ Public Class winHaupt
         e.Handled = True
         nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "adr_gis")
         Dim a = aktadr.gemeindeName
+        setzeReiterAppNummer(1)   '4=probaug  3=bplan  2=fst 1=adr  0=baulast
         'Dim loklist = New List(Of clsFlurstueck)
         'loklist = readFlurst_Form()
         'Dim gemeindeindex As Integer = CInt(cmbGemarkungen.SelectedIndex)
@@ -558,7 +567,17 @@ Public Class winHaupt
             l("adresse wird angezeigt")
             aktualisierenAdressHistory()
         Catch ex As Exception
-            l("btnsucheeigentumer_Click " & ex.ToString)
+            l("btngis4adr_Click " & ex.ToString)
+        End Try
+    End Sub
+
+    Private Sub setzeReiterAppNummer(v As Integer)
+        '4=probaug  3=bplan  2=fst 1=adr  0=baulast
+        Try
+            My.Settings.ReiterAppNummer = v
+            My.Settings.Save()
+        Catch ex As Exception
+            l("setzeReiterAppNummer " & ex.ToString)
         End Try
     End Sub
 
@@ -687,6 +706,7 @@ Public Class winHaupt
 
     Private Async Sub btngis4BPlAN_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
+        setzeReiterAppNummer(3)   '4=probaug  3=bplan  2=fst 1=adr  0=baulast
         nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "bpl_gis")
         'https://gis.kreis-of.de/LKOF/asp/main.asp?&app=sp_mdat&lay=sp_mdat_0013_F&fld=ident&typ=string&val=1674&skipwelcome=true   
         'https://gis.kreis-of.de/LKOF/asp/main.asp?&app=sp_mdat&lay=sp_mdat_0013_F&fld=ident&typ=string&val=1134&skipwelcome=true 
@@ -895,6 +915,7 @@ Public Class winHaupt
 
     Private Sub tbPGsuchestarten_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
+        setzeReiterAppNummer(4)   '4=probaug  3=bplan  2=fst 1=adr  0=baulast
         nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "pg_gis")
         suchePG(True)
     End Sub
@@ -960,6 +981,7 @@ Public Class winHaupt
 
     Private Sub btnfst2PG_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
+        setzeReiterAppNummer(2)   '4=probaug  3=bplan  2=fst 1=adr  0=baulast
         nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "fst_vorgang")
         Dim probaugVorgange As New List(Of myComboBoxItem)
         fkzlist = New List(Of clsFlurstueck)
@@ -1036,6 +1058,7 @@ Public Class winHaupt
             MessageBox.Show("Keine Rechte vorhanden", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
             Exit Sub
         End If
+        setzeReiterAppNummer(1)   '4=probaug  3=bplan  2=fst 1=adr  0=baulast
         Dim lokadr As New clsAdress
         lokadr.gemeindebigNRstring = aktadr.gemeindebigNRstring
         lokadr.gemeindeName = aktadr.gemeindeName
@@ -1119,6 +1142,7 @@ Public Class winHaupt
 
     Private Sub btnBLloeschen_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
+        setzeReiterAppNummer(0)   '4=probaug  3=bplan  2=fst 1=adr  0=baulast
         nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "bl_loeschen")
         tools.writeBLBlattCookie(tbblnr.Text.Trim, "bgm_blattnr_cookie.txt")
         baulastAlsObjImGisZeigen(tbblnr.Text.Trim, tools.themendefinitionsdatei)
