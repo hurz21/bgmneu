@@ -121,28 +121,37 @@
                     <StackPanel Height="277">
                         <StackPanel Orientation="Horizontal">
                             <Label Width="75" FontSize="10">Gemarkung:</Label>
-                            <ComboBox x:Name="cmbGemarkungen" HorizontalAlignment="Left" SelectionChanged="cmbGemarkungen_SelectionChanged"
-                      Height="25" Width="160"  FontSize="10"/>
+                            <ComboBox x:Name="cmbGemarkungen" HorizontalAlignment="Left"
+                                      SelectionChanged="cmbGemarkungen_SelectionChanged"
+                                      Height="25" Width="80"  FontSize="10"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Label Width="75" FontSize="10">Flur:</Label>
-                            <TextBox Name="tbFlur" Width="160"></TextBox>
+                            <TextBox Name="tbFlur" Width="60" IsReadOnly="True" Background="Gainsboro"></TextBox>
+                            <!--<Label Width="10" FontSize="10"  Padding="10,5,5,5" Background="Gainsboro"></Label>-->
                             <ComboBox x:Name="cmbFlur" HorizontalAlignment="Left" Margin="0,0,0,0"
                                        SelectionChanged="cmbFlur_SelectionChanged" 
-                                        DisplayMemberPath="flur"  Width="20" 
-                                         Height="30"   FontSize="10"/>
+                                       DisplayMemberPath="flur"  Width="20" 
+                                       Height="30"   FontSize="10"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Label Width="75" FontSize="10">Zähler:</Label>
-                            <TextBox Name="tbZaehler" Width="160"></TextBox>
+                            <TextBox Name="tbZaehler" Width="80" IsReadOnly="True" Background="Gainsboro"></TextBox>
+                            <Label Width="50" FontSize="10"  Padding="20,5,5,5" Background="Gainsboro">Filter:</Label>
+                            <TextBox Name="tbzaehlerFilter" Width="30" 
+                                     TextChanged="tbzaehlerFilter_TextChanged"
+                                     Padding="5,5,5,5"
+                                     />
                             <ComboBox x:Name="cmbFstKombi" HorizontalAlignment="Left" Margin="0,0,0,0"
-                                   SelectionChanged="cmbFstKombi_SelectionChanged" 
-                                    DisplayMemberPath="fstkombi"  Width="20" 
-                                     Height="30"   FontSize="10"/>
+                                      SelectionChanged="cmbFstKombi_SelectionChanged" 
+                                       Width="20" 
+                                      Height="30"   FontSize="10" 
+      
+                                      />
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Label Width="75" FontSize="10">Nenner:</Label>
-                            <TextBox Name="tbnenner" Width="160"></TextBox>
+                            <TextBox Name="tbnenner" Width="80" IsReadOnly="True"  Background="Gainsboro"></TextBox>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Label Width="75" FontSize="10" ToolTip="Geben sie hier das Az. oder anderen signifikanten Text ein.">Az./Info:</Label>

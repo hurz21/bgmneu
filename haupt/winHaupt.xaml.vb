@@ -731,6 +731,11 @@ Public Class winHaupt
             MessageBox.Show("Die Eingabe war ungültig. Bitte korrigieren!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
             Exit Sub
         End If
+        tbzaehlerFilter.Text = ""
+        tbFlur.Text = ""
+        tbnenner.Text = ""
+
+        aktfst.clear()
         aktfst.gemcode = CInt(cmbGemarkungen.SelectedValue)
         'aktfst.gemindex As Integer = CInt(cmbGemarkungen.SelectedIndex)
         aktfst.gemarkungstext = item.mySttring.ToString
@@ -738,6 +743,7 @@ Public Class winHaupt
         cmbFlur.ItemsSource = tools.flurliste
         cmbFlur.DisplayMemberPath = "mySttring"
         cmbFlur.SelectedValuePath = "myindex"
+        FocusManager.SetFocusedElement(Me, tbzaehlerFilter)
         cmbFlur.IsDropDownOpen = True
     End Sub
 
@@ -1158,13 +1164,18 @@ Public Class winHaupt
             Exit Sub
         End If
         aktfst.flur = CInt(item.mySttring)
+        tbZaehler.Text = ""
+        tbnenner.Text = ""
+        tbzaehlerFilter.Text = ""
         'aktfst.gemindex As Integer = CInt(cmbGemarkungen.SelectedIndex)
         'aktfst.gemarkungstext = item.mySttring.ToString
         tools.fstkombiliste = tools.erzeugeFSTkombiliste(aktfst.gemcode, aktfst.flur)
         cmbFstKombi.ItemsSource = tools.fstkombiliste
         cmbFstKombi.DisplayMemberPath = "mySttring"
         cmbFstKombi.SelectedValuePath = "myindex"
-        cmbFstKombi.IsDropDownOpen = True
+        'FocusManager.SetFocusedElement(Me, tbzaehlerFilter)
+        tbzaehlerFilter.Focus()
+        'cmbFstKombi.IsDropDownOpen = True
         tbFlur.Text = aktfst.flur.ToString
 
 
@@ -1195,7 +1206,19 @@ Public Class winHaupt
         tbnenner.Text = aktfst.nenner.ToString
     End Sub
 
-    'Private Sub tbStrasse_TextChanged(sender As Object, e As TextChangedEventArgs)
+    Private Sub tbzaehlerFilter_TextChanged(sender As Object, e As TextChangedEventArgs)
+        e.Handled = True
+        If Not istgeladen Then Exit Sub
+        Dim filter = tbzaehlerFilter.Text.Trim()
+        If filter.Length < 1 Then
+            cmbFstKombi.ItemsSource = Nothing
+            Return
+        End If
+        Dim gefilterteListe = tools.fstkombiliste.Where(Function(x) x.mySttring.StartsWith(filter)).ToList()
+        cmbFstKombi.ItemsSource = gefilterteListe
+        cmbFstKombi.DisplayMemberPath = "mySttring"
+        cmbFstKombi.SelectedValuePath = "myindex"
+        cmbFstKombi.IsDropDownOpen = (gefilterteListe IsNot Nothing AndAlso gefilterteListe.Count > 0)
 
-    'End Sub
+    End Sub
 End Class
