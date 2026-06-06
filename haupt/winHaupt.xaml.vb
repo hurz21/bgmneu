@@ -56,7 +56,9 @@ Public Class winHaupt
         Dim stored = My.Settings.ImmerLogouten ' Boolean (Default: True)
         chkbImmerLogouten.IsChecked = stored
         gisLogouten = stored
+        'gisLogouten = False ' vorübergehend deaktiviert, da es zu Problemen führt. Bitte in Zukunft überdenken und ggf. optimieren.
         tools.themendefinitionsdatei = My.Settings.Themendatei
+
 
 
         tabEig.SelectedIndex = My.Settings.ReiterAppNummer
@@ -152,13 +154,21 @@ Public Class winHaupt
         End If
 
 
-        dummyaufrufStarten()
+        'dummyaufrufStarten()
         Dim liste As List(Of clsFlurstueck) = cls20Cookies.LadeFlurstuecke()
         cmb20fst.ItemsSource = liste
         Dim aliste As List(Of clsAdress) = cls20Cookies.LadeAdressen()
         cmb20adr.ItemsSource = aliste
         Dim vorhabenliste As List(Of clsPGvorhaben) = cls20Cookies.LadePGcookies()
         cmbPGNR.ItemsSource = vorhabenliste
+
+
+        If My.Settings.ReiterAppNummer = 2 Then
+            cmbGemarkungen.IsDropDownOpen = True
+        End If '  '3=bplan  2=fst 1=adr  0=baulast
+        If My.Settings.ReiterAppNummer = 1 Then
+            cmbGemeinden.IsDropDownOpen = True
+        End If '  '3=bplan  2=fst 1=adr  0=baulast
         istgeladen = True
     End Sub
 
@@ -752,6 +762,7 @@ Public Class winHaupt
         Dim isChecked = If(chkbImmerLogouten.IsChecked, True, False)
         gisLogouten = isChecked
         My.Settings.ImmerLogouten = isChecked
+        'My.Settings.ImmerLogouten = False
         My.Settings.Save()
     End Sub
 

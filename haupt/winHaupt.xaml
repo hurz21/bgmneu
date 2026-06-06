@@ -123,7 +123,7 @@
                             <Label Width="75" FontSize="10">Gemarkung:</Label>
                             <ComboBox x:Name="cmbGemarkungen" HorizontalAlignment="Left"
                                       SelectionChanged="cmbGemarkungen_SelectionChanged"
-                                      Height="25" Width="80"  FontSize="10"/>
+                                      Height="25" Width="80"  FontSize="10" MaxDropDownHeight="800"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Label Width="75" FontSize="10">Flur:</Label>
