@@ -44,7 +44,7 @@ Public Class winHaupt
             tools.eigentuemerAbfrageErlaubt = (result.ToLower.Contains("umwelt") Or result.ToLower.Contains("bauaufsicht"))
         End If
 
-        tools.readFSTCookie(gemarkung, flur, zaehler, nenner, "bgm_FST_cookie.txt")
+        ' tools.readFSTCookie(gemarkung, flur, zaehler, nenner, "bgm_FST_cookie.txt")
         'gemarkungsindex = gemarkung
 
         'nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "startmeup")
@@ -826,6 +826,7 @@ Public Class winHaupt
 
     Private Sub cmbGemeinden_SelectionChanged(sender As Object, e As SelectionChangedEventArgs) Handles cmbGemeinden.SelectionChanged
         e.Handled = True
+        If Not istgeladen Then Exit Sub
         tbStrasseFilter.Text = ""
         cmbstrassen.ItemsSource = Nothing
     End Sub

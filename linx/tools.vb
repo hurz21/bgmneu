@@ -1918,6 +1918,26 @@ Module tools
                             "   FROM [LKOF].[dbo].[VW_lieg_eigentuemerGST_web] " &
                             "   where gemarkungsnummer=" & gemcode & " and flur=" & flur &
                             "   order by zaehler,nenner "
+
+
+            fstREC.mydb.SQL = "SELECT kombi, zaehler, nenner, Flurstueckskennzeichen " &
+                             "FROM (  " &
+                             "SELECT DISTINCT CONCAT(zaehler, '/', nenner) AS kombi, " &
+                             "zaehler,nenner,Flurstueckskennzeichen, " &
+                             "CASE WHEN zaehler NOT LIKE '%[^0-9]%' THEN 0 ELSE 1 END AS zaehler_isnum, " &
+                             "TRY_CAST(zaehler AS INT) AS zaehler_num, " &
+                             "CASE WHEN nenner NOT LIKE '%[^0-9]%' THEN 0 ELSE 1 END AS nenner_isnum, " &
+                             "TRY_CAST(nenner AS INT) AS nenner_num " &
+                             "FROM [LKOF].[dbo].[VW_lieg_eigentuemerGST_web] " &
+                             "WHERE gemarkungsnummer = " & gemcode & " " &
+                             "AND flur = " & flur & " " &
+                             ") t " &
+                             "ORDER BY zaehler_isnum, zaehler_num, nenner_isnum, nenner_num; "
+
+
+
+
+
             l(fstREC.mydb.SQL)
             hinweis = fstREC.getDataDT()
             If fstREC.dt.Rows.Count < 1 Then
