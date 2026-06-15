@@ -22,7 +22,6 @@ Public Class clsAdress
     Sub New()
         ' TODO: Complete member initialization 
     End Sub
-
     Public ReadOnly Property Anzeige As String
         Get
             Return $"{gemeindeName} -  {strasseName}, ({AZ})"

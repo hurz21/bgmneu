@@ -11,11 +11,11 @@ Imports System.Windows
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("bgm")>
+<Assembly: AssemblyTitle("bgmIngrada")>
 <Assembly: AssemblyDescription("")>
-<Assembly: AssemblyCompany("KREIS OFFENBACH")>
-<Assembly: AssemblyProduct("bgm")>
-<Assembly: AssemblyCopyright("Copyright © KREIS OFFENBACH 2020")>
+<Assembly: AssemblyCompany("ANDROIDDREAMS")>
+<Assembly: AssemblyProduct("bgmIngrada")>
+<Assembly: AssemblyCopyright("Copyright © ANDROIDDREAMS 2020")>
 <Assembly: AssemblyTrademark("")>
 <Assembly: ComVisible(false)>
 

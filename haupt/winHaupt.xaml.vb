@@ -513,7 +513,7 @@ Public Class winHaupt
         Dim fst As New clsFlurstueck
         Dim strassennamen As New List(Of myComboBoxItem)
         lage_lage = "== Lage: " & aktadr.gemeindeName & ", " & aktadr.strasseName & " =="
-        lageliste = clsGIStools.getLage(aktadr.strasseName, aktadr.gemeindebigNRstring, mitfkz:=True)
+        lageliste = clsGIStools.getLage(aktadr.strasseName, aktadr.gemeindebigNRstring, mitfkz:=True, nurstart:=True)
         If lageliste.Count > 0 Then
             'fkz zerlegen  
             fst.Flurstuecksskennzeichen = lageliste.Item(0).myindex.ToString
@@ -988,13 +988,13 @@ Public Class winHaupt
 
     Private Sub cmbPGNR_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
         'e.Handled = True
-        'e.Handled = True
-        'Dim adr = TryCast(cmbPGNR.SelectedItem, clsPGvorhaben)
-        'If adr IsNot Nothing Then
-        '    tbPGJahr.Text = adr.jahr
-        '    tbPGnr.Text = adr.nr
-        '    suchePG(False)
-        'End If
+        e.Handled = True
+        Dim adr = TryCast(cmbPGNR.SelectedItem, clsPGVorhaben)
+        If adr IsNot Nothing Then
+            tbPGJahr.Text = adr.Jahr
+            tbPGnr.Text = adr.Nr
+            suchePG(False)
+        End If
     End Sub
 
     Private Sub btnfst2PG_Click(sender As Object, e As RoutedEventArgs)
@@ -1132,27 +1132,46 @@ Public Class winHaupt
 
     End Sub
 
-    Private Async Sub tbStrasseFilter_TextChanged(sender As Object, e As TextChangedEventArgs) Handles tbStrasseFilter.TextChanged
+    Private Sub tbStrasseFilter_TextChanged(sender As Object, e As TextChangedEventArgs) Handles tbStrasseFilter.TextChanged
+        e.Handled = True
         If Not istgeladen Then Return
-        Dim filter = tbStrasseFilter.Text.Trim()
-        If filter.Length < 2 Then
+        Dim filter = tbStrasseFilter.Text
+        If filter.Length < 3 Then
             cmbstrassen.ItemsSource = Nothing
-            Return
+            l("tbStrasseFilter_TextChanged: Filter zu kurz  " & filter)
+            Exit Sub
+        End If
+        l("neustart")
+        'Dim item As myComboBoxItem = CType(cmbstrassen.SelectedItem, myComboBoxItem)
+        Dim gemeindeitem As myComboBoxItem = CType(cmbGemeinden.SelectedItem, myComboBoxItem)
+        Dim nurstart As Boolean = True
+        If chkNurStart.IsChecked Then
+            nurstart = True
+        Else
+            nurstart = False
         End If
 
-        Dim gemeindeKey = If(cmbGemeinden.SelectedValue, "").ToString()
+
+        l("gemeindeitem mySttring " & gemeindeitem.myindex & "  " & filter)
+        'Dim gemeindeKey = If(cmbGemeinden.SelectedValue, "").ToString()
+        'gemeindeKey = gemeindeitem.myindex
+        'l("gemeindeKey " & gemeindeKey)
         Try
-            Dim result As List(Of myComboBoxItem) =
-                Await Task.Run(Function()
-                                   Return clsGIStools.getLage(filter, gemeindeKey, mitfkz:=False)
-                               End Function)
+            'Dim result As List(Of myComboBoxItem) =
+            '    Await Task.Run(Function()
+            '                       Return clsGIStools.getLage(filter, gemeindeitem.myindex, mitfkz:=False)
+            '                   End Function)
+            Dim result As List(Of myComboBoxItem) = clsGIStools.getLage(filter, gemeindeitem.myindex, mitfkz:=False, nurstart)
             If result Is Nothing Then
-                Debug.Print("ss")
+                'Debug.Print("ss")
+                'l("tbStrasseFilter_TextChanged: Keine Ergebnisse gefunden")
             End If
+            'l("tbStrasseFilter_TextChanged: Ergebnisse gefunden: " & If(result IsNot Nothing, result.Count.ToString(), "0"))
             cmbstrassen.ItemsSource = result
             cmbstrassen.DisplayMemberPath = "mySttring"
             cmbstrassen.SelectedValuePath = "myindex"
             cmbstrassen.IsDropDownOpen = (result IsNot Nothing AndAlso result.Count > 0)
+            l("tbStrasseFilter_TextChanged ende")
         Catch ex As Exception
             l("tbStrasseFilter_TextChanged: " & ex.ToString())
         End Try
@@ -1231,6 +1250,10 @@ Public Class winHaupt
         cmbFstKombi.DisplayMemberPath = "mySttring"
         cmbFstKombi.SelectedValuePath = "myindex"
         cmbFstKombi.IsDropDownOpen = (gefilterteListe IsNot Nothing AndAlso gefilterteListe.Count > 0)
+
+    End Sub
+
+    Private Sub tbStrasseFilter_TextChanged_1(sender As Object, e As TextChangedEventArgs)
 
     End Sub
 End Class

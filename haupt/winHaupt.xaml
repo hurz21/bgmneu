@@ -6,7 +6,7 @@
        
         xmlns:local="clr-namespace:bgm" AllowDrop="True"
         mc:Ignorable="d" Left="1" WindowStyle="ToolWindow"    Drop="Window_Drop"
-        Title="BGM" Height="356" Width="289" Background="Beige" >
+        Title="BGM" Height="381" Width="289" Background="Beige" >
     <DockPanel Margin="5">
         <StackPanel Orientation="Vertical"  >
             <Button Name="btnGIS" Click="btnGIS_Click" Content="GIS" Margin="5,9,5,5" Visibility="Collapsed"
@@ -25,7 +25,7 @@
                                       IsDefault="True" Margin="15"
                                        Drop="Window_Drop" AllowDrop="True"/>
                             <Button Name="btnBLloeschen" Click="btnBLloeschen_Click"
-                                    Content="Baulast löschen" Margin="15,0,15,0"/>    
+                                    Content="Baulast löschen" Margin="15,0,15,0"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Width="150" Margin="1">
 
@@ -60,15 +60,28 @@
                         <StackPanel Orientation="Horizontal" >
                             <Label Width="75" FontSize="10">Gemeinde:</Label>
                             <ComboBox x:Name="cmbGemeinden" HorizontalAlignment="Left" 
-                                            Height="25" Width="160"  FontSize="10"/>
+                                            Height="25" Width="160"  FontSize="10"
+                                        DisplayMemberPath= "mySttring"
+                                      />
                         </StackPanel>
+
                         <StackPanel Orientation="Horizontal">
                             <Label Width="75" FontSize="10"  >Strassenfilter:</Label>
-                            <TextBox Name="tbStrasseFilter" Width="160" Height="30" Padding="2" 
-                                     FontSize="11"  ></TextBox>
-                            <ComboBox x:Name="cmbstrassen" SelectionChanged="cmbstrassen_SelectionChanged" 
+                            <Border BorderThickness="0.5" BorderBrush="Black">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBox Name="tbStrasseFilter" Width="80" Height="30" Padding="2" 
+                                     FontSize="11" TextChanged="tbStrasseFilter_TextChanged" ></TextBox>
+                                    <CheckBox x:Name="chkNurStart" Width="75" Height="21"  Margin="5,9,0,0"
+                                       IsChecked="True"
+                                      ToolTip="Nur Anfang des Straßennamens berücksichtigen oder innerhalb des Straßennamens suchen">
+                                        Nur Anfang ...
+                                    </CheckBox>
+                                    <ComboBox x:Name="cmbstrassen" SelectionChanged="cmbstrassen_SelectionChanged" 
                                       HorizontalAlignment="Left" Height="30"  Width="20"
+                                       DisplayMemberPath= "mySttring"
                                     FontSize="10"/>
+                                </StackPanel>
+                            </Border>
                         </StackPanel>
 
 
@@ -123,6 +136,7 @@
                             <Label Width="75" FontSize="10">Gemarkung:</Label>
                             <ComboBox x:Name="cmbGemarkungen" HorizontalAlignment="Left"
                                       SelectionChanged="cmbGemarkungen_SelectionChanged"
+                                       DisplayMemberPath= "mySttring"
                                       Height="25" Width="80"  FontSize="10" MaxDropDownHeight="800"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">

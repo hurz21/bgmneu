@@ -294,7 +294,7 @@ Public Class clsGIStools
         End Try
     End Function
 
-    Friend Shared Function getLage(tbStrasseFilter As String, gemeinde As String, mitfkz As Boolean) As List(Of myComboBoxItem)
+    Friend Shared Function getLage(tbStrasseFilter As String, gemeinde As String, mitfkz As Boolean, nurstart As Boolean) As List(Of myComboBoxItem)
         Dim hinweis As String
         'Dim a() As String
         Dim cbl As New List(Of myComboBoxItem)
@@ -310,6 +310,13 @@ Public Class clsGIStools
 
 
             'SELECT  distinct lagebezeichnung,flurstueckskennzeichen  
+            Dim suchausdruck As String
+
+            If nurstart Then
+                suchausdruck = "lagebezeichnung like '" & tbStrasseFilter & "%' "
+            Else
+                suchausdruck = "lagebezeichnung like '%" & tbStrasseFilter & "%' "
+            End If
 
             If mitfkz Then
                 fstREC.mydb.SQL = "SELECT  distinct lagebezeichnung,flurstueckskennzeichen  FROM   dbo.tbl_lieg_flurstueck AS f LEFT OUTER JOIN       dbo.tbl_reg_gemeinde AS g ON f.gemeinde_gemeindeschluessel = g.gemeindeschluessel " &
@@ -320,27 +327,42 @@ Public Class clsGIStools
             Else
                 fstREC.mydb.SQL = "SELECT  distinct lagebezeichnung  FROM   dbo.tbl_lieg_flurstueck AS f LEFT OUTER JOIN       dbo.tbl_reg_gemeinde AS g ON f.gemeinde_gemeindeschluessel = g.gemeindeschluessel " &
                       "where lagebezeichnung is not null and " &
-                      "lagebezeichnung like '" & tbStrasseFilter & "%' " &
-                      "and gemeindeschluessel ='" & gemeinde & "'  " &
+                       suchausdruck &
+                      " And gemeindeschluessel ='" & gemeinde & "'  " &
                       "order by lagebezeichnung"
+                '               fstREC.mydb.SQL =
+                '                    " SELECT DISTINCT lagebezeichnung FROM dbo.tbl_lieg_flurstueck AS f LEFT JOIN dbo.tbl_reg_gemeinde AS g " &
+                '"   ON f.gemeinde_gemeindeschluessel = g.gemeindeschluessel " &
+                '" WHERE lagebezeichnung IS NOT NULL " &
+                '"   AND lagebezeichnung LIKE 'Am Bieberbach%' -- oder 'am%' je nach Groß/klein " &
+                '"   AND gemeindeschluessel = '06438001' ORDER BY " &
+                '"   TRY_CAST( " &
+                '"     -- letzte zusammenhängende Ziffernfolge aus lagebezeichnung extrahieren " &
+                '"     REVERSE(SUBSTRING( " &
+                '"       REVERSE(lagebezeichnung), " &
+                '"       1,      PATINDEX('%[^0-9]%', REVERSE(lagebezeichnung) + 'a') - 1    )) AS INT  ), " &
+                '"   lagebezeichnung; " 
             End If
-
-
             l(fstREC.mydb.SQL)
             hinweis = fstREC.getDataDT()
             If fstREC.dt.Rows.Count > 0 Then
-                For i = 0 To fstREC.dt.Rows.Count - 1
-                    cb = New myComboBoxItem
-                    cb.mySttring = fstREC.dt.Rows(i).Item(0).ToString.Trim
-                    If mitfkz Then
+                If mitfkz Then
+                    For i = 0 To fstREC.dt.Rows.Count - 1
+                        cb = New myComboBoxItem
+                        cb.mySttring = fstREC.dt.Rows(i).Item(0).ToString.Trim
                         cb.myindex = fstREC.dt.Rows(i).Item(1).ToString.Trim
-                    Else
-                        cb.myindex = "" 'fstREC.dt.Rows(i).Item(1).ToString.Trim
-                    End If
-                    cbl.Add(cb)
-                Next
+                        cbl.Add(cb)
+                    Next
+                Else
+                    For i = 0 To fstREC.dt.Rows.Count - 1
+                        cb = New myComboBoxItem
+                        cb.mySttring = fstREC.dt.Rows(i).Item(0).ToString.Trim
+                        cb.myindex = "" 'fstREC.dt.Rows(i).Item(1).ToString.Trim 
+                        cbl.Add(cb)
+                    Next
+                End If
             Else
-                Debug.Print(clsDBtools.fieldvalue(fstREC.dt.Rows(0).Item(0)))
+                'Debug.Print(clsDBtools.fieldvalue(fstREC.dt.Rows(0).Item(0)))
                 'Return True
             End If
             Return cbl
