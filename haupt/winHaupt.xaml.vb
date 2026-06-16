@@ -942,26 +942,26 @@ Public Class winHaupt
         Dim vorhaben1 As String
         Dim fstliste As List(Of clsFlurstueck)
         Dim metadata As List(Of myComboBoxItem)
-        If clsActiveDir.fdkurz.Contains("mwelt") Then
-            If CInt(tbPGnr.Text) < 80000 Then
+        'If clsActiveDir.fdkurz.Contains("mwelt") Then
+        '    If CInt(tbPGnr.Text) < 80000 Then
 
-                MessageBox.Show("Dem FD Umwelt sind nur Nr > 80000 erlaubt!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
-                If Environment.UserName <> "Feinen_J" Then Exit Sub
-            End If
-        End If
-        If clsActiveDir.fdkurz.Contains("auaufsicht") Then
-            If CInt(tbPGnr.Text) > 80000 Then
-                MessageBox.Show("Dem FD Bauaufsicht sind nur Nr < 80000 erlaubt!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+        '        MessageBox.Show("Dem FD Umwelt sind nur Nr > 80000 erlaubt!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+        '        If Environment.UserName <> "Feinen_J" Then Exit Sub
+        '    End If
+        'End If
+        'If clsActiveDir.fdkurz.Contains("auaufsicht") Then
+        '    If CInt(tbPGnr.Text) > 80000 Then
+        '        MessageBox.Show("Dem FD Bauaufsicht sind nur Nr < 80000 erlaubt!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
 
-                If Environment.UserName <> "Feinen_J" Then Exit Sub
-            End If
-        End If
-        If Not (clsActiveDir.fdkurz.Contains("mwelt") Or clsActiveDir.fdkurz.Contains("auaufsicht")) Then
-            MessageBox.Show("Dem FD Umwelt sind nur Nr > 80000 erlaubt!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+        '        If Environment.UserName <> "Feinen_J" Then Exit Sub
+        '    End If
+        'End If
+        'If Not (clsActiveDir.fdkurz.Contains("mwelt") Or clsActiveDir.fdkurz.Contains("auaufsicht")) Then
+        '    MessageBox.Show("Dem FD Umwelt sind nur Nr > 80000 erlaubt!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
 
 
-            If Environment.UserName <> "Feinen_J" Then Exit Sub
-        End If
+        '    If Environment.UserName <> "Feinen_J" Then Exit Sub
+        'End If
         fstliste = probaug.klaereanzahlFST(tbPGJahr.Text, tbPGnr.Text, metadata, vorhaben1)
         If fstliste Is Nothing Then
             'MsgBox("Das Aktenzeichen ist ungültig!")
@@ -1134,7 +1134,11 @@ Public Class winHaupt
 
     Private Sub tbStrasseFilter_TextChanged(sender As Object, e As TextChangedEventArgs) Handles tbStrasseFilter.TextChanged
         e.Handled = True
-        If Not istgeladen Then Return
+        If Not istgeladen Then Exit Sub
+        sucheFilteredStrassen()
+    End Sub
+
+    Private Sub sucheFilteredStrassen()
         Dim filter = tbStrasseFilter.Text
         If filter.Length < 3 Then
             cmbstrassen.ItemsSource = Nothing
@@ -1150,12 +1154,7 @@ Public Class winHaupt
         Else
             nurstart = False
         End If
-
-
         l("gemeindeitem mySttring " & gemeindeitem.myindex & "  " & filter)
-        'Dim gemeindeKey = If(cmbGemeinden.SelectedValue, "").ToString()
-        'gemeindeKey = gemeindeitem.myindex
-        'l("gemeindeKey " & gemeindeKey)
         Try
             'Dim result As List(Of myComboBoxItem) =
             '    Await Task.Run(Function()
@@ -1253,7 +1252,11 @@ Public Class winHaupt
 
     End Sub
 
-    Private Sub tbStrasseFilter_TextChanged_1(sender As Object, e As TextChangedEventArgs)
 
+
+    Private Sub chkNurStart_Checked(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+        If Not istgeladen Then Exit Sub
+        sucheFilteredStrassen()
     End Sub
 End Class

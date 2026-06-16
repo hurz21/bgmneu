@@ -72,7 +72,7 @@
                                     <TextBox Name="tbStrasseFilter" Width="80" Height="30" Padding="2" 
                                      FontSize="11" TextChanged="tbStrasseFilter_TextChanged" ></TextBox>
                                     <CheckBox x:Name="chkNurStart" Width="75" Height="21"  Margin="5,9,0,0"
-                                       IsChecked="True"
+                                       IsChecked="True" Checked="chkNurStart_Checked" Unchecked="chkNurStart_Checked"
                                       ToolTip="Nur Anfang des Straßennamens berücksichtigen oder innerhalb des Straßennamens suchen">
                                         Nur Anfang ...
                                     </CheckBox>
