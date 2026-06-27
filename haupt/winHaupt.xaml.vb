@@ -33,14 +33,14 @@ Public Class winHaupt
         Else
             tbblnr.Text = cookieBl
         End If
-        Dim gemarkung, flur, zaehler, nenner, gemarkungsindex As String
-        Dim gemeinde, strasse, hausnr, lage, gemeindeindex As String
+        Dim gemarkung As String
+        'Dim gemeinde, strasse, hausnr, lage, gemeindeindex As String
 
         LoadHistory() : ComboHistory.ItemsSource = Nothing : ComboHistory.ItemsSource = historyList
         ComboHistory.DisplayMemberPath = "Anzeige"
         If clsActiveDir.getall(Environment.UserName) Then
             Dim result = clsActiveDir.fdkurz
-            Title = "BGM 2026, " & clsActiveDir.fdkurz
+            Title = "BGM, " & clsActiveDir.fdkurz & ", " & My.Settings.Themendatei.Replace(".txt", "").Replace("themendatei", "Thema: ")
             tools.eigentuemerAbfrageErlaubt = (result.ToLower.Contains("umwelt") Or result.ToLower.Contains("bauaufsicht"))
         End If
 
@@ -812,7 +812,7 @@ Public Class winHaupt
 
             My.Settings.Themendatei = themendatei.Trim
             My.Settings.Save()
-
+            Title = "BGM, " & clsActiveDir.fdkurz & ", " & My.Settings.Themendatei.Replace(".txt", "").Replace("themendatei", "Thema: ")
         Catch ex As Exception
             l("cmbThemendatei_SelectionChanged " & ex.ToString)
         End Try
@@ -1249,14 +1249,36 @@ Public Class winHaupt
         cmbFstKombi.DisplayMemberPath = "mySttring"
         cmbFstKombi.SelectedValuePath = "myindex"
         cmbFstKombi.IsDropDownOpen = (gefilterteListe IsNot Nothing AndAlso gefilterteListe.Count > 0)
-
     End Sub
-
-
 
     Private Sub chkNurStart_Checked(sender As Object, e As RoutedEventArgs)
         e.Handled = True
         If Not istgeladen Then Exit Sub
         sucheFilteredStrassen()
+    End Sub
+
+    Private Sub btnKreisgis_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+        Dim url As String
+        Dim themen As String
+        tools.themendefinitionsdatei = My.Settings.Themendatei
+        themen = tools.getthemen("", tools.themendefinitionsdatei)
+        l(" themen " & themen)
+        'theme=BauenUndUmwelt,Eigene%20Daten,Grenzen,Liegenschaften
+        Dim logout = "https://gis.kreis-of.de/LKOF/asp/login.asp?logout=true&m=1"
+        If gisLogouten Then
+            Process.Start(logout)
+            Threading.Thread.Sleep(1000)
+        End If
+
+        url = "https://gis.kreis-of.de/LKOF/asp/main.asp?" & themen & "&skipwelcome=true"
+        l("url: " & url)
+        Process.Start(url)
+
+    End Sub
+
+    Private Sub btnOptionen_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+        tabEig.SelectedItem = tabOptionen
     End Sub
 End Class

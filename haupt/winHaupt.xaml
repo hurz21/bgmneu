@@ -9,10 +9,20 @@
         Title="BGM" Height="381" Width="289" Background="Beige" >
     <DockPanel Margin="5">
         <StackPanel Orientation="Vertical"  >
-            <Button Name="btnGIS" Click="btnGIS_Click" Content="GIS" Margin="5,9,5,5" Visibility="Collapsed"
-                    ToolTip="zeigt unmittelbar die PDF-Datei der Baulast an"/>
-            <Button Name="btnbplan"   Click="btnbplan_Click" Visibility="Collapsed" Margin="5">Bebauungspläne</Button>
-
+            <StackPanel Orientation="Horizontal">
+                
+            <Button Name="btnKreisgis"  Click="btnKreisgis_Click"  Visibility="Visible" Margin="5" Height="25"
+            Background="Beige" Foreground="Black"
+            >GIS ganzer Kreis Offenbach</Button>
+                <Button Name="btnOptionen"  Click="btnOptionen_Click"  Visibility="Visible" Margin="5" Height="25"
+   Background="Beige" Foreground="Black"
+   >
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock >Einstellungen</TextBlock>
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE115;" FontSize="19"  />
+                    </StackPanel></Button>
+            </StackPanel>  
+            
             <TabControl x:Name="tabEig" FontSize="9" >
                 <TabItem  Name="tabBaulast"  FontSize="9" Header="Baulast"  VerticalAlignment="Top">
                     <!--<TabItem.Header>
@@ -270,7 +280,7 @@
                                  AcceptsTab="True"   TextWrapping="Wrap"/>
                     </StackPanel>
                 </TabItem>
-                <TabItem                            >
+                <TabItem      Name="tabOptionen"                       >
                     <TabItem.Header>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE115;" FontSize="9"  />
@@ -290,6 +300,12 @@
                                   SelectionChanged="cmbThemendatei_SelectionChanged"/>
                         </StackPanel>
                         <Button Name="btnTutorial" Click="btnTutorial_Click" Margin="5">Tutorials</Button>
+                    </StackPanel>
+                </TabItem>
+                <TabItem Name="tabEigentumer" FontSize="9" Header="Eigentümer" VerticalAlignment="Top"
+                         HorizontalContentAlignment="Left">
+                    <StackPanel>
+                        <TextBlock HorizontalAlignment="Center">under construction</TextBlock>
                     </StackPanel>
                 </TabItem>
             </TabControl>

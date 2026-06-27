@@ -108,7 +108,7 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>resouirces\schwei1.ico</ApplicationIcon>
+    <ApplicationIcon>gis1.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <TargetZone>LocalIntranet</TargetZone>
@@ -341,6 +341,7 @@
   <ItemGroup>
     <Content Include="DocumentFormat.OpenXml.dll" />
     <Content Include="DocumentFormat.OpenXml.Framework.dll" />
+    <Resource Include="gis1.ico" />
     <Resource Include="resouirces\schwei1.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
