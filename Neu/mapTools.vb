@@ -86,7 +86,10 @@ Public Class mapTools
                     'bpl.myindex = fstREC.dt.Rows(i).Item("guid").ToString
                     bpl.myindex = fstREC.dt.Rows(i).Item("name").ToString & "#" &
                                     fstREC.dt.Rows(i).Item("vorname").ToString & "#" &
-                                    fstREC.dt.Rows(i).Item("wohnortstrasse").ToString
+                                    fstREC.dt.Rows(i).Item("wohnortstrasse").ToString & "#" &
+                                    fstREC.dt.Rows(i).Item("wohnortplz").ToString() & "#" &
+                                    fstREC.dt.Rows(i).Item("wohnort").ToString()
+
                     If fstREC.dt.Rows(i).Item("geburtsDatum").ToString = String.Empty Then
                         gebdatum = ""
                     Else
@@ -115,7 +118,8 @@ Public Class mapTools
         End Try
     End Function
 
-    Friend Shared Function getFST4nameVname(nachname As String, vorname As String, wohnortstrasse As String) As List(Of clsFlurstueck)
+    Friend Shared Function getFST4nameVname(nachname As String, vorname As String, wohnortstrasse As String,
+                                            plz As String, gemeinde As String) As List(Of clsFlurstueck)
         'SELECT  g.flurstueckskennzeichen,[Anrede],[akademischegrade],[name],[vorname],[wohnortstrasse],[wohnortplz], [wohnort],[geburtsdatum],[namenszusatz],[postfach],[wohnortland],[eigentuemerzusatz],[geburtsname], [nationalitaet],[adressherkunft],[wohnortortsteil],[postfachplz]     
         ' From [LKOF].[dbo].[VW_lieg_eigentuemerGST_web] g, [LKOF].[dbo].[VW_lieg_eigentuemer_web] p   
         ' Where p.guid = g.person_guid And p.name Like 'bürger%'  
@@ -128,7 +132,7 @@ Public Class mapTools
         spalten = " distinct g.flurstueckskennzeichen"
         Try
             l(" MOD getBULKeigentuemervorschlaege anfang")
-            personensql = makesqlperson(nachname, vorname, wohnortstrasse)
+            personensql = makesqlperson(nachname, vorname, wohnortstrasse, plz, gemeinde)
             fstREC.mydb.SQL = "SELECT  " & spalten &
                               " FROM   [LKOF].[dbo].[VW_lieg_eigentuemerGST_web] g, [LKOF].[dbo].[VW_lieg_eigentuemer_web] p    " &
                               "          where p.guid = g.person_guid  " &
@@ -161,8 +165,9 @@ Public Class mapTools
         End Try
     End Function
 
-    Private Shared Function makesqlperson(nachname As String, vorname As String, wohnortstrasse As String) As String
-        Dim result, nachnamestring, vornamestring, wohnstrassestring As String
+    Private Shared Function makesqlperson(nachname As String, vorname As String, wohnortstrasse As String,
+                                           plz As String, gemeinde As String) As String
+        Dim result, nachnamestring, vornamestring, wohnstrassestring, plzstring, gemeindestring As String
         ' "          and p.name ='" & nachname & "'" &
         result = ""
         Try
@@ -176,12 +181,22 @@ Public Class mapTools
             Else
                 vornamestring = " and p.vorname ='" & vorname & "' "
             End If
-            If IsNothingOrEmpty(vorname) Then
-                wohnortstrasse = " "
+            If IsNothingOrEmpty(wohnortstrasse) Then
+                wohnstrassestring = " "
             Else
-                wohnortstrasse = " and p.wohnortstrasse ='" & wohnortstrasse & "' "
+                wohnstrassestring = " and p.wohnortstrasse ='" & wohnortstrasse & "' "
             End If
-            result = nachnamestring & vornamestring & wohnstrassestring
+            If IsNothingOrEmpty(plz) Then
+                plzstring = " "
+            Else
+                plzstring = " and p.wohnortplz ='" & plz & "' "
+            End If
+            If IsNothingOrEmpty(gemeinde) Then
+                gemeindestring = " "
+            Else
+                gemeindestring = " and p.wohnort ='" & gemeinde & "' "
+            End If
+            result = nachnamestring & vornamestring & wohnstrassestring & plzstring & gemeindestring
             Return result
         Catch ex As Exception
             Return result

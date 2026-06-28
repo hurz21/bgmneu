@@ -7,7 +7,7 @@ Public Class probaug
     'Public Shared katasterGem(35) As String
     Public Shared katasterGemarkungslist As New List(Of myComboBoxItem)
     Public Shared probaugGemarkungsdict As New Dictionary(Of Integer, String)
-    Public Shared Function bildeFKZstring(fstliste As List(Of clsFlurstueck)) As String
+    Public Shared Function bildeFKZstring(fstliste As List(Of clsFlurstueck), maximum As Integer) As String
         l("bildeFKZstring: ")
         Dim summe As String = ""
         Dim treffer As Integer = 0
@@ -23,7 +23,9 @@ Public Class probaug
                 Else
 
                 End If
-
+                If treffer = maximum Then
+                    Return summe
+                End If
             Next
             Return summe
         Catch ex As Exception

@@ -1957,7 +1957,8 @@ Module tools
         End Try
     End Function
 
-    Friend Function erzeugeCSVDateiFSTbulk(csvdatei As String, bULKfst2nameList As List(Of clsFlurstueck)) As Boolean
+    Friend Function erzeugeCSVDateiFSTbulk(csvdatei As String, bULKfst2nameList As List(Of clsFlurstueck),
+                                           abschlusszeile As String) As Boolean
 
         Dim hinweis As String = ""
         Dim sw As IO.StreamWriter
@@ -1979,7 +1980,7 @@ Module tools
             For i = 0 To bULKfst2nameList.Count - 1
                 sb = New Text.StringBuilder
                 sb.Append(bULKfst2nameList(i).flurstueckZuFKZ & t)
-                sb.Append(bULKfst2nameList(i).gemarkungstext & t)
+                sb.Append(clsString.umlaut2ue(bULKfst2nameList(i).gemarkungstext) & t)
                 sb.Append(bULKfst2nameList(i).gemcode & t)
                 sb.Append(bULKfst2nameList(i).flur & t)
                 sb.Append(bULKfst2nameList(i).zaehler & t)
@@ -1987,6 +1988,8 @@ Module tools
                 sw.WriteLine(sb.ToString)
                 sb.Clear()
             Next
+            sw.WriteLine("")
+            sw.WriteLine(clsString.umlaut2ue(abschlusszeile))
             sw.Close()
             sw.Dispose()
             Return True

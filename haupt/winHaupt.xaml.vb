@@ -968,7 +968,7 @@ Public Class winHaupt
             MessageBox.Show("Das Aktenzeichen ist ungültig!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
             Exit Sub
         End If
-        Dim fkzstring = probaug.bildeFKZstring(fstliste)
+        Dim fkzstring = probaug.bildeFKZstring(fstliste, 150)
         Dim flurstueckskennzeichen = fkzstring
         tools.gisLogoutUndStartFKZ(flurstueckskennzeichen, gisLogouten)
 
@@ -1288,6 +1288,11 @@ Public Class winHaupt
         Dim vergleichVName As String = "="
         Dim name, vname As String
 
+        tbeigbulkAuswahl.Text = ""
+        btnBULKexcel.IsEnabled = False
+        btnBULKimGIS.IsEnabled = False
+        cmbBULKeig.ItemsSource = Nothing
+
         If tbeigbulkNAME.Text = String.Empty Then
             MsgBox("Der name fehlt")
             Exit Sub
@@ -1315,6 +1320,10 @@ Public Class winHaupt
 
         mapTools.BULKeigentuemerliste = mapTools.getBULKeigentuemervorschlaege(name, vergleichName,
                                                                       vname, vergleichVName)
+        If mapTools.BULKeigentuemerliste.Count > 0 Then
+            btnBULKexcel.IsEnabled = True
+            btnBULKimGIS.IsEnabled = True
+        End If
         cmbBULKeig.ItemsSource = mapTools.BULKeigentuemerliste
         cmbstrassen.DisplayMemberPath = "mySttring"
         cmbBULKeig.SelectedValuePath = "myindex"
@@ -1329,7 +1338,7 @@ Public Class winHaupt
         Dim personAuswahl As myComboBoxItem = CType(cmbBULKeig.SelectedItem, myComboBoxItem)
         Dim namensteile As String()
         namensteile = personAuswahl.myindex.Split("#"c)
-        mapTools.BULKfst2nameList = mapTools.getFST4nameVname(namensteile(0), namensteile(1), namensteile(2))
+        mapTools.BULKfst2nameList = mapTools.getFST4nameVname(namensteile(0), namensteile(1), namensteile(2), namensteile(3), namensteile(4))
         tbeigbulkAuswahl.Text = personAuswahl.myindex.Replace("#", " ") & Environment.NewLine &
                                  mapTools.BULKfst2nameList.Count & " Flurstücke gefunden."
 
@@ -1340,16 +1349,11 @@ Public Class winHaupt
 
     Private Sub btnBULKexcel_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
-
         Dim zieldatei As String
         zieldatei = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
         zieldatei = IO.Path.Combine(zieldatei, "bgm")
         zieldatei = IO.Path.Combine(zieldatei, "FSTliste" & Now.ToString("yyyyMMddhhmm") & ".csv")
-
-
-        '= tools.baulastenoutDir & "\Baulasten_katNichtOK" & Now.ToString("yyyyMMddhhmm") & ".csv"
-
-        If tools.erzeugeCSVDateiFSTbulk(zieldatei, mapTools.BULKfst2nameList) Then
+        If tools.erzeugeCSVDateiFSTbulk(zieldatei, mapTools.BULKfst2nameList, tbeigbulkAuswahl.Text) Then
             Process.Start(zieldatei)
         Else
             'MsgBox("Fehler bei der erzeugung der CSV-Datei: " & zieldatei)
@@ -1359,6 +1363,12 @@ Public Class winHaupt
 
     Private Sub btnBULKimGIS_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
+        Dim maximum = 150
+        If mapTools.BULKfst2nameList.Count > 150 Then
+            MessageBox.Show("Hinweis: Es können nicht mehr als 150 Flurstücke im GIS dargestellt werden: " & mapTools.BULKfst2nameList.Count & " sind zuviel", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
 
+        End If
+        Dim fkzstring = probaug.bildeFKZstring(mapTools.BULKfst2nameList, maximum)
+        tools.gisLogoutUndStartFKZ(fkzstring, gisLogouten)
     End Sub
 End Class

@@ -312,7 +312,7 @@
                                 <ComboBoxItem >like</ComboBoxItem>
                             </ComboBox>-->
                             <TextBox x:Name="tbeigbulkNAME"  Width="160" Background="LightGray" 
-                                     Text="quilling*"
+                                     Text="stadt dietzenbach*"
                                        ToolTip="Als Joker können Sie '*' verwenden. Z.B. *illing"></TextBox> 
                         </StackPanel> 
                         <StackPanel Orientation="Horizontal" >
@@ -355,11 +355,11 @@
                         <StackPanel Orientation="Horizontal">
                             <Label Width="75"  ></Label>
                             <Button Name="btnBULKexcel" Click="btnBULKexcel_Click"
-                                    IsEnabled="True"
+                                    IsEnabled="False"
                                     Width="60" Margin="5,5,5,5">in Excel
                             </Button>
                             <Button Name="btnBULKimGIS" Click="btnBULKimGIS_Click"
-                                     IsEnabled="True"
+                                     IsEnabled="False"
                                      Width="60" Margin="5,5,5,5">im GIS
                             </Button>
                         </StackPanel>
