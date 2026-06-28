@@ -1956,4 +1956,43 @@ Module tools
             Return liste
         End Try
     End Function
+
+    Friend Function erzeugeCSVDateiFSTbulk(csvdatei As String, bULKfst2nameList As List(Of clsFlurstueck)) As Boolean
+
+        Dim hinweis As String = ""
+        Dim sw As IO.StreamWriter
+
+        Dim sb As New Text.StringBuilder
+        Dim t As String = ";"
+        Dim fi As IO.FileInfo
+        Dim fo As IO.FileInfo
+        Try
+            sw = New IO.StreamWriter(csvdatei)
+            sw.AutoFlush = True
+            sb.Append("Flurstueckskennzeichen" & t)
+            sb.Append("Gemarkung" & t)
+            sb.Append("gemcode" & t)
+            sb.Append("flur" & t)
+            sb.Append("zaehler" & t)
+            sb.Append("nenner" & t)
+            sw.WriteLine(sb.ToString)
+            For i = 0 To bULKfst2nameList.Count - 1
+                sb = New Text.StringBuilder
+                sb.Append(bULKfst2nameList(i).flurstueckZuFKZ & t)
+                sb.Append(bULKfst2nameList(i).gemarkungstext & t)
+                sb.Append(bULKfst2nameList(i).gemcode & t)
+                sb.Append(bULKfst2nameList(i).flur & t)
+                sb.Append(bULKfst2nameList(i).zaehler & t)
+                sb.Append(bULKfst2nameList(i).nenner & t)
+                sw.WriteLine(sb.ToString)
+                sb.Clear()
+            Next
+            sw.Close()
+            sw.Dispose()
+            Return True
+        Catch ex As Exception
+            l("fehler in getAllPDFFiles4GUID-- " & ex.ToString)
+            Return False
+        End Try
+    End Function
 End Module

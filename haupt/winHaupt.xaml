@@ -19,7 +19,7 @@
    >
                     <StackPanel Orientation="Horizontal">
                         <TextBlock >Einstellungen</TextBlock>
-                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE115;" FontSize="19"  />
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE115;"  Margin="5,2,0,0"/>
                     </StackPanel></Button>
             </StackPanel>  
             
@@ -76,11 +76,11 @@
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal">
-                            <Label Width="75" FontSize="10"  >Strassenfilter:</Label>
+                            <Label Width="75"  >Strassenfilter:</Label>
                             <Border BorderThickness="0.5" BorderBrush="Black">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBox Name="tbStrasseFilter" Width="80" Height="30" Padding="2" 
-                                     FontSize="11" TextChanged="tbStrasseFilter_TextChanged" ></TextBox>
+                                      TextChanged="tbStrasseFilter_TextChanged" ></TextBox>
                                     <CheckBox x:Name="chkNurStart" Width="75" Height="21"  Margin="5,9,0,0"
                                        IsChecked="True" Checked="chkNurStart_Checked" Unchecked="chkNurStart_Checked"
                                       ToolTip="Nur Anfang des Straßennamens berücksichtigen oder innerhalb des Straßennamens suchen">
@@ -89,7 +89,7 @@
                                     <ComboBox x:Name="cmbstrassen" SelectionChanged="cmbstrassen_SelectionChanged" 
                                       HorizontalAlignment="Left" Height="30"  Width="20"
                                        DisplayMemberPath= "mySttring"
-                                    FontSize="10"/>
+                                    />
                                 </StackPanel>
                             </Border>
                         </StackPanel>
@@ -283,8 +283,7 @@
                 <TabItem      Name="tabOptionen"                       >
                     <TabItem.Header>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE115;" FontSize="9"  />
-
+                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE115;" FontSize="9"  /> 
                         </StackPanel>
                     </TabItem.Header>
                     <!-- Inhalt -->
@@ -303,9 +302,67 @@
                     </StackPanel>
                 </TabItem>
                 <TabItem Name="tabEigentumer" FontSize="9" Header="Eigentümer" VerticalAlignment="Top"
-                         HorizontalContentAlignment="Left">
-                    <StackPanel>
-                        <TextBlock HorizontalAlignment="Center">under construction</TextBlock>
+                         HorizontalContentAlignment="Left" >
+                    <StackPanel >
+                        <TextBlock HorizontalAlignment="Center">ungetestet. bitte rückmeldung</TextBlock> 
+                        <StackPanel Orientation="Horizontal" >
+                            <Label Width="75"  >Name:</Label>
+                            <!--<ComboBox Name="cmbBULKvergleichName">
+                                <ComboBoxItem IsSelected="True">=</ComboBoxItem>
+                                <ComboBoxItem >like</ComboBoxItem>
+                            </ComboBox>-->
+                            <TextBox x:Name="tbeigbulkNAME"  Width="160" Background="LightGray" 
+                                     Text="quilling*"
+                                       ToolTip="Als Joker können Sie '*' verwenden. Z.B. *illing"></TextBox> 
+                        </StackPanel> 
+                        <StackPanel Orientation="Horizontal" >
+                            <Label Width="75"  >Vorname:</Label>
+                            <!--<ComboBox Name="cmbBULKvergleichVorname">
+                                <ComboBoxItem IsSelected="True">=</ComboBoxItem>
+                                <ComboBoxItem >like</ComboBoxItem>
+                            </ComboBox>-->
+                            <TextBox x:Name="tbeigbulkVORNAME"  Width="160" Background="LightGray"
+                                        ToolTip="Als Joker können Sie '*' als Joker verwenden. Z.B. Adol*"></TextBox> 
+                         
+                        </StackPanel>
+                     
+                        <StackPanel Orientation="Horizontal" Visibility="Hidden">
+                            <Label Width="75" FontSize="10">Wohnort:</Label>
+                            <TextBox x:Name="tbeigbulkWohnort"  Width="160" Background="LightGray"></TextBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Width="75"  ></Label> 
+                        <Button Name="btnsucheeigentuemer" Click="btnsucheeigentuemer_Click"
+                                IsEnabled="True"
+                                Width="160"> Suche
+                        </Button>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Width="75"  >Treffer:</Label>
+                            <ComboBox x:Name="cmbBULKeig"  SelectionChanged="cmbBULKeig_SelectionChanged" 
+                  HorizontalAlignment="Left"   Width="160"
+                   DisplayMemberPath= "mySttring"
+                />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" >
+                            <Label Width="75"  >Auswahl:</Label> 
+                            <TextBox x:Name="tbeigbulkAuswahl"  Width="160"  Height="60"
+                                     ToolTip="" AcceptsReturn="True" AcceptsTab="True" TextWrapping="Wrap"
+                                     >
+                                
+                            </TextBox> 
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Width="75"  ></Label>
+                            <Button Name="btnBULKexcel" Click="btnBULKexcel_Click"
+                                    IsEnabled="True"
+                                    Width="60" Margin="5,5,5,5">in Excel
+                            </Button>
+                            <Button Name="btnBULKimGIS" Click="btnBULKimGIS_Click"
+                                     IsEnabled="True"
+                                     Width="60" Margin="5,5,5,5">im GIS
+                            </Button>
+                        </StackPanel>
                     </StackPanel>
                 </TabItem>
             </TabControl>

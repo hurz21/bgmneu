@@ -1281,4 +1281,84 @@ Public Class winHaupt
         e.Handled = True
         tabEig.SelectedItem = tabOptionen
     End Sub
+
+    Private Sub btnsucheeigentuemer_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+        Dim vergleichName As String = "="
+        Dim vergleichVName As String = "="
+        Dim name, vname As String
+
+        If tbeigbulkNAME.Text = String.Empty Then
+            MsgBox("Der name fehlt")
+            Exit Sub
+        End If
+        If tbeigbulkNAME.Text.Count < 2 Then
+            MsgBox("Der Name ist zu kurz")
+            Exit Sub
+        End If
+
+        name = tbeigbulkNAME.Text
+        vname = tbeigbulkVORNAME.Text
+        If tbeigbulkNAME.Text.Contains("*") Then
+            name = tbeigbulkNAME.Text.Replace("*", "%")
+            vergleichName = "like"
+        End If
+        If tbeigbulkVORNAME.Text.Contains("*") Then
+            vname = tbeigbulkVORNAME.Text.Replace("*", "%")
+            vergleichVName = "like"
+        End If
+
+        'Dim vgerleichname = DirectCast(cmbBULKvergleichName.SelectedItem, ComboBoxItem).Content.ToString()
+        'Dim vgerleichvname = DirectCast(cmbBULKvergleichVorname.SelectedItem, ComboBoxItem).Content.ToString()
+
+        setzeReiterAppNummer(6)   '6=eigentümer  4=probaug  3=bplan  2=fst 1=adr  0=baulast
+
+        mapTools.BULKeigentuemerliste = mapTools.getBULKeigentuemervorschlaege(name, vergleichName,
+                                                                      vname, vergleichVName)
+        cmbBULKeig.ItemsSource = mapTools.BULKeigentuemerliste
+        cmbstrassen.DisplayMemberPath = "mySttring"
+        cmbBULKeig.SelectedValuePath = "myindex"
+        cmbBULKeig.IsDropDownOpen = True
+    End Sub
+
+    Private Sub cmbBULKeig_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
+        e.Handled = True
+        If Not istgeladen Then Exit Sub
+        l("cmbBULKeig_SelectionChanged ")
+        If cmbBULKeig.SelectedItem Is Nothing Then Exit Sub
+        Dim personAuswahl As myComboBoxItem = CType(cmbBULKeig.SelectedItem, myComboBoxItem)
+        Dim namensteile As String()
+        namensteile = personAuswahl.myindex.Split("#"c)
+        mapTools.BULKfst2nameList = mapTools.getFST4nameVname(namensteile(0), namensteile(1), namensteile(2))
+        tbeigbulkAuswahl.Text = personAuswahl.myindex.Replace("#", " ") & Environment.NewLine &
+                                 mapTools.BULKfst2nameList.Count & " Flurstücke gefunden."
+
+        'flurstueckskennzeichen
+
+
+    End Sub
+
+    Private Sub btnBULKexcel_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+
+        Dim zieldatei As String
+        zieldatei = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
+        zieldatei = IO.Path.Combine(zieldatei, "bgm")
+        zieldatei = IO.Path.Combine(zieldatei, "FSTliste" & Now.ToString("yyyyMMddhhmm") & ".csv")
+
+
+        '= tools.baulastenoutDir & "\Baulasten_katNichtOK" & Now.ToString("yyyyMMddhhmm") & ".csv"
+
+        If tools.erzeugeCSVDateiFSTbulk(zieldatei, mapTools.BULKfst2nameList) Then
+            Process.Start(zieldatei)
+        Else
+            'MsgBox("Fehler bei der erzeugung der CSV-Datei: " & zieldatei)
+            MessageBox.Show("Fehler bei der erzeugung der CSV-Datei: " & zieldatei, "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+        End If
+    End Sub
+
+    Private Sub btnBULKimGIS_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+
+    End Sub
 End Class
