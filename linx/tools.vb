@@ -1970,6 +1970,8 @@ Module tools
         Try
             sw = New IO.StreamWriter(csvdatei)
             sw.AutoFlush = True
+            sw.WriteLine(clsString.umlaut2ue(abschlusszeile))
+            sw.WriteLine(" ")
             sb.Append("Flurstueckskennzeichen" & t)
             sb.Append("Gemarkung" & t)
             sb.Append("gemcode" & t)
@@ -1988,13 +1990,26 @@ Module tools
                 sw.WriteLine(sb.ToString)
                 sb.Clear()
             Next
-            sw.WriteLine("")
-            sw.WriteLine(clsString.umlaut2ue(abschlusszeile))
+
+
             sw.Close()
             sw.Dispose()
             Return True
         Catch ex As Exception
-            l("fehler in getAllPDFFiles4GUID-- " & ex.ToString)
+            l("fehler in erzeugeCSVDateiFSTbulk-- " & ex.ToString)
+            Return False
+        End Try
+    End Function
+
+    Friend Function erzeugeCSVDateiPGadresse(zieldatei As String, neuertext As String, infozeile As String) As Boolean
+        Try
+            neuertext = neuertext.Replace("|", ";")
+            neuertext = infozeile & Environment.NewLine & neuertext
+            neuertext = clsString.umlaut2ue(neuertext)
+            IO.File.WriteAllText(zieldatei, neuertext)
+            Return True
+        Catch ex As Exception
+            l("fehler in erzeugeCSVDateiPGadresse-- " & ex.ToString)
             Return False
         End Try
     End Function

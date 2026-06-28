@@ -608,9 +608,16 @@ Public Class probaug
         Dim dt As DataTable
         Dim cb As myComboBoxItem
         Dim vlist As New List(Of myComboBoxItem)
+        Dim flurstueckOhneNull As String
+        If clsFlurstueck.nenner = 0 Then
+            flurstueckOhneNull = clsFlurstueck.zaehler.ToString
+        Else
+            flurstueckOhneNull = clsFlurstueck.zaehler.ToString & "/" & clsFlurstueck.nenner
+        End If
+
         sql = "select * from GISVIEW1 where feld28='" & clsFlurstueck.gemarkungstext &
                 "' and feld13='" & clsFlurstueck.flur & "'" &
-                " and feld14='" & clsFlurstueck.fstueckKombi & "' order by feld1 desc"
+                " and feld14='" & flurstueckOhneNull & "' order by feld1 desc"
         'select * from GISVIEW6 where feld7='2026' and feld9='80006'
         l(sql)
         'Dim metad As New List(Of myComboBoxItem)
@@ -643,19 +650,9 @@ Public Class probaug
               " and Strasse='" & lokadr.strasseName.Trim & "'" &
                 " and hnr='" & lokadr.HausKombi & "'  " &
                 " union " &
-             "select feld1,feld3,feld4 from GISVIEW1 where feld28='" & lokfst.gemarkungstext &
+             "select feld1,feld3,concat(feld4,' ',feld8,' ',FELD10) as feld4  from GISVIEW1 where feld28='" & lokfst.gemarkungstext &
                 "' and feld13='" & lokfst.flur & "'" &
                 " and feld14='" & lokfst.fstueckKombi & "') order by feld1 desc"
-
-
-        'sql = "(select * from GISVIEW1 where (feld24='" & lokadr.gemeindeName.Trim & "' or feld33='" & lokadr.gemeindeName.Trim & "') " &
-        '      " and feld25='" & lokadr.strasseName.Trim & "'" &
-        '        " and feld26='" & lokadr.HausKombi & "'  " &
-        '        " union " &
-        '     "select * from GISVIEW1 where feld28='" & lokfst.gemarkungstext &
-        '        "' and feld13='" & lokfst.flur & "'" &
-        '        " and feld14='" & lokfst.fstueckKombi & "') order by feld1 desc"
-
 
         l(sql)
         'Dim metad As New List(Of myComboBoxItem) 

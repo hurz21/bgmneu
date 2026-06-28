@@ -256,10 +256,13 @@
                         </StackPanel>
                     </StackPanel>
                 </TabItem>
-                <TabItem Name="tabProbaug" FontSize="9" Header="ProBauG Az." VerticalAlignment="Top" HorizontalContentAlignment="Left">
-                    <!--<TabItem.Header     >
-                        <Label Content="ProBauG Az." FontSize="9"  VerticalAlignment="Top"   />
-                    </TabItem.Header>-->
+                <TabItem Name="tabProbaug" FontSize="9" 
+                           VerticalAlignment="Top" 
+                         HorizontalContentAlignment="Left">
+                    <TabItem.Header     >
+                        <Label Content="ProBauG Az." FontSize="9"  VerticalAlignment="Top"
+                               Background="LightBlue"  />
+                    </TabItem.Header>
                     <StackPanel Background="LightGray" HorizontalAlignment="Stretch" >
                         <StackPanel Orientation="Horizontal" Height="30">
                             <TextBlock Width="20"> Jahr:</TextBlock>
@@ -267,9 +270,12 @@
                             <TextBlock Width="20"> Az:</TextBlock>
                             <TextBox x:Name="tbPGnr">80006</TextBox>
                             <Button x:Name="tbPGsuchestarten" Click="tbPGsuchestarten_Click" 
-                                    Margin="15,0,0,0" Width="100"
-                                    Content="Vorgang im GIS"></Button>
-                            <ComboBox x:Name="cmbPGNR"  Margin="0,0,0,0"  
+                                    Margin="15,0,0,0" Width="50"
+                                    Content=" im GIS"></Button>
+                            <Button x:Name="tbPGExcel" Click="tbPGExcel_Click" 
+                                          Margin="15,0,0,0" Width="50" Visibility="Collapsed"
+                                          Content=" im Excel"></Button>
+                            <ComboBox x:Name="cmbPGNR"  Margin="25,0,0,0"  
                                         SelectionChanged="cmbPGNR_SelectionChanged" 
                                          DisplayMemberPath="Anzeige"
                                           SelectedItem="{Binding SelectedAdresse}" 
@@ -304,7 +310,7 @@
                 <TabItem Name="tabEigentumer" FontSize="9" Header="Eigentümer" VerticalAlignment="Top"
                          HorizontalContentAlignment="Left" >
                     <StackPanel >
-                        <TextBlock HorizontalAlignment="Center">ungetestet. bitte rückmeldung</TextBlock> 
+                        
                         <StackPanel Orientation="Horizontal" >
                             <Label Width="75"  >Name:</Label>
                             <!--<ComboBox Name="cmbBULKvergleichName">
@@ -312,7 +318,7 @@
                                 <ComboBoxItem >like</ComboBoxItem>
                             </ComboBox>-->
                             <TextBox x:Name="tbeigbulkNAME"  Width="160" Background="LightGray" 
-                                     Text="stadt dietzenbach*"
+                                     Text="müller*"
                                        ToolTip="Als Joker können Sie '*' verwenden. Z.B. *illing"></TextBox> 
                         </StackPanel> 
                         <StackPanel Orientation="Horizontal" >
@@ -340,9 +346,9 @@
                         <StackPanel Orientation="Horizontal">
                             <Label Width="75"  >Treffer:</Label>
                             <ComboBox x:Name="cmbBULKeig"  SelectionChanged="cmbBULKeig_SelectionChanged" 
-                  HorizontalAlignment="Left"   Width="160"
-                   DisplayMemberPath= "mySttring"
-                />
+                                          HorizontalAlignment="Left"   Width="160"
+                                           DisplayMemberPath= "mySttring"
+                                        />
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" >
                             <Label Width="75"  >Auswahl:</Label> 

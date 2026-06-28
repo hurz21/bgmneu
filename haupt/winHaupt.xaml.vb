@@ -1001,6 +1001,10 @@ Public Class winHaupt
         e.Handled = True
         setzeReiterAppNummer(2)   '4=probaug  3=bplan  2=fst 1=adr  0=baulast
         nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "fst_vorgang")
+        If Not tools.eigentuemerAbfrageErlaubt Then
+            MessageBox.Show("Keine Rechte vorhanden", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+            Exit Sub
+        End If
         Dim probaugVorgange As New List(Of myComboBoxItem)
         fkzlist = New List(Of clsFlurstueck)
         fkzlist = readFlurst_Form()
@@ -1020,10 +1024,18 @@ Public Class winHaupt
                        neuertext & Environment.NewLine & Environment.NewLine &
                         Environment.NewLine & Environment.NewLine &
                        "Diese Vorgänge werden unter dem Reiter 'ProBauG' der Combobox zuaddiert!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
-                'MsgBox("Es wurden " & probaugVorgange.Count & " Vorgänge gefunden:" & Environment.NewLine & Environment.NewLine &
-                '       neuertext & Environment.NewLine & Environment.NewLine &
-                '        Environment.NewLine & Environment.NewLine &
-                '       "Diese Vorgänge werden unter dem Reiter 'ProBauG' der Combobox zuaddiert!")
+                Dim zieldatei As String
+                zieldatei = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
+                zieldatei = IO.Path.Combine(zieldatei, "bgm")
+                zieldatei = IO.Path.Combine(zieldatei, "Vorgaenge_auf_adresse" & Now.ToString("yyyyMMddhhmm") & ".csv")
+                Dim infozeile = "Historische; Vorgänge; auf Flurstück:;" & fkzlist(0).gemarkungstext & ";" & fkzlist(0).flur & ";" & fkzlist(0).fstueckKombi & Environment.NewLine &
+                 "Jahr;Akenzeichen;Vorhaben;"
+                If tools.erzeugeCSVDateiPGadresse(zieldatei, neuertext, infozeile) Then
+                    Process.Start(zieldatei)
+                Else
+                    'MsgBox("Fehler bei der erzeugung der CSV-Datei: " & zieldatei)
+                    MessageBox.Show("Fehler bei der erzeugung der CSV-Datei: " & zieldatei, "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+                End If
                 mergeToPGCookie(neuertext)
                 aktualisierePGvorgaengeHistory()
                 tabEig.SelectedIndex = 4
@@ -1069,10 +1081,7 @@ Public Class winHaupt
     Private Sub btnadr2PG_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
         nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "adr_vorgang")
-        If tools.eigentuemerAbfrageErlaubt Then
-            ' eigentuemerWord(False, fkzlist_lage, lage_lage)
-        Else
-            'MsgBox("Keine Rechte vorhanden")
+        If Not tools.eigentuemerAbfrageErlaubt Then
             MessageBox.Show("Keine Rechte vorhanden", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
             Exit Sub
         End If
@@ -1104,23 +1113,26 @@ Public Class winHaupt
         Try
             probaugVorgange = probaug.getVorgaengeZuAdresseUndFlurstueck(lokadr, lokfst)
             If probaugVorgange.Count < 1 Then
-                'MsgBox("Keine Vorgänge zu dieser Adresse und dem entsp. Flurstück gefunden. " & Environment.NewLine &
-                '    " " & Environment.NewLine &
-                '    "  " & Environment.NewLine
-                '       )
                 MessageBox.Show("Keine Vorgänge zu dieser Adresse und dem entsp. Flurstück gefunden. " & Environment.NewLine &
                     " " & Environment.NewLine &
                     "  " & Environment.NewLine, "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
             Else
                 neuertext = bildePGvorgangCookieString(probaugVorgange)
                 MessageBox.Show("Es wurden " & probaugVorgange.Count & " Vorgänge gefunden: " & Environment.NewLine & Environment.NewLine &
-                       neuertext & Environment.NewLine & Environment.NewLine &
-                        Environment.NewLine & Environment.NewLine &
                        "Diese Vorgänge werden unter dem Reiter 'ProBauG' der Combobox zuaddiert!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
-                'MsgBox("Es wurden " & probaugVorgange.Count & " Vorgänge gefunden: " & Environment.NewLine & Environment.NewLine &
-                '       neuertext & Environment.NewLine & Environment.NewLine &
-                '        Environment.NewLine & Environment.NewLine &
-                '       "Diese Vorgänge werden unter dem Reiter 'ProBauG' der Combobox zuaddiert!")
+                Dim zieldatei As String
+                zieldatei = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
+                zieldatei = IO.Path.Combine(zieldatei, "bgm")
+                zieldatei = IO.Path.Combine(zieldatei, "Vorgaenge_auf_adresse" & Now.ToString("yyyyMMddhhmm") & ".csv")
+                Dim infozeile = "Historische; Vorgänge; auf Adresse:;" & aktadr.gemeindeName & ";" & aktadr.strasseName & ";" & aktadr.HausKombi & Environment.NewLine &
+                 "Jahr;Akenzeichen;Vorhaben;"
+                If tools.erzeugeCSVDateiPGadresse(zieldatei, neuertext, infozeile) Then
+                    Process.Start(zieldatei)
+                Else
+                    'MsgBox("Fehler bei der erzeugung der CSV-Datei: " & zieldatei)
+                    MessageBox.Show("Fehler bei der erzeugung der CSV-Datei: " & zieldatei, "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+                End If
+
                 mergeToPGCookie(neuertext)
                 aktualisierePGvorgaengeHistory()
                 tabEig.SelectedIndex = 4
@@ -1287,7 +1299,11 @@ Public Class winHaupt
         Dim vergleichName As String = "="
         Dim vergleichVName As String = "="
         Dim name, vname As String
-
+        If Not tools.eigentuemerAbfrageErlaubt Then
+            MessageBox.Show("Keine Rechte vorhanden", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+            Exit Sub
+        End If
+        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "eigentuemerbulk")
         tbeigbulkAuswahl.Text = ""
         btnBULKexcel.IsEnabled = False
         btnBULKimGIS.IsEnabled = False
@@ -1323,6 +1339,8 @@ Public Class winHaupt
         If mapTools.BULKeigentuemerliste.Count > 0 Then
             btnBULKexcel.IsEnabled = True
             btnBULKimGIS.IsEnabled = True
+        Else
+            tbeigbulkAuswahl.Text = "nothing"
         End If
         cmbBULKeig.ItemsSource = mapTools.BULKeigentuemerliste
         cmbstrassen.DisplayMemberPath = "mySttring"
@@ -1370,5 +1388,9 @@ Public Class winHaupt
         End If
         Dim fkzstring = probaug.bildeFKZstring(mapTools.BULKfst2nameList, maximum)
         tools.gisLogoutUndStartFKZ(fkzstring, gisLogouten)
+    End Sub
+
+    Private Sub tbPGExcel_Click(sender As Object, e As RoutedEventArgs)
+
     End Sub
 End Class
