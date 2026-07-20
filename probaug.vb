@@ -655,7 +655,7 @@ Public Class probaug
                 " and feld14='" & lokfst.fstueckKombi & "') order by feld1 desc"
 
         l(sql)
-        'Dim metad As New List(Of myComboBoxItem) 
+
         Try
             dt = probaug.getbalist2MSSQL(sql)
             For i = 0 To dt.Rows.Count - 1

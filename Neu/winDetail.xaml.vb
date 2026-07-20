@@ -57,7 +57,7 @@ Public Class winDetail
             schonObjekteInMDATvorhanden = refreshGIS(CInt(tbBaulastNr.Text))
             tbanzahlobjgis.Text = tools.FSTausGISListe.Count & " Objekt"
             Dim summe = ""
-            summe = makeFlurstuecksAbstrakt(tools.FSTausPROBAUGListe)
+            summe = makeFlurstuecksAbstrakt(tools.FSTausPROBAUGListe, "")
             summe = summe & Environment.NewLine
             tbEigentuemer.Text = summe
 
@@ -885,7 +885,7 @@ Public Class winDetail
         Dim summe As String = ""
         Try
             'summe = "Aus ProbauG:" & Environment.NewLine
-            summe = summe & makeFlurstuecksAbstrakt(tools.FSTausPROBAUGListe)
+            summe = summe & makeFlurstuecksAbstrakt(tools.FSTausPROBAUGListe, "")
             summe = summe & Environment.NewLine
             Dim result As String
             'If toolsEigentuemer.geteigentuemerText(tools.FSTausPROBAUGListe(0).flurstueckZuFKZ, result) Then
@@ -904,7 +904,7 @@ Public Class winDetail
     Private Sub btnEigentuemerGIS_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
         Dim summe As String = "Aus GIS:" & Environment.NewLine
-        summe = summe & makeFlurstuecksAbstrakt(tools.FSTausGISListe)
+        summe = summe & makeFlurstuecksAbstrakt(tools.FSTausGISListe, "")
         summe = summe & Environment.NewLine
         Dim result As String
         If toolsEigentuemer.geteigentuemerText(tools.FSTausGISListe(0).flurstueckZuFKZ, result) Then

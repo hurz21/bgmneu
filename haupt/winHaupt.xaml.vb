@@ -392,15 +392,15 @@ Public Class winHaupt
             dateinameFST = "_" & fkzlist.Item(0).gemarkungstext & "_" & fkzlist.Item(0).flur & "_" & fkzlist.Item(0).zaehler & "_" & fkzlist.Item(0).nenner & "_"
             Dim summe As String
             summe = "Aus ProbauG:" & Environment.NewLine
-            summe = summe & makeFlurstuecksAbstrakt(fkzlist)
+            summe = summe & makeFlurstuecksAbstrakt(fkzlist, lage)
             summe = summe.Replace("Aus ProbauG:", "Aus Liegenschaftsbuch:")
-            summe = summe & Environment.NewLine
-            summe = summe & lage & Environment.NewLine
-            summe = summe & Environment.NewLine
+            'summe = summe & Environment.NewLine
+            'summe = summe & lage & Environment.NewLine
+            'summe = summe & Environment.NewLine
 
-            Dim result, datei As String
-            If toolsEigentuemer.geteigentuemerText(fkzlist(0).flurstueckZuFKZ, result) Then
-                summe = summe & Environment.NewLine & result
+            Dim dieNamenderEigentuemer, datei As String
+            If toolsEigentuemer.geteigentuemerText(fkzlist(0).flurstueckZuFKZ, dieNamenderEigentuemer) Then
+                'summe = summe & Environment.NewLine & dieNamenderEigentuemer
                 If isbaulast Then
                     datei = tools.erzeugeWordDateiEigentuemer(summe, "")
                 Else
@@ -409,8 +409,8 @@ Public Class winHaupt
                 Threading.Thread.Sleep(1000)
                 Process.Start(datei)
             Else
-                'MsgBox(result)
-                MessageBox.Show(result, "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+                'MsgBox(dieNamenderEigentuemer)
+                MessageBox.Show(dieNamenderEigentuemer, "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
             End If
         Catch ex As Exception
             l("fehler in eigentuemerWord " & ex.ToString)
@@ -501,23 +501,35 @@ Public Class winHaupt
         Dim cb As New myComboBoxItem
         Dim fst As New clsFlurstueck
         Dim strassennamen As New List(Of myComboBoxItem)
-        lage_lage = "== Lage: " & aktadr.gemeindeName & ", " & aktadr.strasseName & " =="
+        lage_lage = "== Lage: " & aktadr.gemeindeName & ", " & aktadr.strasseName & " " & aktadr.HausKombi & " =="
         'hausnummernListe = clsGIStools.getLage(aktadr.strasseName, aktadr.gemeindebigNRstring, mitfkz:=True, nurstart:=True)
         hausnummernListe = clsGIStools.getHausnummernZuStrasse(aktadr.strasseName, aktadr.strassenkennzeichen, aktadr.gemeinde_guid, mitfkz:=True, nurstart:=True)
         If hausnummernListe Is Nothing OrElse hausnummernListe.Count = 0 Then
             'schneise!
             'über die lage abfragen
+            hausnummernListe.Clear()
+            tbhausnr.Text = ""
             Dim fkzlist = clsGIStools.getLage(aktadr.strasseName, aktadr.gemeindebigNRstring, mitfkz:=True, nurstart:=True)
             If fkzlist.Count > 0 Then
                 aktadr.fkz = bildefkzStringAusStrings(fkzlist)
-                tools.gisLogoutUndStartFKZ(aktadr.fkz, gisLogouten)
+                fkzlist_lage.Clear()
+                Dim fsttemp As New clsFlurstueck
+                fsttemp.Flurstuecksskennzeichen = aktadr.fkz
+                fsttemp.fkzzerlegen()
+                fkzlist_lage.Clear()
+                fkzlist_lage.Add(fsttemp)
+
+
+                btnwordADR.IsEnabled = True
+                btngis4adr.IsEnabled = True
+                btnadr2PG.IsEnabled = False
+
+                'tools.gisLogoutUndStartFKZ(aktadr.fkz, gisLogouten)
             Else
                 MessageBox.Show("Keine Hausnummern zu dieser Straße gefunden!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
             End If
             'Dim fkzstring = 'probaug.bildeFKZstring(fkzlist, 150)
-            'Dim flurstueckskennzeichen = fkzstring
-
-
+            'Dim flurstueckskennzeichen = fkzstring 
             Exit Sub
         End If
         cmbhausnr.ItemsSource = hausnummernListe
@@ -976,7 +988,7 @@ Public Class winHaupt
         tools.gisLogoutUndStartFKZ(flurstueckskennzeichen, gisLogouten)
 
         Dim result As String
-        result = fstliste.Count & " gültige Flurstücke wurden gefunden!" & Environment.NewLine
+        result = fstliste.Count & "  Flurstücke wurden gefunden!" & Environment.NewLine
 
         Dim sb As New StringBuilder
         For i = 0 To metadata.Count - 1
@@ -1049,7 +1061,7 @@ Public Class winHaupt
     End Sub
 
     Private Sub aktualisierePGvorgaengeHistory()
-        Dim vorhabenliste As List(Of clsPGvorhaben) = cls20Cookies.LadePGcookies()
+        Dim vorhabenliste As List(Of clsPGVorhaben) = cls20Cookies.LadePGcookies()
         cmbPGNR.ItemsSource = vorhabenliste
     End Sub
 
@@ -1094,10 +1106,13 @@ Public Class winHaupt
         lokadr.gemeindebigNRstring = aktadr.gemeindebigNRstring
         lokadr.gemeindebigNRstring = aktadr.gemeindebigNRstring
         lokadr.gemeindebigNRstring = aktadr.gemeindebigNRstring
+        lokadr.hausNr = aktadr.hausNr
+        lokadr.hausZusatz = aktadr.hausZusatz
+        lokadr.HausKombi = aktadr.HausKombi
         lokadr.fkz = aktadr.fkz
         Dim probaugVorgange As New List(Of myComboBoxItem)
         Dim aa = aktadr.gemeindeName
-        lokadr.ingradaLageZerlegen(lokadr.strasseName)
+        'lokadr.ingradaLageZerlegen(lokadr.strasseName)
         Dim neuertext As String
 
         'jetzt das flurstücksformular ausfüllen
@@ -1124,7 +1139,7 @@ Public Class winHaupt
                 Dim zieldatei As String
                 zieldatei = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
                 zieldatei = IO.Path.Combine(zieldatei, "bgm")
-                zieldatei = IO.Path.Combine(zieldatei, "Vorgaenge_auf_adresse" & Now.ToString("yyyyMMddhhmm") & ".csv")
+                zieldatei = IO.Path.Combine(zieldatei, "Vorgaenge_auf_adresse" & Now.ToString("yyyyMMddhhmmss") & ".csv")
                 Dim infozeile = "Historische; Vorgänge; auf Adresse:;" & aktadr.gemeindeName & ";" & aktadr.strasseName & ";" & aktadr.HausKombi & Environment.NewLine &
                  "Jahr;Akenzeichen;Vorhaben;"
                 If tools.erzeugeCSVDateiPGadresse(zieldatei, neuertext, infozeile) Then
@@ -1170,18 +1185,18 @@ Public Class winHaupt
         l("gemeindeitem mySttring " & gemeindeitem.myindex & "  " & filter)
 
         Try
-            'Dim result As List(Of myComboBoxItem) =
+            'Dim dieNamenderEigentuemer As List(Of myComboBoxItem) =
             '    Await Task.Run(Function()
             '                       Return clsGIStools.getLage(filter, gemeindeitem.myindex, mitfkz:=False)
             '                   End Function)
-            'Dim result As List(Of myComboBoxItem) = clsGIStools.getLage(filter, gemeindeitem.myindex, mitfkz:=False, nurstart)
+            'Dim dieNamenderEigentuemer As List(Of myComboBoxItem) = clsGIStools.getLage(filter, gemeindeitem.myindex, mitfkz:=False, nurstart)
             Dim gemeindenummer = gemeindeitem.myindex.Replace("06438", "")
             Dim result As List(Of myComboBoxItem) = clsGIStools.getStrassennamen(filter, gemeindenummer, mitfkz:=False, nurstart)
             If result Is Nothing Then
                 'Debug.Print("ss")
                 'l("tbStrasseFilter_TextChanged: Keine Ergebnisse gefunden")
             End If
-            'l("tbStrasseFilter_TextChanged: Ergebnisse gefunden: " & If(result IsNot Nothing, result.Count.ToString(), "0"))
+            'l("tbStrasseFilter_TextChanged: Ergebnisse gefunden: " & If(dieNamenderEigentuemer IsNot Nothing, dieNamenderEigentuemer.Count.ToString(), "0"))
             cmbstrassen.ItemsSource = result
             cmbstrassen.DisplayMemberPath = "mySttring"
             cmbstrassen.SelectedValuePath = "myindex"
@@ -1425,10 +1440,32 @@ Public Class winHaupt
             aktadr.hausZusatz = a(1)
             aktadr.HausKombi = aktadr.hausNr & " " & aktadr.hausZusatz
         End If
+
+        lage_lage = "== Lage: " & aktadr.gemeindeName & ", " & aktadr.strasseName & " " & aktadr.HausKombi & " =="
+
         aktadr.HausKombi = hausnritem.mySttring.Trim
         tbhausnr.Text = aktadr.HausKombi
         aktadr.fkz = getFKZ4Hausnr(aktadr.strassenkennzeichen, aktadr.hausNr, aktadr.hausZusatz)
-        btngis4adr.IsEnabled = True
+
+        fkzlist_lage.Clear()
+        Dim fsttemp As New clsFlurstueck
+        fsttemp.Flurstuecksskennzeichen = aktadr.fkz
+        fsttemp.fkzzerlegen()
+        fkzlist_lage.Clear()
+        fkzlist_lage.Add(fsttemp)
+
+        If aktadr.fkz Is Nothing Or aktadr.fkz = String.Empty Then
+            MessageBox.Show("Kein entsprechendes Flurstück gefunden", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+            btnwordADR.IsEnabled = False
+            btngis4adr.IsEnabled = False
+            btnadr2PG.IsEnabled = False
+            Exit Sub
+        Else
+            btnwordADR.IsEnabled = True
+            btngis4adr.IsEnabled = True
+            btnadr2PG.IsEnabled = True
+        End If
+
     End Sub
 
     Private Function getFKZ4Hausnr(strassenkennzeichen As String, hausNr As Integer, hausZusatz As String) As String

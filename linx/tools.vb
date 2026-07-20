@@ -1333,7 +1333,7 @@ Module tools
     '        Return "fehler in adresseZuFKZ"
     '    End Try
     'End Function
-    Public Function makeFlurstuecksAbstrakt(dieliste As List(Of clsFlurstueck)) As String
+    Public Function makeFlurstuecksAbstrakt(dieliste As List(Of clsFlurstueck), lage As String) As String
         Dim summe As String = ""
         Dim result As String = ""
         Dim grundbuchblatt As String = ""
@@ -1345,14 +1345,16 @@ Module tools
                 fst.zaehler & "/" & fst.nenner & " =="
                 If toolsEigentuemer.getGrundbuchblatt(fst.flurstueckZuFKZ, result) Then
                     grundbuchblatt = result
-                    summe = summe & Environment.NewLine & "Grundbuchblatt: " & grundbuchblatt
+                    summe = summe & Environment.NewLine & "== Grundbuchblatt: " & grundbuchblatt
+                    summe = summe & Environment.NewLine & lage
+
                 Else
 
                 End If
 
 
                 If toolsEigentuemer.geteigentuemerText(fst.flurstueckZuFKZ, result) Then
-                    summe = summe & Environment.NewLine & result & Environment.NewLine & Environment.NewLine
+                    summe = summe & Environment.NewLine & Environment.NewLine & result & Environment.NewLine & Environment.NewLine
                     'tbEigentuemer.Text = summe
                 Else
                     'MsgBox(result)
