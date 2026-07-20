@@ -330,18 +330,18 @@ Public Class clsGIStools
                        suchausdruck &
                       " And gemeindeschluessel ='" & gemeinde & "'  " &
                       "order by lagebezeichnung"
-                '               fstREC.mydb.SQL =
-                '                    " SELECT DISTINCT lagebezeichnung FROM dbo.tbl_lieg_flurstueck AS f LEFT JOIN dbo.tbl_reg_gemeinde AS g " &
-                '"   ON f.gemeinde_gemeindeschluessel = g.gemeindeschluessel " &
-                '" WHERE lagebezeichnung IS NOT NULL " &
-                '"   AND lagebezeichnung LIKE 'Am Bieberbach%' -- oder 'am%' je nach Groß/klein " &
-                '"   AND gemeindeschluessel = '06438001' ORDER BY " &
-                '"   TRY_CAST( " &
-                '"     -- letzte zusammenhängende Ziffernfolge aus lagebezeichnung extrahieren " &
-                '"     REVERSE(SUBSTRING( " &
-                '"       REVERSE(lagebezeichnung), " &
-                '"       1,      PATINDEX('%[^0-9]%', REVERSE(lagebezeichnung) + 'a') - 1    )) AS INT  ), " &
-                '"   lagebezeichnung; " 
+                fstREC.mydb.SQL =
+                     " SELECT DISTINCT lagebezeichnung FROM dbo.tbl_lieg_flurstueck AS f LEFT JOIN dbo.tbl_reg_gemeinde AS g " &
+ "   ON f.gemeinde_gemeindeschluessel = g.gemeindeschluessel " &
+ " WHERE lagebezeichnung IS NOT NULL " &
+ "   AND lagebezeichnung LIKE 'Am Bieberbach%' -- oder 'am%' je nach Groß/klein " &
+ "   AND gemeindeschluessel = '06438001' ORDER BY " &
+ "   TRY_CAST( " &
+ "     -- letzte zusammenhängende Ziffernfolge aus lagebezeichnung extrahieren " &
+ "     REVERSE(SUBSTRING( " &
+ "       REVERSE(lagebezeichnung), " &
+ "       1,      PATINDEX('%[^0-9]%', REVERSE(lagebezeichnung) + 'a') - 1    )) AS INT  ), " &
+ "   lagebezeichnung; "
             End If
             l(fstREC.mydb.SQL)
             hinweis = fstREC.getDataDT()

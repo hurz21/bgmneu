@@ -13,7 +13,13 @@
                 
             <Button Name="btnKreisgis"  Click="btnKreisgis_Click"  Visibility="Visible" Margin="5" Height="25"
             Background="Beige" Foreground="Black"
-            >GIS ganzer Kreis Offenbach</Button>
+            >Übersicht</Button>
+                <Button Name="btnAktuell"  Click="btnAktuell_Click"  Visibility="Visible" Margin="5" Height="25"
+    Background="Beige" Foreground="Black"
+    >Aktuelles</Button>
+                <Button Name="btnTutorials"  Click="btnTutorial_Click"  Visibility="Visible" Margin="5" Height="25"
+Background="Beige" Foreground="Black"
+>Tutorial</Button>
                 <Button Name="btnOptionen"  Click="btnOptionen_Click"  Visibility="Visible" Margin="5" Height="25"
    Background="Beige" Foreground="Black"
    >
@@ -261,7 +267,7 @@
                          HorizontalContentAlignment="Left">
                     <TabItem.Header     >
                         <Label Content="ProBauG Az." FontSize="9"  VerticalAlignment="Top"
-                               Background="LightBlue"  />
+                                 />
                     </TabItem.Header>
                     <StackPanel Background="LightGray" HorizontalAlignment="Stretch" >
                         <StackPanel Orientation="Horizontal" Height="30">

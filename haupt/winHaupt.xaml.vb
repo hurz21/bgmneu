@@ -1021,8 +1021,6 @@ Public Class winHaupt
             Else
                 neuertext = bildePGvorgangCookieString(probaugVorgange)
                 MessageBox.Show("Es wurden " & probaugVorgange.Count & " Vorgänge gefunden:" & Environment.NewLine & Environment.NewLine &
-                       neuertext & Environment.NewLine & Environment.NewLine &
-                        Environment.NewLine & Environment.NewLine &
                        "Diese Vorgänge werden unter dem Reiter 'ProBauG' der Combobox zuaddiert!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
                 Dim zieldatei As String
                 zieldatei = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
@@ -1393,4 +1391,13 @@ Public Class winHaupt
     Private Sub tbPGExcel_Click(sender As Object, e As RoutedEventArgs)
 
     End Sub
+
+    Private Sub btnAktuell_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+        Dim appDir = IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
+        Dim aktuelles = IO.Path.Combine(appDir, "aktuelles.html")
+        Process.Start(aktuelles)
+    End Sub
+
+
 End Class
