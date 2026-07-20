@@ -24,7 +24,7 @@ Public Class clsAdress
     End Sub
     Public ReadOnly Property Anzeige As String
         Get
-            Return $"{gemeindeName} -  {strasseName}, ({AZ})"
+            Return $"{gemeindeName} -  {strasseName}, ({HausKombi}, ({AZ})"
         End Get
     End Property
     Property gemeindeindex As Integer
@@ -267,6 +267,8 @@ Public Class clsAdress
     Public Property gemeindebigNRstring As String
     Public Property fkz As String
     Public Property lageindex As Integer = 0
+    Public Property gemeinde_guid As String = ""
+    Public Property strassenkennzeichen As String = ""
 
     Public Function gemeindeNrBig() As String
         Dim tbignr = "4380"

@@ -64,7 +64,7 @@
                 liste = IO.File.ReadAllLines(path).ToList()
             End If
 
-            Dim neuerEintrag = $"{adr.gemeindeName}|{adr.strasseName.Trim}|{adr.fkz}|{adr.gemeindeindex}|{adr.AZ}|{adr.lageindex}"
+            Dim neuerEintrag = $"{adr.gemeindeName}|{adr.strasseName.Trim}|{adr.fkz}|{adr.gemeindeindex}|{adr.AZ}|{adr.strassenkennzeichen}|{adr.HausKombi}"
 
             ' Entferne vorhandenen gleichen Eintrag (Duplikate vermeiden)
             liste = liste.Where(Function(x) x <> neuerEintrag).ToList()
@@ -83,23 +83,22 @@
     Public Shared Function LadeAdressen() As List(Of clsAdress)
         Dim path = GetCookieFilePath("alle20adrcookies.txt")
         Dim result As New List(Of clsAdress)
-
         If IO.File.Exists(path) Then
             For Each line In IO.File.ReadAllLines(path)
                 Dim parts = line.Split("|"c)
-                If parts.Length = 6 Then
+                If parts.Length = 7 Then
                     result.Add(New clsAdress With {
                     .gemeindeName = parts(0),
                     .strasseName = (parts(1)),
                     .fkz = (parts(2)),
                     .gemeindeindex = CInt(parts(3)),
                     .AZ = parts(4),
-                    .lageindex = CInt(parts(5))
+                    .strassenkennzeichen = (parts(5)),
+                    .HausKombi = (parts(6))
                 })
                 End If
             Next
         End If
-
         Return result
     End Function
 

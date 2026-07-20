@@ -1,4 +1,5 @@
 ﻿Imports System.Data
+Imports System.Text.RegularExpressions
 
 Public Class clsGIStools
     Shared Function fstGIS2BLOBJ() As List(Of clsBaulast)
@@ -330,22 +331,28 @@ Public Class clsGIStools
                        suchausdruck &
                       " And gemeindeschluessel ='" & gemeinde & "'  " &
                       "order by lagebezeichnung"
-                fstREC.mydb.SQL =
-                     " SELECT DISTINCT lagebezeichnung FROM dbo.tbl_lieg_flurstueck AS f LEFT JOIN dbo.tbl_reg_gemeinde AS g " &
- "   ON f.gemeinde_gemeindeschluessel = g.gemeindeschluessel " &
- " WHERE lagebezeichnung IS NOT NULL " &
- "   AND lagebezeichnung LIKE 'Am Bieberbach%' -- oder 'am%' je nach Groß/klein " &
- "   AND gemeindeschluessel = '06438001' ORDER BY " &
- "   TRY_CAST( " &
- "     -- letzte zusammenhängende Ziffernfolge aus lagebezeichnung extrahieren " &
- "     REVERSE(SUBSTRING( " &
- "       REVERSE(lagebezeichnung), " &
- "       1,      PATINDEX('%[^0-9]%', REVERSE(lagebezeichnung) + 'a') - 1    )) AS INT  ), " &
- "   lagebezeichnung; "
+                '               fstREC.mydb.SQL =
+                '                    " SELECT DISTINCT lagebezeichnung FROM dbo.tbl_lieg_flurstueck AS f LEFT JOIN dbo.tbl_reg_gemeinde AS g " &
+                '"   ON f.gemeinde_gemeindeschluessel = g.gemeindeschluessel " &
+                '" WHERE lagebezeichnung IS NOT NULL " &
+                '"   AND lagebezeichnung LIKE 'Am Bieberbach%' -- oder 'am%' je nach Groß/klein " &
+                '"   AND gemeindeschluessel = '06438001' ORDER BY " &
+                '"   TRY_CAST( " &
+                '"     -- letzte zusammenhängende Ziffernfolge aus lagebezeichnung extrahieren " &
+                '"     REVERSE(SUBSTRING( " &
+                '"       REVERSE(lagebezeichnung), " &
+                '"       1,      PATINDEX('%[^0-9]%', REVERSE(lagebezeichnung) + 'a') - 1    )) AS INT  ), " &
+                '"   lagebezeichnung; "
             End If
             l(fstREC.mydb.SQL)
             hinweis = fstREC.getDataDT()
             If fstREC.dt.Rows.Count > 0 Then
+
+
+
+
+
+
                 If mitfkz Then
                     For i = 0 To fstREC.dt.Rows.Count - 1
                         cb = New myComboBoxItem
@@ -371,7 +378,132 @@ Public Class clsGIStools
             Return Nothing
         End Try
     End Function
+    Friend Shared Function getStrassennamen(tbStrasseFilter As String, gemeinde As String, mitfkz As Boolean, nurstart As Boolean
+                                          ) As List(Of myComboBoxItem)
+        Dim hinweis As String
+        Dim cbl As New List(Of myComboBoxItem)
+        Dim cb As New myComboBoxItem
+        Try
+            l("getLage ")
+            l("gemeinde " & gemeinde)
+            l("tbStrasseFilter " & tbStrasseFilter)
+            Dim suchausdruck As String
 
+            If nurstart Then
+                fstREC.mydb.SQL = "SELECT  strasse,gemeinde_guid,strassenkennzeichen  FROM [LKOF].[dbo].tbl_reg_strasse " &
+                                    "where gemeindenummer='" & gemeinde & "'" &
+                                     " and strasse like '" & tbStrasseFilter & "%' " &
+                                    "   order by  strasse"
+            Else
+                fstREC.mydb.SQL = "SELECT  strasse,gemeinde_guid,strassenkennzeichen  FROM [LKOF].[dbo].tbl_reg_strasse " &
+                            "where gemeindenummer='" & gemeinde & "'" &
+                             " and strasse like '%" & tbStrasseFilter & "%' " &
+                            "   order by  strasse"
+            End If
+
+            'If mitfkz Then
+            '    fstREC.mydb.SQL = "SELECT  distinct lagebezeichnung,flurstueckskennzeichen  FROM   dbo.tbl_lieg_flurstueck AS f LEFT OUTER JOIN       dbo.tbl_reg_gemeinde AS g ON f.gemeinde_gemeindeschluessel = g.gemeindeschluessel " &
+            '          "where lagebezeichnung is not null and " &
+            '          "lagebezeichnung = '" & tbStrasseFilter & "' " &
+            '          "and gemeindeschluessel ='" & gemeinde & "'  " &
+            '          "order by lagebezeichnung"
+            'Else
+
+            'fstREC.mydb.SQL = "SELECT  distinct lagebezeichnung  FROM   dbo.tbl_lieg_flurstueck AS f LEFT OUTER JOIN       dbo.tbl_reg_gemeinde AS g ON f.gemeinde_gemeindeschluessel = g.gemeindeschluessel " &
+            '          "where lagebezeichnung is not null and " &
+            '           suchausdruck &
+            '          " And gemeindeschluessel ='" & gemeinde & "'  " &
+            '          "order by lagebezeichnung"
+
+            'End If
+
+            l(fstREC.mydb.SQL)
+            hinweis = fstREC.getDataDT()
+            If fstREC.dt.Rows.Count > 0 Then
+
+
+
+                'If mitfkz Then
+                For i = 0 To fstREC.dt.Rows.Count - 1
+                    cb = New myComboBoxItem
+                    cb.mySttring = fstREC.dt.Rows(i).Item(0).ToString.Trim
+                    cb.myindex = fstREC.dt.Rows(i).Item(1).ToString.Trim & "#" & fstREC.dt.Rows(i).Item(2).ToString.Trim
+                    cbl.Add(cb)
+                Next
+                'Else
+                '    For i = 0 To reineStrassen.Count - 1
+                '        cb = New myComboBoxItem
+                '        cb.mySttring = reineStrassen(i).ToString.Trim
+                '        cb.myindex = reineStrassen(i).ToString.Trim
+                '        cbl.Add(cb)
+                '    Next
+                'End If
+            Else
+                'Debug.Print(clsDBtools.fieldvalue(fstREC.dt.Rows(0).Item(0)))
+                'Return True
+            End If
+            Return cbl
+        Catch ex As Exception
+            l("Fehler in getLage " & ex.ToString)
+            Return Nothing
+        End Try
+    End Function
+
+    Friend Shared Function getHausnummernZuStrasse(tbStrasseFilter As String, strassenkennzeichen As String, gemeinde As String, mitfkz As Boolean, nurstart As Boolean) As List(Of myComboBoxItem)
+        Dim hinweis As String
+        Dim cbl As New List(Of myComboBoxItem)
+        Dim cb As New myComboBoxItem
+        Try
+            l("getLage ")
+            l("gemeinde " & gemeinde)
+            l("tbStrasseFilter " & tbStrasseFilter)
+            'Dim suchausdruck As String
+
+            'If nurstart Then
+            '    suchausdruck = "lagebezeichnung like '" & tbStrasseFilter & "%' "
+            'Else
+            '    suchausdruck = "lagebezeichnung like '%" & tbStrasseFilter & "%' "
+            'End If
+
+            'If mitfkz Then
+            '    fstREC.mydb.SQL = "SELECT  distinct lagebezeichnung,flurstueckskennzeichen  FROM   dbo.tbl_lieg_flurstueck AS f LEFT OUTER JOIN       dbo.tbl_reg_gemeinde AS g ON f.gemeinde_gemeindeschluessel = g.gemeindeschluessel " &
+            '          "where lagebezeichnung is not null and " &
+            '          "lagebezeichnung = '" & tbStrasseFilter & "' " &
+            '          "and gemeindeschluessel ='" & gemeinde & "'  " &
+            '          "order by lagebezeichnung"
+            'Else
+            'fstREC.mydb.SQL = "SELECT  distinct lagebezeichnung  FROM   dbo.tbl_lieg_flurstueck AS f LEFT OUTER JOIN       dbo.tbl_reg_gemeinde AS g ON f.gemeinde_gemeindeschluessel = g.gemeindeschluessel " &
+            '          "where lagebezeichnung is not null and " &
+            '           suchausdruck &
+            '          " And gemeindeschluessel ='" & gemeinde & "'  " &
+            '          "order by lagebezeichnung"
+
+            fstREC.mydb.SQL = "SELECT  hausnummer,hausnummerzusatz " &
+                            "from  tbl_reg_hauskoordinaten where strasse_strassenkennzeichen='" &
+                            strassenkennzeichen & "' order by hausnummer"
+
+
+            l(fstREC.mydb.SQL)
+            hinweis = fstREC.getDataDT()
+            If fstREC.dt.Rows.Count > 0 Then
+                For i = 0 To fstREC.dt.Rows.Count - 1
+                    cb = New myComboBoxItem
+                    cb.mySttring = fstREC.dt.Rows(i).Item(0).ToString.Trim & " " & fstREC.dt.Rows(i).Item(1).ToString.Trim
+                    If fstREC.dt.Rows(i).Item(1).ToString.Trim = String.Empty Then
+                        cb.mySttring = fstREC.dt.Rows(i).Item(0).ToString.Trim
+                    Else
+                        cb.myindex = fstREC.dt.Rows(i).Item(0).ToString.Trim & "#" & fstREC.dt.Rows(i).Item(1).ToString.Trim
+                    End If
+                    cbl.Add(cb)
+                Next i
+            End If
+
+            Return cbl
+        Catch ex As Exception
+            l("Fehler In getLage " & ex.ToString)
+            Return Nothing
+        End Try
+    End Function
     'Friend Shared Function updateGISDB(baulastblatnr As String, zuielname As String, gemarkung As String, endung As String) As Boolean
     '    Dim sql As String
     '    Dim neuerTIFFname As String
@@ -381,7 +513,7 @@ Public Class clsGIStools
 
 
     '    Try
-    '        l(" MOD updateGISDB anfang")
+    '        l(" Mod updateGISDB anfang")
     '        neuerTIFFname = srv_subdirBaulsten & "/" & gemarkung & "/" & baulastblatnr.Trim & endung
     '        'update " & tools.srv_schema & "." & tools.srv_tablename & " set tiff2='fkat/baulasten/' || trim(gemarkung) || '/' || trim(jahr_blattnr) || '.tiff'
     '        sql = "update " & tools.srv_schema & "." & tools.srv_tablename & " Set tiff='" & neuerTIFFname & "' where jahr_blattnr='" & baulastblatnr & "'"

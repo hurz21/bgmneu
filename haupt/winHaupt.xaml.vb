@@ -475,71 +475,74 @@ Public Class winHaupt
             l("fehler in MitFlurstueckInsGIS " & ex.ToString)
         End Try
     End Sub
-    'Private Sub tbStrasse_TextChanged(sender As Object, e As TextChangedEventArgs)
-    '    If tbStrasseFilter Is Nothing Then Exit Sub
-    '    e.Handled = True
-    '    Exit Sub
 
-    '    Dim oldstring As String = ""
-    '    Dim cb As New myComboBoxItem
-    '    Dim strassennamen As New List(Of myComboBoxItem)
-    '    lageliste = clsGIStools.getLage(tbStrasseFilter.Text, cmbGemeinden.SelectedValue.ToString, mitfkz:=False)
-    '    Dim a() As String
-    '    Dim newstring As String = ""
-
-    '    cmbstrassen.ItemsSource = lageliste
-    '    cmbstrassen.DisplayMemberPath = "mySttring"
-    '    cmbstrassen.SelectedValuePath = "myindex"
-    '    cmbstrassen.IsDropDownOpen = True
-
-    'End Sub
 
     Private Sub cmbstrassen_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
         e.Handled = True
+        If Not istgeladen Then Exit Sub
         l("cmbstrassen_SelectionChanged ")
+        Dim hausnummernListe As New List(Of myComboBoxItem)
         Dim item As myComboBoxItem = CType(cmbstrassen.SelectedItem, myComboBoxItem)
         Dim gemeindeitem As myComboBoxItem = CType(cmbGemeinden.SelectedItem, myComboBoxItem)
         If item Is Nothing Then
             Exit Sub
         End If
         l(item.myindex)
+        aktadr.gemeinde_guid = item.myindex.ToString
+        Dim a() As String = aktadr.gemeinde_guid.Split("#"c)
+        aktadr.strassenkennzeichen = a(1)
+        aktadr.gemeinde_guid = a(0)
         aktadr.lageindex = CInt(cmbstrassen.SelectedIndex)
         aktadr.gemeindeindex = CInt(cmbGemeinden.SelectedIndex)
         aktadr.gemeindebigNRstring = cmbGemeinden.SelectedValue.ToString
         aktadr.strasseName = item.mySttring
         aktadr.gemeindeName = gemeindeitem.mySttring
-        tblage.Text = aktadr.strasseName
+        tbstrasse.Text = aktadr.strasseName
         Dim cb As New myComboBoxItem
         Dim fst As New clsFlurstueck
         Dim strassennamen As New List(Of myComboBoxItem)
         lage_lage = "== Lage: " & aktadr.gemeindeName & ", " & aktadr.strasseName & " =="
-        lageliste = clsGIStools.getLage(aktadr.strasseName, aktadr.gemeindebigNRstring, mitfkz:=True, nurstart:=True)
-        If lageliste.Count > 0 Then
-            'fkz zerlegen  
-            fst.Flurstuecksskennzeichen = lageliste.Item(0).myindex.ToString
-            '   flurstueckskennzeichen
-            fst.fkzzerlegen()
-            tbFlur.Text = fst.flur.ToString
-            tbZaehler.Text = fst.zaehler.ToString
-            tbnenner.Text = fst.nenner.ToString
-            fkzlist_lage = New List(Of clsFlurstueck)
-            fkzlist_lage.Add(fst)
-            btnwordADR.IsEnabled = True
-            btngis4adr.IsEnabled = True
-            If lageliste IsNot Nothing Then
-                'Dim adr As New clsAdress
-                'aktadr.gemeindeName = gemeindetext.ToString
-                'aktadr.strasseName = lage.ToString
-                aktadr.fkz = fst.Flurstuecksskennzeichen
-                'aktadr.gemeindeindex = cmbGemeinden.SelectedIndex
-                aktadr.AZ = tbADRbemerkung.Text
-
+        'hausnummernListe = clsGIStools.getLage(aktadr.strasseName, aktadr.gemeindebigNRstring, mitfkz:=True, nurstart:=True)
+        hausnummernListe = clsGIStools.getHausnummernZuStrasse(aktadr.strasseName, aktadr.strassenkennzeichen, aktadr.gemeinde_guid, mitfkz:=True, nurstart:=True)
+        If hausnummernListe Is Nothing OrElse hausnummernListe.Count = 0 Then
+            'schneise!
+            'über die lage abfragen
+            Dim fkzlist = clsGIStools.getLage(aktadr.strasseName, aktadr.gemeindebigNRstring, mitfkz:=True, nurstart:=True)
+            If fkzlist.Count > 0 Then
+                aktadr.fkz = bildefkzStringAusStrings(fkzlist)
+                tools.gisLogoutUndStartFKZ(aktadr.fkz, gisLogouten)
+            Else
+                MessageBox.Show("Keine Hausnummern zu dieser Straße gefunden!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
             End If
-        Else
-            'MsgBox("Kein entsprechendes Flurstück gefunden")
-            MessageBox.Show("Kein entsprechendes Flurstück gefunden", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+            'Dim fkzstring = 'probaug.bildeFKZstring(fkzlist, 150)
+            'Dim flurstueckskennzeichen = fkzstring
+
+
+            Exit Sub
         End If
+        cmbhausnr.ItemsSource = hausnummernListe
+        cmbhausnr.DisplayMemberPath = "mySttring"
+        cmbhausnr.SelectedValuePath = "myindex"
+        cmbhausnr.IsDropDownOpen = (hausnummernListe IsNot Nothing AndAlso hausnummernListe.Count > 0)
+        l("tbStrasseFilter_TextChanged ende")
+
     End Sub
+
+    Private Function bildefkzStringAusStrings(fkzlist As List(Of myComboBoxItem)) As String
+        Dim summe = ""
+        Try
+            For i = 0 To fkzlist.Count - 1
+                If i = 0 Then
+                    summe = summe & fkzlist(i).myindex.ToString
+                Else
+                    summe = summe & "," & fkzlist(i).myindex.ToString
+                End If
+            Next
+            Return summe
+        Catch ex As Exception
+            Return summe
+        End Try
+    End Function
 
     Private Sub btnwordADR_Click(sender As Object, e As RoutedEventArgs)
         'Dim loklist = New List(Of clsFlurstueck)
@@ -896,7 +899,7 @@ Public Class winHaupt
             cmbGemeinden.SelectedIndex = CInt(neu.myindex)
             'cmbstrassen.SelectedIndex = CInt(adr.lageindex)
             'cmbstrassen.SelectedValue = CInt(adr.strasseName)
-            tblage.Text = adr.strasseName
+            tbstrasse.Text = adr.strasseName
             adr.lageindex = cmbstrassen.SelectedIndex
 
 
@@ -1087,7 +1090,7 @@ Public Class winHaupt
         Dim lokadr As New clsAdress
         lokadr.gemeindebigNRstring = aktadr.gemeindebigNRstring
         lokadr.gemeindeName = aktadr.gemeindeName
-        lokadr.strasseName = tblage.Text
+        lokadr.strasseName = tbstrasse.Text
         lokadr.gemeindebigNRstring = aktadr.gemeindebigNRstring
         lokadr.gemeindebigNRstring = aktadr.gemeindebigNRstring
         lokadr.gemeindebigNRstring = aktadr.gemeindebigNRstring
@@ -1165,12 +1168,15 @@ Public Class winHaupt
             nurstart = False
         End If
         l("gemeindeitem mySttring " & gemeindeitem.myindex & "  " & filter)
+
         Try
             'Dim result As List(Of myComboBoxItem) =
             '    Await Task.Run(Function()
             '                       Return clsGIStools.getLage(filter, gemeindeitem.myindex, mitfkz:=False)
             '                   End Function)
-            Dim result As List(Of myComboBoxItem) = clsGIStools.getLage(filter, gemeindeitem.myindex, mitfkz:=False, nurstart)
+            'Dim result As List(Of myComboBoxItem) = clsGIStools.getLage(filter, gemeindeitem.myindex, mitfkz:=False, nurstart)
+            Dim gemeindenummer = gemeindeitem.myindex.Replace("06438", "")
+            Dim result As List(Of myComboBoxItem) = clsGIStools.getStrassennamen(filter, gemeindenummer, mitfkz:=False, nurstart)
             If result Is Nothing Then
                 'Debug.Print("ss")
                 'l("tbStrasseFilter_TextChanged: Keine Ergebnisse gefunden")
@@ -1399,5 +1405,65 @@ Public Class winHaupt
         Process.Start(aktuelles)
     End Sub
 
+    Private Sub cmbhausnr_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
+        e.Handled = True
+        If Not istgeladen Then Exit Sub
+        If cmbhausnr.SelectedItem Is Nothing Then
+            Exit Sub
+        End If
+        Dim hausnummernListe As New List(Of myComboBoxItem)
+        'Dim item As myComboBoxItem = CType(cmbhausnr.SelectedItem, myComboBoxItem)
+        Dim hausnritem As myComboBoxItem = CType(cmbhausnr.SelectedItem, myComboBoxItem)
+        If hausnritem.myindex Is Nothing Then
+            aktadr.hausNr = CInt(hausnritem.mySttring.Trim)
+            aktadr.hausZusatz = ""
+            aktadr.HausKombi = hausnritem.mySttring.Trim
+        Else
+            Dim a() As String
+            a = hausnritem.myindex.Split("#"c)
+            aktadr.hausNr = CInt(a(0))
+            aktadr.hausZusatz = a(1)
+            aktadr.HausKombi = aktadr.hausNr & " " & aktadr.hausZusatz
+        End If
+        aktadr.HausKombi = hausnritem.mySttring.Trim
+        tbhausnr.Text = aktadr.HausKombi
+        aktadr.fkz = getFKZ4Hausnr(aktadr.strassenkennzeichen, aktadr.hausNr, aktadr.hausZusatz)
+        btngis4adr.IsEnabled = True
+    End Sub
+
+    Private Function getFKZ4Hausnr(strassenkennzeichen As String, hausNr As Integer, hausZusatz As String) As String
+        Dim fkz = ""
+        Try
+            l("getFKZ4Hausnr " & strassenkennzeichen)
+            l("hausNr " & hausNr)
+            l("hausZusatz " & hausZusatz)
+            Dim suchausdruck As String
+            If hausZusatz.Trim = String.Empty Then
+                fstREC.mydb.SQL = "SELECT distinct flst_flurstueckskennzeichen  FROM [LKOF].[dbo].[tbl_lieg_strasse2flurstueck]  where strasse_strassenkennzeichen='" &
+                      strassenkennzeichen.Trim & "'" &
+                    " And hausnummer = '" & hausNr.ToString.Trim & "' "
+            Else
+                fstREC.mydb.SQL = "SELECT distinct flst_flurstueckskennzeichen  FROM [LKOF].[dbo].[tbl_lieg_strasse2flurstueck]  where strasse_strassenkennzeichen='" &
+                           strassenkennzeichen.Trim & "'" &
+                         " And hausnummer = '" & hausNr.ToString.Trim & "' " &
+                         " And zusatz = '" & hausZusatz.Trim & "' "
+            End If
+
+            l(fstREC.mydb.SQL)
+            Dim hinweis = fstREC.getDataDT()
+            If fstREC.dt.Rows.Count > 0 Then
+                'If mitfkz Then
+                For i = 0 To fstREC.dt.Rows.Count - 1
+                    fkz = clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item(0)).ToString.Trim
+                Next
+            Else
+                MessageBox.Show("Kein entsprechendes Flurstück gefunden", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+            End If
+            Return fkz
+        Catch ex As Exception
+            l("Fehler in getFKZ4Hausnr " & ex.ToString)
+            Return Nothing
+        End Try
+    End Function
 
 End Class
