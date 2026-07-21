@@ -511,25 +511,15 @@ Public Class winHaupt
             tbhausnr.Text = ""
             Dim fkzlist = clsGIStools.getLage(aktadr.strasseName, aktadr.gemeindebigNRstring, mitfkz:=True, nurstart:=True)
             If fkzlist.Count > 0 Then
-                aktadr.fkz = bildefkzStringAusStrings(fkzlist)
                 fkzlist_lage.Clear()
-                Dim fsttemp As New clsFlurstueck
-                fsttemp.Flurstuecksskennzeichen = aktadr.fkz
-                fsttemp.fkzzerlegen()
-                fkzlist_lage.Clear()
-                fkzlist_lage.Add(fsttemp)
-
-
+                fkzlist_lage = bildefstListeAusStrings(fkzlist)
                 btnwordADR.IsEnabled = True
                 btngis4adr.IsEnabled = True
                 btnadr2PG.IsEnabled = False
-
-                'tools.gisLogoutUndStartFKZ(aktadr.fkz, gisLogouten)
             Else
                 MessageBox.Show("Keine Hausnummern zu dieser Straße gefunden!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
             End If
-            'Dim fkzstring = 'probaug.bildeFKZstring(fkzlist, 150)
-            'Dim flurstueckskennzeichen = fkzstring 
+
             Exit Sub
         End If
         cmbhausnr.ItemsSource = hausnummernListe
@@ -539,6 +529,28 @@ Public Class winHaupt
         l("tbStrasseFilter_TextChanged ende")
 
     End Sub
+
+    Private Function bildefstListeAusStrings(fkzlist As List(Of myComboBoxItem)) As List(Of clsFlurstueck)
+        Dim fstliste As New List(Of clsFlurstueck)
+        Dim fst As New clsFlurstueck
+        Try
+            For i = 0 To fkzlist.Count - 1
+                fst = New clsFlurstueck
+                fst.Flurstuecksskennzeichen = fkzlist(i).myindex.ToString
+                fst.fkzzerlegen()
+                fstliste.Add(fst)
+                'If i = 0 Then
+                '    summe = summe & fkzlist(i).myindex.ToString
+                'Else
+                '    summe = summe & "," & fkzlist(i).myindex.ToString
+                'End If
+            Next
+            Return fstliste
+        Catch ex As Exception
+            l("bildefstListeAusStrings " & ex.ToString)
+            Return fstliste
+        End Try
+    End Function
 
     Private Function bildefkzStringAusStrings(fkzlist As List(Of myComboBoxItem)) As String
         Dim summe = ""
@@ -552,6 +564,7 @@ Public Class winHaupt
             Next
             Return summe
         Catch ex As Exception
+            l("bildefkzStringAusStrings " & ex.ToString)
             Return summe
         End Try
     End Function
