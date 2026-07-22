@@ -652,7 +652,7 @@ Public Class probaug
                 " union " &
              "select feld1,feld3,concat(feld4,' ',feld8,' ',FELD10) as feld4  from GISVIEW1 where feld28='" & lokfst.gemarkungstext &
                 "' and feld13='" & lokfst.flur & "'" &
-                " and feld14='" & lokfst.fstueckKombi & "') order by feld1 desc"
+                " and feld14='" & lokfst.fstueckKombiOhneNull & "') order by feld1 desc"
 
         l(sql)
 

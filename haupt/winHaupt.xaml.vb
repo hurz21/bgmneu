@@ -519,7 +519,6 @@ Public Class winHaupt
             Else
                 MessageBox.Show("Keine Hausnummern zu dieser Straße gefunden!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
             End If
-
             Exit Sub
         End If
         cmbhausnr.ItemsSource = hausnummernListe

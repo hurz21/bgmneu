@@ -53,6 +53,14 @@ Public Class clsFlurstueck
             nenner = CInt(Flurstuecksskennzeichen.Substring(17, 4))
             gemarkungstext = gemparms.gemcode2gemarkungstext(gemcode)
             gemeindename = gemparms.gemcode2gemeindetext(gemcode)
+            fstueckKombi = _zaehler.ToString + "/" + _nenner.ToString
+            If nenner = 0 Then
+                fstueckKombiOhneNull = _zaehler.ToString
+            Else
+                fstueckKombiOhneNull = _zaehler.ToString + "/" + _nenner.ToString
+            End If
+
+
         Catch ex As Exception
             l("fehler")
         End Try
@@ -417,6 +425,8 @@ Public Class clsFlurstueck
     Public Property gid As Integer = 0
     Public Property gueltig As String = ""
     Public Property genese As Integer = 1
+    Public Property fstueckKombiOhneNull As String = ""
+
     Function flurstueckZuFKZ() As String
         l("in flurstueckZuFKZ")
         Dim fuell, fs2, _flur As String
