@@ -4,7 +4,7 @@ Public Class clsToolWerkzeuge
 
     'ausgabeKatNichtOk(rawListOfclsBaulast, "c:\baulastenout\Baulasten_katNichtOK" & Now.ToString("yyyyMMddhhmm") & ".csv")
     Shared Function init() As String
-        Dim datei As String = tools.baulastenoutDir & "\Baulasten_katNichtOK" & Now.ToString("yyyyMMddhhmm") & ".csv"
+        Dim datei As String = tools.baulastenoutDir & "\Baulasten_katNichtOK" & Now.ToString("yyyyMMddhhmmss") & ".csv"
         'Dim sql As String
 
         'l(" MOD holeProBaugDaten anfang")

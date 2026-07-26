@@ -1401,7 +1401,7 @@ Public Class winHaupt
         Dim zieldatei As String
         zieldatei = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
         zieldatei = IO.Path.Combine(zieldatei, "bgm")
-        zieldatei = IO.Path.Combine(zieldatei, "FSTliste" & Now.ToString("yyyyMMddhhmm") & ".csv")
+        zieldatei = IO.Path.Combine(zieldatei, "FSTliste" & Now.ToString("yyyyMMddhhmmss") & ".csv")
         If tools.erzeugeCSVDateiFSTbulk(zieldatei, mapTools.BULKfst2nameList, tbeigbulkAuswahl.Text) Then
             Process.Start(zieldatei)
         Else
