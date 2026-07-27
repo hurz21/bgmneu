@@ -509,10 +509,14 @@ Public Class winHaupt
             'über die lage abfragen
             hausnummernListe.Clear()
             tbhausnr.Text = ""
-            Dim fkzlist = clsGIStools.getLage(aktadr.strasseName, aktadr.gemeindebigNRstring, mitfkz:=True, nurstart:=True)
+            Dim fkzlist As List(Of myComboBoxItem)
+            fkzlist = clsGIStools.getLage(aktadr.strasseName, aktadr.gemeindebigNRstring,
+                            mitfkz:=True, nurstart:=True)
             If fkzlist.Count > 0 Then
                 fkzlist_lage.Clear()
-                fkzlist_lage = bildefstListeAusStrings(fkzlist)
+                'fkzlist_lage = bildefstListeAusStrings(fkzlist)
+                tools.fkzlist = bildefstListeAusStrings(fkzlist)
+                aktadr.fkz = bildefkzStringAusStrings(fkzlist)
                 btnwordADR.IsEnabled = True
                 btngis4adr.IsEnabled = True
                 btnadr2PG.IsEnabled = False
