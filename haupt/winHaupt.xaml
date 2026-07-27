@@ -6,7 +6,7 @@
        
         xmlns:local="clr-namespace:bgm" AllowDrop="True"
         mc:Ignorable="d" Left="1" WindowStyle="ToolWindow"    Drop="Window_Drop"
-        Title="BGM" Height="381" Width="289" Background="Beige" >
+        Title="BGM" Height="451" Width="289" Background="Beige" >
     <DockPanel Margin="5">
         <StackPanel Orientation="Vertical"  >
             <StackPanel Orientation="Horizontal">
@@ -68,10 +68,11 @@ Background="Beige" Foreground="Black"
                         </StackPanel>
                     </StackPanel>
                 </TabItem>
-                <TabItem Name="tabadr" Header="Adresse"  FontSize="9"  VerticalAlignment="Top">
-                    <!--<TabItem.Header>
-                        <Label Content="Adresse" FontSize="9"     VerticalAlignment="Top"  />
-                    </TabItem.Header>-->
+                <TabItem Name="tabadr"   FontSize="9"  VerticalAlignment="Top"
+                         >
+                    <TabItem.Header>
+                        <Label Content="Adresse"        />
+                    </TabItem.Header>
                     <StackPanel  >
                         <StackPanel Orientation="Horizontal" >
                             <Label Width="75" FontSize="10">Gemeinde:</Label>
@@ -225,7 +226,7 @@ Background="Beige" Foreground="Black"
                     <!--<TabItem.Header>
                         <Label Content="B-Plan" FontSize="9"    VerticalAlignment="Top"  />
                     </TabItem.Header>-->
-                    <StackPanel Height="297">
+                    <StackPanel Height="287">
 
                         <StackPanel Orientation="Horizontal" Visibility="Collapsed">
                             <Label Width="75" FontSize="10">Gemeinde:</Label>
