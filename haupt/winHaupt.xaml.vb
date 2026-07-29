@@ -94,6 +94,7 @@ Public Class winHaupt
         themendateien.Add(New myComboBoxItem With {.mySttring = "UNB", .myindex = "themendateiUNB.txt"})
         themendateien.Add(New myComboBoxItem With {.mySttring = "UWBB", .myindex = "themendateiUWBB.txt"})
         themendateien.Add(New myComboBoxItem With {.mySttring = "Schornsteinfegerei", .myindex = "themendateiFeger.txt"})
+        themendateien.Add(New myComboBoxItem With {.mySttring = "Zivilschutz", .myindex = "themendateiZivilschutz.txt"})
 
         cmbThemendatei.ItemsSource = themendateien
         cmbThemendatei.DisplayMemberPath = "mySttring"
@@ -1321,12 +1322,13 @@ Public Class winHaupt
         url = "https://gis.kreis-of.de/LKOF/asp/main.asp?" & themen & "&skipwelcome=true"
         l("url: " & url)
         Process.Start(url)
-
+        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "uebersicht")
     End Sub
 
     Private Sub btnOptionen_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
         tabEig.SelectedItem = tabOptionen
+        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "optionen")
     End Sub
 
     Private Sub btnsucheeigentuemer_Click(sender As Object, e As RoutedEventArgs)
@@ -1338,7 +1340,7 @@ Public Class winHaupt
             MessageBox.Show("Keine Rechte vorhanden", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
             Exit Sub
         End If
-        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "eigentuemerbulk")
+        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "eigentuemerbulk_" & tbeigbulkNAME.Text)
         tbeigbulkAuswahl.Text = ""
         btnBULKexcel.IsEnabled = False
         btnBULKimGIS.IsEnabled = False
@@ -1434,6 +1436,7 @@ Public Class winHaupt
         Dim appDir = IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
         Dim aktuelles = IO.Path.Combine(appDir, "aktuelles.html")
         Process.Start(aktuelles)
+        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "aktuelles")
     End Sub
 
     Private Sub cmbhausnr_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
@@ -1519,4 +1522,12 @@ Public Class winHaupt
         End Try
     End Function
 
+    Private Sub btnHilfe_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+        Process.Start(New ProcessStartInfo With {
+     .FileName = "https://gis.kreis-of.de/LKOF/upload/tutorial/videos.html#ingradatool",
+     .UseShellExecute = True
+ })
+        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "Hilfe")
+    End Sub
 End Class

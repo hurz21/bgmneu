@@ -15,18 +15,27 @@
             Background="Beige" Foreground="Black"
             >Übersicht</Button>
                 <Button Name="btnAktuell"  Click="btnAktuell_Click"  Visibility="Visible" Margin="5" Height="25"
-    Background="Beige" Foreground="Black"
-    >Aktuelles</Button>
+                        Background="Beige" Foreground="Black"
+                        >Aktuelles</Button>
                 <Button Name="btnTutorials"  Click="btnTutorial_Click"  Visibility="Visible" Margin="5" Height="25"
-Background="Beige" Foreground="Black"
->Tutorial</Button>
+                        Background="Beige" Foreground="Black"
+                        >Tutorial</Button>
                 <Button Name="btnOptionen"  Click="btnOptionen_Click"  Visibility="Visible" Margin="5" Height="25"
-   Background="Beige" Foreground="Black"
+                          Background="Beige" Foreground="Black"
    >
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock >Einstellungen</TextBlock>
+                        <!--<TextBlock >Einstellung</TextBlock>-->
                         <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE115;"  Margin="5,2,0,0"/>
-                    </StackPanel></Button>
+                    </StackPanel>
+                </Button>
+                <Button Name="btnHilfe"  Click="btnHilfe_Click"  Visibility="Visible" Margin="5" Height="25"
+                        Background="Beige" Foreground="Black"
+                            >
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Width="20">
+                        <TextBlock  FontFamily="Arial Black" Width="20" HorizontalAlignment="Right"> _?</TextBlock>
+                      
+                    </StackPanel>
+                </Button>
             </StackPanel>  
             
             <TabControl x:Name="tabEig" FontSize="9" >
@@ -313,7 +322,7 @@ Background="Beige" Foreground="Black"
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Padding="5,10,0,0">Themen:</TextBlock>
                             <ComboBox x:Name="cmbThemendatei" HorizontalAlignment="Left" 
-                 Height="25" Width="180" Margin="5" FontSize="10"
+                 Height="25" Width="180" Margin="5" FontSize="10" 
                                   SelectionChanged="cmbThemendatei_SelectionChanged"/>
                         </StackPanel>
                         <Button Name="btnTutorial" Click="btnTutorial_Click" Margin="5">Tutorials</Button>
