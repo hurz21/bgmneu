@@ -1571,6 +1571,7 @@ Public Class winHaupt
         e.Handled = True
         nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "adr_google")
         Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
+        l("coordinatendatei " & coordinatendatei)
         Dim ident As String
         ident = tools.makeIdentAusFKZ(aktadr.fkz)
         Dim utm32koordinaten = tools.getUTM32Koordinaten4fkz(ident, coordinatendatei)
@@ -1617,16 +1618,20 @@ Public Class winHaupt
         nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "adr_3d")
 
         Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
+        l("coordinatendatei " & coordinatendatei)
         Dim ident As String
         ident = tools.makeIdentAusFKZ(aktadr.fkz)
+        l("ident " & ident)
         Dim utm32koordinaten = tools.getUTM32Koordinaten4fkz(ident, coordinatendatei)
         Dim koordinaten = utmtransform.UTM32NachWGS84(utm32koordinaten.rechts, utm32koordinaten.hoch)
 
         Dim laenge As Double = koordinaten.Laengengrad
         Dim breite As Double = koordinaten.Breitengrad
-
+        l("breite  " & breite)
+        l("laenge " & laenge)
         'korrektur
         breite = breite - 0.0009
+        l("breite nach korr " & breite)
 
         Dim googleUrl As String =
           "https://www.google.com/maps/@" &
