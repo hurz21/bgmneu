@@ -2015,4 +2015,73 @@ Module tools
             Return False
         End Try
     End Function
+    Public Function makeIdentAusFKZ(Flurstuecksskennzeichen As String) As String
+        Try
+            '060 743 003 00214 0016__
+            '060743003002140016__
+            '060729016000520005
+            If Flurstuecksskennzeichen Is Nothing OrElse Flurstuecksskennzeichen = String.Empty Then
+                Return String.Empty
+            End If
+            Dim gemcode = (Flurstuecksskennzeichen.Substring(3, 3))
+            Dim flur = (Flurstuecksskennzeichen.Substring(7, 3))
+            Dim zaehler = (Flurstuecksskennzeichen.Substring(11, 5))
+            Dim nenner = (Flurstuecksskennzeichen.Substring(17, 4))
+            If nenner = "0000" Then
+                Return "060" & gemcode & flur & zaehler & "______"
+            Else
+                Return "060" & gemcode & flur & zaehler & nenner & "__"
+            End If
+
+        Catch ex As Exception
+            l("fehler in makeIdentAusFKZ " & ex.ToString)
+            Return ""
+        End Try
+    End Function
+    Friend Function getUTM32Koordinaten4fkz(ident As String, coordinatendatei As String) As (rechts As Integer, hoch As Integer)
+        ' Standard-Rückgabewert, falls Datei fehlt oder Ident nicht gefunden wird
+        Dim result As (rechts As Integer, hoch As Integer) = (0, 0)
+#If DEBUG Then
+        coordinatendatei = "W:\diverses\coordinates.csv"
+#End If
+        If Not IO.File.Exists(coordinatendatei) Then
+            Return result
+        End If
+
+        ' Suchbegriff aus das Adress-Objekt holen
+        Dim suchIdent As String = ident
+
+        Try
+            ' Datei zeilenweise durchlaufen (spart Speicher bei großen Dateien)
+            For Each line As String In IO.File.ReadLines(coordinatendatei)
+                If String.IsNullOrWhiteSpace(line) OrElse line.StartsWith("ident;") Then
+                    Continue For ' Header oder Leerzeilen überspringen
+                End If
+
+                ' Zeile an Strichpunkten trennen
+                Dim teile As String() = line.Split(";"c)
+
+                ' Prüfen, ob die Zeile das richtige Format hat (mindestens 3 Spalten)
+                If teile.Length >= 3 Then
+                    Dim dateiIdent As String = teile(0).Trim()
+
+                    ' Identitäts-Vergleich
+                    If dateiIdent.Equals(suchIdent, StringComparison.OrdinalIgnoreCase) Then
+                        Dim r As Integer
+                        Dim h As Integer
+
+                        ' Werte sicher in Integers umwandeln
+                        Integer.TryParse(teile(1).Trim(), r)
+                        Integer.TryParse(teile(2).Trim(), h)
+
+                        Return (rechts:=r, hoch:=h)
+                    End If
+                End If
+            Next
+        Catch ex As Exception
+            l("fehler in getutm32 " & ex.ToString)
+        End Try
+
+        Return result
+    End Function
 End Module

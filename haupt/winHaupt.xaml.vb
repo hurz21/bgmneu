@@ -1530,4 +1530,181 @@ Public Class winHaupt
  })
         nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "Hilfe")
     End Sub
+
+    Private Sub btntest_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+        Dim rw As Double = 480000
+        Dim hw As Double = 5550000
+
+        Dim koordinaten = utmtransform.UTM32NachWGS84(rw, hw)
+
+        Dim laenge As Double = koordinaten.Laengengrad
+        Dim breite As Double = koordinaten.Breitengrad
+
+        Debug.Print("Länge: " & laenge.ToString("0.000000"))
+        Debug.Print("Breite: " & breite.ToString("0.000000"))
+
+
+        'Google Maps erwartet die Reihenfolge **Breitengrad, Längengrad **, also beispielsweise:  
+
+        '```text
+        '50.123456, 8.654321
+        '```
+
+        'Für einen Google-Maps-Link:
+
+        '```vbnet
+        Dim googleUrl As String =
+            "https://www.google.com/maps?q=" &
+            breite.ToString(Globalization.CultureInfo.InvariantCulture) & "," &
+            laenge.ToString(Globalization.CultureInfo.InvariantCulture)
+        'Dim googleEarthUrl As String =
+        '    "https://earth.google.com/?ll=" &
+        '    breite.ToString(Globalization.CultureInfo.InvariantCulture) & "," &
+        '    laenge.ToString(Globalization.CultureInfo.InvariantCulture)
+        '  http: //earth.google.com/?ll=Breitengrad,Längengrad
+        Process.Start(googleUrl)
+        'Process.Start(googleEarthUrl)
+    End Sub
+
+    Private Sub btnadrgoogle_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "adr_google")
+        Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
+        Dim ident As String
+        ident = tools.makeIdentAusFKZ(aktadr.fkz)
+        Dim utm32koordinaten = tools.getUTM32Koordinaten4fkz(ident, coordinatendatei)
+        Dim koordinaten = utmtransform.UTM32NachWGS84(utm32koordinaten.rechts, utm32koordinaten.hoch)
+        Dim laenge As Double = koordinaten.Laengengrad
+        Dim breite As Double = koordinaten.Breitengrad
+        Dim googleUrl As String =
+          "https://www.google.com/maps?q=" &
+          breite.ToString(Globalization.CultureInfo.InvariantCulture) & "," &
+          laenge.ToString(Globalization.CultureInfo.InvariantCulture)
+        Process.Start(googleUrl)
+        'https://gis.kreis-of.de/LKOF/online/?x=3485100&y=5548200&scale=1000&lon=8.767006894380913&lat=50.016123794054096&zoom=18&select=false
+    End Sub
+
+    Private Sub btnadrIngradaOnline_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "adr_igronline")
+
+        Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
+        Dim ident As String
+        ident = tools.makeIdentAusFKZ(aktadr.fkz)
+        Dim utm32koordinaten = tools.getUTM32Koordinaten4fkz(ident, coordinatendatei)
+        Dim koordinaten = utmtransform.UTM32NachWGS84(utm32koordinaten.rechts, utm32koordinaten.hoch)
+
+        Dim laenge As Double = koordinaten.Laengengrad
+        Dim breite As Double = koordinaten.Breitengrad
+
+        Dim googleUrl As String =
+          "https://gis.kreis-of.de/LKOF/online/?&scale=1000&lat=" &
+          breite.ToString(Globalization.CultureInfo.InvariantCulture) & "&lon=" &
+          laenge.ToString(Globalization.CultureInfo.InvariantCulture) &
+          "&zoom=18&select=true"
+
+        Process.Start(googleUrl)
+
+        'https://gis.kreis-of.de/LKOF/online/?x=3485100&y=5548200&scale=1000&lon=8.767006894380913&lat=50.016123794054096&zoom=18&select=false
+        'https://gis.kreis-of.de/LKOF/online/?&scale=1000&lon=8.767006894380913&lat=50.016123794054096&zoom=18&select=false
+
+        'https://ing2googlemaps.ingrada.de/i2g.php?lon=8.96480864751612&lat=50.039391158101&zoom=18&map_type=03
+    End Sub
+
+    Private Sub btnadr3d_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "adr_3d")
+
+        Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
+        Dim ident As String
+        ident = tools.makeIdentAusFKZ(aktadr.fkz)
+        Dim utm32koordinaten = tools.getUTM32Koordinaten4fkz(ident, coordinatendatei)
+        Dim koordinaten = utmtransform.UTM32NachWGS84(utm32koordinaten.rechts, utm32koordinaten.hoch)
+
+        Dim laenge As Double = koordinaten.Laengengrad
+        Dim breite As Double = koordinaten.Breitengrad
+
+        'korrektur
+        breite = breite - 0.0009
+
+        Dim googleUrl As String =
+          "https://www.google.com/maps/@" &
+          breite.ToString(Globalization.CultureInfo.InvariantCulture) & "," &
+          laenge.ToString(Globalization.CultureInfo.InvariantCulture) &
+          ",72a,35y,359.25h,64.17t/data=!3m1!1e3?entry=ttu&g_ep=EgoyMDI2MDgwNC4wIKXMDSoASAFQAw%3D%3D"
+
+        Process.Start(googleUrl)
+
+        'https://gis.kreis-of.de/LKOF/online/?x=3485100&y=5548200&scale=1000&lon=8.767006894380913&lat=50.016123794054096&zoom=18&select=false
+        'https://gis.kreis-of.de/LKOF/online/?&scale=1000&lon=8.767006894380913&lat=50.016123794054096&zoom=18&select=false
+
+        'https://ing2googlemaps.ingrada.de/i2g.php?lon=8.96480864751612&lat=50.039391158101&zoom=18&map_type=03
+
+        'https://www.google.com/maps/@50.040741,9.008404,72a,35y,359.25h,64.17t/data=!3m1!1e3?entry=ttu&g_ep=EgoyMDI2MDgwNC4wIKXMDSoASAFQAw%3D%3D
+    End Sub
+
+    Private Sub btnfstgoogle_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "fst_google")
+        Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
+        Dim ident As String
+        ident = tools.makeIdentAusFKZ(aktfst.flurstueckZuFKZ)
+        Dim utm32koordinaten = tools.getUTM32Koordinaten4fkz(ident, coordinatendatei)
+        Dim koordinaten = utmtransform.UTM32NachWGS84(utm32koordinaten.rechts, utm32koordinaten.hoch)
+        Dim laenge As Double = koordinaten.Laengengrad
+        Dim breite As Double = koordinaten.Breitengrad
+        Dim googleUrl As String =
+          "https://www.google.com/maps?q=" &
+          breite.ToString(Globalization.CultureInfo.InvariantCulture) & "," &
+          laenge.ToString(Globalization.CultureInfo.InvariantCulture)
+        Process.Start(googleUrl)
+        'https://gis.kreis-of.de/LKOF/online/?x=3485100&y=5548200&scale=1000&lon=8.767006894380913&lat=50.016123794054096&zoom=18&select=false
+    End Sub
+
+    Private Sub btnfstIngradaOnline_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "fst_igronline")
+
+        Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
+        Dim ident As String
+        ident = tools.makeIdentAusFKZ(aktfst.flurstueckZuFKZ)
+        Dim utm32koordinaten = tools.getUTM32Koordinaten4fkz(ident, coordinatendatei)
+        Dim koordinaten = utmtransform.UTM32NachWGS84(utm32koordinaten.rechts, utm32koordinaten.hoch)
+
+        Dim laenge As Double = koordinaten.Laengengrad
+        Dim breite As Double = koordinaten.Breitengrad
+
+        Dim googleUrl As String =
+          "https://gis.kreis-of.de/LKOF/online/?&scale=1000&lat=" &
+          breite.ToString(Globalization.CultureInfo.InvariantCulture) & "&lon=" &
+          laenge.ToString(Globalization.CultureInfo.InvariantCulture) &
+          "&zoom=18&select=true"
+
+        Process.Start(googleUrl)
+    End Sub
+
+    Private Sub btnfst3d_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "fst_3d")
+
+        Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
+        Dim ident As String
+        ident = tools.makeIdentAusFKZ(aktfst.Flurstuecksskennzeichen)
+        Dim utm32koordinaten = tools.getUTM32Koordinaten4fkz(ident, coordinatendatei)
+        Dim koordinaten = utmtransform.UTM32NachWGS84(utm32koordinaten.rechts, utm32koordinaten.hoch)
+
+        Dim laenge As Double = koordinaten.Laengengrad
+        Dim breite As Double = koordinaten.Breitengrad
+        'korrektur
+        breite = breite - 0.0009
+
+        Dim googleUrl As String =
+          "https://www.google.com/maps/@" &
+          breite.ToString(Globalization.CultureInfo.InvariantCulture) & "," &
+          laenge.ToString(Globalization.CultureInfo.InvariantCulture) &
+          ",72a,35y,359.25h,64.17t/data=!3m1!1e3?entry=ttu&g_ep=EgoyMDI2MDgwNC4wIKXMDSoASAFQAw%3D%3D"
+
+        Process.Start(googleUrl)
+    End Sub
 End Class

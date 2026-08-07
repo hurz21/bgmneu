@@ -36,6 +36,14 @@
                       
                     </StackPanel>
                 </Button>
+                <Button Name="btntest"  Click="btntest_Click"  Visibility="Visible" Margin="5" Height="25"
+                        Background="Beige" Foreground="Black"
+                            >
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Width="20">
+                        <TextBlock   Width="20" HorizontalAlignment="Right"> test</TextBlock>
+
+                    </StackPanel>
+                </Button>
             </StackPanel>  
             
             <TabControl x:Name="tabEig" FontSize="9" >
@@ -59,7 +67,7 @@
 
                             </TextBox>
                             <ComboBox x:Name="ComboHistory" Height="25"  Width="63"
-    SelectionChanged="ComboHistory_SelectionChanged"/>
+                                         SelectionChanged="ComboHistory_SelectionChanged"/>
 
                             <!--<Button Content="Save" Height="30" Margin="5"
   Click="ButtonSaveHistory_Click"/>-->
@@ -155,6 +163,21 @@
                                 Style="{StaticResource lessButton}"  Margin="0"
                                   IsEnabled="False">Word-Datei</Button>
                         </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Width="75" FontSize="10"  >mehr GIS</Label>
+                            <Button x:Name="btnadrgoogle" Click="btnadrgoogle_Click" 
+                                 HorizontalAlignment="Center"  Width="60"
+                                Style="{StaticResource lessButton}"  Margin="0"
+                                  IsEnabled="True">GoogleMaps</Button>
+                            <Button x:Name="btnadrIngradaOnline" Click="btnadrIngradaOnline_Click" 
+                                  HorizontalAlignment="Center"  Width="60"
+                                 Style="{StaticResource lessButton}"  Margin="0"
+                                   IsEnabled="True">BürgerGIS</Button>
+                            <Button x:Name="btnadr3d" Click="btnadr3d_Click" 
+                                      HorizontalAlignment="Center"  Width="40" ToolTip="3D Ansicht und bei starkem Zoom Streetview"
+                                     Style="{StaticResource lessButton}"  Margin="0"
+                                       IsEnabled="True">3D</Button>
+                        </StackPanel>
                     </StackPanel>
                 </TabItem>
                 <TabItem Name="tabfst"   FontSize="9" Header="Flurstück"   VerticalAlignment="Top">
@@ -227,7 +250,21 @@
                                              Style="{StaticResource lessButton}" Width="160" 
                             >Word-Datei</Button>
                         </StackPanel>
-
+                        <StackPanel Orientation="Horizontal">
+                            <Label Width="75" FontSize="10"  >mehr GIS</Label>
+                            <Button x:Name="btnfstgoogle" Click="btnfstgoogle_Click" 
+                                     HorizontalAlignment="Center"  Width="60"
+                                    Style="{StaticResource lessButton}"  Margin="0"
+                                      IsEnabled="True">GoogleMaps</Button>
+                            <Button x:Name="btnfstIngradaOnline" Click="btnfstIngradaOnline_Click" 
+                                      HorizontalAlignment="Center"  Width="60"
+                                     Style="{StaticResource lessButton}"  Margin="0"
+                                       IsEnabled="True">BürgerGIS</Button>
+                            <Button x:Name="btnfst3d" Click="btnfst3d_Click" 
+                                  HorizontalAlignment="Center"  Width="40" ToolTip="3D Ansicht und bei starkem Zoom Streetview"
+                                 Style="{StaticResource lessButton}"  Margin="0"
+                                   IsEnabled="True">3D</Button>
+                        </StackPanel>
 
                     </StackPanel>
                 </TabItem>
