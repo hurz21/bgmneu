@@ -1674,7 +1674,8 @@ Public Class winHaupt
         l("breite  " & breite)
         l("laenge " & laenge)
         'korrektur
-        breite = breite - 0.0009
+        Dim korrektur As Double = 0.0009
+        breite = breite - korrektur
         l("breite nach korr " & breite)
 
         Dim googleUrl As String =
@@ -1685,7 +1686,11 @@ Public Class winHaupt
 
         'Process.Start(googleUrl)
         Process.Start("chrome.exe", "--app=" & googleUrl)
-
+        breite = breite + korrektur
+        Dim sv = "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=" & breite.ToString(Globalization.CultureInfo.InvariantCulture) & "," &
+          laenge.ToString(Globalization.CultureInfo.InvariantCulture) &
+          "&heading=359&pitch=18&fov=80"
+        Process.Start("chrome.exe", "--app=" & sv)
         'https://gis.kreis-of.de/LKOF/online/?x=3485100&y=5548200&scale=1000&lon=8.767006894380913&lat=50.016123794054096&zoom=18&select=false
         'https://gis.kreis-of.de/LKOF/online/?&scale=1000&lon=8.767006894380913&lat=50.016123794054096&zoom=18&select=false
 
@@ -1760,7 +1765,8 @@ Public Class winHaupt
         Dim laenge As Double = koordinaten.Laengengrad
         Dim breite As Double = koordinaten.Breitengrad
         'korrektur
-        breite = breite - 0.0009
+        Dim korrektur = 0.0009
+        breite = breite - korrektur
 
         Dim googleUrl As String =
           "https://www.google.com/maps/@" &
@@ -1770,5 +1776,10 @@ Public Class winHaupt
 
         'Process.Start(googleUrl)
         Process.Start("chrome.exe", "--app=" & googleUrl)
+        breite = breite + korrektur
+        Dim sv = "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=" & breite.ToString(Globalization.CultureInfo.InvariantCulture) & "," &
+          laenge.ToString(Globalization.CultureInfo.InvariantCulture) &
+          "&heading=359&pitch=18&fov=80"
+        Process.Start("chrome.exe", "--app=" & sv)
     End Sub
 End Class
