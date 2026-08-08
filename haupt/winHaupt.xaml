@@ -103,7 +103,7 @@
                             <Label Width="75"  >Strassenfilter:</Label>
                             <Border BorderThickness="0.5" BorderBrush="Black">
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBox Name="tbStrasseFilter" Width="80" Height="30" Padding="2" 
+                                    <TextBox Name="tbStrasseFilter" Width="80" Height="30" Padding="2" Focusable="True"
                                       TextChanged="tbStrasseFilter_TextChanged" ></TextBox>
                                     <CheckBox x:Name="chkNurStart" Width="75" Height="21"  Margin="5,9,0,0"
                                        IsChecked="True" Checked="chkNurStart_Checked" Unchecked="chkNurStart_Checked"
@@ -143,7 +143,7 @@
                         <StackPanel Orientation="Horizontal" >
                             <Label Width="75" FontSize="10"  >GIS starten:</Label>
                             <Button x:Name="btngis4adr" Click="btngis4adr_Click"   
-                                    IsEnabled="False" Width="160">Adresse im GIS</Button>
+                                    IsEnabled="True" Width="160">Adresse im GIS</Button>
                             <ComboBox x:Name="cmb20adr"  
                                    SelectionChanged="cmb20adr_SelectionChanged" 
                                     DisplayMemberPath="Anzeige"
@@ -161,7 +161,7 @@
                             <Button x:Name="btnwordADR" Click="btnwordADR_Click" 
                                  HorizontalAlignment="Center"  Width="160"
                                 Style="{StaticResource lessButton}"  Margin="0"
-                                  IsEnabled="False">Word-Datei</Button>
+                                  IsEnabled="True">Word-Datei</Button>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Label Width="75" FontSize="10"  >mehr GIS</Label>

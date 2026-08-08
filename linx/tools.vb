@@ -2042,7 +2042,7 @@ Module tools
         ' Standard-Rückgabewert, falls Datei fehlt oder Ident nicht gefunden wird
         Dim result As (rechts As Integer, hoch As Integer) = (0, 0)
 #If DEBUG Then
-        coordinatendatei = "W:\diverses\coordinates.csv"
+        coordinatendatei = "W:\diverses\bgmingrada\coordinates.csv"
 #End If
         If Not IO.File.Exists(coordinatendatei) Then
             Return result

@@ -335,6 +335,10 @@ Public Class winHaupt
         setzeReiterAppNummer(2)   '4=probaug  3=bplan  2=fst 1=adr  0=baulast
         nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "fst_word")
         If tools.eigentuemerAbfrageErlaubt Then
+            If aktfst.flur = 0 Or aktfst.zaehler = 0 Then
+                MessageBox.Show("Bitte wählen Sie ein Flurstück aus", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+                Exit Sub
+            End If
             eigentuemerWord(False, fkzlist_lage, lage_lage)
         Else
             'MsgBox("Keine Rechte vorhanden")
@@ -422,6 +426,10 @@ Public Class winHaupt
         e.Handled = True
         setzeReiterAppNummer(2)   '4=probaug  3=bplan  2=fst 1=adr  0=baulast
         nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "fst_gis")
+        If aktfst.flur = 0 Or aktfst.zaehler = 0 Then
+            MessageBox.Show("Bitte wählen Sie ein Flurstück aus", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+            Exit Sub
+        End If
         fkzlist = New List(Of clsFlurstueck)
         fkzlist.Add(aktfst)
         Dim index As Integer = CInt(cmbGemarkungen.SelectedIndex)
@@ -579,6 +587,10 @@ Public Class winHaupt
         setzeReiterAppNummer(1)   '4=probaug  3=bplan  2=fst 1=adr  0=baulast
         nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "adr_word")
         If tools.eigentuemerAbfrageErlaubt Then
+            If aktadr.fkz Is Nothing Or aktadr.fkz = String.Empty Then
+                MessageBox.Show("Bitte wählen Sie eine Adresse aus", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+                Exit Sub
+            End If
             eigentuemerWord(False, fkzlist_lage, lage_lage)
         Else
             'MsgBox("Keine Rechte vorhanden")
@@ -596,6 +608,10 @@ Public Class winHaupt
         'loklist = readFlurst_Form()
         'Dim gemeindeindex As Integer = CInt(cmbGemarkungen.SelectedIndex)
         'Dim adr As New clsAdress
+        If aktadr.fkz Is Nothing Or aktadr.fkz = String.Empty Then
+            MessageBox.Show("Bitte wählen Sie eine Adresse aus", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+            Exit Sub
+        End If
         Try
             ' tools.writeFlurstCookie(gemaIndex.ToString, (fkzlist_lage.Item(0).flur.ToString), (fkzlist_lage.Item(0).zaehler.ToString), (fkzlist_lage.Item(0).nenner.ToString), "bgm_FST_cookie.txt")
             Dim Url = gisLogoutUndStartFKZ(aktadr.fkz, gisLogouten)
@@ -861,6 +877,7 @@ Public Class winHaupt
         If Not istgeladen Then Exit Sub
         tbStrasseFilter.Text = ""
         cmbstrassen.ItemsSource = Nothing
+        tbStrasseFilter.Focus()
     End Sub
 
     'Private Sub btnSucheadresse_Click(sender As Object, e As RoutedEventArgs)
@@ -1037,6 +1054,10 @@ Public Class winHaupt
             MessageBox.Show("Keine Rechte vorhanden", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
             Exit Sub
         End If
+        If aktfst.flur = 0 Or aktfst.zaehler = 0 Then
+            MessageBox.Show("Bitte wählen Sie ein Flurstück aus", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+            Exit Sub
+        End If
         Dim probaugVorgange As New List(Of myComboBoxItem)
         fkzlist = New List(Of clsFlurstueck)
         fkzlist = readFlurst_Form()
@@ -1113,6 +1134,10 @@ Public Class winHaupt
         nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "adr_vorgang")
         If Not tools.eigentuemerAbfrageErlaubt Then
             MessageBox.Show("Keine Rechte vorhanden", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+            Exit Sub
+        End If
+        If aktadr.fkz Is Nothing Or aktadr.fkz = String.Empty Then
+            MessageBox.Show("Bitte wählen Sie eine Adresse aus", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
             Exit Sub
         End If
         setzeReiterAppNummer(1)   '4=probaug  3=bplan  2=fst 1=adr  0=baulast
@@ -1573,16 +1598,27 @@ Public Class winHaupt
         Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
         l("coordinatendatei " & coordinatendatei)
         Dim ident As String
+        If aktadr.fkz Is Nothing Or aktadr.fkz = String.Empty Then
+            MessageBox.Show("Bitte wählen Sie eine Adresse aus", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+            Exit Sub
+        End If
         ident = tools.makeIdentAusFKZ(aktadr.fkz)
         Dim utm32koordinaten = tools.getUTM32Koordinaten4fkz(ident, coordinatendatei)
         Dim koordinaten = utmtransform.UTM32NachWGS84(utm32koordinaten.rechts, utm32koordinaten.hoch)
         Dim laenge As Double = koordinaten.Laengengrad
         Dim breite As Double = koordinaten.Breitengrad
+        If laenge = 0 Or breite = 0 Then
+            MessageBox.Show("Keine Koordinaten gefunden", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+            Exit Sub
+        End If
         Dim googleUrl As String =
           "https://www.google.com/maps?q=" &
           breite.ToString(Globalization.CultureInfo.InvariantCulture) & "," &
           laenge.ToString(Globalization.CultureInfo.InvariantCulture)
-        Process.Start(googleUrl)
+        l("googleUrl " & googleUrl)
+        'Process.Start(googleUrl)
+
+        Process.Start("chrome.exe", "--app=" & googleUrl)
         'https://gis.kreis-of.de/LKOF/online/?x=3485100&y=5548200&scale=1000&lon=8.767006894380913&lat=50.016123794054096&zoom=18&select=false
     End Sub
 
@@ -1592,6 +1628,10 @@ Public Class winHaupt
 
         Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
         Dim ident As String
+        If aktadr.fkz Is Nothing Or aktadr.fkz = String.Empty Then
+            MessageBox.Show("Bitte wählen Sie eine Adresse aus", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+            Exit Sub
+        End If
         ident = tools.makeIdentAusFKZ(aktadr.fkz)
         Dim utm32koordinaten = tools.getUTM32Koordinaten4fkz(ident, coordinatendatei)
         Dim koordinaten = utmtransform.UTM32NachWGS84(utm32koordinaten.rechts, utm32koordinaten.hoch)
@@ -1619,6 +1659,10 @@ Public Class winHaupt
 
         Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
         l("coordinatendatei " & coordinatendatei)
+        If aktadr.fkz Is Nothing Or aktadr.fkz = String.Empty Then
+            MessageBox.Show("Bitte wählen Sie eine Adresse aus", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+            Exit Sub
+        End If
         Dim ident As String
         ident = tools.makeIdentAusFKZ(aktadr.fkz)
         l("ident " & ident)
@@ -1639,7 +1683,8 @@ Public Class winHaupt
           laenge.ToString(Globalization.CultureInfo.InvariantCulture) &
           ",72a,35y,359.25h,64.17t/data=!3m1!1e3?entry=ttu&g_ep=EgoyMDI2MDgwNC4wIKXMDSoASAFQAw%3D%3D"
 
-        Process.Start(googleUrl)
+        'Process.Start(googleUrl)
+        Process.Start("chrome.exe", "--app=" & googleUrl)
 
         'https://gis.kreis-of.de/LKOF/online/?x=3485100&y=5548200&scale=1000&lon=8.767006894380913&lat=50.016123794054096&zoom=18&select=false
         'https://gis.kreis-of.de/LKOF/online/?&scale=1000&lon=8.767006894380913&lat=50.016123794054096&zoom=18&select=false
@@ -1653,6 +1698,11 @@ Public Class winHaupt
         e.Handled = True
         nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "fst_google")
         Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
+
+        If aktfst.flur = 0 Or aktfst.zaehler = 0 Then
+            MessageBox.Show("Bitte wählen Sie ein Flurstück aus", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+            Exit Sub
+        End If
         Dim ident As String
         ident = tools.makeIdentAusFKZ(aktfst.flurstueckZuFKZ)
         Dim utm32koordinaten = tools.getUTM32Koordinaten4fkz(ident, coordinatendatei)
@@ -1672,6 +1722,10 @@ Public Class winHaupt
         nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "fst_igronline")
 
         Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
+        If aktfst.flur = 0 Or aktfst.zaehler = 0 Then
+            MessageBox.Show("Bitte wählen Sie ein Flurstück aus", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+            Exit Sub
+        End If
         Dim ident As String
         ident = tools.makeIdentAusFKZ(aktfst.flurstueckZuFKZ)
         Dim utm32koordinaten = tools.getUTM32Koordinaten4fkz(ident, coordinatendatei)
@@ -1694,6 +1748,10 @@ Public Class winHaupt
         nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "fst_3d")
 
         Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
+        If aktfst.flur = 0 Or aktfst.zaehler = 0 Then
+            MessageBox.Show("Bitte wählen Sie ein Flurstück aus", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+            Exit Sub
+        End If
         Dim ident As String
         ident = tools.makeIdentAusFKZ(aktfst.Flurstuecksskennzeichen)
         Dim utm32koordinaten = tools.getUTM32Koordinaten4fkz(ident, coordinatendatei)
@@ -1710,6 +1768,7 @@ Public Class winHaupt
           laenge.ToString(Globalization.CultureInfo.InvariantCulture) &
           ",72a,35y,359.25h,64.17t/data=!3m1!1e3?entry=ttu&g_ep=EgoyMDI2MDgwNC4wIKXMDSoASAFQAw%3D%3D"
 
-        Process.Start(googleUrl)
+        'Process.Start(googleUrl)
+        Process.Start("chrome.exe", "--app=" & googleUrl)
     End Sub
 End Class
