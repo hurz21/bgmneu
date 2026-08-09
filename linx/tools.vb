@@ -2,6 +2,7 @@
 
 
 Module tools
+    Public logfileschreiben As Boolean = False
     Public themendefinitionsdatei As String = "themendateiBaulasten.txt"
     Public gisLogouten As Boolean = True
     Public historyFile As String = "history.txt"
@@ -616,10 +617,10 @@ Module tools
         End Try
     End Function
     Sub l(v As String)
-        nachricht(v)
+        If tools.logfileschreiben Then nachricht(v)
     End Sub
     Sub nachricht(ByVal text$)
-        My.Log.WriteEntry(text)
+        If tools.logfileschreiben Then My.Log.WriteEntry(text)
     End Sub
 
     Function calcDateiExistiert(lok As clsBaulast) As Boolean
