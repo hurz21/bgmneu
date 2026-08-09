@@ -153,6 +153,7 @@
                         <StackPanel Orientation="Horizontal">
                             <Label Width="75" FontSize="10"  >In Prosoz ?</Label>
                             <Button x:Name="btnadr2PG" Click="btnadr2PG_Click"   
+                                      ToolTip="zeigt die Vorgänge im ProBauG, die zu diesem Flurstück gehören"
                                     IsEnabled="True"   Width="160" HorizontalAlignment="Center" 
                                   Style="{StaticResource lessButton}">Vorgänge mit dieser Adresse</Button>
                         </StackPanel>
@@ -161,6 +162,7 @@
                             <Button x:Name="btnwordADR" Click="btnwordADR_Click" 
                                  HorizontalAlignment="Center"  Width="160"
                                 Style="{StaticResource lessButton}"  Margin="0"
+                                    ToolTip="erstellt eine Word-Datei mit den Informationen zur Adresse"
                                   IsEnabled="True">Word-Datei</Button>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
@@ -168,6 +170,8 @@
                             <Button x:Name="btnadrgoogle" Click="btnadrgoogle_Click" 
                                  HorizontalAlignment="Center"  Width="50" FontSize="8"
                                 Style="{StaticResource lessButton}"  Margin="0"
+                                        ToolTip="öffnet das Flurstück Google Maps."
+                              
                                   IsEnabled="True">
                                 <StackPanel Orientation="Vertical"> 
                                     <TextBlock   Text="Google"  Margin="0,0,0,0"/>
@@ -176,15 +180,29 @@
                             </Button>
                             <Button x:Name="btnadrIngradaOnline" Click="btnadrIngradaOnline_Click" 
                                   HorizontalAlignment="Center"  Width="50"
+                                        ToolTip="öffnet das Flurstück in der BürgerGIS (Ingrada-Online). Ist noch nicht Fertig ausgebaut."
+                              
                                  Style="{StaticResource lessButton}"  Margin="0"
                                    IsEnabled="True">BürgerGIS</Button>
                             <Button x:Name="btnadr3d" Click="btnadr3d_Click" FontSize="8"
-                                      HorizontalAlignment="Center"  Width="60" ToolTip="3D Ansicht und Streetview= 2 Fenster öffnen sich"
-                                     Style="{StaticResource lessButton}"  Margin="0"
-                                       IsEnabled="True">
+                                      HorizontalAlignment="Center"  Width="60"       Style="{StaticResource lessButton}"  Margin="0"
+         IsEnabled="True">
+                                <Button.ToolTip>
+                                    <TextBlock>
+                                        3D Ansicht und Streetview= 2 Fenster öffnen sich. 
+                                    <LineBreak/>
+                                    Streetview gibt es nicht überall - meist nur an Strassen.
+                                    <LineBreak/>
+                                    Für 3D-Darstellung muss die 'Globusansicht' eingeschaltet sein.
+                                      <LineBreak/>
+                                    Dafür links unten auf Ebenen-Mehr. Dann nach unten scrollen und 'Globusansicht' einschalten.
+                                    </TextBlock>
+                                </Button.ToolTip>
+
+
                                 <StackPanel Orientation="Vertical"> 
-                                    <TextBlock   Text="Google3D &amp;"  Margin="0,0,0,0"/>
-                                    <TextBlock   Text="Streetview"  Margin="0,0,0,0"/>
+                                    <TextBlock Text="Google3D &amp;" Margin="0,0,0,0"/>
+                                    <TextBlock Text="Streetview" Margin="0,0,0,0"/>
                                 </StackPanel>
                             </Button>
                         </StackPanel>
@@ -251,11 +269,13 @@
                             <Label Width="75" FontSize="10">GIS starten:</Label>
                             <Button x:Name="btnfst2PG" Click="btnfst2PG_Click"  
                                       IsEnabled="True"   Width="160" HorizontalAlignment="Left" 
+                                    ToolTip="zeigt die Vorgänge im ProBauG, die zu diesem Flurstück gehören"
                                     Style="{StaticResource lessButton}">Vorgänge zum Flurstück</Button>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal"  HorizontalAlignment="Left">
                             <Label Width="75" FontSize="10">Eigentümer:</Label>
                             <Button x:Name="btnsucheeigentumer" Click="btnsucheeigentumer_Click" 
+                                          ToolTip="erstellt eine Word-Datei mit den Informationen zur Adresse"
                                 HorizontalAlignment="left"  
                                              Style="{StaticResource lessButton}" Width="160" 
                             >Word-Datei</Button>
@@ -265,6 +285,7 @@
                             <Button x:Name="btnfstgoogle" Click="btnfstgoogle_Click" 
                                      HorizontalAlignment="Center"  Width="50" FontSize="8"
                                     Style="{StaticResource lessButton}"  Margin="0"
+                                      ToolTip="öffnet das Flurstück in Google Maps"
                                       IsEnabled="True">
 
                                 <StackPanel Orientation="Vertical">
@@ -275,12 +296,24 @@
                                 
                             <Button x:Name="btnfstIngradaOnline" Click="btnfstIngradaOnline_Click" 
                                       HorizontalAlignment="Center"  Width="50"
+                                    ToolTip="öffnet das Flurstück in der BürgerGIS (Ingrada-Online). Ist noch nicht Fertig ausgebaut."
                                      Style="{StaticResource lessButton}"  Margin="0"
                                        IsEnabled="True">BürgerGIS</Button>
                             <Button x:Name="btnfst3d" Click="btnfst3d_Click" 
-                                  HorizontalAlignment="Center"  Width="60" ToolTip="3D Ansicht und Streetview= 2 Fenster öffnen sich"
+                                  HorizontalAlignment="Center"  Width="60"  
                                  Style="{StaticResource lessButton}"  Margin="0" FontSize="8"
                                    IsEnabled="True">
+                                <Button.ToolTip>
+                                    <TextBlock>
+                                              3D Ansicht und Streetview= 2 Fenster öffnen sich. 
+                                          <LineBreak/>
+                                          Streetview gibt es nicht überall - meist nur an Strassen.
+                                          <LineBreak/>
+                                          Für 3D-Darstellung muss die 'Globusansicht' eingeschaltet sein.
+                                            <LineBreak/>
+                                          Dafür links unten auf Ebenen-Mehr. Dann nach unten scrollen und 'Globusansicht' einschalten.
+                                    </TextBlock>
+                                </Button.ToolTip>
                                 <StackPanel Orientation="Vertical">
                                     <TextBlock   Text="Google3D &amp;"  Margin="0,0,0,0"/>
                                     <TextBlock   Text="Streetview"  Margin="0,0,0,0"/>
