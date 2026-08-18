@@ -157,7 +157,8 @@ Public Class clsDBspecMSSQL
     End Function
 
     Shared Sub nachricht(ByVal text$)
-        If tools.logfileschreiben Then My.Log.WriteEntry("IN mssql: " & text)
+        'If tools.logfileschreiben Then My.Log.WriteEntry("IN mssql: " & text)
+        My.Log.WriteEntry("IN mssql: " & text)
     End Sub
 
     'Shared Sub nachricht_Mbox(ByVal text$)

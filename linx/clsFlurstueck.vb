@@ -16,6 +16,7 @@ Public Class clsFlurstueck
             Return $"{gemarkungstext} - Flur {flur}, {zaehler}/{nenner} ({AZ})"
         End Get
     End Property
+    Public IngradaIdent As String = ""
     Public Property index As Integer = 0
     Property Flurstuecksskennzeichen As String = ""
     Property GUID As String = ""
@@ -39,7 +40,29 @@ Public Class clsFlurstueck
 
 
     Property gemparms As New clsGemarkungsParams
-
+    Public Function makeIdentAusFKZ() As String
+        Try
+            '060 743 003 00214 0016__
+            '060743003002140016__
+            '060729016000520005
+            If Flurstuecksskennzeichen Is Nothing OrElse Flurstuecksskennzeichen = String.Empty Then
+                Return String.Empty
+            End If
+            Dim gemcode = (Flurstuecksskennzeichen.Substring(3, 3))
+            Dim flur = (Flurstuecksskennzeichen.Substring(7, 3))
+            Dim zaehler = (Flurstuecksskennzeichen.Substring(11, 5))
+            Dim nenner = (Flurstuecksskennzeichen.Substring(17, 4))
+            If nenner = "0000" Then
+                IngradaIdent = "060" & gemcode & flur & zaehler & "______"
+            Else
+                IngradaIdent = "060" & gemcode & flur & zaehler & nenner & "__"
+            End If
+            Return IngradaIdent
+        Catch ex As Exception
+            l("fehler in makeIdentAusFKZ " & ex.ToString)
+            Return ""
+        End Try
+    End Function
     Public Sub fkzzerlegen()
         Dim test As String
         '060734-005-00315/0001.000

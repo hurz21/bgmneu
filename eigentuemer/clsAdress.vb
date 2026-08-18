@@ -7,6 +7,7 @@ Public Class clsAdress
 
     Public gemparms As New clsGemarkungsParams
     Private _strassennameNORM$
+    Public IngradaIdent As String
     Property geom As String
     Sub clear()
         gemeindeName = ""
@@ -17,6 +18,7 @@ Public Class clsAdress
         strasseCode = 0
         hausNr = 0
         hausZusatz = ""
+        IngradaIdent = ""
 
     End Sub
     Sub New()
@@ -270,6 +272,30 @@ Public Class clsAdress
     Public Property gemeinde_guid As String = ""
     Public Property strassenkennzeichen As String = ""
 
+    Public Function makeIdentAusFKZ() As String
+        Try
+            '060 743 003 00214 0016__
+            '060743003002140016__
+            '060729016000520005
+            If fkz Is Nothing OrElse fkz = String.Empty Then
+                Return String.Empty
+            End If
+            Dim gemcode = (fkz.Substring(3, 3))
+            Dim flur = (fkz.Substring(7, 3))
+            Dim zaehler = (fkz.Substring(11, 5))
+            Dim nenner = (fkz.Substring(17, 4))
+            If nenner = "0000" Then
+                IngradaIdent = "060" & gemcode & flur & zaehler & "______"
+            Else
+                IngradaIdent = "060" & gemcode & flur & zaehler & nenner & "__"
+            End If
+            Return IngradaIdent
+        Catch ex As Exception
+            l("fehler in makeIdentAusFKZ " & ex.ToString)
+            Return ""
+        End Try
+    End Function
+
     Public Function gemeindeNrBig() As String
         Dim tbignr = "4380"
         Dim s$ = gemeindeNr.ToString
@@ -440,4 +466,7 @@ Public Class clsAdress
         Return gemeindeName & " " & strasseName & " " & HausKombi
     End Function
 
+    Friend Function MakeIdentIngrada() As String
+        Throw New NotImplementedException()
+    End Function
 End Class

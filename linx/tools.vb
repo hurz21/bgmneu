@@ -2016,29 +2016,29 @@ Module tools
             Return False
         End Try
     End Function
-    Public Function makeIdentAusFKZ(Flurstuecksskennzeichen As String) As String
-        Try
-            '060 743 003 00214 0016__
-            '060743003002140016__
-            '060729016000520005
-            If Flurstuecksskennzeichen Is Nothing OrElse Flurstuecksskennzeichen = String.Empty Then
-                Return String.Empty
-            End If
-            Dim gemcode = (Flurstuecksskennzeichen.Substring(3, 3))
-            Dim flur = (Flurstuecksskennzeichen.Substring(7, 3))
-            Dim zaehler = (Flurstuecksskennzeichen.Substring(11, 5))
-            Dim nenner = (Flurstuecksskennzeichen.Substring(17, 4))
-            If nenner = "0000" Then
-                Return "060" & gemcode & flur & zaehler & "______"
-            Else
-                Return "060" & gemcode & flur & zaehler & nenner & "__"
-            End If
+    'Public Function makeIdentAusFKZ(Flurstuecksskennzeichen As String) As String
+    '    Try
+    '        '060 743 003 00214 0016__
+    '        '060743003002140016__
+    '        '060729016000520005
+    '        If Flurstuecksskennzeichen Is Nothing OrElse Flurstuecksskennzeichen = String.Empty Then
+    '            Return String.Empty
+    '        End If
+    '        Dim gemcode = (Flurstuecksskennzeichen.Substring(3, 3))
+    '        Dim flur = (Flurstuecksskennzeichen.Substring(7, 3))
+    '        Dim zaehler = (Flurstuecksskennzeichen.Substring(11, 5))
+    '        Dim nenner = (Flurstuecksskennzeichen.Substring(17, 4))
+    '        If nenner = "0000" Then
+    '            Return "060" & gemcode & flur & zaehler & "______"
+    '        Else
+    '            Return "060" & gemcode & flur & zaehler & nenner & "__"
+    '        End If
 
-        Catch ex As Exception
-            l("fehler in makeIdentAusFKZ " & ex.ToString)
-            Return ""
-        End Try
-    End Function
+    '    Catch ex As Exception
+    '        l("fehler in makeIdentAusFKZ " & ex.ToString)
+    '        Return ""
+    '    End Try
+    'End Function
     Friend Function getUTM32Koordinaten4fkz(ident As String, coordinatendatei As String) As (rechts As Integer, hoch As Integer)
         ' Standard-Rückgabewert, falls Datei fehlt oder Ident nicht gefunden wird
         Dim result As (rechts As Integer, hoch As Integer) = (0, 0)
@@ -2082,7 +2082,27 @@ Module tools
         Catch ex As Exception
             l("fehler in getutm32 " & ex.ToString)
         End Try
-
         Return result
     End Function
+
+    Friend Sub backupbaulastSDF()
+        Dim zieldatei, quelldatei As String
+        Try
+            zieldatei = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
+            zieldatei = IO.Path.Combine(zieldatei, "bgm\backup")
+            IO.Directory.CreateDirectory(zieldatei)
+            zieldatei = IO.Path.Combine(zieldatei, "sp_mdat_0010_F_" & Format(Now, "dd") & ".sdf")
+            quelldatei = "\\kh-w-ingrada\lkof\data\LKOF_bearb\sdf3"
+            quelldatei = IO.Path.Combine(quelldatei, "sp_mdat_0010_F.sdf")
+            l("quelldatei " & quelldatei)
+            l("zieldatei " & zieldatei)
+            IO.File.Copy(quelldatei, zieldatei, True)
+            'MessageBox.Show("Backup der Baulast-SDF-Datei erfolgreich erstellt: " & zieldatei,
+            '                "GEOMETRIE Backup erfolgreich", MessageBoxButton.OK)
+        Catch ex As Exception
+            l("fehler in backupbaulastSDF " & ex.ToString)
+            'MessageBox.Show("FEHLER bei GEOMETRIE Backup der Baulast-SDF-Datei: " & zieldatei,
+            '    "Backup gescheitert", MessageBoxButton.OK, MessageBoxImage.Warning)
+        End Try
+    End Sub
 End Module

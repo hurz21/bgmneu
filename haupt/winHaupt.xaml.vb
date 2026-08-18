@@ -63,7 +63,8 @@ Public Class winHaupt
 
         tabEig.SelectedIndex = My.Settings.ReiterAppNummer
 
-        If isAutho() Then
+        If isAuthoBaulastManager() Then
+            tools.backupbaulastSDF()
             ComboHistory.IsDropDownOpen = True
             stpBaulastenmedels.Visibility = Visibility.Visible
             'If Environment.UserName = "Feinen_J" Then
@@ -160,7 +161,7 @@ Public Class winHaupt
         cmb20fst.ItemsSource = liste
         Dim aliste As List(Of clsAdress) = cls20Cookies.LadeAdressen()
         cmb20adr.ItemsSource = aliste
-        Dim vorhabenliste As List(Of clsPGvorhaben) = cls20Cookies.LadePGcookies()
+        Dim vorhabenliste As List(Of clsPGVorhaben) = cls20Cookies.LadePGcookies()
         cmbPGNR.ItemsSource = vorhabenliste
 
 
@@ -180,7 +181,7 @@ Public Class winHaupt
             'Process.Start(logout)
         End If
     End Sub
-    Private Shared Function isAutho() As Boolean
+    Private Shared Function isAuthoBaulastManager() As Boolean
         Try
             Dim appDir = IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
             Dim userFile = IO.Path.Combine(appDir, "bgmusers.txt")
@@ -207,11 +208,11 @@ Public Class winHaupt
             Dim currentUser = Environment.UserName
             Return allowed.Contains(currentUser)
         Catch ex As Exception
-            l("Fehler in isAutho: " & ex.ToString())
+            l("Fehler in isAuthoBaulastManager: " & ex.ToString())
             Return False
         End Try
     End Function
-    'Private Shared Function isAutho() As Boolean
+    'Private Shared Function isAuthoBaulastManager() As Boolean
     '    'Return False
     '    Return Environment.UserName.ToLower = "benes_c" Or
     '            Environment.UserName.ToLower = "hartmann_s" Or
@@ -1602,7 +1603,9 @@ Public Class winHaupt
             MessageBox.Show("Bitte wählen Sie eine Adresse aus", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
             Exit Sub
         End If
-        ident = tools.makeIdentAusFKZ(aktadr.fkz)
+        'ident = tools.makeIdentAusFKZ(aktadr.fkz
+        ident = aktadr.MakeIdentIngrada
+
         Dim utm32koordinaten = tools.getUTM32Koordinaten4fkz(ident, coordinatendatei)
         Dim koordinaten = utmtransform.UTM32NachWGS84(utm32koordinaten.rechts, utm32koordinaten.hoch)
         Dim laenge As Double = koordinaten.Laengengrad
@@ -1632,7 +1635,7 @@ Public Class winHaupt
             MessageBox.Show("Bitte wählen Sie eine Adresse aus", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
             Exit Sub
         End If
-        ident = tools.makeIdentAusFKZ(aktadr.fkz)
+        ident = aktadr.MakeIdentIngrada
         Dim utm32koordinaten = tools.getUTM32Koordinaten4fkz(ident, coordinatendatei)
         Dim koordinaten = utmtransform.UTM32NachWGS84(utm32koordinaten.rechts, utm32koordinaten.hoch)
 
@@ -1664,7 +1667,7 @@ Public Class winHaupt
             Exit Sub
         End If
         Dim ident As String
-        ident = tools.makeIdentAusFKZ(aktadr.fkz)
+        ident = aktadr.MakeIdentIngrada
         l("ident " & ident)
         Dim utm32koordinaten = tools.getUTM32Koordinaten4fkz(ident, coordinatendatei)
         Dim koordinaten = utmtransform.UTM32NachWGS84(utm32koordinaten.rechts, utm32koordinaten.hoch)
@@ -1709,15 +1712,17 @@ Public Class winHaupt
             Exit Sub
         End If
         Dim ident As String
-        ident = tools.makeIdentAusFKZ(aktfst.flurstueckZuFKZ)
+        'ident = aktfst.MakeIdentIngrada
+        aktfst.flurstueckZuFKZ()
+        ident = aktfst.makeIdentAusFKZ
         Dim utm32koordinaten = tools.getUTM32Koordinaten4fkz(ident, coordinatendatei)
         Dim koordinaten = utmtransform.UTM32NachWGS84(utm32koordinaten.rechts, utm32koordinaten.hoch)
         Dim laenge As Double = koordinaten.Laengengrad
         Dim breite As Double = koordinaten.Breitengrad
         Dim googleUrl As String =
-          "https://www.google.com/maps?q=" &
-          breite.ToString(Globalization.CultureInfo.InvariantCulture) & "," &
-          laenge.ToString(Globalization.CultureInfo.InvariantCulture)
+                                  "https://www.google.com/maps?q=" &
+                                  breite.ToString(Globalization.CultureInfo.InvariantCulture) & "," &
+                                  laenge.ToString(Globalization.CultureInfo.InvariantCulture)
         Process.Start(googleUrl)
         'https://gis.kreis-of.de/LKOF/online/?x=3485100&y=5548200&scale=1000&lon=8.767006894380913&lat=50.016123794054096&zoom=18&select=false
     End Sub
@@ -1732,7 +1737,9 @@ Public Class winHaupt
             Exit Sub
         End If
         Dim ident As String
-        ident = tools.makeIdentAusFKZ(aktfst.flurstueckZuFKZ)
+        'ident = tools.makeIdentAusFKZ(aktfst.flurstueckZuFKZ)
+        aktfst.flurstueckZuFKZ()
+        ident = aktfst.makeIdentAusFKZ
         Dim utm32koordinaten = tools.getUTM32Koordinaten4fkz(ident, coordinatendatei)
         Dim koordinaten = utmtransform.UTM32NachWGS84(utm32koordinaten.rechts, utm32koordinaten.hoch)
 
@@ -1758,7 +1765,9 @@ Public Class winHaupt
             Exit Sub
         End If
         Dim ident As String
-        ident = tools.makeIdentAusFKZ(aktfst.Flurstuecksskennzeichen)
+        'ident = tools.makeIdentAusFKZ(aktfst.Flurstuecksskennzeichen)
+        aktfst.flurstueckZuFKZ()
+        ident = aktfst.makeIdentAusFKZ
         Dim utm32koordinaten = tools.getUTM32Koordinaten4fkz(ident, coordinatendatei)
         Dim koordinaten = utmtransform.UTM32NachWGS84(utm32koordinaten.rechts, utm32koordinaten.hoch)
 
