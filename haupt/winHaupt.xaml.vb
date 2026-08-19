@@ -42,6 +42,7 @@ Public Class winHaupt
             Dim result = clsActiveDir.fdkurz
             Title = "BGM, " & clsActiveDir.fdkurz & ", " & My.Settings.Themendatei.Replace(".txt", "").Replace("themendatei", "Thema: ")
             tools.eigentuemerAbfrageErlaubt = (result.ToLower.Contains("umwelt") Or result.ToLower.Contains("bauaufsicht"))
+            'tools.darfprobaug = tools.darfprobaugeinsehen(clsActiveDir.fdkurz, "")
         End If
 
         ' tools.readFSTCookie(gemarkung, flur, zaehler, nenner, "bgm_FST_cookie.txt")
@@ -984,6 +985,7 @@ Public Class winHaupt
     Private Sub tbPGsuchestarten_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
         setzeReiterAppNummer(4)   '4=probaug  3=bplan  2=fst 1=adr  0=baulast
+
         nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "pg_gis")
         suchePG(True)
     End Sub
@@ -992,26 +994,32 @@ Public Class winHaupt
         Dim vorhaben1 As String
         Dim fstliste As List(Of clsFlurstueck)
         Dim metadata As List(Of myComboBoxItem)
-        'If clsActiveDir.fdkurz.Contains("mwelt") Then
-        '    If CInt(tbPGnr.Text) < 80000 Then
-
-        '        MessageBox.Show("Dem FD Umwelt sind nur Nr > 80000 erlaubt!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
-        '        If Environment.UserName <> "Feinen_J" Then Exit Sub
-        '    End If
+        If Not tools.darfprobaugeinsehen(clsActiveDir.fdkurz) Then
+            MessageBox.Show("Keine Rechte vorhanden", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+            Exit Sub
+        End If
+        'If Not tools.darfprobaugeinsehen(clsActiveDir.fdkurz, tbPGnr.Text) Then
+        '    MessageBox.Show("Keine Rechte vorhanden", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+        '    Exit Sub
         'End If
-        'If clsActiveDir.fdkurz.Contains("auaufsicht") Then
-        '    If CInt(tbPGnr.Text) > 80000 Then
-        '        MessageBox.Show("Dem FD Bauaufsicht sind nur Nr < 80000 erlaubt!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+        If clsActiveDir.fdkurz.Contains("mwelt") Then
+            If CInt(tbPGnr.Text) < 80000 Then
 
-        '        If Environment.UserName <> "Feinen_J" Then Exit Sub
-        '    End If
-        'End If
-        'If Not (clsActiveDir.fdkurz.Contains("mwelt") Or clsActiveDir.fdkurz.Contains("auaufsicht")) Then
-        '    MessageBox.Show("Dem FD Umwelt sind nur Nr > 80000 erlaubt!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+                MessageBox.Show("Dem FD Umwelt sind nur Nr > 80000 erlaubt!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+                If Environment.UserName <> "Feinen_J" Then Exit Sub
+            End If
+        End If
+        If clsActiveDir.fdkurz.Contains("auaufsicht") Then
+            If CInt(tbPGnr.Text) > 80000 Then
+                MessageBox.Show("Dem FD Bauaufsicht sind nur Nr < 80000 erlaubt!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
 
-
-        '    If Environment.UserName <> "Feinen_J" Then Exit Sub
-        'End If
+                If Environment.UserName <> "Feinen_J" Then Exit Sub
+            End If
+        End If
+        If Not (clsActiveDir.fdkurz.Contains("mwelt") Or clsActiveDir.fdkurz.Contains("auaufsicht")) Then
+            MessageBox.Show("Dem FD Umwelt sind nur Nr > 80000 erlaubt!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+            If Environment.UserName <> "Feinen_J" Then Exit Sub
+        End If
         fstliste = probaug.klaereanzahlFST(tbPGJahr.Text, tbPGnr.Text, metadata, vorhaben1)
         If fstliste Is Nothing Then
             'MsgBox("Das Aktenzeichen ist ungültig!")
@@ -1050,8 +1058,11 @@ Public Class winHaupt
     Private Sub btnfst2PG_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
         setzeReiterAppNummer(2)   '4=probaug  3=bplan  2=fst 1=adr  0=baulast
-        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "fst_vorgang")
         If Not tools.eigentuemerAbfrageErlaubt Then
+            MessageBox.Show("Keine Rechte vorhanden", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+            Exit Sub
+        End If
+        If Not tools.darfprobaugeinsehen(clsActiveDir.fdkurz) Then
             MessageBox.Show("Keine Rechte vorhanden", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
             Exit Sub
         End If
@@ -1059,6 +1070,7 @@ Public Class winHaupt
             MessageBox.Show("Bitte wählen Sie ein Flurstück aus", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
             Exit Sub
         End If
+        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "fst_vorgang")
         Dim probaugVorgange As New List(Of myComboBoxItem)
         fkzlist = New List(Of clsFlurstueck)
         fkzlist = readFlurst_Form()
@@ -1132,8 +1144,11 @@ Public Class winHaupt
 
     Private Sub btnadr2PG_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
-        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "adr_vorgang")
         If Not tools.eigentuemerAbfrageErlaubt Then
+            MessageBox.Show("Keine Rechte vorhanden", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+            Exit Sub
+        End If
+        If Not tools.darfprobaugeinsehen(clsActiveDir.fdkurz) Then
             MessageBox.Show("Keine Rechte vorhanden", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
             Exit Sub
         End If
@@ -1141,6 +1156,7 @@ Public Class winHaupt
             MessageBox.Show("Bitte wählen Sie eine Adresse aus", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
             Exit Sub
         End If
+        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "adr_vorgang")
         setzeReiterAppNummer(1)   '4=probaug  3=bplan  2=fst 1=adr  0=baulast
         Dim lokadr As New clsAdress
         lokadr.gemeindebigNRstring = aktadr.gemeindebigNRstring

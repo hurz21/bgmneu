@@ -45,6 +45,7 @@ Module tools
     Public Property wkt As String = ""
     Public Property FSTausGISListeFehlt As List(Of clsFlurstueck)
     Public Property eigentuemerAbfrageErlaubt As Boolean = False
+    Public Property darfprobaug As Boolean = False
     Public logfile As String = "C:\kreisoffenbach\bgm\" ' & Environment.UserName & "_"
     'Public logfile As String = srv_unc_path & "\apps\test\bgm\" & "logs\" ' & Environment.UserName & "_"
     Public pfad As String = srv_unc_path & "\fkat\baulasten\"
@@ -2102,7 +2103,24 @@ Module tools
         Catch ex As Exception
             l("fehler in backupbaulastSDF " & ex.ToString)
             'MessageBox.Show("FEHLER bei GEOMETRIE Backup der Baulast-SDF-Datei: " & zieldatei,
-            '    "Backup gescheitert", MessageBoxButton.OK, MessageBoxImage.Warning)
+            '    "GEOMETRIE Backup gescheitert", MessageBoxButton.OK, MessageBoxImage.Warning)
         End Try
     End Sub
+
+    Friend Function darfprobaugeinsehen(fdkurz As String) As Boolean
+        Try
+            If clsActiveDir.fdkurz.Contains("mwelt") Then
+                Return True
+            End If
+            If clsActiveDir.fdkurz.Contains("auaufsicht") Then
+                Return True
+            End If
+            nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "darfpg_nicht" & (clsActiveDir.fdkurz))
+            Return False
+        Catch ex As Exception
+            l("fehler in darfprobaugeinsehen " & ex.ToString)
+            nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "darfpg_nicht" & (clsActiveDir.fdkurz))
+            Return False
+        End Try
+    End Function
 End Module
