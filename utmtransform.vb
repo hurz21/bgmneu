@@ -6,74 +6,78 @@
         ' UTM Zone 32N -> WGS84
         ' Standardmäßig für Deutschland geeignet
         ' EPSG:25832 / EPSG:32632
-
+        l("UTM32NachWGS84 " & rechtswert & " " & hochwert)
         Const a As Double = 6378137.0
         Const eccSquared As Double = 0.006694380023
         Const k0 As Double = 0.9996
 
         Dim eccPrimeSquared As Double = eccSquared / (1 - eccSquared)
+        Try
 
-        ' UTM-Koordinaten zurückrechnen
-        Dim x As Double = rechtswert - 500000.0
-        Dim y As Double = hochwert
 
-        ' Zone 32N -> kein Südhalbkugel-Offset erforderlich
+            ' UTM-Koordinaten zurückrechnen
+            Dim x As Double = rechtswert - 500000.0
+            Dim y As Double = hochwert
 
-        Dim M As Double = y / k0
+            ' Zone 32N -> kein Südhalbkugel-Offset erforderlich
 
-        Dim mu As Double = M / (a * (1 - eccSquared / 4 _
-                                  - 3 * eccSquared ^ 2 / 64 _
-                                  - 5 * eccSquared ^ 3 / 256))
+            Dim M As Double = y / k0
 
-        Dim e1 As Double = (1 - Math.Sqrt(1 - eccSquared)) /
-                       (1 + Math.Sqrt(1 - eccSquared))
+            Dim mu As Double = M / (a * (1 - eccSquared / 4 _
+                                      - 3 * eccSquared ^ 2 / 64 _
+                                      - 5 * eccSquared ^ 3 / 256))
 
-        Dim J1 As Double = 3 * e1 / 2 - 27 * e1 ^ 3 / 32
-        Dim J2 As Double = 21 * e1 ^ 2 / 16 - 55 * e1 ^ 4 / 32
-        Dim J3 As Double = 151 * e1 ^ 3 / 96
-        Dim J4 As Double = 1097 * e1 ^ 4 / 512
+            Dim e1 As Double = (1 - Math.Sqrt(1 - eccSquared)) /
+                           (1 + Math.Sqrt(1 - eccSquared))
 
-        Dim fp As Double = mu +
-                       J1 * Math.Sin(2 * mu) +
-                       J2 * Math.Sin(4 * mu) +
-                       J3 * Math.Sin(6 * mu) +
-                       J4 * Math.Sin(8 * mu)
+            Dim J1 As Double = 3 * e1 / 2 - 27 * e1 ^ 3 / 32
+            Dim J2 As Double = 21 * e1 ^ 2 / 16 - 55 * e1 ^ 4 / 32
+            Dim J3 As Double = 151 * e1 ^ 3 / 96
+            Dim J4 As Double = 1097 * e1 ^ 4 / 512
 
-        Dim sinFp As Double = Math.Sin(fp)
-        Dim cosFp As Double = Math.Cos(fp)
-        Dim tanFp As Double = Math.Tan(fp)
+            Dim fp As Double = mu +
+                           J1 * Math.Sin(2 * mu) +
+                           J2 * Math.Sin(4 * mu) +
+                           J3 * Math.Sin(6 * mu) +
+                           J4 * Math.Sin(8 * mu)
 
-        Dim C1 As Double = eccPrimeSquared * cosFp ^ 2
-        Dim T1 As Double = tanFp ^ 2
+            Dim sinFp As Double = Math.Sin(fp)
+            Dim cosFp As Double = Math.Cos(fp)
+            Dim tanFp As Double = Math.Tan(fp)
 
-        Dim N1 As Double = a / Math.Sqrt(1 - eccSquared * sinFp ^ 2)
-        Dim R1 As Double = a * (1 - eccSquared) /
-                       (1 - eccSquared * sinFp ^ 2) ^ 1.5
+            Dim C1 As Double = eccPrimeSquared * cosFp ^ 2
+            Dim T1 As Double = tanFp ^ 2
 
-        Dim D As Double = x / (N1 * k0)
+            Dim N1 As Double = a / Math.Sqrt(1 - eccSquared * sinFp ^ 2)
+            Dim R1 As Double = a * (1 - eccSquared) /
+                           (1 - eccSquared * sinFp ^ 2) ^ 1.5
 
-        Dim latitude As Double =
-        fp - (N1 * tanFp / R1) *
-        (D ^ 2 / 2 -
-         (5 + 3 * T1 + 10 * C1 - 4 * C1 ^ 2 - 9 * eccPrimeSquared) *
-         D ^ 4 / 24 +
-         (61 + 90 * T1 + 298 * C1 + 45 * T1 ^ 2 -
-          252 * eccPrimeSquared - 3 * C1 ^ 2) *
-         D ^ 6 / 720)
+            Dim D As Double = x / (N1 * k0)
 
-        Dim longitude As Double =
-        (D -
-         (1 + 2 * T1 + C1) * D ^ 3 / 6 +
-         (5 - 2 * C1 + 28 * T1 - 3 * C1 ^ 2 +
-          8 * eccPrimeSquared + 24 * T1 ^ 2) *
-         D ^ 5 / 120) / cosFp
+            Dim latitude As Double =
+            fp - (N1 * tanFp / R1) *
+            (D ^ 2 / 2 -
+             (5 + 3 * T1 + 10 * C1 - 4 * C1 ^ 2 - 9 * eccPrimeSquared) *
+             D ^ 4 / 24 +
+             (61 + 90 * T1 + 298 * C1 + 45 * T1 ^ 2 -
+              252 * eccPrimeSquared - 3 * C1 ^ 2) *
+             D ^ 6 / 720)
 
-        ' Zentralmeridian von UTM Zone 32 = 9° Ost
-        longitude = longitude * 180.0 / Math.PI + 9.0
-        latitude = latitude * 180.0 / Math.PI
+            Dim longitude As Double =
+            (D -
+             (1 + 2 * T1 + C1) * D ^ 3 / 6 +
+             (5 - 2 * C1 + 28 * T1 - 3 * C1 ^ 2 +
+              8 * eccPrimeSquared + 24 * T1 ^ 2) *
+             D ^ 5 / 120) / cosFp
 
-        Return (longitude, latitude)
+            ' Zentralmeridian von UTM Zone 32 = 9° Ost
+            longitude = longitude * 180.0 / Math.PI + 9.0
+            latitude = latitude * 180.0 / Math.PI
 
+            Return (longitude, latitude)
+        Catch ex As Exception
+            l("Fehler in UTM32NachWGS84: " & ex.ToString)
+        End Try
     End Function
     '```
 

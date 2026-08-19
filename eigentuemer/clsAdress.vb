@@ -466,7 +466,5 @@ Public Class clsAdress
         Return gemeindeName & " " & strasseName & " " & HausKombi
     End Function
 
-    Friend Function MakeIdentIngrada() As String
-        Throw New NotImplementedException()
-    End Function
+
 End Class

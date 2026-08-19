@@ -18,11 +18,10 @@ Public Class winHaupt
         InitializeComponent()
     End Sub
     Private Sub winHaupt_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
-
         e.Handled = True
-
         setLogfile(logfile) : l("Start " & Now) : l("mgisversion:" & bgmVersion)
         initdb()
+        'MsgBox(logfile)
         'tbblnr.Text = "6428"
         'tbblnr.Text = "21507"
         'tbblnr.Text = "131045"
@@ -187,7 +186,7 @@ Public Class winHaupt
             Dim appDir = IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
             Dim userFile = IO.Path.Combine(appDir, "bgmusers.txt")
             Dim allowed As HashSet(Of String)
-
+            l("isAuthoBaulastManager anfang")
             If IO.File.Exists(userFile) Then
                 Dim lines = IO.File.ReadAllLines(userFile).
                             Where(Function(s) Not String.IsNullOrWhiteSpace(s)).
@@ -207,6 +206,7 @@ Public Class winHaupt
             End If
 
             Dim currentUser = Environment.UserName
+            l(allowed.Contains(currentUser).ToString)
             Return allowed.Contains(currentUser)
         Catch ex As Exception
             l("Fehler in isAuthoBaulastManager: " & ex.ToString())
@@ -1575,236 +1575,313 @@ Public Class winHaupt
 
     Private Sub btntest_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
-        Dim rw As Double = 480000
-        Dim hw As Double = 5550000
+        'Dim rw As Double = 480000
+        'Dim hw As Double = 5550000
 
-        Dim koordinaten = utmtransform.UTM32NachWGS84(rw, hw)
+        'Dim koordinaten = utmtransform.UTM32NachWGS84(rw, hw)
 
-        Dim laenge As Double = koordinaten.Laengengrad
-        Dim breite As Double = koordinaten.Breitengrad
+        'Dim laenge As Double = koordinaten.Laengengrad
+        'Dim breite As Double = koordinaten.Breitengrad
 
-        Debug.Print("Länge: " & laenge.ToString("0.000000"))
-        Debug.Print("Breite: " & breite.ToString("0.000000"))
+        'Debug.Print("Länge: " & laenge.ToString("0.000000"))
+        'Debug.Print("Breite: " & breite.ToString("0.000000"))
 
 
-        'Google Maps erwartet die Reihenfolge **Breitengrad, Längengrad **, also beispielsweise:  
+        ''Google Maps erwartet die Reihenfolge **Breitengrad, Längengrad **, also beispielsweise:  
 
-        '```text
-        '50.123456, 8.654321
-        '```
+        ''```text
+        ''50.123456, 8.654321
+        ''```
 
-        'Für einen Google-Maps-Link:
+        ''Für einen Google-Maps-Link:
 
-        '```vbnet
-        Dim googleUrl As String =
-            "https://www.google.com/maps?q=" &
-            breite.ToString(Globalization.CultureInfo.InvariantCulture) & "," &
-            laenge.ToString(Globalization.CultureInfo.InvariantCulture)
-        'Dim googleEarthUrl As String =
-        '    "https://earth.google.com/?ll=" &
+        ''```vbnet
+        'Dim googleUrl As String =
+        '    "https://www.google.com/maps?q=" &
         '    breite.ToString(Globalization.CultureInfo.InvariantCulture) & "," &
         '    laenge.ToString(Globalization.CultureInfo.InvariantCulture)
-        '  http: //earth.google.com/?ll=Breitengrad,Längengrad
-        Process.Start(googleUrl)
-        'Process.Start(googleEarthUrl)
+        ''Dim googleEarthUrl As String =
+        ''    "https://earth.google.com/?ll=" &
+        ''    breite.ToString(Globalization.CultureInfo.InvariantCulture) & "," &
+        ''    laenge.ToString(Globalization.CultureInfo.InvariantCulture)
+        ''  http: //earth.google.com/?ll=Breitengrad,Längengrad
+        'Process.Start(googleUrl)
+        ''Process.Start(googleEarthUrl)
     End Sub
 
     Private Sub btnadrgoogle_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
-        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "adr_google")
-        Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
-        l("coordinatendatei " & coordinatendatei)
-        Dim ident As String
-        If aktadr.fkz Is Nothing Or aktadr.fkz = String.Empty Then
-            MessageBox.Show("Bitte wählen Sie eine Adresse aus", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
-            Exit Sub
-        End If
-        'ident = tools.makeIdentAusFKZ(aktadr.fkz
-        ident = aktadr.MakeIdentIngrada
+        Try
+            l("btnadrgoogle_Click")
+            nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "adr_google")
+            Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
+            l("coordinatendatei " & coordinatendatei)
+            Dim ident As String
+            If aktadr.fkz Is Nothing Or aktadr.fkz = String.Empty Then
+                MessageBox.Show("Bitte wählen Sie eine Adresse aus", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+                Exit Sub
+            End If
+            'ident = tools.makeIdentAusFKZ(aktadr.fkz
+            ident = aktadr.makeIdentAusFKZ
 
-        Dim utm32koordinaten = tools.getUTM32Koordinaten4fkz(ident, coordinatendatei)
-        Dim koordinaten = utmtransform.UTM32NachWGS84(utm32koordinaten.rechts, utm32koordinaten.hoch)
-        Dim laenge As Double = koordinaten.Laengengrad
-        Dim breite As Double = koordinaten.Breitengrad
-        If laenge = 0 Or breite = 0 Then
-            MessageBox.Show("Keine Koordinaten gefunden", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
-            Exit Sub
-        End If
-        Dim googleUrl As String =
+            Dim utm32koordinaten = tools.getUTM32Koordinaten4fkz(ident, coordinatendatei)
+            If utm32koordinaten.rechts < 10 Or utm32koordinaten.hoch < 10 Then
+                MessageBox.Show("Keine Koordinaten gefunden", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+                Exit Sub
+            End If
+            Dim koordinaten = utmtransform.UTM32NachWGS84(utm32koordinaten.rechts, utm32koordinaten.hoch)
+            Dim laenge As Double = koordinaten.Laengengrad
+            Dim breite As Double = koordinaten.Breitengrad
+            If laenge = 0 Or breite = 0 Then
+                MessageBox.Show("Keine Koordinaten gefunden", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+                Exit Sub
+            End If
+            Dim googleUrl As String =
           "https://www.google.com/maps?q=" &
           breite.ToString(Globalization.CultureInfo.InvariantCulture) & "," &
           laenge.ToString(Globalization.CultureInfo.InvariantCulture)
-        l("googleUrl " & googleUrl)
-        'Process.Start(googleUrl)
+            l("googleUrl " & googleUrl)
+            'Process.Start(googleUrl)
 
-        Process.Start("chrome.exe", "--app=" & googleUrl)
-        'https://gis.kreis-of.de/LKOF/online/?x=3485100&y=5548200&scale=1000&lon=8.767006894380913&lat=50.016123794054096&zoom=18&select=false
+            Process.Start("chrome.exe", "--app=" & googleUrl)
+            'https://gis.kreis-of.de/LKOF/online/?x=3485100&y=5548200&scale=1000&lon=8.767006894380913&lat=50.016123794054096&zoom=18&select=false 
+        Catch ex As Exception
+            l("fehler in btnadrgoogle_Click " & ex.ToString)
+        End Try
     End Sub
 
     Private Sub btnadrIngradaOnline_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
-        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "adr_igronline")
+        Try
 
-        Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
-        Dim ident As String
-        If aktadr.fkz Is Nothing Or aktadr.fkz = String.Empty Then
-            MessageBox.Show("Bitte wählen Sie eine Adresse aus", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
-            Exit Sub
-        End If
-        ident = aktadr.MakeIdentIngrada
-        Dim utm32koordinaten = tools.getUTM32Koordinaten4fkz(ident, coordinatendatei)
-        Dim koordinaten = utmtransform.UTM32NachWGS84(utm32koordinaten.rechts, utm32koordinaten.hoch)
+            l("btnadrIngradaOnline_Click")
+            nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "adr_igronline")
 
-        Dim laenge As Double = koordinaten.Laengengrad
-        Dim breite As Double = koordinaten.Breitengrad
+            Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
+            l("coordinatendatei " & coordinatendatei)
+            Dim ident As String
+            If aktadr.fkz Is Nothing Or aktadr.fkz = String.Empty Then
+                MessageBox.Show("Bitte wählen Sie eine Adresse aus", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+                Exit Sub
+            End If
+            ident = aktadr.makeIdentAusFKZ
+            Dim utm32koordinaten = tools.getUTM32Koordinaten4fkz(ident, coordinatendatei)
+            If utm32koordinaten.rechts < 10 Or utm32koordinaten.hoch < 10 Then
+                MessageBox.Show("Keine Koordinaten gefunden", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+                Exit Sub
+            End If
+            Dim koordinaten = utmtransform.UTM32NachWGS84(utm32koordinaten.rechts, utm32koordinaten.hoch)
 
-        Dim googleUrl As String =
-          "https://gis.kreis-of.de/LKOF/online/?&scale=1000&lat=" &
-          breite.ToString(Globalization.CultureInfo.InvariantCulture) & "&lon=" &
-          laenge.ToString(Globalization.CultureInfo.InvariantCulture) &
-          "&zoom=18&select=true"
+            Dim laenge As Double = koordinaten.Laengengrad
+            Dim breite As Double = koordinaten.Breitengrad
 
-        Process.Start(googleUrl)
+            Dim googleUrl As String =
+              "https://gis.kreis-of.de/LKOF/online/?&scale=1000&lat=" &
+              breite.ToString(Globalization.CultureInfo.InvariantCulture) & "&lon=" &
+              laenge.ToString(Globalization.CultureInfo.InvariantCulture) &
+              "&zoom=18&select=true"
 
-        'https://gis.kreis-of.de/LKOF/online/?x=3485100&y=5548200&scale=1000&lon=8.767006894380913&lat=50.016123794054096&zoom=18&select=false
-        'https://gis.kreis-of.de/LKOF/online/?&scale=1000&lon=8.767006894380913&lat=50.016123794054096&zoom=18&select=false
+            Process.Start(googleUrl)
 
-        'https://ing2googlemaps.ingrada.de/i2g.php?lon=8.96480864751612&lat=50.039391158101&zoom=18&map_type=03
+            'https://gis.kreis-of.de/LKOF/online/?x=3485100&y=5548200&scale=1000&lon=8.767006894380913&lat=50.016123794054096&zoom=18&select=false
+            'https://gis.kreis-of.de/LKOF/online/?&scale=1000&lon=8.767006894380913&lat=50.016123794054096&zoom=18&select=false
+
+            'https://ing2googlemaps.ingrada.de/i2g.php?lon=8.96480864751612&lat=50.039391158101&zoom=18&map_type=03
+
+
+        Catch ex As Exception
+            l("fehler in btnadrIngradaOnline_Click " & ex.ToString)
+        End Try
     End Sub
 
     Private Sub btnadr3d_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
-        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "adr_3d")
+        Try
+            l("btnadr3d_Click")
+            nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "adr_3d")
 
-        Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
-        l("coordinatendatei " & coordinatendatei)
-        If aktadr.fkz Is Nothing Or aktadr.fkz = String.Empty Then
-            MessageBox.Show("Bitte wählen Sie eine Adresse aus", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
-            Exit Sub
-        End If
-        Dim ident As String
-        ident = aktadr.MakeIdentIngrada
-        l("ident " & ident)
-        Dim utm32koordinaten = tools.getUTM32Koordinaten4fkz(ident, coordinatendatei)
-        Dim koordinaten = utmtransform.UTM32NachWGS84(utm32koordinaten.rechts, utm32koordinaten.hoch)
+            Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
+            l("coordinatendatei " & coordinatendatei)
+            If aktadr.fkz Is Nothing Or aktadr.fkz = String.Empty Then
+                MessageBox.Show("Bitte wählen Sie eine Adresse aus", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+                Exit Sub
+            End If
+            Dim ident As String
+            ident = aktadr.makeIdentAusFKZ
+            l("ident " & ident)
+            Dim utm32koordinaten = tools.getUTM32Koordinaten4fkz(ident, coordinatendatei)
+            If utm32koordinaten.rechts < 10 Or utm32koordinaten.hoch < 10 Then
+                MessageBox.Show("Keine Koordinaten gefunden", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+                Exit Sub
+            End If
+            Dim koordinaten = utmtransform.UTM32NachWGS84(utm32koordinaten.rechts, utm32koordinaten.hoch)
 
-        Dim laenge As Double = koordinaten.Laengengrad
-        Dim breite As Double = koordinaten.Breitengrad
-        l("breite  " & breite)
-        l("laenge " & laenge)
-        'korrektur
-        Dim korrektur As Double = 0.0009
-        breite = breite - korrektur
-        l("breite nach korr " & breite)
+            Dim laenge As Double = koordinaten.Laengengrad
+            Dim breite As Double = koordinaten.Breitengrad
+            l("breite  " & breite)
+            l("laenge " & laenge)
+            'korrektur
+            Dim korrektur As Double = 0.0009
+            breite = breite - korrektur
+            l("breite nach korr " & breite)
 
-        Dim googleUrl As String =
+            Dim googleUrl As String =
           "https://www.google.com/maps/@" &
           breite.ToString(Globalization.CultureInfo.InvariantCulture) & "," &
           laenge.ToString(Globalization.CultureInfo.InvariantCulture) &
           ",72a,35y,359.25h,64.17t/data=!3m1!1e3?entry=ttu&g_ep=EgoyMDI2MDgwNC4wIKXMDSoASAFQAw%3D%3D"
 
-        'Process.Start(googleUrl)
-        Process.Start("chrome.exe", "--app=" & googleUrl)
-        breite = breite + korrektur
-        Dim sv = "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=" & breite.ToString(Globalization.CultureInfo.InvariantCulture) & "," &
+            'Process.Start(googleUrl)
+            Process.Start("chrome.exe", "--app=" & googleUrl)
+            breite = breite + korrektur
+            Dim sv = "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=" & breite.ToString(Globalization.CultureInfo.InvariantCulture) & "," &
           laenge.ToString(Globalization.CultureInfo.InvariantCulture) &
           "&heading=359&pitch=18&fov=80"
-        Process.Start("chrome.exe", "--app=" & sv)
-        'https://gis.kreis-of.de/LKOF/online/?x=3485100&y=5548200&scale=1000&lon=8.767006894380913&lat=50.016123794054096&zoom=18&select=false
-        'https://gis.kreis-of.de/LKOF/online/?&scale=1000&lon=8.767006894380913&lat=50.016123794054096&zoom=18&select=false
+            Process.Start("chrome.exe", "--app=" & sv)
+            'https://gis.kreis-of.de/LKOF/online/?x=3485100&y=5548200&scale=1000&lon=8.767006894380913&lat=50.016123794054096&zoom=18&select=false
+            'https://gis.kreis-of.de/LKOF/online/?&scale=1000&lon=8.767006894380913&lat=50.016123794054096&zoom=18&select=false
 
-        'https://ing2googlemaps.ingrada.de/i2g.php?lon=8.96480864751612&lat=50.039391158101&zoom=18&map_type=03
+            'https://ing2googlemaps.ingrada.de/i2g.php?lon=8.96480864751612&lat=50.039391158101&zoom=18&map_type=03
 
-        'https://www.google.com/maps/@50.040741,9.008404,72a,35y,359.25h,64.17t/data=!3m1!1e3?entry=ttu&g_ep=EgoyMDI2MDgwNC4wIKXMDSoASAFQAw%3D%3D
+            'https://www.google.com/maps/@50.040741,9.008404,72a,35y,359.25h,64.17t/data=!3m1!1e3?entry=ttu&g_ep=EgoyMDI2MDgwNC4wIKXMDSoASAFQAw%3D%3D
+
+
+        Catch ex As Exception
+            l("fehler in btnadr3d_Click " & ex.ToString)
+        End Try
     End Sub
 
     Private Sub btnfstgoogle_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
-        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "fst_google")
-        Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
-
-        If aktfst.flur = 0 Or aktfst.zaehler = 0 Then
-            MessageBox.Show("Bitte wählen Sie ein Flurstück aus", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
-            Exit Sub
-        End If
-        Dim ident As String
-        'ident = aktfst.MakeIdentIngrada
-        aktfst.flurstueckZuFKZ()
-        ident = aktfst.makeIdentAusFKZ
-        Dim utm32koordinaten = tools.getUTM32Koordinaten4fkz(ident, coordinatendatei)
-        Dim koordinaten = utmtransform.UTM32NachWGS84(utm32koordinaten.rechts, utm32koordinaten.hoch)
-        Dim laenge As Double = koordinaten.Laengengrad
-        Dim breite As Double = koordinaten.Breitengrad
-        Dim googleUrl As String =
+        Try
+            l("btnfstgoogle_Click")
+            nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "fst_google")
+            Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
+            l("coordinatendatei " & coordinatendatei)
+            If aktfst.flur = 0 Or aktfst.zaehler = 0 Then
+                MessageBox.Show("Bitte wählen Sie ein Flurstück aus", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+                Exit Sub
+            End If
+            Dim ident As String
+            'ident = aktfst.MakeIdentIngrada
+            aktfst.flurstueckZuFKZ()
+            ident = aktfst.makeIdentAusFKZ
+            l("ident " & ident)
+            Dim utm32koordinaten = tools.getUTM32Koordinaten4fkz(ident, coordinatendatei)
+            If utm32koordinaten.rechts < 10 Or utm32koordinaten.hoch < 10 Then
+                MessageBox.Show("Keine Koordinaten gefunden", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+                Exit Sub
+            End If
+            Dim koordinaten = utmtransform.UTM32NachWGS84(utm32koordinaten.rechts, utm32koordinaten.hoch)
+            Dim laenge As Double = koordinaten.Laengengrad
+            Dim breite As Double = koordinaten.Breitengrad
+            l("laenge " & laenge)
+            l("breite " & breite)
+            Dim googleUrl As String =
                                   "https://www.google.com/maps?q=" &
                                   breite.ToString(Globalization.CultureInfo.InvariantCulture) & "," &
                                   laenge.ToString(Globalization.CultureInfo.InvariantCulture)
-        Process.Start(googleUrl)
-        'https://gis.kreis-of.de/LKOF/online/?x=3485100&y=5548200&scale=1000&lon=8.767006894380913&lat=50.016123794054096&zoom=18&select=false
+            l("googleUrl " & googleUrl)
+            Process.Start(googleUrl)
+            'https://gis.kreis-of.de/LKOF/online/?x=3485100&y=5548200&scale=1000&lon=8.767006894380913&lat=50.016123794054096&zoom=18&select=false
+
+
+        Catch ex As Exception
+            l("fehler in btnfstgoogle_Click " & ex.ToString)
+        End Try
     End Sub
 
     Private Sub btnfstIngradaOnline_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
-        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "fst_igronline")
+        Try
+            l("btnfstIngradaOnline_Click")
+            nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "fst_igronline")
 
-        Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
-        If aktfst.flur = 0 Or aktfst.zaehler = 0 Then
-            MessageBox.Show("Bitte wählen Sie ein Flurstück aus", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
-            Exit Sub
-        End If
-        Dim ident As String
-        'ident = tools.makeIdentAusFKZ(aktfst.flurstueckZuFKZ)
-        aktfst.flurstueckZuFKZ()
-        ident = aktfst.makeIdentAusFKZ
-        Dim utm32koordinaten = tools.getUTM32Koordinaten4fkz(ident, coordinatendatei)
-        Dim koordinaten = utmtransform.UTM32NachWGS84(utm32koordinaten.rechts, utm32koordinaten.hoch)
+            Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
+            l("coordinatendatei " & coordinatendatei)
+            If aktfst.flur = 0 Or aktfst.zaehler = 0 Then
+                MessageBox.Show("Bitte wählen Sie ein Flurstück aus", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+                Exit Sub
+            End If
+            Dim ident As String
+            'ident = tools.makeIdentAusFKZ(aktfst.flurstueckZuFKZ)
+            aktfst.flurstueckZuFKZ()
+            ident = aktfst.makeIdentAusFKZ
+            Dim utm32koordinaten = tools.getUTM32Koordinaten4fkz(ident, coordinatendatei)
+            If utm32koordinaten.rechts < 10 Or utm32koordinaten.hoch < 10 Then
+                MessageBox.Show("Keine Koordinaten gefunden", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+                Exit Sub
+            End If
+            Dim koordinaten = utmtransform.UTM32NachWGS84(utm32koordinaten.rechts, utm32koordinaten.hoch)
 
-        Dim laenge As Double = koordinaten.Laengengrad
-        Dim breite As Double = koordinaten.Breitengrad
+            Dim laenge As Double = koordinaten.Laengengrad
+            Dim breite As Double = koordinaten.Breitengrad
 
-        Dim googleUrl As String =
+            Dim googleUrl As String =
           "https://gis.kreis-of.de/LKOF/online/?&scale=1000&lat=" &
           breite.ToString(Globalization.CultureInfo.InvariantCulture) & "&lon=" &
           laenge.ToString(Globalization.CultureInfo.InvariantCulture) &
           "&zoom=18&select=true"
 
-        Process.Start(googleUrl)
+            Process.Start(googleUrl)
+
+
+        Catch ex As Exception
+            l("fehler in btnfstIngradaOnline_Click " & ex.ToString)
+        End Try
     End Sub
 
     Private Sub btnfst3d_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
-        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "fst_3d")
+        l("btnfst3d_Click")
+        Try
+            nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "fst_3d")
 
-        Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
-        If aktfst.flur = 0 Or aktfst.zaehler = 0 Then
-            MessageBox.Show("Bitte wählen Sie ein Flurstück aus", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
-            Exit Sub
-        End If
-        Dim ident As String
-        'ident = tools.makeIdentAusFKZ(aktfst.Flurstuecksskennzeichen)
-        aktfst.flurstueckZuFKZ()
-        ident = aktfst.makeIdentAusFKZ
-        Dim utm32koordinaten = tools.getUTM32Koordinaten4fkz(ident, coordinatendatei)
-        Dim koordinaten = utmtransform.UTM32NachWGS84(utm32koordinaten.rechts, utm32koordinaten.hoch)
+            Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
+            l("coordinatendatei " & coordinatendatei)
+            If aktfst.flur = 0 Or aktfst.zaehler = 0 Then
+                MessageBox.Show("Bitte wählen Sie ein Flurstück aus", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+                Exit Sub
+            End If
+            Dim ident As String
+            'ident = tools.makeIdentAusFKZ(aktfst.Flurstuecksskennzeichen)
+            aktfst.flurstueckZuFKZ()
+            ident = aktfst.makeIdentAusFKZ
+            Dim utm32koordinaten = tools.getUTM32Koordinaten4fkz(ident, coordinatendatei)
+            If utm32koordinaten.rechts < 10 Or utm32koordinaten.hoch < 10 Then
+                MessageBox.Show("Keine Koordinaten gefunden", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+                Exit Sub
+            End If
+            Dim koordinaten = utmtransform.UTM32NachWGS84(utm32koordinaten.rechts, utm32koordinaten.hoch)
+            l("btnfst3d_Click 1")
+            Dim laenge As Double = koordinaten.Laengengrad
+            Dim breite As Double = koordinaten.Breitengrad
+            l("btnfst3d_Click laenge " & laenge)
+            l("btnfst3d_Click breite " & breite)
+            'korrektur
+            Dim korrektur = 0.0009
+            breite = breite - korrektur
 
-        Dim laenge As Double = koordinaten.Laengengrad
-        Dim breite As Double = koordinaten.Breitengrad
-        'korrektur
-        Dim korrektur = 0.0009
-        breite = breite - korrektur
+            Dim googleUrl As String =
+              "https://www.google.com/maps/@" &
+              breite.ToString(Globalization.CultureInfo.InvariantCulture) & "," &
+              laenge.ToString(Globalization.CultureInfo.InvariantCulture) &
+              ",72a,35y,359.25h,64.17t/data=!3m1!1e3?entry=ttu&g_ep=EgoyMDI2MDgwNC4wIKXMDSoASAFQAw%3D%3D"
 
-        Dim googleUrl As String =
-          "https://www.google.com/maps/@" &
-          breite.ToString(Globalization.CultureInfo.InvariantCulture) & "," &
-          laenge.ToString(Globalization.CultureInfo.InvariantCulture) &
-          ",72a,35y,359.25h,64.17t/data=!3m1!1e3?entry=ttu&g_ep=EgoyMDI2MDgwNC4wIKXMDSoASAFQAw%3D%3D"
+            l(googleUrl)
+            'Process.Start(googleUrl)
+            Process.Start("chrome.exe", "--app=" & googleUrl)
+            breite = breite + korrektur
+            Dim sv = "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=" & breite.ToString(Globalization.CultureInfo.InvariantCulture) & "," &
+              laenge.ToString(Globalization.CultureInfo.InvariantCulture) &
+              "&heading=359&pitch=18&fov=80"
+            l(sv)
+            Process.Start("chrome.exe", "--app=" & sv)
 
-        'Process.Start(googleUrl)
-        Process.Start("chrome.exe", "--app=" & googleUrl)
-        breite = breite + korrektur
-        Dim sv = "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=" & breite.ToString(Globalization.CultureInfo.InvariantCulture) & "," &
-          laenge.ToString(Globalization.CultureInfo.InvariantCulture) &
-          "&heading=359&pitch=18&fov=80"
-        Process.Start("chrome.exe", "--app=" & sv)
+
+        Catch ex As Exception
+            l("fehler in btnfst3d_Click " & ex.ToString)
+        End Try
+
     End Sub
 End Class

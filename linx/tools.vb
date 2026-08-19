@@ -2,7 +2,7 @@
 
 
 Module tools
-    Public logfileschreiben As Boolean = False
+    Public logfileschreiben As Boolean = True
     Public themendefinitionsdatei As String = "themendateiBaulasten.txt"
     Public gisLogouten As Boolean = True
     Public historyFile As String = "history.txt"
@@ -38,7 +38,7 @@ Module tools
     Public srv_unc_path As String = "\\kh-w-ingrada\lkof\data\upload\FILES\LKOF\sp_mdat\dat\"
 
     'Public srv_unc_path As String = "\\gis\d$"
-    Public gisexe As String = "C:\kreisoffenbach\mgis\mgis.exe"
+    'Public gisexe As String = "C:\kreisoffenbach\mgis\mgis.exe"
     'Public bplanexe As String = "C:\kreisoffenbach\bplankat\bplaninternet.exe"
     Public bgmVersion As String = My.Resources.BuildDate.Trim.Replace(vbCrLf, "")
     Public Property baulastenoutDir As String = "c:\baulastenout"
@@ -46,7 +46,7 @@ Module tools
     Public Property FSTausGISListeFehlt As List(Of clsFlurstueck)
     Public Property eigentuemerAbfrageErlaubt As Boolean = False
     Public Property darfprobaug As Boolean = False
-    Public logfile As String = "C:\kreisoffenbach\bgm\" ' & Environment.UserName & "_"
+    Public logfile As String = "" '"C:\kreisoffenbach\bgm\" ' & Environment.UserName & "_"
     'Public logfile As String = srv_unc_path & "\apps\test\bgm\" & "logs\" ' & Environment.UserName & "_"
     Public pfad As String = srv_unc_path & "\fkat\baulasten\"
 
@@ -158,7 +158,7 @@ Module tools
 
 
     End Sub
-    Sub setLogfile(logfile As String)
+    Sub setLogfile(ByRef logfile As String)
         With My.Log.DefaultFileLogWriter
             '#If DEBUG Then
             '.CustomLocation = mgisUserRoot & "logs\"
@@ -1892,7 +1892,7 @@ Module tools
             fstREC.mydb.SQL =
                 "SELECT distinct flur FROM [LKOF].[dbo].[VW_lieg_eigentuemerGST_web] " &
                         "where gemarkungsnummer= " & gemcode &
-                        "order by flur"
+                        " order by flur"
             l(fstREC.mydb.SQL)
             hinweis = fstREC.getDataDT()
             If fstREC.dt.Rows.Count < 1 Then
@@ -2042,11 +2042,14 @@ Module tools
     'End Function
     Friend Function getUTM32Koordinaten4fkz(ident As String, coordinatendatei As String) As (rechts As Integer, hoch As Integer)
         ' Standard-Rückgabewert, falls Datei fehlt oder Ident nicht gefunden wird
+        l("getUTM32Koordinaten4fkz: ")
         Dim result As (rechts As Integer, hoch As Integer) = (0, 0)
 #If DEBUG Then
         coordinatendatei = "W:\diverses\bgmingrada\coordinates.csv"
 #End If
+
         If Not IO.File.Exists(coordinatendatei) Then
+            l("getUTM32Koordinaten4fkz: coordinatendatei  existiert nicht " & coordinatendatei)
             Return result
         End If
 
@@ -2080,10 +2083,11 @@ Module tools
                     End If
                 End If
             Next
+            Return result
         Catch ex As Exception
-            l("fehler in getutm32 " & ex.ToString)
+            l("fehler in getUTM32Koordinaten4fkz " & ex.ToString)
         End Try
-        Return result
+
     End Function
 
     Friend Sub backupbaulastSDF()
