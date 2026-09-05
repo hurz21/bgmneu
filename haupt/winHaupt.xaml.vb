@@ -90,7 +90,7 @@ Public Class winHaupt
         themendateien.Add(New myComboBoxItem With {.mySttring = "Baulasten", .myindex = "themendateiBaulasten.txt"})
         themendateien.Add(New myComboBoxItem With {.mySttring = "Bauaufsicht", .myindex = "themendateiBauaufsicht.txt"})
         themendateien.Add(New myComboBoxItem With {.mySttring = "Denkmalschutz", .myindex = "themendateiDenkmalschutz.txt"})
-        themendateien.Add(New myComboBoxItem With {.mySttring = "Gebäudewirtschaft", .myindex = "themenGebaeudewirtschaft.txt"})
+        themendateien.Add(New myComboBoxItem With {.mySttring = "Gebäudewirtschaft", .myindex = "themendateiGebaeudewirtschaft.txt"})
         themendateien.Add(New myComboBoxItem With {.mySttring = "Immissionsschutz", .myindex = "themendateiImmissionsschutz.txt"})
         themendateien.Add(New myComboBoxItem With {.mySttring = "Umwelt", .myindex = "themendateiUmwelt.txt"})
         themendateien.Add(New myComboBoxItem With {.mySttring = "UNB", .myindex = "themendateiUNB.txt"})
