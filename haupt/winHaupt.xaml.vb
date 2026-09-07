@@ -1350,6 +1350,13 @@ Public Class winHaupt
 
     Private Sub btnKreisgis_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
+        UebersichtMitIngradaWeb()
+        'hier folgt die verion für ingradaOnline
+        'Dim url As String = "https://gis.kreis-of.de/LKOF/online/?&scale=1000&lat=49.99972857020089&lon=8.71295188295569&zoom=13&select=true&loadlayers=sp_lieg_flurstueck_FONHEFEHLER%2Csp_lieg_beschr_geoinfodoc_flurstuecksnummer_T%2Csp_lieg_gebaeude_P%2Csp_lieg_flurstueck_grenz_P%2Clage_lageinformationen"
+        'Process.Start(url)
+    End Sub
+
+    Private Shared Sub UebersichtMitIngradaWeb()
         Dim url As String
         Dim themen As String
         tools.themendefinitionsdatei = My.Settings.Themendatei
