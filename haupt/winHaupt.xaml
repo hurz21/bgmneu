@@ -206,7 +206,22 @@
                                 </StackPanel>
                             </Button>
                         </StackPanel>
-                    </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Width="75" FontSize="10"  >mehr GIS</Label>
+                            <Button x:Name="btnadrbing3d" Click="btnadrbing3d_Click" 
+                                       HorizontalAlignment="Center"  Width="160" FontSize="8"
+                                      Style="{StaticResource lessButton}"  Margin="0"
+                                        ToolTip="öffnet das Flurstück in Bing Maps"
+                                        IsEnabled="True">       
+
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock   Text="Bing Maps 3D"  Margin="0,0,0,0"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+
+                 
+        </StackPanel>
                 </TabItem>
                 <TabItem Name="tabfst"   FontSize="9" Header="Flurstück"   VerticalAlignment="Top">
                     <!--<TabItem.Header>
@@ -317,6 +332,19 @@
                                 <StackPanel Orientation="Vertical">
                                     <TextBlock   Text="Google3D &amp;"  Margin="0,0,0,0"/>
                                     <TextBlock   Text="Streetview"  Margin="0,0,0,0"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Width="75" FontSize="10"  >mehr GIS</Label>
+                            <Button x:Name="btnfstbing3d" Click="btnfstbing3d_Click" 
+                                       HorizontalAlignment="Center"  Width="160" FontSize="8"
+                                      Style="{StaticResource lessButton}"  Margin="0"
+                                        ToolTip="öffnet das Flurstück in Bing Maps"
+                                        IsEnabled="True">
+
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock   Text="Bing Maps 3D"  Margin="0,0,0,0"/> 
                                 </StackPanel>
                             </Button>
                         </StackPanel>

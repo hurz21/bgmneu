@@ -1648,6 +1648,8 @@ Public Class winHaupt
           "https://www.google.com/maps?q=" &
           breite.ToString(Globalization.CultureInfo.InvariantCulture) & "," &
           laenge.ToString(Globalization.CultureInfo.InvariantCulture)
+
+            '&sp=point.50.0253570383344_8.67079897859454
             l("googleUrl " & googleUrl)
             'Process.Start(googleUrl)
 
@@ -1891,5 +1893,112 @@ Public Class winHaupt
             l("fehler in btnfst3d_Click " & ex.ToString)
         End Try
 
+    End Sub
+
+    Private Sub btnfstbing3d_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+        l("btnfst3d_Click")
+        Try
+            nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "fst_3dBING")
+
+            Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
+            l("coordinatendatei " & coordinatendatei)
+            If aktfst.flur = 0 Or aktfst.zaehler = 0 Then
+                MessageBox.Show("Bitte wählen Sie ein Flurstück aus", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+                Exit Sub
+            End If
+            Dim ident As String
+            'ident = tools.makeIdentAusFKZ(aktfst.Flurstuecksskennzeichen)
+            aktfst.flurstueckZuFKZ()
+            ident = aktfst.makeIdentAusFKZ
+            Dim utm32koordinaten = tools.getUTM32Koordinaten4fkz(ident, coordinatendatei)
+            If utm32koordinaten.rechts < 10 Or utm32koordinaten.hoch < 10 Then
+                MessageBox.Show("Keine Koordinaten gefunden", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+                Exit Sub
+            End If
+            Dim koordinaten = utmtransform.UTM32NachWGS84(utm32koordinaten.rechts, utm32koordinaten.hoch)
+            l("btnfst3d_Click 1")
+            Dim laenge As Double = koordinaten.Laengengrad
+            Dim breite As Double = koordinaten.Breitengrad
+            l("btnfst3d_Click laenge " & laenge)
+            l("btnfst3d_Click breite " & breite)
+            'korrektur
+
+            Dim breiteMarker = breite
+            Dim laengeMarker = laenge
+
+
+            Dim korrektur = 0.0009
+            breite = breite + korrektur
+
+
+            Dim googleUrl As String =
+              "https://www.bing.com/maps/?cp=" &
+              breite.ToString(Globalization.CultureInfo.InvariantCulture) & "%7E" &
+              laenge.ToString(Globalization.CultureInfo.InvariantCulture) &
+             "lvl=98.7&style=3d&eh=224.11&dir=359.38&pi=66.57&sp=point." &
+               breiteMarker.ToString(Globalization.CultureInfo.InvariantCulture) & "_" &
+              laengeMarker.ToString(Globalization.CultureInfo.InvariantCulture)
+
+            l(googleUrl)
+
+            Process.Start("chrome.exe", "--app=" & googleUrl)
+
+
+
+        Catch ex As Exception
+            l("fehler in btnfst3d_Click " & ex.ToString)
+        End Try
+    End Sub
+
+    Private Sub btnadrbing3d_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+        Try
+            l("btnadrgoogle_Click")
+            nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "adr_3dBING")
+            Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
+            l("coordinatendatei " & coordinatendatei)
+            Dim ident As String
+            If aktadr.fkz Is Nothing Or aktadr.fkz = String.Empty Then
+                MessageBox.Show("Bitte wählen Sie eine Adresse aus", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+                Exit Sub
+            End If
+            'ident = tools.makeIdentAusFKZ(aktadr.fkz
+            ident = aktadr.makeIdentAusFKZ
+
+            Dim utm32koordinaten = tools.getUTM32Koordinaten4fkz(ident, coordinatendatei)
+            If utm32koordinaten.rechts < 10 Or utm32koordinaten.hoch < 10 Then
+                MessageBox.Show("Keine Koordinaten gefunden", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+                Exit Sub
+            End If
+            Dim koordinaten = utmtransform.UTM32NachWGS84(utm32koordinaten.rechts, utm32koordinaten.hoch)
+            Dim laenge As Double = koordinaten.Laengengrad
+            Dim breite As Double = koordinaten.Breitengrad
+            If laenge = 0 Or breite = 0 Then
+                MessageBox.Show("Keine Koordinaten gefunden", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+                Exit Sub
+            End If
+
+            Dim breiteMarker = breite
+            Dim laengeMarker = laenge
+
+
+            Dim korrektur = 0.0009
+            breite = breite + korrektur
+
+            Dim googleUrl As String =
+              "https://www.bing.com/maps/?cp=" &
+              breite.ToString(Globalization.CultureInfo.InvariantCulture) & "%7E" &
+              laenge.ToString(Globalization.CultureInfo.InvariantCulture) &
+              "lvl=98.7&style=3d&eh=224.11&dir=359.38&pi=66.57&sp=point." &
+               breiteMarker.ToString(Globalization.CultureInfo.InvariantCulture) & "_" &
+              laengeMarker.ToString(Globalization.CultureInfo.InvariantCulture)
+
+            l(googleUrl)
+
+            Process.Start("chrome.exe", "--app=" & googleUrl)
+        Catch ex As Exception
+            l("fehler in btnadrgoogle_Click " & ex.ToString)
+        End Try
     End Sub
 End Class
