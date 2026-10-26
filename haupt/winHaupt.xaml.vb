@@ -1975,7 +1975,7 @@ Public Class winHaupt
               "https://www.bing.com/maps/?cp=" &
               breite.ToString(Globalization.CultureInfo.InvariantCulture) & "%7E" &
               laenge.ToString(Globalization.CultureInfo.InvariantCulture) &
-             "lvl=98.7&style=3d&eh=224.11&dir=359.38&pi=66.57&sp=point." &
+             "lvl=18&style=3d&eh=224.11&dir=359.38&pi=66.57&sp=point." &
                breiteMarker.ToString(Globalization.CultureInfo.InvariantCulture) & "_" &
               laengeMarker.ToString(Globalization.CultureInfo.InvariantCulture)
 
@@ -2029,7 +2029,7 @@ Public Class winHaupt
               "https://www.bing.com/maps/?cp=" &
               breite.ToString(Globalization.CultureInfo.InvariantCulture) & "%7E" &
               laenge.ToString(Globalization.CultureInfo.InvariantCulture) &
-              "lvl=98.7&style=3d&eh=224.11&dir=359.38&pi=66.57&sp=point." &
+              "lvl=18&style=3d&eh=224.11&dir=359.38&pi=66.57&sp=point." &
                breiteMarker.ToString(Globalization.CultureInfo.InvariantCulture) & "_" &
               laengeMarker.ToString(Globalization.CultureInfo.InvariantCulture)
 

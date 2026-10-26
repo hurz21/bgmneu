@@ -2215,28 +2215,33 @@ Module tools
         Dim sw As New IO.StreamWriter(zieldatei, False, New UTF8Encoding(True))
         l("erzeugeUserlisteAusIngrada")
         Try
-            fstREC.mydb.SQL = "select text1 as flurstück,text2 as status,text3  as gebiet , text4 as räumungstyp " &
-                             ", text5 as erledigtam  " &
-                             ", text7 as Bearbeiter " &
-                             ", int1 as rbtyp " &
-                             ", int2 as paradigmaid " &
-                             ", int3 as illegid " &
-                             ", date1 as anhörung " &
-                             ", date2 as raumungbis " &
-                             ", date3 as räumungam " &
-                             ", date4 as verfügung " &
-                             ", text6 as Vermerk " &
+            fstREC.mydb.SQL = "select " &
+                             "  int2 As paradigmaid " &
+                             ", text1 as flurstück" &
+                             ", text2 As status" &
+                             ", text3  As gebiet" &
+                             ", text4 As räumungstyp " &
+                             ", text5 As erledigtam  " &
+                             ", text7 As Bearbeiter " &
+                             ", int1 As rbtyp " &
+                             ", int3 As illegid " &
+                             ", date1 As anhörung " &
+                             ", date2 As raumungbis " &
+                             ", date3 As räumungam " &
+                             ", date4 As verfügung " &
+                             ", text6 As Vermerk " &
                              "From [LKOF_Bearb].[dbo].[tbl_mdat_datensatz] Where kategorie_guid ='90CDD618-AFB8-45AB-87E7-5A509CA14A65' " &
                              " order by status,erledigtam desc"
             l(fstREC.mydb.SQL)
             Dim retcode = fstREC.dboeffnen(hinweis)
             Dim t As Char = ";"c
             sw.AutoFlush = True
-            sw.WriteLine("flurstück;status;gebiet;räumungstyp;erledigtam;Bearbeiter;rbtyp;paradigmaid;illegid;anhörung;räumungbis;räumungam;verfügung;vermerk;;")
+            sw.WriteLine("jahr;PUnummer;paradigmaid;flurstück;status;gebiet;räumungstyp;erledigtam;Bearbeiter;rbtyp;illegid;anhörung;räumungbis;räumungam;verfügung;vermerk;;")
             Using com As New SqlCommand(fstREC.mydb.SQL, fstREC.myconn)
                 Using reader As SqlDataReader = com.ExecuteReader()
                     While reader.Read()
-                        zeile = ""
+                        zeile = ";;"
+                        zeile += reader("paradigmaid").ToString() & t
                         zeile += reader("flurstück").ToString() & t
                         zeile += reader("status").ToString() & t
                         zeile += reader("gebiet").ToString() & t
@@ -2244,7 +2249,6 @@ Module tools
                         zeile += reader("erledigtam").ToString() & t
                         zeile += reader("bearbeiter").ToString() & t
                         zeile += reader("rbtyp").ToString() & t
-                        zeile += reader("paradigmaid").ToString() & t
                         zeile += reader("illegid").ToString() & t
                         zeile += reader("anhörung").ToString() & t
                         zeile += reader("raumungbis").ToString() & t

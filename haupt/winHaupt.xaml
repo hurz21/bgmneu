@@ -447,7 +447,7 @@
                         </StackPanel>
                         <Button Name="btnTutorial" Click="btnTutorial_Click" Margin="5"   Style="{StaticResource lessButton}">Tutorials</Button>
                         <Button Name="btnUserlist" Click="btnUserlist_Click" Margin="5"   Style="{StaticResource lessButton}" Width="50" HorizontalAlignment="Left">User List</Button>
-                        <Button Name="btnIllegale1" Click="btnIllegale1_Click" Margin="5"   Style="{StaticResource lessButton}" Width="50" HorizontalAlignment="Left">IllAll</Button>
+                        <Button Name="btnIllegale1" Click="btnIllegale1_Click" Margin="5"   Style="{StaticResource lessButton}" Width="50" HorizontalAlignment="Left">Illegale</Button>
                         <TextBox Name="tbinfofkz" ></TextBox>
                     </StackPanel>
                 </TabItem>
