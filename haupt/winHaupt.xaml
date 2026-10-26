@@ -46,7 +46,7 @@
                 </Button>
             </StackPanel>  
             
-            <TabControl x:Name="tabEig" FontSize="9" >
+            <TabControl x:Name="tabEig" FontSize="9" Height="363" >
                 <TabItem  Name="tabBaulast"  FontSize="9" Header="Baulast"  VerticalAlignment="Top">
                     <!--<TabItem.Header>
                         <Label Content="Baulast" FontSize="9"      />
@@ -445,7 +445,10 @@
                  Height="25" Width="180" Margin="5" FontSize="10" 
                                   SelectionChanged="cmbThemendatei_SelectionChanged"/>
                         </StackPanel>
-                        <Button Name="btnTutorial" Click="btnTutorial_Click" Margin="5">Tutorials</Button>
+                        <Button Name="btnTutorial" Click="btnTutorial_Click" Margin="5"   Style="{StaticResource lessButton}">Tutorials</Button>
+                        <Button Name="btnUserlist" Click="btnUserlist_Click" Margin="5"   Style="{StaticResource lessButton}" Width="50" HorizontalAlignment="Left">User List</Button>
+                        <Button Name="btnIllegale1" Click="btnIllegale1_Click" Margin="5"   Style="{StaticResource lessButton}" Width="50" HorizontalAlignment="Left">IllAll</Button>
+                        <TextBox Name="tbinfofkz" ></TextBox>
                     </StackPanel>
                 </TabItem>
                 <TabItem Name="tabEigentumer" FontSize="9" Header="Eigentümer" VerticalAlignment="Top"

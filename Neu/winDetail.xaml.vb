@@ -815,6 +815,7 @@ Public Class winDetail
 
     Private Sub btnZumGISOBJ_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
+        nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "bl_gis_detail")
         baulastAlsObjImGisZeigen(tbBaulastNr.Text.Trim, tools.themendefinitionsdatei)
         'Dim url As String
         ''  https://gis.kreis-of.de/LKOF/asp/main.asp?app=sp_mdat&lay=sp_mdat_0010_F&fld=text3&typ=string&val=1001&skipwelcome=true

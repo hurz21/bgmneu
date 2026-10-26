@@ -1,7 +1,13 @@
 ﻿Imports System.Data
+Imports System.IO
+Imports System.Text
 
 
 Module tools
+    'Public coordinatendatei As String = "W:\diverses\bgmingrada\coordinates.csv"
+    Public coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
+
+    Public userlisteAusIngrada As New List(Of String)
     Public logfileschreiben As Boolean = True
     Public themendefinitionsdatei As String = "themendateiBaulasten.txt"
     Public gisLogouten As Boolean = True
@@ -46,6 +52,8 @@ Module tools
     Public Property FSTausGISListeFehlt As List(Of clsFlurstueck)
     Public Property eigentuemerAbfrageErlaubt As Boolean = False
     Public Property darfprobaug As Boolean = False
+    Public Property istbauaufsicht As Boolean = False
+    Public Property istumwelt As Boolean = False
     Public logfile As String = "" '"C:\kreisoffenbach\bgm\" ' & Environment.UserName & "_"
     'Public logfile As String = srv_unc_path & "\apps\test\bgm\" & "logs\" ' & Environment.UserName & "_"
     Public pfad As String = srv_unc_path & "\fkat\baulasten\"
@@ -305,10 +313,10 @@ Module tools
     End Function
     'Function getbalist2Oracle(sql As String) As DataTable
     '    Dim oOracleConn As OracleConnection
-    '    Dim dt As System.Data.DataTable
+    '    Dim ergebnisse As System.Data.DataTable
     '    Dim com As OracleCommand
     '    Dim _mycount As Long
-    '    dt = New DataTable
+    '    ergebnisse = New DataTable
     '    Try
     '        l(" MOD getbalist2 anfang")
     '        oOracleConn = New OracleConnection(OracleConnectionString)
@@ -319,17 +327,17 @@ Module tools
     '        da.MissingSchemaAction = MissingSchemaAction.AddWithKey
     '        nachricht("fill")
     '        Console.WriteLine("vor fill")
-    '        _mycount = da.Fill(dt)
+    '        _mycount = da.Fill(ergebnisse)
     '        nachricht("fillfertig: " & _mycount)
     '        nachricht("in gisview2 wurden " & _mycount & " datensätze gefunden 
     '        oOracleConn.Close()
     '        com.Dispose()
     '        da.Dispose()
-    '        Return dt
+    '        Return ergebnisse
     '        l(" MOD getbalist2 ende")
     '    Catch ex As Exception
     '        l("Fehler in getbalist2: " & ex.ToString())
-    '        Return dt
+    '        Return ergebnisse
     '    End Try
     'End Function
 
@@ -640,7 +648,7 @@ Module tools
     '    fstREC.mydb.SQL = "select * from " & tools.srv_schema & "." & tools.srv_tablename & "   where fs='" & fS & "'"
     '    l(fstREC.mydb.SQL)
     '    hinweis = fstREC.getDataDT()
-    '    If fstREC.dt.Rows.Count < 1 Then
+    '    If fstREC.ergebnisse.Rows.Count < 1 Then
 
     '        Return False
     '    Else
@@ -1284,7 +1292,7 @@ Module tools
     '        fstREC.mydb.SQL = sql  '   where lower(trim(tiff2))='" & temp.Trim.ToLower & "'"
     '        l(fstREC.mydb.SQL)
     '        hinweis = fstREC.getDataDT()
-    '        If fstREC.dt.Rows.Count < 1 Then
+    '        If fstREC.ergebnisse.Rows.Count < 1 Then
     '            Return False
     '        Else
     '            Return True
@@ -1776,16 +1784,16 @@ Module tools
                     sw.WriteLine(sb.ToString)
                     sb.Clear()
                 Next
-                'For i = 0 To fstREC.dt.Rows.Count - 1
-                '    Dim datei = srv_unc_path & "BAUL4ST_" & clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("text3")).ToString & ".pdf"
+                'For i = 0 To fstREC.ergebnisse.Rows.Count - 1
+                '    Dim datei = srv_unc_path & "BAUL4ST_" & clsDBtools.fieldvalue(fstREC.ergebnisse.Rows(i).Item("text3")).ToString & ".pdf"
                 '    fi = New IO.FileInfo(datei)
                 '    Dim quelldatei As String
 
                 '    If Not fi.Exists Then
-                '        If clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("text8")).ToString.ToLower = String.Empty Then
+                '        If clsDBtools.fieldvalue(fstREC.ergebnisse.Rows(i).Item("text8")).ToString.ToLower = String.Empty Then
                 '        Else
-                '            quelldatei = "L:\fkat\baulasten\" & clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("text8")).ToString.ToLower
-                '            quelldatei = quelldatei & "\" & clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("text3")).ToString & ".pdf"
+                '            quelldatei = "L:\fkat\baulasten\" & clsDBtools.fieldvalue(fstREC.ergebnisse.Rows(i).Item("text8")).ToString.ToLower
+                '            quelldatei = quelldatei & "\" & clsDBtools.fieldvalue(fstREC.ergebnisse.Rows(i).Item("text3")).ToString & ".pdf"
                 '            fo = New IO.FileInfo(quelldatei)
                 '            If fo.Exists Then
                 '                IO.File.Copy(quelldatei, datei)
@@ -1864,8 +1872,8 @@ Module tools
                     sb.Append((clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("text7")).ToString) & t)
                     sb.Append((clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("text8")).ToString) & t)
                     sb.Append((clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("text3")).ToString) & t)
-                    'sb.Append((clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("text2")).ToString) & t)
-                    'sb.Append((clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("text1")).ToString) & t)
+                    'sb.Append((clsDBtools.fieldvalue(fstREC.ergebnisse.Rows(i).Item("text2")).ToString) & t)
+                    'sb.Append((clsDBtools.fieldvalue(fstREC.ergebnisse.Rows(i).Item("text1")).ToString) & t)
                     sb.Append((clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("int1")).ToString) & t)
                     sb.Append((clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("int2")).ToString) & t)
                     sb.Append((clsDBtools.fieldvalue(fstREC.dt.Rows(i).Item("int3")).ToString))
@@ -2044,9 +2052,7 @@ Module tools
         ' Standard-Rückgabewert, falls Datei fehlt oder Ident nicht gefunden wird
         l("getUTM32Koordinaten4fkz: ")
         Dim result As (rechts As Integer, hoch As Integer) = (0, 0)
-#If DEBUG Then
-        coordinatendatei = "W:\diverses\bgmingrada\coordinates.csv"
-#End If
+
 
         If Not IO.File.Exists(coordinatendatei) Then
             l("getUTM32Koordinaten4fkz: coordinatendatei  existiert nicht " & coordinatendatei)
@@ -2124,6 +2130,136 @@ Module tools
         Catch ex As Exception
             l("fehler in darfprobaugeinsehen " & ex.ToString)
             nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "darfpg_nicht" & (clsActiveDir.fdkurz))
+            Return False
+        End Try
+    End Function
+
+    Friend Function erzeugeUserlisteAusIngrada() As List(Of String)
+        Dim sql, hinweis As String
+        Dim newid As Long
+        Dim dt As DataTable
+        Dim ergebnisse As New List(Of String)
+        l("erzeugeUserlisteAusIngrada")
+        Try
+            fstREC.mydb.SQL = "SELECT g.name AS gruppe, u.name AS anwender " &
+                    "FROM [LKOF_Bearb].[dbo].tbl_sys_cmuser2group AS ug " &
+                    "INNER JOIN [LKOF_Bearb].[dbo].tbl_sys_cmgroup AS g " &
+                    "ON ug.group_guid = g.guid " &
+                    "INNER JOIN [LKOF_Bearb].[dbo].tbl_sys_cmuser AS u " &
+                    "ON u.guid = ug.user_guid " &
+                    "GROUP BY g.name, u.name"
+
+            l(fstREC.mydb.SQL)
+            Dim retcode = fstREC.dboeffnen(hinweis)
+            'Dim com As New SqlCommand(fstREC.mydb.SQL, fstREC.myconn)
+            'Dim da As New SqlDataAdapter(com)
+            'Dim reader As SqlDataReader = com.ExecuteReader()
+
+            Using com As New SqlCommand(fstREC.mydb.SQL, fstREC.myconn)
+                Using reader As SqlDataReader = com.ExecuteReader()
+
+                    While reader.Read()
+                        Dim gruppenname As String = reader("gruppe").ToString()
+                        Dim benutzername As String = reader("anwender").ToString()
+
+                        ergebnisse.Add(gruppenname & " ; " & benutzername)
+                    End While
+
+                End Using
+            End Using
+            Return ergebnisse
+        Catch ex As Exception
+            l("fehler in erzeugeUserlisteAusIngrada Abfrage gescheitert " & ex.ToString)
+            Return ergebnisse
+        End Try
+    End Function
+
+    Friend Sub erzeugeCSVDatei(datei As String, ergebnisse As List(Of String))
+        Using writer As New StreamWriter(datei, False, New UTF8Encoding(True))
+
+            'Kopfzeile
+            writer.WriteLine("""Gruppe"";""Anwender""")
+
+            For Each eintrag As String In ergebnisse
+
+                'Trennung zwischen Gruppe und Anwender
+                Dim teile() As String = eintrag.Split(
+            New String() {" ; "},
+            StringSplitOptions.None
+        )
+
+                If teile.Length >= 2 Then
+                    Dim gruppe As String = teile(0).Replace("""", """""")
+                    Dim anwender As String = teile(1).Replace("""", """""").Replace("Kreis-OF\", "")
+
+                    writer.WriteLine("""" & gruppe & """;""" & anwender & """")
+                End If
+
+            Next
+
+        End Using
+
+        l("CSV-Datei wurde erstellt: " & datei)
+        Try
+
+        Catch ex As Exception
+            l("fehler in erzeugeUserlisteAusIngrada Abfrage gescheitert " & ex.ToString)
+        End Try
+    End Sub
+
+    Friend Function erzeugeIllegale1AusIngrada(zieldatei As String) As Boolean
+        Dim zeile, hinweis As String
+        'Dim newid As Long
+        'Dim dt As DataTable
+        'Dim ergebnisse As New List(Of String)
+        Dim sw As New IO.StreamWriter(zieldatei, False, New UTF8Encoding(True))
+        l("erzeugeUserlisteAusIngrada")
+        Try
+            fstREC.mydb.SQL = "select text1 as flurstück,text2 as status,text3  as gebiet , text4 as räumungstyp " &
+                             ", text5 as erledigtam  " &
+                             ", text7 as Bearbeiter " &
+                             ", int1 as rbtyp " &
+                             ", int2 as paradigmaid " &
+                             ", int3 as illegid " &
+                             ", date1 as anhörung " &
+                             ", date2 as raumungbis " &
+                             ", date3 as räumungam " &
+                             ", date4 as verfügung " &
+                             ", text6 as Vermerk " &
+                             "From [LKOF_Bearb].[dbo].[tbl_mdat_datensatz] Where kategorie_guid ='90CDD618-AFB8-45AB-87E7-5A509CA14A65' " &
+                             " order by status,erledigtam desc"
+            l(fstREC.mydb.SQL)
+            Dim retcode = fstREC.dboeffnen(hinweis)
+            Dim t As Char = ";"c
+            sw.AutoFlush = True
+            sw.WriteLine("flurstück;status;gebiet;räumungstyp;erledigtam;Bearbeiter;rbtyp;paradigmaid;illegid;anhörung;räumungbis;räumungam;verfügung;vermerk;;")
+            Using com As New SqlCommand(fstREC.mydb.SQL, fstREC.myconn)
+                Using reader As SqlDataReader = com.ExecuteReader()
+                    While reader.Read()
+                        zeile = ""
+                        zeile += reader("flurstück").ToString() & t
+                        zeile += reader("status").ToString() & t
+                        zeile += reader("gebiet").ToString() & t
+                        zeile += reader("räumungstyp").ToString() & t
+                        zeile += reader("erledigtam").ToString() & t
+                        zeile += reader("bearbeiter").ToString() & t
+                        zeile += reader("rbtyp").ToString() & t
+                        zeile += reader("paradigmaid").ToString() & t
+                        zeile += reader("illegid").ToString() & t
+                        zeile += reader("anhörung").ToString() & t
+                        zeile += reader("raumungbis").ToString() & t
+                        zeile += reader("räumungam").ToString() & t
+                        zeile += reader("verfügung").ToString() & t
+                        zeile += reader("Vermerk").ToString().Replace(vbCr, " ").Replace(vbLf, " ").Replace(vbCrLf, " ") & t
+                        sw.WriteLine(zeile)
+                    End While
+                End Using
+            End Using
+            sw.Close()
+            sw.Dispose()
+            Return True
+        Catch ex As Exception
+            l("fehler in erzeugeUserlisteAusIngrada Abfrage gescheitert " & ex.ToString)
             Return False
         End Try
     End Function

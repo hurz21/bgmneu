@@ -37,13 +37,27 @@ Public Class winHaupt
 
         LoadHistory() : ComboHistory.ItemsSource = Nothing : ComboHistory.ItemsSource = historyList
         ComboHistory.DisplayMemberPath = "Anzeige"
+
+        userlisteAusIngrada = tools.erzeugeUserlisteAusIngrada
+
         If clsActiveDir.getall(Environment.UserName) Then
             Dim result = clsActiveDir.fdkurz
             Title = "BGM, " & clsActiveDir.fdkurz & ", " & My.Settings.Themendatei.Replace(".txt", "").Replace("themendatei", "Thema: ")
             tools.eigentuemerAbfrageErlaubt = (result.ToLower.Contains("umwelt") Or result.ToLower.Contains("bauaufsicht"))
+            If Not tools.eigentuemerAbfrageErlaubt Then
+                'If Environment.UserName.ToLower = "schaub_a" Or
+                '        Environment.UserName.ToLower = "seker_h" Or
+                '        Environment.UserName.ToLower = "zurlo_a" Then
+                '    tools.eigentuemerAbfrageErlaubt = True
+                'End If
+            End If
+                tools.istbauaufsicht = (result.ToLower.Contains("bauaufsicht"))
+            tools.istumwelt = (result.ToLower.Contains("umwelt"))
             'tools.darfprobaug = tools.darfprobaugeinsehen(clsActiveDir.fdkurz, "")
         End If
-
+#If DEBUG Then
+        coordinatendatei = "W:\diverses\bgmingrada\coordinates.csv"
+#End If
         ' tools.readFSTCookie(gemarkung, flur, zaehler, nenner, "bgm_FST_cookie.txt")
         'gemarkungsindex = gemarkung
 
@@ -63,7 +77,7 @@ Public Class winHaupt
 
         tabEig.SelectedIndex = My.Settings.ReiterAppNummer
 
-        If isAuthoBaulastManager() Then
+        If isAuthoBaulastManager(userlisteAusIngrada) Then
             tools.backupbaulastSDF()
             ComboHistory.IsDropDownOpen = True
             stpBaulastenmedels.Visibility = Visibility.Visible
@@ -97,6 +111,8 @@ Public Class winHaupt
         themendateien.Add(New myComboBoxItem With {.mySttring = "UWBB", .myindex = "themendateiUWBB.txt"})
         themendateien.Add(New myComboBoxItem With {.mySttring = "Schornsteinfegerei", .myindex = "themendateiFeger.txt"})
         themendateien.Add(New myComboBoxItem With {.mySttring = "Zivilschutz", .myindex = "themendateiZivilschutz.txt"})
+        themendateien.Add(New myComboBoxItem With {.mySttring = "Leer", .myindex = "themendateiLeer.txt"})
+        themendateien.Add(New myComboBoxItem With {.mySttring = "Alles", .myindex = "themendateiAlles.txt"})
 
         cmbThemendatei.ItemsSource = themendateien
         cmbThemendatei.DisplayMemberPath = "mySttring"
@@ -182,38 +198,57 @@ Public Class winHaupt
             'Process.Start(logout)
         End If
     End Sub
-    Private Shared Function isAuthoBaulastManager() As Boolean
+    Private Shared Function isAuthoBaulastManager(userliste As List(Of String)) As Boolean
+        Dim currentUser = Environment.UserName.ToLower
+        l("isAuthoBaulastManager " & currentUser)
+        Dim a() As String
+        Dim test As String
         Try
-            Dim appDir = IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
-            Dim userFile = IO.Path.Combine(appDir, "bgmusers.txt")
-            Dim allowed As HashSet(Of String)
-            l("isAuthoBaulastManager anfang")
-            If IO.File.Exists(userFile) Then
-                Dim lines = IO.File.ReadAllLines(userFile).
-                            Where(Function(s) Not String.IsNullOrWhiteSpace(s)).
-                            Select(Function(s) s.Trim())
-                allowed = New HashSet(Of String)(lines, StringComparer.OrdinalIgnoreCase)
-            Else
-                ' Fallback: eingebaute Liste (nur als Notfall). Bevorzugt: Datei pflegen.
-                allowed = New HashSet(Of String)(New String() {
-                                                    "benes_c",
-                                                    "hartmann_s",
-                                                    "briese_j",
-                                                    "feinen_j",
-                                                    "thieme_m",
-                                                    "zahnlückenpimpf",
-                                                    "neis_h"
-                                                   }, StringComparer.OrdinalIgnoreCase)
-            End If
-
-            Dim currentUser = Environment.UserName
-            l(allowed.Contains(currentUser).ToString)
-            Return allowed.Contains(currentUser)
+            For Each text In userliste
+                a = text.Split(";"c)
+                test = a(1).Replace("Kreis-OF\", "").ToLower.Trim
+                If a(0).ToLower.Trim = "Baulastenmedels".ToLower AndAlso test = currentUser Then
+                    Return True
+                End If
+            Next
+            Return False
         Catch ex As Exception
             l("Fehler in isAuthoBaulastManager: " & ex.ToString())
             Return False
         End Try
     End Function
+    'Private Shared Function isAuthoBaulastManager() As Boolean
+    '    Try
+    '        Dim appDir = IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)
+    '        Dim userFile = IO.Path.Combine(appDir, "bgmusers.txt")
+    '        Dim allowed As HashSet(Of String)
+    '        l("isAuthoBaulastManager anfang")
+    '        If IO.File.Exists(userFile) Then
+    '            Dim lines = IO.File.ReadAllLines(userFile).
+    '                        Where(Function(s) Not String.IsNullOrWhiteSpace(s)).
+    '                        Select(Function(s) s.Trim())
+    '            allowed = New HashSet(Of String)(lines, StringComparer.OrdinalIgnoreCase)
+    '        Else
+    '            ' Fallback: eingebaute Liste (nur als Notfall). Bevorzugt: Datei pflegen.
+    '            allowed = New HashSet(Of String)(New String() {
+    '                                                "benes_c",
+    '                                                "hartmann_s",
+    '                                                "briese_j",
+    '                                                "feinen_j",
+    '                                                "thieme_m",
+    '                                                "zahnlückenpimpf",
+    '                                                "neis_h"
+    '                                               }, StringComparer.OrdinalIgnoreCase)
+    '        End If
+
+    '        Dim currentUser = Environment.UserName
+    '        l(allowed.Contains(currentUser).ToString)
+    '        Return allowed.Contains(currentUser)
+    '    Catch ex As Exception
+    '        l("Fehler in isAuthoBaulastManager: " & ex.ToString())
+    '        Return False
+    '    End Try
+    'End Function
     'Private Shared Function isAuthoBaulastManager() As Boolean
     '    'Return False
     '    Return Environment.UserName.ToLower = "benes_c" Or
@@ -327,6 +362,7 @@ Public Class winHaupt
         nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "bl_gis")
         tools.writeBLBlattCookie(tbblnr.Text.Trim, "bgm_blattnr_cookie.txt")
         If clsGIStools.getBaulastFromBaulastMDAT(CInt(tbblnr.Text.Trim), kategorie_guid_Baulasten) Then
+            'falls die baulast existiert, dann zeige sie im GIS an
             baulastAlsObjImGisZeigen(tbblnr.Text.Trim, tools.themendefinitionsdatei)
         Else
             MessageBox.Show("Diese Baulast gibt es im GIS nicht!", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
@@ -537,6 +573,7 @@ Public Class winHaupt
             End If
             Exit Sub
         End If
+        tbinfofkz.Text = aktadr.fkz
         cmbhausnr.ItemsSource = hausnummernListe
         cmbhausnr.DisplayMemberPath = "mySttring"
         cmbhausnr.SelectedValuePath = "myindex"
@@ -1325,6 +1362,7 @@ Public Class winHaupt
         'cmbFstKombi.IsDropDownOpen = True
         tbZaehler.Text = aktfst.zaehler.ToString
         tbnenner.Text = aktfst.nenner.ToString
+        tbinfofkz.Text = aktfst.Flurstuecksskennzeichen
     End Sub
 
     Private Sub tbzaehlerFilter_TextChanged(sender As Object, e As TextChangedEventArgs)
@@ -1522,6 +1560,7 @@ Public Class winHaupt
         fsttemp.fkzzerlegen()
         fkzlist_lage.Clear()
         fkzlist_lage.Add(fsttemp)
+        tbinfofkz.Text = aktadr.fkz
 
         If aktadr.fkz Is Nothing Or aktadr.fkz = String.Empty Then
             MessageBox.Show("Kein entsprechendes Flurstück gefunden", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
@@ -1622,7 +1661,7 @@ Public Class winHaupt
         Try
             l("btnadrgoogle_Click")
             nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "adr_google")
-            Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
+
             l("coordinatendatei " & coordinatendatei)
             Dim ident As String
             If aktadr.fkz Is Nothing Or aktadr.fkz = String.Empty Then
@@ -1667,7 +1706,7 @@ Public Class winHaupt
             l("btnadrIngradaOnline_Click")
             nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "adr_igronline")
 
-            Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
+            'Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
             l("coordinatendatei " & coordinatendatei)
             Dim ident As String
             If aktadr.fkz Is Nothing Or aktadr.fkz = String.Empty Then
@@ -1710,7 +1749,7 @@ Public Class winHaupt
             l("btnadr3d_Click")
             nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "adr_3d")
 
-            Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
+            'Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
             l("coordinatendatei " & coordinatendatei)
             If aktadr.fkz Is Nothing Or aktadr.fkz = String.Empty Then
                 MessageBox.Show("Bitte wählen Sie eine Adresse aus", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
@@ -1766,7 +1805,7 @@ Public Class winHaupt
         Try
             l("btnfstgoogle_Click")
             nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "fst_google")
-            Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
+            'Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
             l("coordinatendatei " & coordinatendatei)
             If aktfst.flur = 0 Or aktfst.zaehler = 0 Then
                 MessageBox.Show("Bitte wählen Sie ein Flurstück aus", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
@@ -1807,7 +1846,7 @@ Public Class winHaupt
             l("btnfstIngradaOnline_Click")
             nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "fst_igronline")
 
-            Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
+            'Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
             l("coordinatendatei " & coordinatendatei)
             If aktfst.flur = 0 Or aktfst.zaehler = 0 Then
                 MessageBox.Show("Bitte wählen Sie ein Flurstück aus", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
@@ -1847,7 +1886,7 @@ Public Class winHaupt
         Try
             nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "fst_3d")
 
-            Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
+            'Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
             l("coordinatendatei " & coordinatendatei)
             If aktfst.flur = 0 Or aktfst.zaehler = 0 Then
                 MessageBox.Show("Bitte wählen Sie ein Flurstück aus", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
@@ -1901,7 +1940,7 @@ Public Class winHaupt
         Try
             nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "fst_3dBING")
 
-            Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
+            'Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
             l("coordinatendatei " & coordinatendatei)
             If aktfst.flur = 0 Or aktfst.zaehler = 0 Then
                 MessageBox.Show("Bitte wählen Sie ein Flurstück aus", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
@@ -1956,7 +1995,7 @@ Public Class winHaupt
         Try
             l("btnadrgoogle_Click")
             nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "adr_3dBING")
-            Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
+            'Dim coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
             l("coordinatendatei " & coordinatendatei)
             Dim ident As String
             If aktadr.fkz Is Nothing Or aktadr.fkz = String.Empty Then
@@ -2001,4 +2040,33 @@ Public Class winHaupt
             l("fehler in btnadrgoogle_Click " & ex.ToString)
         End Try
     End Sub
+
+    Private Sub btnUserlist_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+        Dim zieldatei As String
+        zieldatei = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
+        zieldatei = IO.Path.Combine(zieldatei, "bgm")
+        zieldatei = IO.Path.Combine(zieldatei, "userlist" & Now.ToString("yyyyMMddhhmm") & ".csv")
+
+
+        tools.erzeugeCSVDatei(zieldatei, userlisteAusIngrada)
+        Process.Start(zieldatei)
+
+    End Sub
+
+    Private Sub btnIllegale1_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+        Dim zieldatei As String
+        zieldatei = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
+        zieldatei = IO.Path.Combine(zieldatei, "bgm")
+        zieldatei = IO.Path.Combine(zieldatei, "illegale1" & Now.ToString("yyyyMMddhhmm") & ".csv")
+
+
+        tools.erzeugeIllegale1AusIngrada(zieldatei)
+        Process.Start(zieldatei)
+    End Sub
+
+
+
+
 End Class
