@@ -49,6 +49,7 @@
         <StackPanel>
             <TextBox x:Name="ThemeStringTextBox" Margin="10" Height="240" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
             <Button Content="Meine Auswahl speichern" Margin="10" Width="200" Click="Button_Click"/>
+            <Button Content="Verlassen ohne speichern" Name="btnaabruch" Margin="10" Width="200" Click="btnaabruch_Click"/>
         </StackPanel>
     </DockPanel>
 </Window>

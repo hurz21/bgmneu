@@ -41,7 +41,8 @@
         '    MessageBox.Show("Die gewählte Themendatei existiert nicht. Bitte wählen Sie eine andere Themendatei aus.", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
         '    Exit Sub
         'End If
-        Close()
+        Me.DialogResult = True
+        'Close()
     End Sub
 
     Private Sub AlleAuswaehlen_Click(sender As Object, e As RoutedEventArgs)
@@ -62,5 +63,9 @@
             cb.IsChecked = False
         Next
         ThemeStringTextBox.Text = ""
+    End Sub
+
+    Private Sub btnaabruch_Click(sender As Object, e As RoutedEventArgs)
+        Me.DialogResult = False
     End Sub
 End Class

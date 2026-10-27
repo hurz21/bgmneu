@@ -899,7 +899,9 @@ Public Class winHaupt
                 Dim zieldatei = tools.makeFullpathMeineauswahlThema(themendatei)
                 Dim fi As New IO.FileInfo(zieldatei)
                 If Not fi.Exists Then
-                    MessageBox.Show("Die gewählte Themendatei existiert nicht. Bitte wählen Sie eine andere Themendatei aus.", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+                    MessageBox.Show("Die gewählte Themendatei existiert nicht. Bitte wählen Sie eine andere Themendatei aus oder erzeugen sie eine eigene Auswahl.",
+                                    "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+                    cmbThemendatei.SelectedValue = My.Settings.Themendatei
                     Exit Sub
                 End If
             Else
@@ -2078,13 +2080,20 @@ Public Class winHaupt
         Process.Start(zieldatei)
     End Sub
 
-    Private Sub tbThemendateiPLUS_TextChanged(sender As Object, e As TextChangedEventArgs)
 
-    End Sub
 
     Private Sub tbADDThema_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
         Dim wina As New WINansichten
         wina.ShowDialog()
+        If wina.DialogResult Then
+            tools.themendefinitionsdatei = "themendateiMeineAuswahl.txt".Trim
+            My.Settings.Themendatei = "themendateiMeineAuswahl.txt".Trim
+            My.Settings.Save()
+            Title = "BGM, " & clsActiveDir.fdkurz & ", " & My.Settings.Themendatei.Replace(".txt", "").Replace("themendatei", "Thema: ")
+            cmbThemendatei.SelectedValue = My.Settings.Themendatei
+        Else
+
+        End If
     End Sub
 End Class

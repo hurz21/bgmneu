@@ -10,8 +10,8 @@
     <DockPanel Margin="5">
         <StackPanel Orientation="Vertical"  >
             <StackPanel Orientation="Horizontal">
-                
-            <Button Name="btnKreisgis"  Click="btnKreisgis_Click"  Visibility="Visible" Margin="5" Height="25"
+
+                <Button Name="btnKreisgis"  Click="btnKreisgis_Click"  Visibility="Visible" Margin="5" Height="25"
             Background="Beige" Foreground="Black"
             >Übersicht</Button>
                 <Button Name="btnAktuell"  Click="btnAktuell_Click"  Visibility="Visible" Margin="5" Height="25"
@@ -33,7 +33,7 @@
                             >
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Width="20">
                         <TextBlock  FontFamily="Arial Black" Width="20" HorizontalAlignment="Right"> _?</TextBlock>
-                      
+
                     </StackPanel>
                 </Button>
                 <Button Name="btntest"  Click="btntest_Click"  Visibility="Collapsed" Margin="5" Height="25"
@@ -44,8 +44,8 @@
 
                     </StackPanel>
                 </Button>
-            </StackPanel>  
-            
+            </StackPanel>
+
             <TabControl x:Name="tabEig" FontSize="9" Height="363" >
                 <TabItem  Name="tabBaulast"  FontSize="9" Header="Baulast"  VerticalAlignment="Top">
                     <!--<TabItem.Header>
@@ -173,7 +173,7 @@
                                         ToolTip="öffnet das Flurstück Google Maps."
                               
                                   IsEnabled="True">
-                                <StackPanel Orientation="Vertical"> 
+                                <StackPanel Orientation="Vertical">
                                     <TextBlock   Text="Google"  Margin="0,0,0,0"/>
                                     <TextBlock   Text="Maps"  Margin="0,0,0,0"/>
                                 </StackPanel>
@@ -200,7 +200,7 @@
                                 </Button.ToolTip>
 
 
-                                <StackPanel Orientation="Vertical"> 
+                                <StackPanel Orientation="Vertical">
                                     <TextBlock Text="Google3D &amp;" Margin="0,0,0,0"/>
                                     <TextBlock Text="Streetview" Margin="0,0,0,0"/>
                                 </StackPanel>
@@ -212,7 +212,7 @@
                                        HorizontalAlignment="Center"  Width="160" FontSize="8"
                                       Style="{StaticResource lessButton}"  Margin="0"
                                         ToolTip="öffnet das Flurstück in Bing Maps"
-                                        IsEnabled="True">       
+                                        IsEnabled="True">
 
                                 <StackPanel Orientation="Vertical">
                                     <TextBlock   Text="Bing Maps 3D"  Margin="0,0,0,0"/>
@@ -220,8 +220,8 @@
                             </Button>
                         </StackPanel>
 
-                 
-        </StackPanel>
+
+                    </StackPanel>
                 </TabItem>
                 <TabItem Name="tabfst"   FontSize="9" Header="Flurstück"   VerticalAlignment="Top">
                     <!--<TabItem.Header>
@@ -308,7 +308,7 @@
                                     <TextBlock   Text="Maps"  Margin="0,0,0,0"/>
                                 </StackPanel>
                             </Button>
-                                
+
                             <Button x:Name="btnfstIngradaOnline" Click="btnfstIngradaOnline_Click" 
                                       HorizontalAlignment="Center"  Width="50"
                                     ToolTip="öffnet das Flurstück in der BürgerGIS (Ingrada-Online). Ist noch nicht Fertig ausgebaut."
@@ -344,7 +344,7 @@
                                         IsEnabled="True">
 
                                 <StackPanel Orientation="Vertical">
-                                    <TextBlock   Text="Bing Maps 3D"  Margin="0,0,0,0"/> 
+                                    <TextBlock   Text="Bing Maps 3D"  Margin="0,0,0,0"/>
                                 </StackPanel>
                             </Button>
                         </StackPanel>
@@ -430,7 +430,7 @@
                 <TabItem      Name="tabOptionen"                       >
                     <TabItem.Header>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE115;" FontSize="9"  /> 
+                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE115;" FontSize="9"  />
                         </StackPanel>
                     </TabItem.Header>
                     <!-- Inhalt -->
@@ -439,15 +439,25 @@
 
                         <CheckBox Name="chkbImmerLogouten" IsChecked="True" Margin="5"
                               Click="chkbImmerLogouten_Click">Vor GIS-Aufruf alte GIS-Sitzung beenden</CheckBox>
+                        <GroupBox BorderThickness="1" BorderBrush="Black">
+                            
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Padding="5,10,0,0">Themen:</TextBlock>
-                             
-                      
-                                <ComboBox x:Name="cmbThemendatei" HorizontalAlignment="Left"  
-                 Height="25" Width="180" Margin="5" FontSize="10" 
+
+
+                            <ComboBox x:Name="cmbThemendatei"  
+                                  Height="25" Width="143" Margin="5" FontSize="10" 
                                   SelectionChanged="cmbThemendatei_SelectionChanged"/>
-                            <Button Name="tbADDThema" Click="tbADDThema_Click"  Style="{StaticResource lessButton}" ToolTip="Meine Auswahl erzeugen" Width="25" >+</Button>
+                                <Button Name="tbADDThema" Click="tbADDThema_Click"  Style="{StaticResource lessButton}" 
+                                    ToolTip="Meine Auswahl erzeugen" Width="65" FontSize="8">
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="Meine Auswahl"  Margin="0,0,0,0"/>
+                                        <TextBlock Text="festlegen"  Margin="10,0,0,0"/>
+                                    </StackPanel>
+                               
+                                </Button>
                         </StackPanel>
+                        </GroupBox>
                         <Button Name="btnTutorial" Click="btnTutorial_Click" Margin="5"   Style="{StaticResource lessButton}">Tutorials</Button>
                         <Button Name="btnUserlist" Click="btnUserlist_Click" Margin="5"   Style="{StaticResource lessButton}" Width="50" HorizontalAlignment="Left">User List</Button>
                         <Button Name="btnIllegale1" Click="btnIllegale1_Click" Margin="5"   Style="{StaticResource lessButton}" Width="50" HorizontalAlignment="Left">Illegale</Button>
@@ -457,7 +467,7 @@
                 <TabItem Name="tabEigentumer" FontSize="9" Header="Eigentümer" VerticalAlignment="Top"
                          HorizontalContentAlignment="Left" >
                     <StackPanel >
-                        
+
                         <StackPanel Orientation="Horizontal" >
                             <Label Width="75"  >Name:</Label>
                             <!--<ComboBox Name="cmbBULKvergleichName">
@@ -466,8 +476,8 @@
                             </ComboBox>-->
                             <TextBox x:Name="tbeigbulkNAME"  Width="160" Background="LightGray" 
                                      Text="müller*"
-                                       ToolTip="Als Joker können Sie '*' verwenden. Z.B. *illing"></TextBox> 
-                        </StackPanel> 
+                                       ToolTip="Als Joker können Sie '*' verwenden. Z.B. *illing"></TextBox>
+                        </StackPanel>
                         <StackPanel Orientation="Horizontal" >
                             <Label Width="75"  >Vorname:</Label>
                             <!--<ComboBox Name="cmbBULKvergleichVorname">
@@ -475,20 +485,20 @@
                                 <ComboBoxItem >like</ComboBoxItem>
                             </ComboBox>-->
                             <TextBox x:Name="tbeigbulkVORNAME"  Width="160" Background="LightGray"
-                                        ToolTip="Als Joker können Sie '*' als Joker verwenden. Z.B. Adol*"></TextBox> 
-                         
+                                        ToolTip="Als Joker können Sie '*' als Joker verwenden. Z.B. Adol*"></TextBox>
+
                         </StackPanel>
-                     
+
                         <StackPanel Orientation="Horizontal" Visibility="Hidden">
                             <Label Width="75" FontSize="10">Wohnort:</Label>
                             <TextBox x:Name="tbeigbulkWohnort"  Width="160" Background="LightGray"></TextBox>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <Label Width="75"  ></Label> 
-                        <Button Name="btnsucheeigentuemer" Click="btnsucheeigentuemer_Click"
+                            <Label Width="75"  ></Label>
+                            <Button Name="btnsucheeigentuemer" Click="btnsucheeigentuemer_Click"
                                 IsEnabled="True"
-                                Width="160"> Suche
-                        </Button>
+                                Width="160">Suche
+                            </Button>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Label Width="75"  >Treffer:</Label>
@@ -498,12 +508,12 @@
                                         />
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" >
-                            <Label Width="75"  >Auswahl:</Label> 
+                            <Label Width="75"  >Auswahl:</Label>
                             <TextBox x:Name="tbeigbulkAuswahl"  Width="160"  Height="60"
                                      ToolTip="" AcceptsReturn="True" AcceptsTab="True" TextWrapping="Wrap"
                                      >
-                                
-                            </TextBox> 
+
+                            </TextBox>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Label Width="75"  ></Label>
