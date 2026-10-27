@@ -1,0 +1,54 @@
+﻿<Window x:Class="WINansichten"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:bgm"
+        mc:Ignorable="d"
+        Title="WINansichten" Height="450" Width="800">
+    <DockPanel>
+        <StackPanel Orientation="Vertical" Height="300" VerticalAlignment="Top">
+
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10">
+                <Button Content="Alle auswählen" Margin="5" Click="AlleAuswaehlen_Click"/>
+                <Button Content="Alle abwählen" Margin="5" Click="AlleAbwaehlen_Click"/>
+            </StackPanel>
+        </StackPanel >
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10" Height="300" VerticalAlignment="Top">
+            <StackPanel x:Name="LeftPanel" Grid.Column="0">
+                <CheckBox Content="Aktuell" Margin="0,6" Click="GeneriereThemeString_Click"/>
+                <CheckBox Content="Biotope" Margin="0,6" Click="GeneriereThemeString_Click"/>
+                <CheckBox Content="Denkmalschutz" Margin="0,6" Click="GeneriereThemeString_Click"/>
+                <CheckBox Content="Grenzen" Margin="0,6" Click="GeneriereThemeString_Click"/>
+                <CheckBox Content="Historie" Margin="0,6" Click="GeneriereThemeString_Click"/>
+                <CheckBox Content="KommunaleSatzungen" Margin="0,6" Click="GeneriereThemeString_Click"/>
+                <CheckBox Content="Liegenschaftsauswertung" Margin="0,6" Click="GeneriereThemeString_Click"/>
+                <CheckBox Content="Naturschutz-Flächenpool" Margin="0,6" Click="GeneriereThemeString_Click"/>
+                <CheckBox Content="Oberflächengewässer" Margin="0,6" Click="GeneriereThemeString_Click"/>
+                <CheckBox Content="Schutzgebiete UNB" Margin="0,6" Click="GeneriereThemeString_Click"/>
+                <CheckBox Content="Verkehr" Margin="0,6" Click="GeneriereThemeString_Click"/>
+                <CheckBox Content="Zeichnen" Margin="0,6" Click="GeneriereThemeString_Click"/>
+            </StackPanel>
+
+            <!-- Spalte Rechts mit x:Name -->
+            <StackPanel x:Name="RightPanel" Grid.Column="1"   >
+                <CheckBox Content="B-Pläne" Margin="0,6" Click="GeneriereThemeString_Click"/>
+                <CheckBox Content="Breitbandausbau" Margin="0,6" Click="GeneriereThemeString_Click"/>
+                <CheckBox Content="Eigene Daten" Margin="0,6" Click="GeneriereThemeString_Click"/>
+                <CheckBox Content="Grundwasser" Margin="0,6" Click="GeneriereThemeString_Click"/>
+                <CheckBox Content="Immission" Margin="0,6" Click="GeneriereThemeString_Click"/>
+                <CheckBox Content="Liegenschaften" Margin="0,6" Click="GeneriereThemeString_Click"/>
+                <CheckBox Content="Natürliche Grundlagen" Margin="0,6" Click="GeneriereThemeString_Click"/>
+                <CheckBox Content="Naturschutz-Maßnahmen" Margin="0,6" Click="GeneriereThemeString_Click"/>
+                <CheckBox Content="Pflanzen und Tiere" Margin="0,6" Click="GeneriereThemeString_Click"/>
+                <CheckBox Content="Soziales" Margin="0,6" Click="GeneriereThemeString_Click"/>
+                <CheckBox Content="WMS Extern" Margin="0,6" Click="GeneriereThemeString_Click"/>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel>
+            <TextBox x:Name="ThemeStringTextBox" Margin="10" Height="240" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
+            <Button Content="Meine Auswahl speichern" Margin="10" Width="200" Click="Button_Click"/>
+        </StackPanel>
+    </DockPanel>
+</Window>

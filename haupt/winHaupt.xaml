@@ -441,9 +441,12 @@
                               Click="chkbImmerLogouten_Click">Vor GIS-Aufruf alte GIS-Sitzung beenden</CheckBox>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Padding="5,10,0,0">Themen:</TextBlock>
-                            <ComboBox x:Name="cmbThemendatei" HorizontalAlignment="Left" 
+                             
+                      
+                                <ComboBox x:Name="cmbThemendatei" HorizontalAlignment="Left"  
                  Height="25" Width="180" Margin="5" FontSize="10" 
                                   SelectionChanged="cmbThemendatei_SelectionChanged"/>
+                            <Button Name="tbADDThema" Click="tbADDThema_Click"  Style="{StaticResource lessButton}" ToolTip="Meine Auswahl erzeugen" Width="25" >+</Button>
                         </StackPanel>
                         <Button Name="btnTutorial" Click="btnTutorial_Click" Margin="5"   Style="{StaticResource lessButton}">Tutorials</Button>
                         <Button Name="btnUserlist" Click="btnUserlist_Click" Margin="5"   Style="{StaticResource lessButton}" Width="50" HorizontalAlignment="Left">User List</Button>

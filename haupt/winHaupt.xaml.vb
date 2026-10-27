@@ -113,6 +113,7 @@ Public Class winHaupt
         themendateien.Add(New myComboBoxItem With {.mySttring = "Zivilschutz", .myindex = "themendateiZivilschutz.txt"})
         themendateien.Add(New myComboBoxItem With {.mySttring = "Leer", .myindex = "themendateiLeer.txt"})
         themendateien.Add(New myComboBoxItem With {.mySttring = "Alles", .myindex = "themendateiAlles.txt"})
+        themendateien.Add(New myComboBoxItem With {.mySttring = "MeineAuswahl", .myindex = "themendateiMeineAuswahl.txt"})
 
         cmbThemendatei.ItemsSource = themendateien
         cmbThemendatei.DisplayMemberPath = "mySttring"
@@ -888,12 +889,23 @@ Public Class winHaupt
         If Not istgeladen Then Exit Sub
 
         Dim dateiitem As myComboBoxItem
-        Dim fi As IO.FileInfo
+        'Dim fi As IO.FileInfo
         Dim themendatei As String
-        Dim immer_aus_dem_cache_die_bplanpdfs As Boolean = True
+        'Dim immer_aus_dem_cache_die_bplanpdfs As Boolean = True
         Try
             dateiitem = CType(cmbThemendatei.SelectedItem, myComboBoxItem)
             themendatei = dateiitem.myindex
+            If themendatei = "themendateiMeineAuswahl.txt" Then
+                Dim zieldatei = tools.makeFullpathMeineauswahlThema(themendatei)
+                Dim fi As New IO.FileInfo(zieldatei)
+                If Not fi.Exists Then
+                    MessageBox.Show("Die gewählte Themendatei existiert nicht. Bitte wählen Sie eine andere Themendatei aus.", "BGM Ingradatool", MessageBoxButton.OK, MessageBoxImage.Exclamation)
+                    Exit Sub
+                End If
+            Else
+
+                'themendatei = tools.themendefinitionsdatei
+            End If
             nutzprotokoll.NutzungProtokollieren(AppDomain.CurrentDomain.BaseDirectory, "themen_" & themendatei)
             tools.themendefinitionsdatei = themendatei.Trim
 
@@ -1975,7 +1987,7 @@ Public Class winHaupt
               "https://www.bing.com/maps/?cp=" &
               breite.ToString(Globalization.CultureInfo.InvariantCulture) & "%7E" &
               laenge.ToString(Globalization.CultureInfo.InvariantCulture) &
-             "lvl=18&style=3d&eh=224.11&dir=359.38&pi=66.57&sp=point." &
+             "&lvl=18&style=3d&eh=224.11&dir=359.38&pi=66.57&sp=point." &
                breiteMarker.ToString(Globalization.CultureInfo.InvariantCulture) & "_" &
               laengeMarker.ToString(Globalization.CultureInfo.InvariantCulture)
 
@@ -2029,7 +2041,7 @@ Public Class winHaupt
               "https://www.bing.com/maps/?cp=" &
               breite.ToString(Globalization.CultureInfo.InvariantCulture) & "%7E" &
               laenge.ToString(Globalization.CultureInfo.InvariantCulture) &
-              "lvl=18&style=3d&eh=224.11&dir=359.38&pi=66.57&sp=point." &
+              "&lvl=18&style=3d&eh=224.11&dir=359.38&pi=66.57&sp=point." &
                breiteMarker.ToString(Globalization.CultureInfo.InvariantCulture) & "_" &
               laengeMarker.ToString(Globalization.CultureInfo.InvariantCulture)
 
@@ -2066,7 +2078,13 @@ Public Class winHaupt
         Process.Start(zieldatei)
     End Sub
 
+    Private Sub tbThemendateiPLUS_TextChanged(sender As Object, e As TextChangedEventArgs)
 
+    End Sub
 
-
+    Private Sub tbADDThema_Click(sender As Object, e As RoutedEventArgs)
+        e.Handled = True
+        Dim wina As New WINansichten
+        wina.ShowDialog()
+    End Sub
 End Class

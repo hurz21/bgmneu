@@ -205,6 +205,9 @@
     <Compile Include="werkzeuge\winWerkzeuge.xaml.vb">
       <DependentUpon>winWerkzeuge.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WINansichten.xaml.vb">
+      <DependentUpon>WINansichten.xaml</DependentUpon>
+    </Compile>
     <Compile Include="winFST.xaml.vb">
       <DependentUpon>winFST.xaml</DependentUpon>
     </Compile>
@@ -237,6 +240,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="werkzeuge\winWerkzeuge.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WINansichten.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

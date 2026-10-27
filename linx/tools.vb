@@ -1210,6 +1210,12 @@ Module tools
 #If DEBUG Then
             exepath = "W:\diverses"
 #End If
+            If themendefinitionsdatei.ToLower.Contains("meineauswahl") Then
+                Dim zieldatei As String
+                zieldatei = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
+                zieldatei = IO.Path.Combine(zieldatei, "bgm")
+                exepath = zieldatei
+            End If
             l("exepath: " & exepath)
             themendatei = IO.Path.Combine(exepath, themendefinitionsdatei)
             l("themendatei: " & themendatei)
@@ -2265,6 +2271,36 @@ Module tools
         Catch ex As Exception
             l("fehler in erzeugeUserlisteAusIngrada Abfrage gescheitert " & ex.ToString)
             Return False
+        End Try
+    End Function
+
+    'Friend Function makeFullpathMeineauswahlThemaAndExists(themendatei As String) As Boolean
+    '    Dim zieldatei As String
+    '    Try
+    '        zieldatei = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
+    '        zieldatei = IO.Path.Combine(zieldatei, "bgm")
+    '        zieldatei = IO.Path.Combine(zieldatei, themendatei)
+    '        Dim fi As New IO.FileInfo(zieldatei)
+    '        If fi.Exists Then
+    '            Return True
+    '        Else
+    '            Return False
+    '        End If
+    '    Catch ex As Exception
+    '        l("fehler in makeFullpathMeineauswahlThemaAndExists     " & ex.ToString)
+    '        Return False
+    '    End Try
+    'End Function
+    Friend Function makeFullpathMeineauswahlThema(themendatei As String) As String
+        Dim zieldatei As String
+        Try
+            zieldatei = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
+            zieldatei = IO.Path.Combine(zieldatei, "bgm")
+            zieldatei = IO.Path.Combine(zieldatei, themendatei)
+            Return zieldatei
+        Catch ex As Exception
+            l("fehler in makeFullpathMeineauswahlThema     " & ex.ToString)
+            Return ""
         End Try
     End Function
 End Module
