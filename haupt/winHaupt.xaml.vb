@@ -51,7 +51,7 @@ Public Class winHaupt
                 '    tools.eigentuemerAbfrageErlaubt = True
                 'End If
             End If
-                tools.istbauaufsicht = (result.ToLower.Contains("bauaufsicht"))
+            tools.istbauaufsicht = (result.ToLower.Contains("bauaufsicht"))
             tools.istumwelt = (result.ToLower.Contains("umwelt"))
             'tools.darfprobaug = tools.darfprobaugeinsehen(clsActiveDir.fdkurz, "")
         End If
@@ -99,21 +99,8 @@ Public Class winHaupt
 
         Dim gameindeitems As New List(Of myComboBoxItem)
         Dim gamarkungsitems As New List(Of myComboBoxItem)
-        Dim themendateien As New List(Of myComboBoxItem)
 
-        themendateien.Add(New myComboBoxItem With {.mySttring = "Baulasten", .myindex = "themendateiBaulasten.txt"})
-        themendateien.Add(New myComboBoxItem With {.mySttring = "Bauaufsicht", .myindex = "themendateiBauaufsicht.txt"})
-        themendateien.Add(New myComboBoxItem With {.mySttring = "Denkmalschutz", .myindex = "themendateiDenkmalschutz.txt"})
-        themendateien.Add(New myComboBoxItem With {.mySttring = "Gebäudewirtschaft", .myindex = "themendateiGebaeudewirtschaft.txt"})
-        themendateien.Add(New myComboBoxItem With {.mySttring = "Immissionsschutz", .myindex = "themendateiImmissionsschutz.txt"})
-        themendateien.Add(New myComboBoxItem With {.mySttring = "Umwelt", .myindex = "themendateiUmwelt.txt"})
-        themendateien.Add(New myComboBoxItem With {.mySttring = "UNB", .myindex = "themendateiUNB.txt"})
-        themendateien.Add(New myComboBoxItem With {.mySttring = "UWBB", .myindex = "themendateiUWBB.txt"})
-        themendateien.Add(New myComboBoxItem With {.mySttring = "Schornsteinfegerei", .myindex = "themendateiFeger.txt"})
-        themendateien.Add(New myComboBoxItem With {.mySttring = "Zivilschutz", .myindex = "themendateiZivilschutz.txt"})
-        themendateien.Add(New myComboBoxItem With {.mySttring = "Leer", .myindex = "themendateiLeer.txt"})
-        themendateien.Add(New myComboBoxItem With {.mySttring = "Alles", .myindex = "themendateiAlles.txt"})
-        themendateien.Add(New myComboBoxItem With {.mySttring = "MeineAuswahl", .myindex = "themendateiMeineAuswahl.txt"})
+        cmbthemendateienAufbauen()
 
         cmbThemendatei.ItemsSource = themendateien
         cmbThemendatei.DisplayMemberPath = "mySttring"
@@ -189,7 +176,21 @@ Public Class winHaupt
         If My.Settings.ReiterAppNummer = 1 Then
             cmbGemeinden.IsDropDownOpen = True
         End If '  '3=bplan  2=fst 1=adr  0=baulast
+
+        paradigmaNeuvorgangdateiLoeschen
         istgeladen = True
+    End Sub
+
+    Private Sub paradigmaNeuvorgangdateiLoeschen()
+        Dim pfad = "C:\kreisoffenbach\paradigmaNeuerVorgang\paradigmaNeuerVorgang.exe"
+        Dim fi As New IO.FileInfo(pfad)
+        Try
+            If fi.Exists Then
+                fi.Delete()
+            End If
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     Private Sub dummyaufrufStarten()
@@ -2058,26 +2059,31 @@ Public Class winHaupt
     Private Sub btnUserlist_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
         Dim zieldatei As String
-        zieldatei = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
-        zieldatei = IO.Path.Combine(zieldatei, "bgm")
-        zieldatei = IO.Path.Combine(zieldatei, "userlist" & Now.ToString("yyyyMMddhhmm") & ".csv")
+        Try
+            zieldatei = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
+            zieldatei = IO.Path.Combine(zieldatei, "bgm")
+            zieldatei = IO.Path.Combine(zieldatei, "userlist" & Now.ToString("yyyyMMddhhmm") & ".csv")
 
 
-        tools.erzeugeCSVDatei(zieldatei, userlisteAusIngrada)
-        Process.Start(zieldatei)
-
+            tools.erzeugeCSVDatei(zieldatei, userlisteAusIngrada)
+            Process.Start(zieldatei)
+        Catch ex As Exception
+            l("fehler in btnUserlist_Click " & ex.ToString)
+        End Try
     End Sub
 
     Private Sub btnIllegale1_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
         Dim zieldatei As String
-        zieldatei = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
-        zieldatei = IO.Path.Combine(zieldatei, "bgm")
-        zieldatei = IO.Path.Combine(zieldatei, "illegale1" & Now.ToString("yyyyMMddhhmm") & ".csv")
-
-
-        tools.erzeugeIllegale1AusIngrada(zieldatei)
-        Process.Start(zieldatei)
+        Try
+            zieldatei = Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments)
+            zieldatei = IO.Path.Combine(zieldatei, "bgm")
+            zieldatei = IO.Path.Combine(zieldatei, "illegale1" & Now.ToString("yyyyMMddhhmm") & ".csv")
+            tools.erzeugeIllegale1AusIngrada(zieldatei)
+            Process.Start(zieldatei)
+        Catch ex As Exception
+            l("fehler in btnIllegale1_Click " & ex.ToString)
+        End Try
     End Sub
 
 
@@ -2085,15 +2091,19 @@ Public Class winHaupt
     Private Sub tbADDThema_Click(sender As Object, e As RoutedEventArgs)
         e.Handled = True
         Dim wina As New WINansichten
-        wina.ShowDialog()
-        If wina.DialogResult Then
-            tools.themendefinitionsdatei = "themendateiMeineAuswahl.txt".Trim
-            My.Settings.Themendatei = "themendateiMeineAuswahl.txt".Trim
-            My.Settings.Save()
-            Title = "BGM, " & clsActiveDir.fdkurz & ", " & My.Settings.Themendatei.Replace(".txt", "").Replace("themendatei", "Thema: ")
-            cmbThemendatei.SelectedValue = My.Settings.Themendatei
-        Else
-
-        End If
+        Try
+            wina.ShowDialog()
+            If wina.DialogResult Then
+                tools.themendefinitionsdatei = "themendateiMeineAuswahl.txt".Trim
+                My.Settings.Themendatei = "themendateiMeineAuswahl.txt".Trim
+                My.Settings.Save()
+                Title = "BGM, " & clsActiveDir.fdkurz & ", " & My.Settings.Themendatei.Replace(".txt", "").Replace("themendatei", "Thema: ")
+                cmbThemendatei.SelectedValue = My.Settings.Themendatei
+            Else
+                cmbThemendatei.IsDropDownOpen = True
+            End If
+        Catch ex As Exception
+            l("fehler in tbADDThema_Click " & ex.ToString)
+        End Try
     End Sub
 End Class

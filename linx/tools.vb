@@ -5,6 +5,7 @@ Imports System.Text
 
 Module tools
     'Public coordinatendatei As String = "W:\diverses\bgmingrada\coordinates.csv"
+    Public themendateien As New List(Of myComboBoxItem)
     Public coordinatendatei As String = AppDomain.CurrentDomain.BaseDirectory & "\coordinates.csv"
 
     Public userlisteAusIngrada As New List(Of String)
@@ -2303,4 +2304,19 @@ Module tools
             Return ""
         End Try
     End Function
+    Public Sub cmbthemendateienAufbauen()
+        themendateien.Add(New myComboBoxItem With {.mySttring = "Baulasten", .myindex = "themendateiBaulasten.txt"})
+        themendateien.Add(New myComboBoxItem With {.mySttring = "Bauaufsicht", .myindex = "themendateiBauaufsicht.txt"})
+        themendateien.Add(New myComboBoxItem With {.mySttring = "Denkmalschutz", .myindex = "themendateiDenkmalschutz.txt"})
+        themendateien.Add(New myComboBoxItem With {.mySttring = "Gebäudewirtschaft", .myindex = "themendateiGebaeudewirtschaft.txt"})
+        themendateien.Add(New myComboBoxItem With {.mySttring = "Immissionsschutz", .myindex = "themendateiImmissionsschutz.txt"})
+        themendateien.Add(New myComboBoxItem With {.mySttring = "Umwelt", .myindex = "themendateiUmwelt.txt"})
+        themendateien.Add(New myComboBoxItem With {.mySttring = "UNB", .myindex = "themendateiUNB.txt"})
+        themendateien.Add(New myComboBoxItem With {.mySttring = "UWBB", .myindex = "themendateiUWBB.txt"})
+        themendateien.Add(New myComboBoxItem With {.mySttring = "Schornsteinfegerei", .myindex = "themendateiFeger.txt"})
+        themendateien.Add(New myComboBoxItem With {.mySttring = "Zivilschutz", .myindex = "themendateiZivilschutz.txt"})
+        themendateien.Add(New myComboBoxItem With {.mySttring = "Leer", .myindex = "themendateiLeer.txt"})
+        themendateien.Add(New myComboBoxItem With {.mySttring = "Alles", .myindex = "themendateiAlles.txt"})
+        themendateien.Add(New myComboBoxItem With {.mySttring = "MeineAuswahl", .myindex = "themendateiMeineAuswahl.txt"})
+    End Sub
 End Module

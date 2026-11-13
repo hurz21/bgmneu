@@ -441,10 +441,8 @@
                               Click="chkbImmerLogouten_Click">Vor GIS-Aufruf alte GIS-Sitzung beenden</CheckBox>
                         <GroupBox BorderThickness="1" BorderBrush="Black">
                             
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Padding="5,10,0,0">Themen:</TextBlock>
-
-
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Width="261">
+                            <TextBlock Padding="0,10,0,0">Themen:</TextBlock> 
                             <ComboBox x:Name="cmbThemendatei"  
                                   Height="25" Width="143" Margin="5" FontSize="10" 
                                   SelectionChanged="cmbThemendatei_SelectionChanged"/>
